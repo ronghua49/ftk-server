@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project [
+<!ENTITY walletLib SYSTEM "lib/wallet-lib.ant.xml">
+<!ENTITY walletCommon SYSTEM "lib/wallet-common.ant.xml">
+<!ENTITY walletService SYSTEM "lib/wallet-service.ant.xml">
+]>
+<project name="wallet" default="default" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
+
+	<antversion property="version.ant" />
+
+	<available file=".svn" type="dir" property="scm" value="svn" />
+	<available file=".git" type="dir" property="scm" value="git" />
+	<available file=".git/svn" type="dir" property="scm" value="git-svn" />
+
+	<script language="javascript">
+		project.setNewProperty("host.hostname", java.net.InetAddress.getLocalHost().getHostName());
+	</script>
+
+	<echo message="Using Ant Version: ${version.ant}" />
+	<echo message="Using Java Version: ${java.version}" />
+	<echo message="Current Host Name: ${host.hostname}" />
+	<echo message="SCM TYPE: ${scm}" />
+
+	<property file="${user.home}/config/wallet.properties" />
+	<property file="build.properties" />
+	<property environment="env" />
+
+	<property name="build.resources" location="build/resources" />
+	<property name="build.classes" location="build/classes" />
+
+	<property name="lib.dir" location="lib" />
+	<property name="lib.compile" location="${lib.dir}/compile" />
+	<property name="lib.provided" location="${lib.dir}/provided" />
+	<property name="lib.test" location="${lib.dir}/test" />
+	<property name="lib.runtime" location="${lib.dir}/runtime" />
+
+	<fileset id="jars.provided" dir="${lib.provided}" includes="*.jar" />
+	<fileset id="jars.test" dir="${lib.test}" includes="*.jar" />
+
+	<macrodef name="PROJECT">
+		<attribute name="name" />
+		<sequential>
+			<echo message="define project: @{name}" />
+			<property name="project.@{name}" location="${name}" />
+			<property name="src.@{name}.java" location="${project.@{name}}/src/main/java" />
+			<property name="src.@{name}.resources" location="${project.@{name}}/src/main/resources" />
+			<property name="res.@{name}" location="${build.resources}/@{name}" />
+			<property name="classes.@{name}" location="${build.classes}/@{name}" />
+			<property name="jar.@{name}" location="build/jar/@{name}.jar" />
+		</sequential>
+	</macrodef>
+
+	<property name="project.wallet-lib" location="wallet-lib" />
+	<property name="project.wallet-common" location="wallet-common" />
+	<property name="project.wallet-service" location="wallet-service" />
+
+	<property name="src.wallet-lib.java" location="${project.wallet-lib}/src/main/java" />
+	<property name="src.wallet-lib.resources" location="${project.wallet-lib}/src/main/resources" />
+	<property name="src.wallet-common.java" location="${project.wallet-common}/src/main/java" />
+	<property name="src.wallet-common.resources" location="${project.wallet-common}/src/main/resources" />
+	<property name="src.wallet-service.java" location="${project.wallet-service}/src/main/java" />
+	<property name="src.wallet-service.resources" location="${project.wallet-service}/src/main/resources" />
+
+	<property name="res.wallet-lib" location="${build.resources}/wallet-lib" />
+	<property name="res.wallet-service" location="${build.resources}/wallet-service" />
+	<property name="res.wallet-common" location="${build.resources}/wallet-common" />
+
+	<property name="classes.wallet-lib" location="${build.classes}/wallet-lib" />
+	<property name="classes.wallet-service" location="${build.classes}/wallet-service" />
+	<property name="classes.wallet-common" location="${build.classes}/wallet-common" />
+
+	<property name="jar.wallet-lib" location="build/jar/wallet-lib.jar" />
+	<property name="jar.wallet-service" location="build/jar/wallet-service.jar" />
+	<property name="jar.wallet-common" location="build/jar/wallet-common.jar" />
+
+	<!-- 192.168.8.20 -->
+	<condition property="host.node">
+		<equals arg1="${host.hostname}" arg2="node" />
+	</condition>
+	<!-- w530 -->
+	<condition property="host.w530">
+		<equals arg1="${host.hostname}" arg2="w530" />
+	</condition>
+
+	<macrodef name="JAVAC" taskname="javac">
+		<attribute name="src" />
+		<attribute name="dest" />
+		<attribute name="path" />
+		<sequential>
+			<mkdir dir="@{dest}" />
+			<javac encoding="UTF-8" debug="true" srcdir="@{src}" destdir="@{dest}" includeantruntime="false" source="1.8" target="1.8" classpathref="@{path}" includes="**/*.java" />
+		</sequential>
+	</macrodef>
+	
+	&walletLib;
+	&walletCommon;
+	&walletService;
+	
+	<target name="env">
+	</target>
+
+	<target name="prepare">
+		<path id="classpath.provided">
+			<fileset dir="${lib.provided}" includes="*.jar" />
+		</path>
+		<path id="classpath.test">
+			<fileset dir="${lib.test}" includes="*.jar" />
+		</path>
+		<path id="classpath.all-compile">
+			<fileset dir="${lib.compile}" includes="*.jar" />
+			<path refid="classpath.provided" />
+		</path>
+	</target>
+
+	<target name="init" depends="prepare">
+		<mkdir dir="${build.classes}" />
+		<mkdir dir="${build.resources}" />
+		<mkdir dir="build/jar" />
+		<mkdir dir="build/dist" />
+	</target>
+
+	<target name="clean" depends="prepare">
+		<delete dir="build" />
+	</target>
+
+	<target name="compile.wallet-lib" depends="init">
+		<path id="classpath.wallet-lib">
+			<fileset dir="${lib.compile}">
+				<patternset refid="ps.wallet-lib.compile" />
+			</fileset>
+			<path refid="classpath.provided" />
+		</path>
+		<JAVAC src="${src.wallet-lib.java}" dest="${classes.wallet-lib}" path="classpath.wallet-lib" />
+		<copy todir="${res.wallet-lib}">
+			<fileset dir="${src.wallet-lib.resources}" includes="**/*" />
+		</copy>
+		<jar destfile="${jar.wallet-lib}">
+			<fileset dir="${classes.wallet-lib}" />
+			<fileset dir="${res.wallet-lib}" />
+		</jar>
+	</target>
+
+	<target name="compile.wallet-common" depends="compile.wallet-lib">
+		<path id="classpath.wallet-common">
+			<fileset dir="${lib.compile}">
+				<patternset refid="ps.wallet-common.compile" />
+			</fileset>
+			<path refid="classpath.provided" />
+			<path location="${jar.wallet-lib}" />
+		</path>
+		<JAVAC src="${src.wallet-common.java}" dest="${classes.wallet-common}" path="classpath.wallet-common" />
+		<copy todir="${res.wallet-common}">
+			<fileset dir="${src.wallet-common.resources}" includes="**/*" />
+		</copy>
+		<jar destfile="${jar.wallet-common}">
+			<fileset dir="${classes.wallet-common}" />
+			<fileset dir="${res.wallet-common}" />
+		</jar>
+	</target>
+
+	<target name="compile.wallet-service" depends="compile.wallet-common">
+		<path id="classpath.wallet-service">
+			<fileset dir="${lib.compile}">
+				<patternset refid="ps.wallet-service.compile" />
+			</fileset>
+			<path refid="classpath.provided" />
+			<path location="${jar.wallet-common}" />
+			<path location="${jar.wallet-lib}" />
+		</path>
+		<JAVAC src="${src.wallet-service.java}" dest="${classes.wallet-service}" path="classpath.wallet-service" />
+		<copy todir="${res.wallet-service}">
+			<fileset dir="${src.wallet-service.java}" excludes="**/*.java" />
+			<fileset dir="${src.wallet-service.resources}" includes="**/*" />
+		</copy>
+		<copy todir="${res.wallet-service}" file="${user.home}/config/watching-keys.properties" overwrite="true" />
+		<propertyfile file="${res.wallet-service}/application.properties">
+			<entry key="db.mysql.username" value="${db.mysql.username}" />
+			<entry key="db.mysql.password" value="${db.mysql.password}" />
+			<entry key="db.mysql.database" value="${db.mysql.database}" />
+			<entry key="db.mysql.hostname" value="${db.mysql.hostname}" />
+			<entry key="web3j.rpc.remoteAddress" value="${web3j.rpc.remoteAddress}" />
+			<entry key="redis.database" value="${redis.database}" />
+			<entry key="redis.hostname" value="${redis.hostname}" />
+			<entry key="wallet.account" value="${wallet.account}" />
+			<entry key="chain.eth.fromBlock" value="${chain.eth.fromBlock}" />
+			<entry key="chain.btc.peers" value="${chain.btc.peers}" />
+			<entry key="chain.btc.network.type" value="${chain.btc.network.type}" />
+			<entry key="chain.btc.blockstore.location" value="${chain.btc.blockstore.location}" />
+			<entry key="chain.btc.wallet.file" value="${chain.btc.wallet.file}" />
+			<entry key="chain.btc.wallet.watchingKey" value="${chain.btc.wallet.watchingKey}" />
+		</propertyfile>
+		<jar destfile="${jar.wallet-service}">
+			<fileset dir="${classes.wallet-service}" />
+		</jar>
+	</target>
+
+	<target name="compile" depends="compile.wallet-service" />
+
+	<target name="default" depends="compile" />
+
+</project>

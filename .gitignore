@@ -1,0 +1,14 @@
+.classpath
+/*/.project
+target
+.settings
+.gradle
+build/
+build-eclipse/
+/lib
+gradle-dependencies.txt
+.DS_Store
+bin/
+/logs/
+.metadata/
+.recommenders/

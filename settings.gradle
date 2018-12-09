@@ -1,0 +1,10 @@
+include (
+	'commons-api',
+	'ftk-web-p',
+	'ftk-web-b',
+	'ftk-server-api',
+	'ftk-server',
+	'ftk-chain-api',
+	'ftk-chain'
+)
+

@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'war'
+
+dependencies {
+	compile project(':commons-api')
+	compile project(':ftk-chain-api')
+}
+
+eclipse {
+	project {
+		natures 'org.eclipse.wst.common.project.facet.core.nature'
+		natures 'org.eclipse.wst.common.modulecore.ModuleCoreNature'
+		natures 'org.eclipse.jem.workbench.JavaEMFNature'
+		buildCommand 'org.eclipse.wst.common.project.facet.core.builder'
+		buildCommand 'org.eclipse.wst.validation.validationbuilder'
+	}
+	wtp {
+		component {
+			contextPath = '/'
+		}
+	}
+}
+
