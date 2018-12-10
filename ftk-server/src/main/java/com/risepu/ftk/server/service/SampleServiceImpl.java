@@ -28,6 +28,12 @@ public class SampleServiceImpl implements SampleService {
 		List<Organization> orgs1 = crudService.hql(Organization.class, "from Organization where id = ?1", "12345678-1");
 		Organization organization = crudService.uniqueResultHql(Organization.class, "from Organization where id = ?1",
 				"12345678-1");
+		
+		organization = crudService.get(Organization.class, "");
+		
+		organization.setName("");
+		
+		crudService.update(organization);
 
 		return Arrays.asList(new String[] { "hello", "world" });
 	}

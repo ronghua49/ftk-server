@@ -24,3 +24,13 @@
 	在开发web端时, 将所有domain, dto类放在ftk-server-api下
 	
 
+
+gradle 安装
+
+JDK: 8.0
+eclipse-jee: 
+	General->Keys:
+		Content Assist: 修改为Alt-/
+		Word Completion: 修改为空
+	
+
