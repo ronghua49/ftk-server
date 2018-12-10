@@ -14,10 +14,5 @@ eclipse {
 		buildCommand 'org.eclipse.wst.common.project.facet.core.builder'
 		buildCommand 'org.eclipse.wst.validation.validationbuilder'
 	}
-	wtp {
-		component {
-			contextPath = '/'
-		}
-	}
 }
 

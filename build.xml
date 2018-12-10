@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project [
-<!ENTITY walletLib SYSTEM "lib/wallet-lib.ant.xml">
+<!ENTITY commonsApi SYSTEM "lib/commons-api.ant.xml">
 <!ENTITY walletCommon SYSTEM "lib/wallet-common.ant.xml">
 <!ENTITY walletService SYSTEM "lib/wallet-service.ant.xml">
 ]>
