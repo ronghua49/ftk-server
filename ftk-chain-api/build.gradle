@@ -1,10 +1,6 @@
 apply plugin: 'java'
-apply plugin: 'eclipse-wtp'
+apply plugin: 'eclipse'
 apply plugin: 'war'
-
-dependencies {
-	compile project(':commons-api')
-}
 
 eclipse {
 	project {
@@ -14,5 +10,51 @@ eclipse {
 		buildCommand 'org.eclipse.wst.common.project.facet.core.builder'
 		buildCommand 'org.eclipse.wst.validation.validationbuilder'
 	}
+	classpath.file.withXml {
+		for (entry in node['classpathentry'].iterator()) {
+			if (entry.@kind == 'lib') {
+				def String path = entry.@path
+				if (configurations.providedCompile.find { it.path == path }) {
+				} else if ((configurations.testCompile - configurations.compile).find { it.path == path }) {
+				} else {
+					entry.children().clear()
+					entry.@exported = true
+					entry.appendNode('attributes').appendNode('attribute', [
+						name: 'org.eclipse.jst.component.dependency', value: '../'
+					])
+				}
+			} else if (entry.@kind == 'con') {
+				entry.@path = entry.@path.replaceFirst('^org\\.eclipse\\.jdt\\.launching\\.JRE_CONTAINER$', "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8")
+			} else if (entry.@kind == 'src') {
+				if (entry.@path.startsWith('/')) {
+					entry.@exported = "true"
+					entry.children().clear()
+					entry.appendNode('attributes').appendNode('attribute', [
+						name: 'org.eclipse.jst.component.nondependency', value: ''
+					])
+				}
+			}
+		}
+	}
+	wtp {
+		facet.file.withXml {
+			def Node node = it.asNode();
+			node.children().clear();
+			node.appendNode('fixed',['facet':'jst.java'])
+			node.appendNode('fixed',['facet':'jst.utility'])
+			node.appendNode('installed',['facet':'jst.java','version':'1.8'])
+			node.appendNode('installed',['facet':'jst.utility','version':'1.0'])
+		}
+		component.file.withXml {
+			for (wb in it.asNode().'wb-module') {
+				for (res in wb.'wb-resource') {
+					res.'@deploy-path' = '/';
+				}
+			}
+		}
+	}
 }
 
+dependencies {
+	compile project(':commons-api')
+}

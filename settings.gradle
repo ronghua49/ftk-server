@@ -2,6 +2,7 @@ include (
 	'commons-api',
 	'ftk-web-p',
 	'ftk-web-b',
+	'ftk-web-m',
 	'ftk-server-api',
 	'ftk-server',
 	'ftk-chain-api',
