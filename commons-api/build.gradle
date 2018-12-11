@@ -8,6 +8,7 @@ dependencies {
 	compile group: 'org.springframework', name: 'spring-context-support', version: "$springVersion"
 	compile group: 'org.springframework', name: 'spring-web', version: "$springVersion"
 	compile group: 'org.springframework', name: 'spring-orm', version: "$springVersion"
+	compile group: 'org.springframework', name: 'spring-webmvc', version: "$springVersion"
 	//compile group: 'org.springframework.amqp', name: 'spring-rabbit', version: "1.7.1.RELEASE";
 	
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: "$commonsLang3Version"

@@ -10,10 +10,10 @@
 		<param-value>classpath:/applicationContext.xml</param-value>
 	</context-param>
 
-	<listener>
-		<display-name>Spring Startup Listener</display-name>
-		<listener-class>net.lc4ever.framework.context.ContextLoaderListener</listener-class>
-	</listener>
+<!-- 	<listener> -->
+<!-- 		<display-name>Spring Startup Listener</display-name> -->
+<!-- 		<listener-class>net.lc4ever.framework.context.ContextLoaderListener</listener-class> -->
+<!-- 	</listener> -->
 
 	<servlet>
 		<display-name>Hessian Remote Servlet(delegate by spring)</display-name>

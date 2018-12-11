@@ -183,7 +183,7 @@ subprojects {
 		compile group: 'org.apache.commons', name: 'commons-dbcp2', version: "$commonsDbcp2Version"
 		testCompile group: 'org.easymock', name: 'easymock', version: "$easymockVersion"
 
-		testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "$springBootVersion"
+//		testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: "$springBootVersion"
 		
 		compile group: 'org.apache.commons', name: 'commons-lang3', version: "$commonsLang3Version"
 		compile group: 'commons-io', name: 'commons-io', version: "$commonsIOVersion"
@@ -191,18 +191,18 @@ subprojects {
 		compile group: 'org.apache.commons', name: 'commons-collections4', version: "$commonsCollections4Version"
 		compile group: 'commons-beanutils', name: 'commons-beanutils', version: "$commonsBeanUtilsVersion"
 		
-		compile group: 'org.springframework.boot', name: 'spring-boot', version: "$springBootVersion"
-//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: "$springBootVersion"
-		compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot', version: "$springBootVersion"
+////		compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: "$springBootVersion"
+//		compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: "$springBootVersion"
 		
 	}
 
@@ -219,8 +219,8 @@ subprojects {
 	}
 
 	task cleanLegacyBin {
-		delete 'bin'
-		delete 'build'
+//		delete 'bin'
+//		delete 'build'
 //		delete 'build-eclipse'
 	}
 
