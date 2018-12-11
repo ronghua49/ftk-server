@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns:xi="http://www.w3.org/2001/XInclude" status="WARN">
+
+	<Properties>
+		<Property name="file.name" value="core" />
+		<Property name="file.location" value="${bundle:config:log.main.location:-/tmp/log/ftk-server}" />
+	</Properties>
+
+	<Appenders>
+		<Console name="console">
+			<PatternLayout pattern="[%-5p] %d{HH:mm:ss} %-32t %-40c{1} - %m%n" />
+		</Console>
+
+		<RollingFile name="main" fileName="${file.location}/${file.name}.log" filePattern="${file.location}/daily/${file.name}.%d{yyyy-MM-dd}.log.xz">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss}[%4T][%-5p]: %m --%c{1}%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+		<RollingFile name="warn" fileName="${file.location}/${file.name}-warn.log" filePattern="${file.location}/daily/${file.name}-warn.%d{yyyy-MM-dd}.log.xz">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss}[%4T][%-5p]: %m --%c{1}%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="WARN" />
+			</Filters>
+		</RollingFile>
+		<RollingFile name="sql" fileName="${file.location}/${file.name}-sql.log" filePattern="${file.location}/daily/${file.name}-sql.%d{yyyy-MM-dd}.log.xz">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss}[%4T][%-5p]: %m --%c{1}%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+
+	<loggers>
+	
+		<logger level="INFO" name="org.springframework.remoting.support.RemoteInvocationTraceInterceptor" />
+		<logger level="INFO" name="net.lc4ever" />
+		<logger level="INFO" name="net.lc4ever.framework.remote" />
+		<logger level="DEBUG" name="org.springframework" />
+
+<!-- 		<logger level="DEBUG" name="org.hibernate.SQL" /> -->
+
+		<root level="INFO">
+			<appenderRef ref="console" />
+			<appenderRef ref="main" />
+			<appenderRef ref="warn" />
+		</root>
+	</loggers>
+
+</Configuration>

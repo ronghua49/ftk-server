@@ -158,13 +158,13 @@ subprojects {
 		
 
 		compile group: 'joda-time', name: 'joda-time', version: "$jodaTimeVersion"
-//		compile group: 'org.slf4j', name: 'slf4j-api', version: "$slf4jVersion"
-//		compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: "$slf4jVersion"
-//		compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: "$slf4jVersion"
-//		compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: "$log4j2Version"
-//		compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "$log4j2Version"
-//		compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "$log4j2Version"
-//		compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: "$log4j2Version"
+		compile group: 'org.slf4j', name: 'slf4j-api', version: "$slf4jVersion"
+		compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: "$slf4jVersion"
+		compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: "$slf4jVersion"
+		compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: "$log4j2Version"
+		compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "$log4j2Version"
+		compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "$log4j2Version"
+		compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: "$log4j2Version"
 
 		compile group: 'org.apache.commons', name: 'commons-compress', version: "$commonsCompressVersion"
 		compile group: 'org.tukaani', name: 'xz', version: '1.8'
