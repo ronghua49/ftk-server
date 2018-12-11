@@ -33,7 +33,7 @@
 
 	<import resource="classpath:net/lc4ever/framework/application-hibernate.xml" />
 
-	<import resource="classpath:gznx/eloan/application-hibernate-mappings.xml" />
+	<import resource="classpath:application-hibernate-mappings.xml" />
 
 	<beans profile="!test">
 		<jee:jndi-lookup id="dataSource" jndi-name="${jndi.jdbc:jdbc/eqd}" expected-type="javax.sql.DataSource" />

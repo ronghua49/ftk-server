@@ -89,7 +89,7 @@ subprojects {
 
 	sourceCompatibility = 1.8
 	targetCompatibility = 1.8
-	webAppDirName = "WebContent"
+	webAppDirName = "src/main/webapps"
 
 	eclipse.project {
 		natures 'org.eclipse.wst.common.project.facet.core.nature'
@@ -222,7 +222,6 @@ subprojects {
 		delete 'bin'
 		delete 'build'
 //		delete 'build-eclipse'
-		delete 'WebContent/WEB-INF/classes'
 	}
 
 	task writeDep {

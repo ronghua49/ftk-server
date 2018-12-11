@@ -42,6 +42,8 @@ dependencies {
 	compile group: 'com.google.zxing', name: 'core', version: '3.3.3'
 	compile group: 'com.google.zxing', name: 'javase', version: '3.3.3'
 	
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.13'
+	
 	
 }
 
