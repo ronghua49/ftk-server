@@ -14,14 +14,15 @@ import net.lc4ever.framework.domain.TimestampObject;
  * @author q-wang
  */
 @Entity
-@Table(name = "FTK_ORGANIZATION_USER")
-public class OrganizationUser extends TimestampObject<String> {
+@Table(name = "FTK_PERSONAL_USER")
+public class PersonalUser extends TimestampObject<String> {
 
+	/** 个人用户唯一标识: 当前存储数据为身份证号码 */
 	private String id;
 
-	@Override
 	@Id
-	@Column(name = "ID", length = 31)
+	@Column(name = "ID", length = 128)
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -31,15 +32,16 @@ public class OrganizationUser extends TimestampObject<String> {
 		this.id = id;
 	}
 
-	private String organization;
+	/** 手机号码 */
+	private String mobile;
 
-	@Column(name = "ORGANIZATION", length = 10)
-	public String getOrganization() {
-		return organization;
+	@Column(name = "MOBILE", length = 32)
+	public String getMobile() {
+		return mobile;
 	}
 
-	public void setOrganization(String organization) {
-		this.organization = organization;
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 }
