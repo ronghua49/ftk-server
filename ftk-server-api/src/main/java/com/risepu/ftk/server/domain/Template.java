@@ -5,6 +5,8 @@ package com.risepu.ftk.server.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -21,6 +23,7 @@ public class Template extends AuditableObject<Long> {
 
 	@Id
 	@Column(name = "ID", precision = 19)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Override
 	public Long getId() {
 		return id;

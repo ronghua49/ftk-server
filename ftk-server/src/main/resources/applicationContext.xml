@@ -36,6 +36,7 @@
 	<import resource="classpath:net/lc4ever/framework/application-hibernate.xml" />
 
 	<import resource="classpath:application-hibernate-mappings.xml" />
+	<import resource="classpath:application-service.xml" />
 
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
