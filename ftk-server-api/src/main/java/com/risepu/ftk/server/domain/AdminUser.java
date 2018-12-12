@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.AuditableObject;
 
 /**
+ * 
+ * 个人用户表
  * @author q-wang
  */
 @Entity

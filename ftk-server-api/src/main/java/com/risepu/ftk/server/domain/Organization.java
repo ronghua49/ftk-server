@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.AuditableObject;
 
 /**
+ * 企业表
  * @author q-wang
  */
 @Entity
@@ -30,7 +31,7 @@ public class Organization extends AuditableObject<String> {
 	public void setId(String id) {
 		this.id = id;
 	}
-
+	/**企业名称*/
 	private String name;
 
 	@Column(name = "NAME", length = 255, nullable = false)

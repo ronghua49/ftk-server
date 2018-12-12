@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.TimestampObject;
 
 /**
+ * 
+ * 文档数据
  * @author q-wang
  */
 @Entity
@@ -22,10 +24,13 @@ public class DocumentData extends TimestampObject<DocumentData.ID> {
 
 	@Embeddable
 	public static class ID implements Serializable {
+		
+		/** 模板id */
 		private Long domainId;
-
+		
+		/**文档id*/
 		private Long documentId;
-
+		
 		@Column(name = "DOMAIN")
 		public Long getDomainId() {
 			return domainId;
@@ -96,5 +101,7 @@ public class DocumentData extends TimestampObject<DocumentData.ID> {
 	public void setId(ID id) {
 		this.id = id;
 	}
+	
+	private String value;
 
 }
