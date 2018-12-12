@@ -5,15 +5,21 @@ package com.risepu.ftk.web.api;
 
 import java.io.Serializable;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author q-wang
  */
 public class Response<T> implements Serializable {
 
 	public static class Header implements Serializable {
+		@ApiModelProperty(value = "ResultCode")
 		private int code;
+		@ApiModelProperty(value = "ResultMessage", example = "SUCCEED")
 		private String message;
+		@ApiModelProperty(value = "ResultDesc")
 		private String desc;
+		@ApiModelProperty(value = "ResultTimestamp")
 		private long timestamp;
 
 		public int getCode() {
@@ -55,8 +61,10 @@ public class Response<T> implements Serializable {
 
 	}
 
+	@ApiModelProperty(value = "header")
 	private Header header;
 
+	@ApiModelProperty(value = "body")
 	private T body;
 
 	public Header getHeader() {

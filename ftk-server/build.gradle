@@ -5,8 +5,6 @@ apply plugin: 'war'
 dependencies {
 	compile project(':commons-api')
 	compile project(':ftk-server-api')
-	compile group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.0.6'
-	
 }
 
 eclipse {
