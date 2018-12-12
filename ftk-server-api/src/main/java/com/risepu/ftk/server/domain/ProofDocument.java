@@ -11,6 +11,9 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.AuditableObject;
 
 /**
+ * 
+ * 文档
+ * 
  * @author q-wang
  */
 @Entity
@@ -31,6 +34,7 @@ public class ProofDocument extends AuditableObject<Long> {
 		this.id = id;
 	}
 
+	/** 模板id */
 	private Long template;
 
 	@Column(name = "TEMPLATE", precision = 19)
@@ -42,6 +46,7 @@ public class ProofDocument extends AuditableObject<Long> {
 		this.template = template;
 	}
 
+	/** 区块hash */
 	private String chainHash;
 
 	@Column(name = "CHAIN_HASH", length = 128)
@@ -53,8 +58,9 @@ public class ProofDocument extends AuditableObject<Long> {
 		this.chainHash = chainHash;
 	}
 
+	/** 企业信息 */
 	private String organization;
-
+	/** 个人信息 */
 	private String personalUser;
 
 	public String getOrganization() {

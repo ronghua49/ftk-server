@@ -13,13 +13,26 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.AuditableObject;
 
 /**
+ * 
+ * 模板
+ * 
  * @author q-wang
  */
 @Entity
 @Table(name = "FTK_TEMPLATE")
 public class Template extends AuditableObject<Long> {
 
+	/** 模板主键 */
 	private Long id;
+
+	/** 模板名称 */
+	private String name;
+
+	/** 模板描述 */
+	private String description;
+
+	/** 模板路径 */
+	private String filePath;
 
 	@Id
 	@Column(name = "ID", precision = 19)
@@ -33,12 +46,6 @@ public class Template extends AuditableObject<Long> {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	private String name;
-
-	private String description;
-
-	private String filePath;
 
 	@Column(name = "NAME", length = 32)
 	public String getName() {

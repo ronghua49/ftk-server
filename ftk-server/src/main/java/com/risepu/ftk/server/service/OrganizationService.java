@@ -4,8 +4,6 @@ import java.util.Map;
 
 import net.lc4ever.framework.remote.annotation.Remote;
 
-import  com.risepu.ftk.server.web.b.dto.LoginResult;
-
 @Remote(path="/org")
 public interface OrganizationService {
 	
@@ -16,16 +14,17 @@ public interface OrganizationService {
 	  * @param password 密码
 	  * @return
 	  */
-	public String orgReg(String phone,String password);
+	public String orgReg(String phone,String code,String password);
 	
 	/**
 	 *  
 	 * @param phoneOrName 
 	 * @param password
-	 * @return LoginResult 登录返回结果
+	 * @return map message： 登录返回信息
+	 * 				org: 登录成功后的企业对象
 	 * 
 	 */
-	public LoginResult orgLogin(String phoneOrName,String password); 
+	public Map<String, Object> orgLogin(String phoneOrName,String password); 
 	
 	/**
 	 * 

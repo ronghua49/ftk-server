@@ -1,9 +1,11 @@
 /**
- * 
+ *
  */
 package com.risepu.ftk.web.api;
 
 import java.io.Serializable;
+
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author q-wang
@@ -11,9 +13,13 @@ import java.io.Serializable;
 public class Response<T> implements Serializable {
 
 	public static class Header implements Serializable {
+		@ApiModelProperty(value = "ResultCode")
 		private int code;
+		@ApiModelProperty(value = "ResultMessage", example = "SUCCEED")
 		private String message;
+		@ApiModelProperty(value = "ResultDesc")
 		private String desc;
+		@ApiModelProperty(value = "ResultTimestamp")
 		private long timestamp;
 
 		public int getCode() {
@@ -50,14 +56,15 @@ public class Response<T> implements Serializable {
 
 		@Override
 		public String toString() {
-			return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "")
-					+ (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
+			return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "") + (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
 		}
 
 	}
-	
+
+	@ApiModelProperty(value = "header")
 	private Header header;
 
+	@ApiModelProperty(value = "body")
 	private T body;
 
 	public Header getHeader() {
@@ -81,10 +88,11 @@ public class Response<T> implements Serializable {
 		Header header = new Header();
 		header.code = 0;
 		header.timestamp = System.currentTimeMillis();
-		result.setBody(body);
+		result.body = body;
+		result.header = header;
 		return result;
 	}
-	
+
 	public static <T> Response<T> failed(int code, String message) {
 		Header header = new Header();
 		header.code = code;

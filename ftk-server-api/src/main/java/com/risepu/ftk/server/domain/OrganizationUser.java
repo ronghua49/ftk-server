@@ -11,7 +11,9 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.TimestampObject;
 
 /**
- * @author q-wang
+ * 
+ * 企业用户表
+ * @author q-wang 企业用户表
  */
 @Entity
 @Table(name = "FTK_ORGANIZATION_USER")

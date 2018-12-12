@@ -11,13 +11,14 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.AuditableObject;
 
 /**
+ * 企业表
  * @author q-wang
  */
 @Entity
 @Table(name = "FTK_ORGANIZATION")
 public class Organization extends AuditableObject<String> {
 
-	/*发起认证的企业用户手机号*/
+	/** 发起认证的企业用户手机号 */
 	private String id;
 
 	@Override
@@ -32,7 +33,7 @@ public class Organization extends AuditableObject<String> {
 		this.id = id;
 	}
 
-	/*企业名*/
+	/** 企业名 */
 	private String name;
 
 	@Column(name = "NAME", length = 255, nullable = false)
@@ -44,7 +45,7 @@ public class Organization extends AuditableObject<String> {
 		this.name = name;
 	}
 
-	/*组织机构代码*/
+	/** 组织机构代码 */
 	private String organization;
 
 	@Column(name = "ORGANIZATION", length = 10)
@@ -56,7 +57,7 @@ public class Organization extends AuditableObject<String> {
 		this.organization = organization;
 	}
 	
-	/*审核状态*/
+	/** 审核状态 */
 	private boolean state;
 
 	@Column(name = "STATE", length = 1)

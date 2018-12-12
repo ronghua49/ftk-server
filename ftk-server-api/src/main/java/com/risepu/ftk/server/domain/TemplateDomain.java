@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.BaseEntity;
 
 /**
+ * 
+ * 模板数据关联
  * @author q-wang
  */
 @Entity
@@ -22,8 +24,9 @@ public class TemplateDomain implements BaseEntity<TemplateDomain.ID> {
 
 	@Embeddable
 	public static class ID implements Serializable {
+		/**模板id*/
 		private Long templateId;
-
+		/**模板数据id*/
 		private Long domainId;
 
 		@Column(name = "TEMPLATE")

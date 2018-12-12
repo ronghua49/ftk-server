@@ -17,15 +17,17 @@
 		</property>
 	</bean>
 
-	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<context:annotation-config />
 
-	<context:component-scan base-package="com.risepu.ftk.web.b.controller">
+	<context:component-scan base-package="com.risepu.ftk.web">
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 		<context:include-filter type="annotation"
 			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
+
+	<mvc:annotation-driven>
+	</mvc:annotation-driven>
 
 	<mvc:default-servlet-handler />
 
