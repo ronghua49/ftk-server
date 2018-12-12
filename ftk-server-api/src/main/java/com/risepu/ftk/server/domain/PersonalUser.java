@@ -44,4 +44,14 @@ public class PersonalUser extends TimestampObject<String> {
 		this.mobile = mobile;
 	}
 
+	private String password;
+
+	@Column(name = "PASSWORD", length = 32)
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

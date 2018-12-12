@@ -18,7 +18,7 @@ import net.lc4ever.framework.domain.TimestampObject;
 @Entity
 @Table(name = "FTK_ORGANIZATION_USER")
 public class OrganizationUser extends TimestampObject<String> {
-
+	/*组织机构代码证*/
 	private String id;
 
 	@Override
@@ -33,6 +33,7 @@ public class OrganizationUser extends TimestampObject<String> {
 		this.id = id;
 	}
 
+	/*企业名称*/
 	private String organization;
 
 	@Column(name = "ORGANIZATION", length = 10)
@@ -42,6 +43,62 @@ public class OrganizationUser extends TimestampObject<String> {
 
 	public void setOrganization(String organization) {
 		this.organization = organization;
+	}
+	
+private String password;
+	
+	@Column(name="PASSWORD",length=32)
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	private String address;
+	
+	@Column(name="ADDRESS",length=31)
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	private String legalPerson;
+	
+	@Column(name="LEGAL_PERSON",length=10)
+	public String getLegalPerson() {
+		return legalPerson;
+	}
+
+	public void setLegalPerson(String legalPerson) {
+		this.legalPerson = legalPerson;
+	}
+
+	private String phoneNo;
+	
+	@Column(name="PHONE_NO",length=11)
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	
+	private String imgPath;
+	
+	@Column(name="IMG_PATH",length=225)
+	public String getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
 	}
 
 }
