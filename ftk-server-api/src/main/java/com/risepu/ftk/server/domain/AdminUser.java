@@ -31,5 +31,19 @@ public class AdminUser extends AuditableObject<String> {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	/*密码*/
+	private String password;
+	
+	@Column(name ="PASSWORD", length = 32)
+	public String getPassword() {
+		return password;
+	}
+	
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 
 }
