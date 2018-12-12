@@ -17,12 +17,12 @@ public class AdminServiceImpl implements AdminService {
 
 
 	@Override
-	public String login(String adminName, String password) {
+	public AdminUser login(String adminName, String password) {
 		AdminUser adminUser = crudService.uniqueResultHql(AdminUser.class, "from AdminUser where adminName=?1", adminName);
 		if(adminUser!=null && adminUser.getPassword().equals(password)) {
-			return "登录成功";
+			return adminUser;
 		}
-		return "用户名或者密码错误！";
+		return null;
 	}
 
 

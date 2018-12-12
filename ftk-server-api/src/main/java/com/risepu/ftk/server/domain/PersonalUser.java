@@ -26,7 +26,7 @@ public class PersonalUser extends TimestampObject<String> {
 	public String getId() {
 		return id;
 	}
-
+  
 	@Override
 	public void setId(String id) {
 		this.id = id;
@@ -43,15 +43,6 @@ public class PersonalUser extends TimestampObject<String> {
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
-
-	private String password;
-
-	@Column(name = "PASSWORD", length = 32)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+	
+	
 }

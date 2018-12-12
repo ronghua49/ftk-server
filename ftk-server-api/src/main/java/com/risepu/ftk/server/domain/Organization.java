@@ -17,6 +17,7 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Table(name = "FTK_ORGANIZATION")
 public class Organization extends AuditableObject<String> {
 
+	/*发起认证的企业用户手机号*/
 	private String id;
 
 	@Override
@@ -31,6 +32,7 @@ public class Organization extends AuditableObject<String> {
 		this.id = id;
 	}
 
+	/*企业名*/
 	private String name;
 
 	@Column(name = "NAME", length = 255, nullable = false)
@@ -41,35 +43,23 @@ public class Organization extends AuditableObject<String> {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	private String phone;
 
-	@Column(name = "PHONE", length = 11, nullable = false)
-	public String getPhone() {
-		return phone;
-	}
+	/*组织机构代码*/
+	private String organization;
 
-	public void setPhone(String phnoe) {
-		this.phone = phnoe;
+	@Column(name = "ORGANIZATION", length = 10)
+	public String getOrganization() {
+		return organization;
 	}
 	
-	
-	private String password;
-
-	@Column(name="PASSWORD",length=32)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+	public void setOrganization(String organization) {
+		this.organization = organization;
 	}
 	
-	
+	/*审核状态*/
 	private boolean state;
 
-	@Column(name="STATE",length=1)
+	@Column(name = "STATE", length = 1)
 	public boolean isState() {
 		return state;
 	}
@@ -77,6 +67,55 @@ public class Organization extends AuditableObject<String> {
 	public void setState(boolean state) {
 		this.state = state;
 	}
+
+	private String address;
+
+	@Column(name = "ADDRESS", length = 31)
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	private String legalPerson;
+
+	@Column(name = "LEGAL_PERSON", length = 10)
+	public String getLegalPerson() {
+		return legalPerson;
+	}
+
+	public void setLegalPerson(String legalPerson) {
+		this.legalPerson = legalPerson;
+	}
+
+	
+	private String idCardImgPath;
+	
+	
+	
+	@Column(name="IDCARD_IMG_PATH",length=50)
+	public String getIdCardImgPath() {
+		return idCardImgPath;
+	}
+
+	public void setIdCardImgPath(String idCardImgPath) {
+		this.idCardImgPath = idCardImgPath;
+	}
+
+	private String licenseImgPath;
+	
+	@Column(name="LICENCE_IMG_PATH")
+	public String getLicenseImgPath() {
+		return licenseImgPath;
+	}
+
+	public void setLicenseImgPath(String licenseImgPath) {
+		this.licenseImgPath = licenseImgPath;
+	}
+
+	
 	
 
 }
