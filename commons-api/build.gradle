@@ -32,6 +32,15 @@ dependencies {
 	compile "com.fasterxml.jackson.core:jackson-databind:$jackson2Version"
 	compile "com.fasterxml.jackson.core:jackson-annotations:$jackson2Version"
 	
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.7'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.9.7'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatypes-collections', version: '2.9.7', ext: 'pom'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.7'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-guava', version: '2.9.7'
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7'
+	
+	
 	compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: "$bouncyCastleVersion"
 	compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: "$bouncyCastleVersion"
 	compile group: 'org.bouncycastle', name: 'bcmail-jdk15on', version: "$bouncyCastleVersion"

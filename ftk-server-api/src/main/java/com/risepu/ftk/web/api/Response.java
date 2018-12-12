@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.risepu.ftk.web.api;
 
@@ -50,12 +50,11 @@ public class Response<T> implements Serializable {
 
 		@Override
 		public String toString() {
-			return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "")
-					+ (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
+			return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "") + (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
 		}
 
 	}
-	
+
 	private Header header;
 
 	private T body;
@@ -81,10 +80,11 @@ public class Response<T> implements Serializable {
 		Header header = new Header();
 		header.code = 0;
 		header.timestamp = System.currentTimeMillis();
-		result.setBody(body);
+		result.body = body;
+		result.header = header;
 		return result;
 	}
-	
+
 	public static <T> Response<T> failed(int code, String message) {
 		Header header = new Header();
 		header.code = code;
