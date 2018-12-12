@@ -25,7 +25,7 @@ public class DocumentData extends TimestampObject<DocumentData.ID> {
 	@Embeddable
 	public static class ID implements Serializable {
 		
-		/** 模板id */
+		/** 模板数据id */
 		private Long domainId;
 		
 		/**文档id*/

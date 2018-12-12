@@ -26,7 +26,7 @@ public class SampleController implements SampleApi {
 
 	@Override
 	public ResponseEntity<Response<RegistResult>> regist() {
-
+		// http://localhost:8080/swagger-ui.html
 		logger.debug("Request Uri: /sample/sample1");
 		Response<List<String>> sample1 = Response.succeed(Arrays.asList(new String[] { "hello", "world" }));
 		RegistResult result = new RegistResult();
