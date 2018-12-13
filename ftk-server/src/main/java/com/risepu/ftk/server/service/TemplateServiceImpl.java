@@ -1,4 +1,4 @@
-package com.risepu.ftk.server.serviceImpl;
+package com.risepu.ftk.server.service;
 
 import java.util.List;
 

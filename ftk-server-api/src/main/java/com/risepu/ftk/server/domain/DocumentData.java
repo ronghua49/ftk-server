@@ -104,4 +104,14 @@ public class DocumentData extends TimestampObject<DocumentData.ID> {
 	
 	private String value;
 
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	
+
 }

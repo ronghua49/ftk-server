@@ -46,5 +46,6 @@ public class SampleServiceTest extends AbstractServerTestCase {
 		System.out.println(crudService.save(templateDomain).toString());
 		//System.out.println(domainService.selectAll().size());
 		
+		
 	}
 }

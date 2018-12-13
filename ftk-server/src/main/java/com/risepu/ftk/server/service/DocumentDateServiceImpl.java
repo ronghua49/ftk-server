@@ -1,4 +1,4 @@
-package com.risepu.ftk.server.serviceImpl;
+package com.risepu.ftk.server.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,27 @@ public class DocumentDateServiceImpl implements DocumentDateService {
 	}
 
 	@Override
-	public ID add(Long domainId, Long documentId) {
+	public ID add(Long domainId, Long documentId,String value) {
 		// TODO Auto-generated method stub
 		ID id = new ID();
 		id.setDocumentId(documentId);
 		id.setDomainId(domainId);
 		DocumentData documentData = new DocumentData();
 		documentData.setId(id);
+		documentData.setValue(value);
 		return crudService.save(documentData);
+	}
+
+	@Override
+	public void delete(Long domainId, Long documentId,String value) {
+		// TODO Auto-generated method stub
+		ID id = new ID();
+		id.setDocumentId(documentId);
+		id.setDomainId(domainId);
+		DocumentData documentData = new DocumentData();
+		documentData.setId(id);
+		documentData.setValue(value);
+		crudService.delete(documentData);
 	}
 
 }

@@ -21,7 +21,7 @@ public interface DomainService {
 	public Domain selectById(Long id);
 
 	/** 根据模板id查询符合条件的所有模板数据 */
-//	public List<Domain> selectListById(Long templateId);
+	public List<Domain> selectByTemplate(Long templateId);
 
 	/** 查找所有模板数据 */
 	public List<Domain> selectAll();
