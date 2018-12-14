@@ -30,7 +30,6 @@ public class SampleController implements SampleApi {
 		logger.debug("Request Uri: /sample/sample1");
 		Response<List<String>> sample1 = Response.succeed(Arrays.asList(new String[] { "hello", "world" }));
 		RegistResult result = new RegistResult();
-
 		return ResponseEntity.ok(Response.succeed(result));
 	}
 }

@@ -1,4 +1,4 @@
-package com.risepu.ftk.server.service;
+package com.risepu.ftk.server.serviceImpl;
 
 import java.util.List;
 
@@ -23,19 +23,28 @@ public class TemplateServiceImpl implements TemplateService {
 	public void setCrudService(GenericCrudService crudService) {
 		this.crudService = crudService;
 	}
+
 	@Override
 	public void add(String name, String description, String filePath) {
 		// TODO Auto-generated method stub
-		Template template=new Template();
+		Template template = new Template();
 		template.setName(name);
 		template.setDescription(description);
 		template.setFilePath(filePath);
 		crudService.save(template);
 	}
+
 	@Override
 	public List<Template> select() {
 		// TODO Auto-generated method stub
 		return crudService.hql(Template.class, "from Template");
+	}
+
+	@Override
+	public String getFilePath(Long template) {
+		// TODO Auto-generated method stub
+		Template temp = crudService.uniqueResultHql(Template.class, "from Template where id = ? ", template);
+		return temp.getFilePath();
 	}
 
 }

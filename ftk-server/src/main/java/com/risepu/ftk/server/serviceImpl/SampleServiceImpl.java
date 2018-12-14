@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.risepu.ftk.server.service;
+package com.risepu.ftk.server.serviceImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,8 @@ public class SampleServiceImpl implements SampleService {
 	public List<String> sample1() {
 
 		List<Organization> orgs1 = crudService.hql(Organization.class, "from Organization where id = ?1", "12345678-1");
-		Organization organization = crudService.uniqueResultHql(Organization.class, "from Organization where id = ?1", "12345678-1");
+		Organization organization = crudService.uniqueResultHql(Organization.class, "from Organization where id = ?1",
+				"12345678-1");
 
 		organization = crudService.get(Organization.class, "123");
 

@@ -1,4 +1,4 @@
-package com.risepu.ftk.server.service;
+package com.risepu.ftk.server.serviceImpl;
 
 import java.util.Date;
 import java.util.List;
@@ -78,7 +78,7 @@ public class DomainServiceImpl implements DomainService {
 	public List<Domain> selectByTemplate(Long templateId) {
 		// TODO Auto-generated method stub
 		List<Domain> list = crudService.hql(Domain.class,
-				"select * from Domain where id in (select domainId from TemplateDomain where templateId = ? )",
+				"from Domain where id in (select domainId from TemplateDomain where templateId = ? )",
 				templateId);
 		return list;
 	}

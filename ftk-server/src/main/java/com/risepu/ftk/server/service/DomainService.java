@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.risepu.ftk.server.domain.Domain;
 
+/**
+ * 
+ * @author L-heng
+ *
+ */
 public interface DomainService {
 	/** 新增模板数据 */
 	public Long add(String name, String type, String description);

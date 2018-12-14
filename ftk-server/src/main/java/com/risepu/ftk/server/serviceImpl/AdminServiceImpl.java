@@ -1,8 +1,9 @@
-package com.risepu.ftk.server.service;
+package com.risepu.ftk.server.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.risepu.ftk.server.domain.AdminUser;
+import com.risepu.ftk.server.service.AdminService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 

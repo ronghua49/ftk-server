@@ -27,6 +27,9 @@ public class Template extends AuditableObject<Long> {
 
 	/** 模板名称 */
 	private String name;
+	
+	/**模板状态 0已启用，1未启用*/
+	private Integer state;
 
 	/** 模板描述 */
 	private String description;
@@ -54,6 +57,15 @@ public class Template extends AuditableObject<Long> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Column(name = "STATE", length = 1)
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 	@Column(name = "DESCRIPTION", length = 512)

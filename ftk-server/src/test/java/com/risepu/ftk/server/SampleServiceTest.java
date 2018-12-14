@@ -37,7 +37,7 @@ public class SampleServiceTest extends AbstractServerTestCase {
 	@Test
 	public void testSample() throws Exception {
 //		sampleService.sample1();
-		Long i=(long) 121212;
+		Long i=(long) 121211;
 		TemplateDomain templateDomain=new TemplateDomain();
 		ID id=new ID();
 		id.setDomainId(i);
