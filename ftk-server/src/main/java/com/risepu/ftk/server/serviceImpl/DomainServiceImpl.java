@@ -74,13 +74,13 @@ public class DomainServiceImpl implements DomainService {
 		return crudService.hql(Domain.class, "from Domain");
 	}
 
-//	@Override
-//	public List<Domain> selectListById(Long templateId) {
+	@Override
+	public List<Domain> selectByTemplate(Long templateId) {
 		// TODO Auto-generated method stub
-//		List<Domain> list = (List<Domain>) crudService.sql(
-//				"select * from FTK_DOMAIN where id = (select DOMAIN from FTK_TEMPLATE_DOMAIN where TEMPLATE=?)",
-//				templateId);
-//		return list;
-//	}
+		List<Domain> list = crudService.hql(Domain.class,
+				"from Domain where id in (select domainId from TemplateDomain where templateId = ? )",
+				templateId);
+		return list;
+	}
 
 }

@@ -1,6 +1,7 @@
 package com.risepu.ftk.server.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.risepu.ftk.server.domain.TemplateDomain;
 import com.risepu.ftk.server.domain.TemplateDomain.ID;
@@ -8,7 +9,13 @@ import com.risepu.ftk.server.service.TemplateDomainService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
-public class TemplateDomainServiceImpl implements TemplateDomainService{
+/**
+ * 
+ * @author L-heng
+ *
+ */
+@Service
+public class TemplateDomainServiceImpl implements TemplateDomainService {
 	private GenericCrudService crudService;
 
 	@Autowired
@@ -19,8 +26,8 @@ public class TemplateDomainServiceImpl implements TemplateDomainService{
 	@Override
 	public ID add(Long templateId, Long domainId) {
 		// TODO Auto-generated method stub
-		TemplateDomain templateDomain=new TemplateDomain();	
-		ID id=new ID();
+		TemplateDomain templateDomain = new TemplateDomain();
+		ID id = new ID();
 		id.setDomainId(domainId);
 		id.setTemplateId(templateId);
 		templateDomain.setId(id);
@@ -30,8 +37,8 @@ public class TemplateDomainServiceImpl implements TemplateDomainService{
 	@Override
 	public void delete(Long templateId, Long domainId) {
 		// TODO Auto-generated method stub
-		TemplateDomain templateDomain=new TemplateDomain();	
-		ID id=new ID();
+		TemplateDomain templateDomain = new TemplateDomain();
+		ID id = new ID();
 		id.setDomainId(domainId);
 		id.setTemplateId(templateId);
 		templateDomain.setId(id);

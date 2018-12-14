@@ -63,7 +63,8 @@ public class MvcConfigurator implements WebMvcConfigurer {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.regex("/api/.*")).build().apiInfo(apiInfo());
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
+				.paths(PathSelectors.regex("/api/.*")).build().apiInfo(apiInfo());
 	}
 
 	private ApiInfo apiInfo() {

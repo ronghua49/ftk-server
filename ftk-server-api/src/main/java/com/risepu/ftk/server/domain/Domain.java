@@ -35,7 +35,7 @@ public class Domain extends AuditableObject<Long> {
 	/** 描述 */
 	private String description;
 	
-	/**是否删除*/
+	/**是否删除 0否，1是*/
 	private Integer isDelete;
 	
 	/**创建时间*/

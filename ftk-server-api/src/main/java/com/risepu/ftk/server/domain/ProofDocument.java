@@ -58,9 +58,9 @@ public class ProofDocument extends AuditableObject<Long> {
 		this.chainHash = chainHash;
 	}
 
-	/** 企业信息 */
+	/** 企业信息id */
 	private String organization;
-	/** 个人信息 */
+	/** 个人信息id */
 	private String personalUser;
 
 	public String getOrganization() {

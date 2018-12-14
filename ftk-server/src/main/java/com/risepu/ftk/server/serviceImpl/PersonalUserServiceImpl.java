@@ -1,9 +1,10 @@
-package com.risepu.ftk.server.service;
+package com.risepu.ftk.server.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.risepu.ftk.server.domain.PersonalUser;
+import com.risepu.ftk.server.service.PersonalUserService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
