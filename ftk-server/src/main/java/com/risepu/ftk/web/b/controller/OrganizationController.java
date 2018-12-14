@@ -19,7 +19,6 @@ import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.PersonalUserService;
-import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.ScanRequest;
 import com.risepu.ftk.web.api.Response;
@@ -35,26 +34,8 @@ public class OrganizationController  {
 	
 	@Autowired
 	private OrganizationService organizationService;
-	
-	@Autowired
-	private SmsService SmsService;
-	
 	@Autowired
 	private PersonalUserService personalUserService;
-	
-	
-	@GetMapping("/test1")
-	@ResponseBody
-	public String get() {
-		return "success get";
-	}
-	
-	@PostMapping("/test2")
-	@ResponseBody
-	public String test(@RequestParam String test2) {
-		return test2;
-	}
-	
 	/**
 	 * 企业端注册
 	 * @return

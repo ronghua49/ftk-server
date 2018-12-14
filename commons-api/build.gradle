@@ -35,7 +35,7 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.7'
 	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7'
 	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.9.7'
-	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatypes-collections', version: '2.9.7', ext: 'pom'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatypes-collections', version: '2.9.7', ext:'pom'
 	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.7'
 	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-guava', version: '2.9.7'
 	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7'

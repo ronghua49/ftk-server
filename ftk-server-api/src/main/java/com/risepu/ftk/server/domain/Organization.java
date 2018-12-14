@@ -17,6 +17,15 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Entity
 @Table(name = "FTK_ORGANIZATION")
 public class Organization extends AuditableObject<String> {
+	/** 未审核 */
+	public static final Integer UNCHECK_STATE=0;
+	/** 审核中 */
+	public static final Integer CHECKING_STATE=1;
+	/** 审核通过 */
+	public static final Integer CHECK_PASS_STATE=2;
+	/** 审核未通过 */
+	public static final Integer CHECK_FAIL_STATE=3;
+	
 
 	/** 发起认证的企业用户手机号 */
 	private String id;
@@ -57,20 +66,23 @@ public class Organization extends AuditableObject<String> {
 		this.organization = organization;
 	}
 	
-	/** 审核状态 */
-	private boolean state;
+	/** 审核状态   默认未审核 */
+	private Integer state=UNCHECK_STATE;
 
 	@Column(name = "STATE", length = 1)
-	public boolean isState() {
+	
+	
+	public Integer getState() {
+		
 		return state;
 	}
 
-	public void setState(boolean state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 
 	private String address;
-
+	
 	@Column(name = "ADDRESS", length = 31)
 	public String getAddress() {
 		return address;
@@ -116,6 +128,19 @@ public class Organization extends AuditableObject<String> {
 		this.licenseImgPath = licenseImgPath;
 	}
 
+	private String remark;
+
+	@Column(name="REMARK",length=225)
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	
+	
 	
 	
 

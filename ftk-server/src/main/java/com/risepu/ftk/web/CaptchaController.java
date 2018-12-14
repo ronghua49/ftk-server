@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.risepu.ftk.server.service.SmsService;
@@ -61,9 +63,9 @@ public class CaptchaController implements InitializingBean {
 		write(code, response);
 	}
 	
-	@GetMapping("/identify")
+	@PostMapping("/identify")
 	@ResponseBody
-	public boolean identify(String inputCaptcha,String phone, HttpServletRequest request) {
+	public boolean identify(@RequestParam String inputCaptcha,@RequestParam String phone, HttpServletRequest request) {
 		String saveCaprcha = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeImg());
 		if(inputCaptcha.equals(saveCaprcha)) {
 			//获得短信验证码，存入sessoin
