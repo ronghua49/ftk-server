@@ -7,6 +7,17 @@ public class LoginResult {
 	private String message;
 	
 	private OrganizationUser organizationUser;
+	
+	
+	private boolean isSuccess;
+	
+	public boolean isSuccess() {
+		return isSuccess;
+	}
+
+	public void setSuccess(boolean isSuccess) {
+		this.isSuccess = isSuccess;
+	}
 
 	public String getMessage() {
 		return message;

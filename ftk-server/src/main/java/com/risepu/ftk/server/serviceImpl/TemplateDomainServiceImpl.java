@@ -1,6 +1,7 @@
 package com.risepu.ftk.server.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.risepu.ftk.server.domain.TemplateDomain;
 import com.risepu.ftk.server.domain.TemplateDomain.ID;
@@ -8,6 +9,7 @@ import com.risepu.ftk.server.service.TemplateDomainService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
+@Service
 public class TemplateDomainServiceImpl implements TemplateDomainService{
 	private GenericCrudService crudService;
 

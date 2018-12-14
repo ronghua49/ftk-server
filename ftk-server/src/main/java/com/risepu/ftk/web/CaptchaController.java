@@ -21,12 +21,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.web.b.dto.RegistResult;
 
 @Controller
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = "/captcha/v1")
 public class CaptchaController implements InitializingBean {
 	
 	@Autowired
@@ -49,10 +50,11 @@ public class CaptchaController implements InitializingBean {
 		imageCaptchaChars = imageCaptchaCandicate.toCharArray();
 	}
 
-	@RequestMapping("captcha")
+	@RequestMapping("/get")
 	public void captcha(HttpServletResponse response,HttpServletRequest request) {
 		String code = generateImageCaptcha();
-		request.getSession().setAttribute("imgCode", code);
+		
+		request.getSession().setAttribute(Constant.getSessionVerificationCodeImg(), code);
 		
 		//setSessionParam(NewConstants.SESSION_VERIFICATION_CODE, code);
 
@@ -60,11 +62,13 @@ public class CaptchaController implements InitializingBean {
 	}
 	
 	@GetMapping("/identify")
+	@ResponseBody
 	public boolean identify(String inputCaptcha,String phone, HttpServletRequest request) {
-		if(inputCaptcha.equals(request.getSession().getAttribute("imgCode"))) {
-			
+		String saveCaprcha = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeImg());
+		if(inputCaptcha.equals(saveCaprcha)) {
+			//获得短信验证码，存入sessoin
 			String smsCode = smsService.sendCode(phone);
-			request.getSession().setAttribute("smsCode", smsCode);
+			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(), smsCode);
 			return  true;
 		}else {
 			return false;

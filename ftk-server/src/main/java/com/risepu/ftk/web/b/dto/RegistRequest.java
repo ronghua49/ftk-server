@@ -1,7 +1,7 @@
-package com.risepu.ftk.web.b.vo;
+package com.risepu.ftk.web.b.dto;
 
 
-public class RegistVo {
+public class RegistRequest {
 	
 	private String mobile;
 	
@@ -41,6 +41,12 @@ public class RegistVo {
 
 	public void setImgCode(String imgCode) {
 		this.imgCode = imgCode;
+	}
+
+	@Override
+	public String toString() {
+		return "RegistRequest [mobile=" + mobile + ", password=" + password + ", msmCode=" + msmCode + ", imgCode="
+				+ imgCode + "]";
 	}
 	
 	

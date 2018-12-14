@@ -3,6 +3,7 @@ package com.risepu.ftk.utils;
 import java.util.List;
 
 public class PageResult<T> {
+	
 	private int code; //状态码, 0表示成功
 
     private String msg;  //提示信息
