@@ -48,16 +48,23 @@ public class OrganizationServiceImpl implements OrganizationService{
 		
 		if(StringUtils.isNumeric(phoneOrName)) {
 			/** 使用手机号登录*/
-			OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
-			if(org!=null && org.getPassword().equals(password)) {
+			try {
+				OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
 				
-				loginResult.setSuccess(true);
-				loginResult.setMessage("登录成功！");
-				loginResult.setOrganizationUser(org);
-			}else {
+				if(org!=null && org.getPassword().equals(password)) {
+					loginResult.setSuccess(true);
+					loginResult.setMessage("登录成功！");
+					loginResult.setOrganizationUser(org);
+				}else {
+					loginResult.setSuccess(false);
+					loginResult.setMessage("密码错误！");
+				}
+				
+			} catch (Exception e) {
 				loginResult.setSuccess(false);
-				loginResult.setMessage("密码错误！");
+				loginResult.setMessage("此手机号还未注册，请注册！");
 			}
+			
 		}else {
 			/**使用企业名登录*/
 			Organization org = crudService.uniqueResultByProperty(Organization.class, "name",phoneOrName);

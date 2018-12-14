@@ -18,20 +18,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.risepu.ftk.server.service.SmsService;
-import com.risepu.ftk.web.b.dto.RegistResult;
+import com.risepu.ftk.web.api.Response;
 
 @Controller
-@RequestMapping(value = "/captcha/v1")
-public class CaptchaController implements InitializingBean {
-	
+@RequestMapping("/captcha/v1")
+public class CaptchaController implements InitializingBean,CaptchaApi {
+
 	@Autowired
 	private SmsService smsService;
 
@@ -46,36 +47,45 @@ public class CaptchaController implements InitializingBean {
 	private char[] imageCaptchaChars;
 
 	private boolean captchaEnabled;
+	
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		imageCaptchaChars = imageCaptchaCandicate.toCharArray();
 	}
 
-	@RequestMapping("/get")
-	public void captcha(HttpServletResponse response,HttpServletRequest request) {
+	@Override
+	public ResponseEntity<Response<String>> captcha(HttpServletResponse response, HttpServletRequest request) {
+		 
 		String code = generateImageCaptcha();
-		
 		request.getSession().setAttribute(Constant.getSessionVerificationCodeImg(), code);
 		
-		//setSessionParam(NewConstants.SESSION_VERIFICATION_CODE, code);
+		try {
+			captchaEnabled=true;
+			return ResponseEntity.ok(Response.succeed("/captcha/v1/img"));
+			
+		} catch (Exception e) {
+			return ResponseEntity.ok(Response.failed(500, "网络异常，请重试"));
+		}
+		
 
-		write(code, response);
 	}
-	
-	@PostMapping("/identify")
-	@ResponseBody
-	public boolean identify(@RequestParam String inputCaptcha,@RequestParam String phone, HttpServletRequest request) {
-		String saveCaprcha = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeImg());
-		if(inputCaptcha.equals(saveCaprcha)) {
-			//获得短信验证码，存入sessoin
+
+	@Override
+	public ResponseEntity<Response<String>> identify(String inputCaptcha, String phone, HttpServletRequest request) {
+		
+		String saveCaprcha = getCaptcha(request);
+		
+		if (inputCaptcha.equals(saveCaprcha)) {
+			// 获得短信验证码，存入sessoin
 			String smsCode = smsService.sendCode(phone);
 			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(), smsCode);
-			return  true;
-		}else {
-			return false;
+			return ResponseEntity.ok(Response.succeed("短信已下发！"));
+		} else {
+			return ResponseEntity.ok(Response.failed(400, "验证码错误"));
 		}
 	}
+	
 
 	private String generateImageCaptcha() {
 		if (captchaEnabled) {
@@ -100,7 +110,10 @@ public class CaptchaController implements InitializingBean {
 		}
 	}
 
-	private void write(String code, HttpServletResponse response) {
+	@Override
+	public  void write(HttpServletResponse response,HttpServletRequest request) {
+		String code = getCaptcha(request);
+		
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
 		response.setDateHeader("Expires", 0);
@@ -173,7 +186,10 @@ public class CaptchaController implements InitializingBean {
 			g.copyArea(i, 0, 1, h1, 0, (int) d);
 		}
 	}
-	
+
+	private String getCaptcha(HttpServletRequest request) {
+		return (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeImg());
+	}
 	
 	
 }

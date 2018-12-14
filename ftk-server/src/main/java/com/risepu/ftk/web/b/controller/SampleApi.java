@@ -21,9 +21,15 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "sample")
 public interface SampleApi {
 
-	@ApiOperation(value = "示例", nickname = "regist")
+	@ApiOperation(value = "企业注册", nickname = "regist")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = RegistResult.class) })
-	@RequestMapping(path = "/sample1")
+	@RequestMapping(path = "/orgRegist")
 	@ResponseBody
 	ResponseEntity<Response<RegistResult>> regist();
+	
+	
+	
+	
+	
+	
 }

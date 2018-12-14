@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.RegistRequest;
@@ -86,11 +87,13 @@ public class SampleController implements SampleApi {
 		return test2;
 	}
 	
-	@PostMapping("/test3")
+	@GetMapping("/test3")
 	@ResponseBody
-	public RegistRequest testObject(@RequestBody RegistRequest registRequest) {
-		
-		return registRequest;
+	public OrganizationUser testObject() {
+		OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", "135123835407");
+		return org;
 	}
 
+	
+	
 }

@@ -28,8 +28,8 @@ import com.risepu.ftk.web.b.dto.RegistRequest;
 import com.risepu.ftk.web.b.dto.RegistResult;
 
 @Controller
-@RequestMapping("/org")
-public class OrganizationController  {
+@RequestMapping("/api/org")
+public class OrganizationController implements OrganizationApi {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
@@ -40,11 +40,8 @@ public class OrganizationController  {
 	 * 企业端注册
 	 * @return
 	 */
-	@PostMapping("/regist")
-	public ResponseEntity<Response<RegistResult>> orgRegist(@RequestBody RegistRequest registVo,HttpServletRequest request){
-		
-		System.out.println(registVo);
-	
+	@Override
+	public ResponseEntity<Response<RegistResult>> orgRegist(RegistRequest registVo, HttpServletRequest request) {
 		//判断smsCode
 		RegistResult registResult = new RegistResult();
 		String code = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
@@ -59,6 +56,7 @@ public class OrganizationController  {
 		
 		return ResponseEntity.ok(Response.succeed(registResult));
 	}
+
 	
 	/**
 	 * 企业登录
@@ -67,9 +65,10 @@ public class OrganizationController  {
 	 * @param request 
 	 * @return 登录结果
 	 */
-	@PostMapping("/login")
-	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestParam(name="name") String mobileOrName,@RequestParam String password,HttpServletRequest request){
-		
+	
+	@Override
+	public ResponseEntity<Response<LoginResult>> orgLogin(String mobileOrName, String password,
+			HttpServletRequest request) {
 		LoginResult loginResult = organizationService.orgLogin(mobileOrName, password);
 		
 		if(loginResult.isSuccess()) {
@@ -81,6 +80,7 @@ public class OrganizationController  {
 			return ResponseEntity.ok(Response.failed(001, loginResult.getMessage()));
 		}
 	}
+
 	
 	/**
 	 * 修改密码
@@ -88,8 +88,9 @@ public class OrganizationController  {
 	 * @param request
 	 * @return 
 	 */
-	@PostMapping("/modify/pwd")
-	public ResponseEntity<Response<String>> orgChangPwd(@RequestBody ForgetRequest forgetRequest,HttpServletRequest request){
+
+	@Override
+	public ResponseEntity<Response<String>> orgChangPwd(ForgetRequest forgetRequest, HttpServletRequest request) {
 		/** 判断输入的企业信息是否存在*/
 		String  orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
 		
@@ -110,8 +111,11 @@ public class OrganizationController  {
 		}else {
 			return ResponseEntity.ok(Response.failed(002, "企业信息不存在"));
 		}
-		
 	}
+
+	
+	
+
 	
 	
 	
@@ -167,6 +171,8 @@ public class OrganizationController  {
 		personalUserService.personReg(scanRequest.getMobile(), scanRequest.getIdCard(), scanRequest.getUserName());
 		
 	}
+	
+
 	
 	
 	
