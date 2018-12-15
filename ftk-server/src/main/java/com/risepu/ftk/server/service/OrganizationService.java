@@ -1,6 +1,9 @@
 package com.risepu.ftk.server.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,11 +48,20 @@ public interface OrganizationService {
 	public String upload (MultipartFile file) throws IllegalStateException, IOException;
 	
 	/**
+	 * 图片的下载
+	 * @param imgName 图片名
+	 * @param response 响应对象
+	 * @throws FileNotFoundException 
+	 * @throws IOException 
+	 */
+	public void download(String imgName, HttpServletResponse response) throws IOException;
+	
+	/**
 	 * 保存
 	 * @param organization 认证的企业信息
 	 * @return 是否发送成功
 	 */
-	public boolean saveOrUpdateOrgInfo(Organization organization);
+	public void saveOrUpdateOrgInfo(Organization organization);
 
 	/**
 	 * 判断企业用户名是否存在
@@ -57,6 +69,13 @@ public interface OrganizationService {
 	 * @return 存在返回id值，否则返回 null
 	 */
 	public String  checkOrgName(String mobileOrName);
+
+	
+	/**
+	 * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败
+	 * 
+	 * 
+	 */
 	
 	
 	

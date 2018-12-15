@@ -18,25 +18,27 @@ import io.swagger.annotations.ApiResponses;
 @Api(value="cap")
 public interface CaptchaApi {
 	
-	@ApiOperation(value = "获取图片验证码地址", nickname = "getCapcha")
-	@ApiResponses({ @ApiResponse(code = 200, message = "succeed",response = String.class) })
+	
+
+	@ApiOperation(value = "获取图片验证码", nickname = "getCapcha")
+	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
 	@RequestMapping(path = "/get")
 	@ResponseBody
 	@CrossOrigin
-	ResponseEntity<Response<String>> captcha(HttpServletResponse response,HttpServletRequest request);
+	public ResponseEntity<Response<String>> captcha(HttpServletResponse response, HttpServletRequest request);
+
 	
-	@ApiOperation(value = "校验验证码", nickname = "IdentifyCapcha")
-	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-	@RequestMapping(path ="/identify")
-	@ResponseBody
-	@CrossOrigin
-	ResponseEntity<Response<String>> identify( String inputCaptcha, String phone, HttpServletRequest request);
-	
-	
-	@ApiOperation(value = "返回图片", nickname = "imgCode")
-	@ApiResponses({ @ApiResponse(code = 200, message = "succeed") })
-	@RequestMapping(path ="/img")
-	@ResponseBody
-	@CrossOrigin
-	public  void write(HttpServletResponse response,HttpServletRequest request);
+//	@ApiOperation(value = "校验验证码", nickname = "IdentifyCapcha")
+//	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
+//	@RequestMapping(path = "/identify")
+//	@ResponseBody
+//	@CrossOrigin
+//	ResponseEntity<Response<String>> identify(String inputCaptcha, String phone, HttpServletRequest request);
+
+//	@ApiOperation(value = "返回图片", nickname = "imgCode")
+//	@ApiResponses({ @ApiResponse(code = 200, message = "succeed",response = String.class)})
+//	@RequestMapping(path = "/img")
+//	@ResponseBody
+//	@CrossOrigin
+//	public String imgBase64(HttpServletRequest request);
 }

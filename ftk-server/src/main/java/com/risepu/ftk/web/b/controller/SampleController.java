@@ -90,6 +90,10 @@ public class SampleController implements SampleApi {
 	@GetMapping("/test3")
 	@ResponseBody
 	public OrganizationUser testObject() {
+		//多参数的查询
+		
+		crudService.hql(OrganizationUser.class, 0, 5, "from ", params)
+		
 		OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", "135123835407");
 		return org;
 	}

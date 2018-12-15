@@ -2,11 +2,18 @@ package com.risepu.ftk.server.serviceImpl;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,16 +113,29 @@ public class OrganizationServiceImpl implements OrganizationService{
 		return name;
 	}
 
+	@Override
+	public void download(String imgName, HttpServletResponse response) throws IOException {
+		
+		String filePath = ConfigUtil.getValue("file.upload.path");
+		
+		InputStream in = new FileInputStream(new File(filePath,imgName));
+		OutputStream out = response.getOutputStream();
+		
+		IOUtils.copy(in, out);
+		out.flush();
+		out.close();
+		in.close();
+		
+		
+	}
+
 	
 	
 	
 	
 	@Override
-	public boolean saveOrUpdateOrgInfo(Organization organization) {
-		
+	public void saveOrUpdateOrgInfo(Organization organization) {
 		crudService.saveOrUpdate(organization);
-		
-		return true;
 	}
 
 	@Override
@@ -135,6 +155,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 		
 		return null;
 	}
+
 
 
 	

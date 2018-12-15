@@ -279,7 +279,7 @@ public class GenericDaoHibernate implements GenericDao {
 			predicates[i] = arg == null ? builder.isNotNull(root.get(property)) : builder.equal(root.get(property), arg);
 		}
 		query.where(builder.and(predicates));
-		return getSession().createQuery(query).getSingleResult();
+		return getSession().createQuery(query).uniqueResult();
 	}
 
 	/**

@@ -68,7 +68,6 @@ public class PersonalUserController implements Controller {
 			return ResponseEntity.ok(Response.failed(001, "验证码输入错误"));
 		}
 		
-		
 	}
 
 

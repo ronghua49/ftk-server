@@ -5,37 +5,29 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.web.api.Response;
 
 @Controller
 @RequestMapping("/captcha/v1")
 public class CaptchaController implements InitializingBean,CaptchaApi {
-
-	@Autowired
-	private SmsService smsService;
-
+	
 	private final int OFFSET = 538309;
 
 	@Value("${captcha.image.candicate:0123456789}")
@@ -47,7 +39,6 @@ public class CaptchaController implements InitializingBean,CaptchaApi {
 	private char[] imageCaptchaChars;
 
 	private boolean captchaEnabled;
-	
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -58,35 +49,21 @@ public class CaptchaController implements InitializingBean,CaptchaApi {
 	public ResponseEntity<Response<String>> captcha(HttpServletResponse response, HttpServletRequest request) {
 		 
 		String code = generateImageCaptcha();
+		
+		System.out.println("请求图片的sessionId:"+request.getSession().getId());
+		
 		request.getSession().setAttribute(Constant.getSessionVerificationCodeImg(), code);
 		
 		try {
-			captchaEnabled=true;
-			return ResponseEntity.ok(Response.succeed("/captcha/v1/img"));
+			captchaEnabled=false;
+			return ResponseEntity.ok(Response.succeed(imgBase64(request,code)));
 			
 		} catch (Exception e) {
 			return ResponseEntity.ok(Response.failed(500, "网络异常，请重试"));
 		}
-		
-
-	}
-
-	@Override
-	public ResponseEntity<Response<String>> identify(String inputCaptcha, String phone, HttpServletRequest request) {
-		
-		String saveCaprcha = getCaptcha(request);
-		
-		if (inputCaptcha.equals(saveCaprcha)) {
-			// 获得短信验证码，存入sessoin
-			String smsCode = smsService.sendCode(phone);
-			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(), smsCode);
-			return ResponseEntity.ok(Response.succeed("短信已下发！"));
-		} else {
-			return ResponseEntity.ok(Response.failed(400, "验证码错误"));
-		}
 	}
 	
-
+	
 	private String generateImageCaptcha() {
 		if (captchaEnabled) {
 			Random random = newRandom();
@@ -109,18 +86,12 @@ public class CaptchaController implements InitializingBean,CaptchaApi {
 			throw new IllegalStateException(e);
 		}
 	}
-
-	@Override
-	public  void write(HttpServletResponse response,HttpServletRequest request) {
-		String code = getCaptcha(request);
+	
+	
+	public  String imgBase64(HttpServletRequest request, String code) {
 		
-		response.setHeader("Pragma", "No-cache");
-		response.setHeader("Cache-Control", "no-cache");
-		response.setDateHeader("Expires", 0);
-		response.setContentType("image/jpeg");
-
+		
 		int width = 70, height = 40;
-
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);
 		Graphics2D g = image.createGraphics();
 		// 设定背景色
@@ -144,12 +115,17 @@ public class CaptchaController implements InitializingBean,CaptchaApi {
 
 		shear(g, width, height, Color.white);
 
-		try (ServletOutputStream out = response.getOutputStream()) {
-			ImageIO.write(image, "jpg", out);
-			out.flush();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(image, "jpg", outputStream);
+			String base64 = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+			String src = base64;
+			return src;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return "io 异常";
 		}
+	
 	}
 
 	private Color getRandColor(int fc, int bc) {
@@ -187,9 +163,7 @@ public class CaptchaController implements InitializingBean,CaptchaApi {
 		}
 	}
 
-	private String getCaptcha(HttpServletRequest request) {
-		return (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeImg());
-	}
+	
 	
 	
 }

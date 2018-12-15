@@ -15,7 +15,7 @@ import net.lc4ever.framework.domain.AuditableObject;
  * @author q-wang
  */
 @Entity
-@Table(name = "FTK_ORGANIZATION")
+@Table(name ="FTK_ORGANIZATION")
 public class Organization extends AuditableObject<String> {
 	/** 未审核 */
 	public static final Integer UNCHECK_STATE=0;
@@ -107,7 +107,6 @@ public class Organization extends AuditableObject<String> {
 	private String idCardImgPath;
 	
 	
-	
 	@Column(name="IDCARD_IMG_PATH",length=50)
 	public String getIdCardImgPath() {
 		return idCardImgPath;
@@ -137,6 +136,19 @@ public class Organization extends AuditableObject<String> {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	
+	
+	private String tel;
+	
+	
+	@Column(name="TEL",length=11)
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
 	}
 	
 	
