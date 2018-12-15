@@ -1,6 +1,5 @@
 package com.risepu.ftk.server.serviceImpl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,10 @@ public class DomainServiceImpl implements DomainService {
 	}
 
 	@Override
-	public Long add(String name, String type, String description) {
+	public Long add(Domain domain) {
 		// TODO Auto-generated method stub
-		Domain domin = new Domain();
-		domin.setName(name);
-		domin.setType(type);
-		domin.setIsDelete(0);
-		domin.setDescription(description);
-		domin.setCreate_time(new Date());
-		return crudService.save(domin);
+		domain.setIsDelete(0);
+		return crudService.save(domain);
 	}
 
 	@Override
@@ -45,27 +39,16 @@ public class DomainServiceImpl implements DomainService {
 	}
 
 	@Override
-	public void update(String name, String type, String description) {
+	public void update(Domain domain) {
 		// TODO Auto-generated method stub
-		Domain domin = new Domain();
-		domin.setName(name);
-		domin.setType(type);
-		domin.setDescription(description);
-		crudService.update(domin);
+		domain.setIsDelete(0);
+		crudService.update(domain);
 	}
 
 	@Override
 	public Domain selectById(Long id) {
 		// TODO Auto-generated method stub
 		return crudService.get(Domain.class, id);
-	}
-
-	@Override
-	public void updateState(Long id) {
-		// TODO Auto-generated method stub
-		Domain domin = crudService.get(Domain.class, id);
-		domin.setIsDelete(1);
-		crudService.update(domin);
 	}
 
 	@Override
@@ -78,9 +61,15 @@ public class DomainServiceImpl implements DomainService {
 	public List<Domain> selectByTemplate(Long templateId) {
 		// TODO Auto-generated method stub
 		List<Domain> list = crudService.hql(Domain.class,
-				"from Domain where id in (select domainId from TemplateDomain where templateId = ? )",
-				templateId);
+				"from Domain where id in (select domainId from TemplateDomain where templateId = ? )", templateId);
 		return list;
 	}
 
+	@Override
+	public void updateState(Long id) {
+		// TODO Auto-generated method stub
+		Domain domin = crudService.get(Domain.class, id);
+		domin.setIsDelete(1);
+		crudService.update(domin);
+	}
 }

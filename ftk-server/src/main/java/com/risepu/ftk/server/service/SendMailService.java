@@ -6,6 +6,6 @@ package com.risepu.ftk.server.service;
  *
  */
 public interface SendMailService {
-	public String sendMail(String email) throws Exception;
+	public void sendMail(String email) throws Exception;
 
 }

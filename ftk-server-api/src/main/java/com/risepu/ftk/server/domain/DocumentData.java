@@ -22,9 +22,19 @@ import net.lc4ever.framework.domain.TimestampObject;
 @Table(name = "FTK_DOCUMENT_DATA")
 public class DocumentData extends TimestampObject<DocumentData.ID> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Embeddable
 	public static class ID implements Serializable {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/** 模板数据id */
 		private Long domainId;
 		

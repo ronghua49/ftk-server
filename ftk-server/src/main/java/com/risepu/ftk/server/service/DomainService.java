@@ -11,7 +11,7 @@ import com.risepu.ftk.server.domain.Domain;
  */
 public interface DomainService {
 	/** 新增模板数据 */
-	public Long add(String name, String type, String description);
+	public Long add(Domain domain);
 
 	/** 物理删除模板数据 */
 	public void deleteById(Long id);
@@ -20,7 +20,7 @@ public interface DomainService {
 	public void updateState(Long id);
 
 	/** 修改模板数据 */
-	public void update(String name, String type, String description);
+	public void update(Domain domain);
 
 	/** 根据id查找模板数据 */
 	public Domain selectById(Long id);

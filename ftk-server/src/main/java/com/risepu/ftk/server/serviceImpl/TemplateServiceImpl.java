@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.TemplateService;
 
@@ -25,13 +26,10 @@ public class TemplateServiceImpl implements TemplateService {
 	}
 
 	@Override
-	public void add(String name, String description, String filePath) {
+	public Long add(Template template) {
 		// TODO Auto-generated method stub
-		Template template = new Template();
-		template.setName(name);
-		template.setDescription(description);
-		template.setFilePath(filePath);
-		crudService.save(template);
+		template.setState(0);
+		return crudService.save(template);
 	}
 
 	@Override
@@ -41,10 +39,10 @@ public class TemplateServiceImpl implements TemplateService {
 	}
 
 	@Override
-	public String getFilePath(Long template) {
+	public Template getTemplate(Long template) {
 		// TODO Auto-generated method stub
-		Template temp = crudService.uniqueResultHql(Template.class, "from Template where id = ? ", template);
-		return temp.getFilePath();
+		Template temp = crudService.uniqueResultHql(Template.class, "from Template where id = ?1 ", template);
+		return temp;
 	}
 
 }

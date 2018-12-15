@@ -20,6 +20,11 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Table(name = "FTK_PROOF_DOCUMENT")
 public class ProofDocument extends AuditableObject<Long> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Long id;
 
 	@Id

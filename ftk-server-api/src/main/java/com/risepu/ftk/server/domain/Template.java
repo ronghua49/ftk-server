@@ -22,19 +22,27 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Table(name = "FTK_TEMPLATE")
 public class Template extends AuditableObject<Long> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** 模板主键 */
 	private Long id;
 
 	/** 模板名称 */
 	private String name;
-	
-	/**模板状态 0已启用，1未启用*/
+
+	/** 模板状态 0已启用，1未启用 */
 	private Integer state;
 
 	/** 模板描述 */
 	private String description;
 
-	/** 模板路径 */
+	/** 一次模板值 */
+	private String _template;
+
+	/** 二次模板路径 */
 	private String filePath;
 
 	@Id
@@ -58,7 +66,7 @@ public class Template extends AuditableObject<Long> {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "STATE", length = 1)
 	public Integer getState() {
 		return state;
@@ -68,13 +76,22 @@ public class Template extends AuditableObject<Long> {
 		this.state = state;
 	}
 
-	@Column(name = "DESCRIPTION", length = 512)
+	@Column(name = "DESCRIPTION")
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Column(name = "_TEMPLATE")
+	public String get_template() {
+		return _template;
+	}
+
+	public void set_template(String _template) {
+		this._template = _template;
 	}
 
 	@Column(name = "FILE_PATH", length = 128)

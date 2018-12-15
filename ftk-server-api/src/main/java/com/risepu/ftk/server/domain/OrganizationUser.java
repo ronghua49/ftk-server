@@ -13,12 +13,18 @@ import net.lc4ever.framework.domain.TimestampObject;
 /**
  * 
  * 企业用户表
+ * 
  * @author q-wang 企业用户表
  */
 @Entity
 @Table(name = "FTK_ORGANIZATION_USER")
 public class OrganizationUser extends TimestampObject<String> {
-	/*组织机构代码证*/
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/* 组织机构代码证 */
 	private String id;
 
 	@Override
@@ -33,7 +39,7 @@ public class OrganizationUser extends TimestampObject<String> {
 		this.id = id;
 	}
 
-	/*企业名称*/
+	/* 企业名称 */
 	private String organization;
 
 	@Column(name = "ORGANIZATION", length = 10)
@@ -44,10 +50,10 @@ public class OrganizationUser extends TimestampObject<String> {
 	public void setOrganization(String organization) {
 		this.organization = organization;
 	}
-	
-private String password;
-	
-	@Column(name="PASSWORD",length=32)
+
+	private String password;
+
+	@Column(name = "PASSWORD", length = 32)
 	public String getPassword() {
 		return password;
 	}
@@ -57,8 +63,8 @@ private String password;
 	}
 
 	private String address;
-	
-	@Column(name="ADDRESS",length=31)
+
+	@Column(name = "ADDRESS", length = 31)
 	public String getAddress() {
 		return address;
 	}
@@ -66,10 +72,10 @@ private String password;
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	private String legalPerson;
-	
-	@Column(name="LEGAL_PERSON",length=10)
+
+	@Column(name = "LEGAL_PERSON", length = 10)
 	public String getLegalPerson() {
 		return legalPerson;
 	}
@@ -79,8 +85,8 @@ private String password;
 	}
 
 	private String phoneNo;
-	
-	@Column(name="PHONE_NO",length=11)
+
+	@Column(name = "PHONE_NO", length = 11)
 	public String getPhoneNo() {
 		return phoneNo;
 	}
@@ -89,10 +95,9 @@ private String password;
 		this.phoneNo = phoneNo;
 	}
 
-	
 	private String imgPath;
-	
-	@Column(name="IMG_PATH",length=225)
+
+	@Column(name = "IMG_PATH", length = 225)
 	public String getImgPath() {
 		return imgPath;
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.risepu.ftk.server.domain.Domain;
@@ -43,6 +44,15 @@ public class TemplateController implements TemplateApi {
 	public ResponseEntity<Response<List<Domain>>> getTemplateData(Long templateId) {
 		List<Domain> domains = domainService.selectByTemplate(templateId);
 		return ResponseEntity.ok(Response.succeed(domains));
+	}
+
+	@Override
+	public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) {
+		// TODO Auto-generated method stub
+		if (templateService.add(template) != null) {
+			return ResponseEntity.ok(Response.succeed("添加成功"));
+		}
+		return ResponseEntity.ok(Response.failed(400, "添加失败"));
 	}
 
 }

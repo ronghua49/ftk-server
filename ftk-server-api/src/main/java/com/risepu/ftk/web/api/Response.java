@@ -12,7 +12,16 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class Response<T> implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static class Header implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		@ApiModelProperty(value = "ResultCode")
 		private int code;
 		@ApiModelProperty(value = "ResultMessage", example = "SUCCEED")
@@ -56,7 +65,8 @@ public class Response<T> implements Serializable {
 
 		@Override
 		public String toString() {
-			return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "") + (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
+			return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "")
+					+ (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
 		}
 
 	}

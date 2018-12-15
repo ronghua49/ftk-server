@@ -19,6 +19,10 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Table(name = "FTK_ADMIN_USER")
 public class AdminUser extends AuditableObject<String> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** 用户名 */
 	private String id;
 

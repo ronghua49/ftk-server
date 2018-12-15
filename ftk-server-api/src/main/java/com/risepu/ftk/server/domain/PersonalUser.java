@@ -17,6 +17,11 @@ import net.lc4ever.framework.domain.TimestampObject;
 @Table(name = "FTK_PERSONAL_USER")
 public class PersonalUser extends TimestampObject<String> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	/** 个人用户唯一标识: 当前存储数据为身份证号码 */
 	private String id;
 

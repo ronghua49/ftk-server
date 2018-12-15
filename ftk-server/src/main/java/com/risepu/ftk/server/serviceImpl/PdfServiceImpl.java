@@ -2,21 +2,27 @@ package com.risepu.ftk.server.serviceImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.util.Iterator;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.PRStream;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfDictionary;
 import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfName;
+import com.itextpdf.text.pdf.PdfObject;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.PdfService;
+import com.risepu.ftk.server.service.TemplateService;
 
 /**
  * 
@@ -25,63 +31,38 @@ import com.risepu.ftk.server.service.PdfService;
  */
 @Service
 public class PdfServiceImpl implements PdfService {
+	@Autowired
+	private TemplateService templateService;
 
 	@Override
-	public void pdf(String templatePath, String newPDFPath, Map<String, Map<String, String>> o) throws Exception {
+	public void pdf(Long templateId) throws Exception {
 		// TODO Auto-generated method stub
-		// 模板路径
-//		String templatePath = "E:/测试3.pdf";
-		// 生成的新文件路径
-//		String newPDFPath = "E:/ceshi.pdf";
-		PdfReader reader;
-		FileOutputStream out;
-		ByteArrayOutputStream bos;
-		PdfStamper stamper;
+		// 根据模板id得到模板
+		Template template = templateService.getTemplate(templateId);
 
-		out = new FileOutputStream(newPDFPath);// 输出流
-		reader = new PdfReader(templatePath);// 读取pdf模板
-		bos = new ByteArrayOutputStream();
-		stamper = new PdfStamper(reader, bos);
-		AcroFields form = stamper.getAcroFields();
+		// 获取一次模板
+		String _template = template.get_template();
 
-//		String[] str = { "123456789", "TOP__ONE", "男", "1991-01-01", "130222111133338888", "河北省保定市" };
-//		int i = 0;
-//		Iterator<String> it = form.getFields().keySet().iterator();
-//		while (it.hasNext()) {
-//			String name = it.next().toString();
-//			System.out.println(name);
-//			form.setField(name, str[i++]);
-//		}
-		// 文字类的内容处理
-		Map<String, String> datemap = (Map<String, String>) o.get("datemap");
-		for (String key : datemap.keySet()) {
-			String value = datemap.get(key);
-			form.setField(key, value);
+		// 获取二次模板路径
+		String filePath = template.getFilePath();
+
+		FileOutputStream out = new FileOutputStream("C:/Users/MACHEMIKE/Desktop/测试.pdf");// 输出流
+		PdfReader reader = new PdfReader(filePath);// 读取pdf模板
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+		PdfDictionary dict = reader.getPageN(1);
+		PdfObject object = dict.getDirectObject(PdfName.CONTENTS);
+		if (object instanceof PRStream) {
+			PRStream stream = (PRStream) object;
+			byte[] data = PdfReader.getStreamBytes(stream);
+			System.out.println(new String(data));
+//			stream.setData(new String(data).replace("Hello World", "HELLO WORLD").getBytes());
 		}
-
-		// 图片类的内容处理
-		Map<String, String> imgmap = (Map<String, String>) o.get("imgmap");
-		for (String key : imgmap.keySet()) {
-			String value = imgmap.get(key);
-			String imgpath = value;
-			int pageNo = form.getFieldPositions(key).get(0).page;
-			Rectangle signRect = form.getFieldPositions(key).get(0).position;
-			float x = signRect.getLeft();
-			float y = signRect.getBottom();
-			// 根据路径读取图片
-			Image image = Image.getInstance(imgpath);
-			// 获取图片页面
-			PdfContentByte under = stamper.getOverContent(pageNo);
-			// 图片大小自适应
-			image.scaleToFit(signRect.getWidth(), signRect.getHeight());
-			// 添加图片
-			image.setAbsolutePosition(x, y);
-			under.addImage(image);
-		}
+		PdfStamper stamper = new PdfStamper(reader, bos);
 
 		stamper.setFormFlattening(true);// 如果为false那么生成的PDF文件还能编辑，一定要设为true
 		stamper.close();
-
+		reader.close();
 		Document doc = new Document();
 		PdfCopy copy = new PdfCopy(doc, out);
 		doc.open();

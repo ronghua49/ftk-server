@@ -26,7 +26,6 @@ public class SampleController implements SampleApi {
 
 	@Override
 	public ResponseEntity<Response<RegistResult>> regist() {
-
 		logger.debug("Request Uri: /sample/sample1");
 		Response<List<String>> sample1 = Response.succeed(Arrays.asList(new String[] { "hello", "world" }));
 		RegistResult result = new RegistResult();

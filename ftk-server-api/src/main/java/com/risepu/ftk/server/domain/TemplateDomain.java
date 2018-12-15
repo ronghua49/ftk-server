@@ -16,17 +16,29 @@ import net.lc4ever.framework.domain.BaseEntity;
 /**
  * 
  * 模板数据关联
+ * 
  * @author q-wang
  */
 @Entity
 @Table(name = "FTK_TEMPLATE_DOMAIN")
 public class TemplateDomain implements BaseEntity<TemplateDomain.ID> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Embeddable
 	public static class ID implements Serializable {
-		/**模板id*/
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/** 模板id */
 		private Long templateId;
-		/**模板数据id*/
+
+		/** 模板数据id */
 		private Long domainId;
 
 		@Column(name = "TEMPLATE")

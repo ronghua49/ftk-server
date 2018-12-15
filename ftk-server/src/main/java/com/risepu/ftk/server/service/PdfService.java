@@ -8,5 +8,5 @@ import java.util.Map;
  *
  */
 public interface PdfService {
-	public void pdf(String templatePath, String newPDFPath, Map<String, Map<String, String>> o) throws Exception;
+	public void pdf(Long templateId) throws Exception;
 }
