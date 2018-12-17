@@ -1,5 +1,7 @@
 package com.risepu.ftk.server.service;
 
+import com.risepu.ftk.server.domain.ProofDocument;
+
 /**
  * 
  * @author L-heng
@@ -7,6 +9,6 @@ package com.risepu.ftk.server.service;
  */
 public interface ProofDocumentService {
 	/** 新增文档 */
-	public Long add(Long template, String chainHash, String organization, String personalUser);
+	public Long add(ProofDocument proofDocument);
 
 }

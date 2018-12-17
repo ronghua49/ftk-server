@@ -49,16 +49,25 @@ public interface TemplateApi {
 	/**
 	 * 添加模板
 	 * 
-	 * @param _template   一次模板值
-	 * @param name        模板名称
-	 * @param description 模板描述
-	 * @param filePath    二次模板路径
+	 * @param template 模板JavaBean
 	 * @return 添加是否成功
 	 */
 	@ApiOperation(value = "添加模板", nickname = "addTemplate")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-	@RequestMapping(path = "/addTemplate",consumes= {"application/json"})
+	@RequestMapping(path = "/addTemplate", consumes = { "application/json" })
 	@ResponseBody
 	public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template);
+
+	/**
+	 * 添加模板数据
+	 * 
+	 * @param domain 模板数据JavaBean
+	 * @return 添加是否成功
+	 */
+	@ApiOperation(value = "添加模板数据", nickname = "addTemplateData")
+	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
+	@RequestMapping(path = "/addTemplateData", consumes = { "application/json" })
+	@ResponseBody
+	public ResponseEntity<Response<String>> addTemplateData(Long templateId, @RequestBody Domain domain);
 
 }

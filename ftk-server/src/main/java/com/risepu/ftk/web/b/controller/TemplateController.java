@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DomainService;
+import com.risepu.ftk.server.service.TemplateDomainService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.api.Response;
 
@@ -29,6 +30,9 @@ public class TemplateController implements TemplateApi {
 
 	@Autowired
 	private DomainService domainService;
+
+	@Autowired
+	private TemplateDomainService templateDomainService;
 
 	@Override
 	public ResponseEntity<Response<List<String>>> getAllTemplate() {
@@ -50,6 +54,17 @@ public class TemplateController implements TemplateApi {
 	public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) {
 		// TODO Auto-generated method stub
 		if (templateService.add(template) != null) {
+			return ResponseEntity.ok(Response.succeed("添加成功"));
+		}
+		return ResponseEntity.ok(Response.failed(400, "添加失败"));
+	}
+
+	@Override
+	public ResponseEntity<Response<String>> addTemplateData(Long templateId, Domain domain) {
+		// TODO Auto-generated method stub
+		Long domainId = domainService.add(domain);
+		if (domainId != null) {
+			templateDomainService.add(templateId, domainId);
 			return ResponseEntity.ok(Response.succeed("添加成功"));
 		}
 		return ResponseEntity.ok(Response.failed(400, "添加失败"));

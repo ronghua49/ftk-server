@@ -23,13 +23,9 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
 	}
 
 	@Override
-	public Long add(Long template, String chainHash, String organization, String personalUser) {
+	public Long add(ProofDocument proofDocument) {
 		// TODO Auto-generated method stub
-		ProofDocument proofDocument = new ProofDocument();
-		proofDocument.setChainHash(chainHash);
-		proofDocument.setTemplate(template);
-		proofDocument.setOrganization(organization);
-		proofDocument.setPersonalUser(personalUser);
+		System.out.println("22222222222222222"+proofDocument.getFilePath());
 		return crudService.save(proofDocument);
 	}
 

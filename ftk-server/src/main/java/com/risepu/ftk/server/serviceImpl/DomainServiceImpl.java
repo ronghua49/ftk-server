@@ -61,7 +61,8 @@ public class DomainServiceImpl implements DomainService {
 	public List<Domain> selectByTemplate(Long templateId) {
 		// TODO Auto-generated method stub
 		List<Domain> list = crudService.hql(Domain.class,
-				"from Domain where id in (select domainId from TemplateDomain where templateId = ? )", templateId);
+				"from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )",
+				templateId);
 		return list;
 	}
 
@@ -71,5 +72,12 @@ public class DomainServiceImpl implements DomainService {
 		Domain domin = crudService.get(Domain.class, id);
 		domin.setIsDelete(1);
 		crudService.update(domin);
+	}
+
+	@Override
+	public Domain selectByCode(String code) {
+		// TODO Auto-generated method stub
+		Domain domain = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1",code);
+		return domain;
 	}
 }

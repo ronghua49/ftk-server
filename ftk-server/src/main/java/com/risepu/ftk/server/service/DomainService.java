@@ -30,4 +30,7 @@ public interface DomainService {
 
 	/** 查找所有模板数据 */
 	public List<Domain> selectAll();
+
+	/** 根据code查找模板数据 */
+	public Domain selectByCode(String code);
 }

@@ -1,13 +1,13 @@
 package com.risepu.ftk.web.b.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.JsonObject;
 import com.risepu.ftk.web.api.Response;
 
 import io.swagger.annotations.Api;
@@ -34,7 +34,7 @@ public interface DocumentDataApi {
 	@RequestMapping(path = "/add")
 	@ResponseBody
 	@CrossOrigin
-	public ResponseEntity<Response<String>> add(Long template) throws Exception;
+	public ResponseEntity<Response<String>> add(@RequestBody Map<String, String> map) throws Exception;
 
 	/**
 	 * 发送邮件
