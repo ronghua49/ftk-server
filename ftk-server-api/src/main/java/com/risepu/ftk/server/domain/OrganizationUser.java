@@ -17,12 +17,12 @@ import net.lc4ever.framework.domain.TimestampObject;
 @Entity
 @Table(name = "FTK_ORGANIZATION_USER")
 public class OrganizationUser extends TimestampObject<String> {
-	/*手机号*/
+	/** 手机号 */
 	private String id;
 
 	@Override
 	@Id
-	@Column(name = "ID", length = 31)
+	@Column(name = "ID", length = 11)
 	public String getId() {
 		return id;
 	}

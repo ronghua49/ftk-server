@@ -32,9 +32,12 @@ public class SmsController {
 		boolean identify = smsService.identify(mesRequest.getImgCode(), sessionCode);
 		
 		if(identify) {
+			String sendCode = smsService.sendCode(mesRequest.getPhone());
+			
+			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(),sendCode);
 			return ResponseEntity.ok(Response.succeed("验证码已下发"));
 		}else {
-			return ResponseEntity.ok(Response.failed(400, "图片验证码错误"));
+			return ResponseEntity.ok(Response.succeed("图片验证码错误"));
 		}
 		
 	}

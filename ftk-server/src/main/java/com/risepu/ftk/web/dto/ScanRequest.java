@@ -1,4 +1,4 @@
-package com.risepu.ftk.web;
+package com.risepu.ftk.web.dto;
 
 public class ScanRequest {
 	/** 用户身份证*/

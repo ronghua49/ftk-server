@@ -32,7 +32,7 @@ public class Organization extends AuditableObject<String> {
 
 	@Override
 	@Id
-	@Column(name = "ID", length = 10)
+	@Column(name = "ID", length = 11)
 	public String getId() {
 		return id;
 	}
@@ -104,28 +104,33 @@ public class Organization extends AuditableObject<String> {
 	}
 
 	
-	private String idCardImgPath;
+	private String idCardImgName;
+	
+	@Column(name="IDCARD_IMG_NAME",length=50)
+	public String getIdCardImgName() {
+		return idCardImgName;
+	}
+	
+	public void setIdCardImgName(String idCardImgName) {
+		this.idCardImgName = idCardImgName;
+	}
 	
 	
-	@Column(name="IDCARD_IMG_PATH",length=50)
-	public String getIdCardImgPath() {
-		return idCardImgPath;
-	}
-
-	public void setIdCardImgPath(String idCardImgPath) {
-		this.idCardImgPath = idCardImgPath;
-	}
-
-	private String licenseImgPath;
 	
-	@Column(name="LICENCE_IMG_PATH")
-	public String getLicenseImgPath() {
-		return licenseImgPath;
+	
+	private String licenseImgName;
+
+	@Column(name="LICENCE_IMG_NAME")
+	public String getLicenseImgName() {
+		return licenseImgName;
 	}
 
-	public void setLicenseImgPath(String licenseImgPath) {
-		this.licenseImgPath = licenseImgPath;
+	public void setLicenseImgName(String licenseImgName) {
+		this.licenseImgName = licenseImgName;
 	}
+
+	
+	
 
 	private String remark;
 
@@ -142,7 +147,7 @@ public class Organization extends AuditableObject<String> {
 	private String tel;
 	
 	
-	@Column(name="TEL",length=11)
+	@Column(name="TEL",length=15)
 	public String getTel() {
 		return tel;
 	}

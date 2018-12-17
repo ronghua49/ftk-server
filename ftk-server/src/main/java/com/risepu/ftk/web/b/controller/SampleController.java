@@ -3,8 +3,15 @@
  */
 package com.risepu.ftk.web.b.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,13 +96,18 @@ public class SampleController implements SampleApi {
 	
 	@GetMapping("/test3")
 	@ResponseBody
-	public OrganizationUser testObject() {
+	public List<Organization> testObject() throws ParseException {
 		//多参数的查询
+		//string转换data的问题
+//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mmm:ss");
+//		Date date2 = format.parse("2018-12-13 13:37:37");
+		Object[] params = {"13310"};
 		
-		crudService.hql(OrganizationUser.class, 0, 5, "from ", params)
+		List<Organization> orgs = crudService.hql(Organization.class, 0, 5, "from  Organization where id <?1", params);
+		System.out.println(orgs.size());
 		
-		OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", "135123835407");
-		return org;
+		//OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", "135123835407");
+		return orgs;
 	}
 
 	

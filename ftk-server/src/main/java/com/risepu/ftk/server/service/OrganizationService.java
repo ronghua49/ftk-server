@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.web.b.dto.LoginResult;
 
 //@Remote(path="/org")
@@ -69,6 +70,28 @@ public interface OrganizationService {
 	 * @return 存在返回id值，否则返回 null
 	 */
 	public String  checkOrgName(String mobileOrName);
+
+	/**
+	 * 保存企业反馈信息
+	 * @param advice
+	 */
+	public void saveAdviceInfo(OrganizationAdvice advice);
+
+	/**
+	 * 根据企业id校验企业认证结果
+	 * @param id 当前的企业id(手机号)
+	 * @return 认证结果
+	 */
+	public Organization checkAuthState(String id);
+
+	/**
+	 * 插入授权流水
+	 * @param orgId 当前企业id
+	 * @param personId 单据上用户身份证
+	 */
+	public void InsertAuthorStream(String orgId, String personId);
+
+	
 
 	
 	/**

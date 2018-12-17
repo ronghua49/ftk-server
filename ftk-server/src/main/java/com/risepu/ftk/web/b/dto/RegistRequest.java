@@ -7,7 +7,7 @@ public class RegistRequest {
 	
 	private String password;
 	
-	private String msmCode;
+	private String smsCode;
 	
 	private String imgCode;
 
@@ -27,12 +27,14 @@ public class RegistRequest {
 		this.password = password;
 	}
 
-	public String getMsmCode() {
-		return msmCode;
+	
+
+	public String getSmsCode() {
+		return smsCode;
 	}
 
-	public void setMsmCode(String msmCode) {
-		this.msmCode = msmCode;
+	public void setSmsCode(String smsCode) {
+		this.smsCode = smsCode;
 	}
 
 	public String getImgCode() {
@@ -45,7 +47,7 @@ public class RegistRequest {
 
 	@Override
 	public String toString() {
-		return "RegistRequest [mobile=" + mobile + ", password=" + password + ", msmCode=" + msmCode + ", imgCode="
+		return "RegistRequest [mobile=" + mobile + ", password=" + password + ", smsCode=" + smsCode + ", imgCode="
 				+ imgCode + "]";
 	}
 	

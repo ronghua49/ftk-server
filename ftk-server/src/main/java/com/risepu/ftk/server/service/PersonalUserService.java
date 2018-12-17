@@ -6,6 +6,7 @@ import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
+import com.risepu.ftk.web.p.dto.LoginRequest;
 
 import net.lc4ever.framework.remote.annotation.Remote;
 
@@ -22,11 +23,11 @@ public interface PersonalUserService {
 	
 	/**
 	 * 用户通过验证码登录
-	 * @param phone 
-	 * @param code
+	 * @param cardNo 用户身份证号
+	 * @param phone 手机号
 	 * @return
 	 */
-	public PersonalUser personLogin(String mobile);
+	public PersonalUser personLogin(String cardNo, String phone);
 
 	/**
 	 * 保存授权操作流水记录
@@ -42,5 +43,6 @@ public interface PersonalUserService {
 	 * @return 查询页面
 	 */
 	public PageResult<AuthHistoryInfo> queryHistoryByParam(Map<String, Object> paraMap, Integer pageNo, Integer pageSize);
+
 	
 }

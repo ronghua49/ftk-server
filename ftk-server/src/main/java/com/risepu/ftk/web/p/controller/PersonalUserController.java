@@ -1,9 +1,6 @@
 package com.risepu.ftk.web.p.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,28 +9,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.service.PersonalUserService;
 import com.risepu.ftk.server.service.SmsService;
-import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
-import com.risepu.ftk.web.ScanRequest;
 import com.risepu.ftk.web.api.Response;
-import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
+import com.risepu.ftk.web.dto.ScanRequest;
 import com.risepu.ftk.web.p.dto.LoginRequest;
-import com.risepu.ftk.web.p.dto.LoginResult;
-import com.risepu.ftk.web.p.dto.RegistRequest;
 
 
 @RestController
 @RequestMapping("/personal")
-public class PersonalUserController implements Controller {
+public class PersonalUserController   {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -41,12 +31,7 @@ public class PersonalUserController implements Controller {
 	private PersonalUserService personalService;
 	
 	@Autowired
-	private SmsService SmsService;
-
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return null;
-	}
+	private SmsService service;
 
 	
 	/**
@@ -57,17 +42,28 @@ public class PersonalUserController implements Controller {
 	 */
 	public ResponseEntity<Response<String>> personalLogin(@RequestBody LoginRequest loginRequest,HttpServletRequest request){
 		
-		boolean codeIdentify = codeIdentify(request,loginRequest.getInCode());
 		
-		if(codeIdentify) {
-			PersonalUser personalUser = personalService.personLogin(loginRequest.getPhone());
+		String smsCode =getSmsCode(request);  
+		
+		boolean identify = service.identify(loginRequest.getInCode(), smsCode);
+		
+		if(identify) {
+			PersonalUser personalUser = personalService.personLogin(loginRequest.getCardNo(),loginRequest.getPhone());
+			
 			request.getSession().setAttribute(Constant.getSessionCurrUser(), personalUser);
-			logger.debug("用户手机号--{}，登录成功",loginRequest.getPhone());
+			
+			logger.debug("用户手机号--{}，登录成功",personalUser.getMobile());
+			
 			return ResponseEntity.ok(Response.succeed("登录成功"));
 		}else {
-			return ResponseEntity.ok(Response.failed(001, "验证码输入错误"));
+			return ResponseEntity.ok(Response.succeed("验证码输入错误"));
 		}
 		
+	}
+
+
+	private String getSmsCode(HttpServletRequest request) {
+		return (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
 	}
 
 
@@ -89,7 +85,7 @@ public class PersonalUserController implements Controller {
 		/** 判断授权 */
 		if(scanRequest.getState().equals("0")) {
 			/** 发送验证码 */
-			SmsService.sendCode(personalUser.getMobile());
+			service.sendCode(personalUser.getMobile());
 			authStream.setState(AuthorizationStream.AUTH_STATE_PASS);
 			return ResponseEntity.ok(Response.succeed("授权码下发成功"));
 			
@@ -120,13 +116,7 @@ public class PersonalUserController implements Controller {
 //		
 //	}
 
-	private boolean codeIdentify(HttpServletRequest request, String inCode) {
-		
-		if(inCode.equals(request.getSession().getAttribute(Constant.getSessionVerificationCodeSms()))) {
-			return true;
-		}
-		return false;
-	}
+	
 	
 	
 

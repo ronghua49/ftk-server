@@ -30,17 +30,15 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	}
 
 	@Override
-	public PersonalUser personLogin(String mobile) {
-		PersonalUser personalUser = crudService.uniqueResultByProperty(PersonalUser.class, "mobile", mobile);
-		/** 若果用户不存在*/ //TODD
-		if(personalUser==null) {
-			PersonalUser personalUser2 = new PersonalUser();
-			personalUser2.setMobile(mobile);
-			crudService.save(personalUser2);
-			return personalUser2;
-		}
+	public PersonalUser personLogin(String cardNo,String phone) {
 		
-		return personalUser;
+		PersonalUser user = new PersonalUser();
+		user.setMobile(phone);
+		user.setId(cardNo);
+		crudService.save(user);
+		return user;
+		
+		
 	}
 
 	@Override
