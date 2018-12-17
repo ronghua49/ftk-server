@@ -87,9 +87,9 @@ public interface OrganizationService {
 	/**
 	 * 插入授权流水
 	 * @param orgId 当前企业id
-	 * @param personId 单据上用户身份证
+	 * @param cardNo 单据上用户身份证号
 	 */
-	public void InsertAuthorStream(String orgId, String personId);
+	public void InsertAuthorStream(String orgId, String cardNo);
 
 	
 
