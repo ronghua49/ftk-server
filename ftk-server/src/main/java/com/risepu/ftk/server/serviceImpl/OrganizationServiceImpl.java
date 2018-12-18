@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -16,17 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
-import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
-import com.risepu.ftk.web.b.dto.VerifyHistory;
-
 import net.lc4ever.framework.service.GenericCrudService;
 
 @Service
@@ -53,7 +47,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public LoginResult orgLogin(String phoneOrName, String password) {
-		password = DigestUtils.md5Hex(password + SALT);
+		System.out.println("登录获取的盐："+SALT);
+		String secutityPwd = DigestUtils.md5Hex(password + SALT);
 		LoginResult loginResult = new LoginResult();
 		
 		if (StringUtils.isNumeric(phoneOrName)) {
@@ -66,7 +61,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 					loginResult.setMessage("此手机号还未注册，请注册！");
 				}
 				
-				if (org != null && org.getPassword().equals(password)) {
+				if (org != null && org.getPassword().equals(secutityPwd)) {
 					loginResult.setCode(0);
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(org);
@@ -91,7 +86,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "id",
 						org.getId());
 				if (orgUser.getPassword().equals(password)) {
-
+					loginResult.setCode(0);
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(orgUser);
 				}else {
@@ -108,9 +103,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public void changePwd(String id, String newPwd) {
-		
-		newPwd = DigestUtils.md5Hex(newPwd+SALT);
-
 		OrganizationUser orgUser = new OrganizationUser();
 		orgUser.setId(id);
 		orgUser.setPassword(newPwd);
@@ -186,11 +178,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 		crudService.save(stream);
 	}
 
-	@Override
-	public PageResult<VerifyHistory> queryVerifyPage(String key, Integer pageNo, Integer pageSize, String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	
 }

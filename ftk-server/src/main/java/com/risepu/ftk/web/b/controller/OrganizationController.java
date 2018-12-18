@@ -29,11 +29,10 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.b.dto.DocumentInfo;
 import com.risepu.ftk.web.b.dto.ForgetRequest;
 import com.risepu.ftk.web.b.dto.LoginResult;
 import com.risepu.ftk.web.b.dto.RegistRequest;
-import com.risepu.ftk.web.b.dto.RegistResult;
-import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 @Controller
 @RequestMapping("/org")
@@ -141,6 +140,8 @@ public class OrganizationController {
 
 				return ResponseEntity.ok(Response.failed(2, "验证码输入错误"));
 			}
+			
+			
 		} else {
 			return ResponseEntity.ok(Response.failed(4, "该账号还未注册"));
 		}
@@ -158,7 +159,6 @@ public class OrganizationController {
 		OrganizationUser currUser = getCurrUser(request);
 		
 		String salt = ConfigUtil.getValue("salt");
-
 		password = DigestUtils.md5Hex(password + salt);
 		newpwd = DigestUtils.md5Hex(newpwd + salt);
 
@@ -221,7 +221,6 @@ public class OrganizationController {
 	 */
 	@GetMapping("/auth/check")
 	@ResponseBody
-	@CrossOrigin
 	public ResponseEntity<Response<Organization>> checkAuthState(HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
@@ -242,8 +241,9 @@ public class OrganizationController {
 	@ResponseBody
 	public ResponseEntity<Response<String>> orgAuthen(@RequestBody Organization organization,
 			HttpServletRequest request) {
-
-		OrganizationUser user = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+		
+		
+		OrganizationUser user = getCurrUser(request);
 
 		/** 增加关联 id 为发起认证的企业用户手机号 */
 		organization.setId(user.getId());
@@ -257,7 +257,7 @@ public class OrganizationController {
 	}
 
 	/**
-	 * 企业扫码单据
+	 * 企业扫码单据 产生扫码流水
 	 * 
 	 * @param orgId
 	 *            企业id
@@ -265,6 +265,8 @@ public class OrganizationController {
 	 *            用户身份证号
 	 * @return
 	 */
+	@GetMapping("/scanQR")
+	@ResponseBody
 	public ResponseEntity<Response<String>> scanQR(@RequestParam String orgId, @RequestParam String cardNo,HttpServletRequest request) {
 		
 		/** 未审核通过的企业不允许扫描单据 */
@@ -280,27 +282,49 @@ public class OrganizationController {
 		}
 		return ResponseEntity.ok(Response.succeed("请认证通过后扫描"));
 	}
+	
 
 	/**
 	 * 企业扫码验证历史查询
-	 * 
-	 * @param authCode
-	 *            授权码
-	 * @param cardNo
-	 *            用户身份证号
-	 * @return 单据信息 集合
+	 * @param key 查询参数
+	 * @param pageNo 当前页码
+	 * @param pageSize 每页显示数量
+	 * @param request
+	 * @return
 	 */
 	@GetMapping("/history/verify")
-	 public ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
+	@ResponseBody
+	 public ResponseEntity<Response<PageResult<DocumentInfo>>> verifyHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
 		 	
 		OrganizationUser orgUser = getCurrUser(request);
 		
-		PageResult<VerifyHistory>  page = organizationService.queryVerifyPage(key,pageNo,pageSize,orgUser.getId());
+		//PageResult<DocumentInfo>  page = organizationService.queryVerifyPage(key,pageNo,pageSize,orgUser.getId());
 	
 		
-		return ResponseEntity.ok(Response.succeed(page));
+		return null;
 	
 	 }
+	
+	/**
+	 * 企业历史单据查询
+	 * @param key 搜索参数
+ 	 * @param pageNo 页码
+	 * @param pageSize 每页显示数量
+	 * @param request 
+	 * @return
+	 */
+//	@GetMapping("/history/document")
+//	@ResponseBody
+//	public ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
+//		/** 查询企业历史单据信息 */	
+//		
+//		
+//		
+//	}
+	
+	
+	
+	
 	/**
 	 * 企业反馈信息录入
 	 * 

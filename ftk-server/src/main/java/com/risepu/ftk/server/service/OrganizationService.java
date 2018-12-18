@@ -9,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
-import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
-import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 //@Remote(path="/org")
 public interface OrganizationService {
@@ -61,8 +59,8 @@ public interface OrganizationService {
 	
 	/**
 	 * 保存
-	 * @param organization 认证的企业信息
-	 * @return 是否发送成功
+	 * @param organization 认证的企业信息和管理员审核后添加的信息
+	 * @return 
 	 */
 	public void saveOrUpdateOrgInfo(Organization organization);
 
@@ -93,16 +91,8 @@ public interface OrganizationService {
 	 */
 	public void InsertAuthorStream(String orgId, String cardNo);
 
-	/**
-	 * 企业的历史验证 页面查询
-	 * @param key
-	 * @param pageNo
-	 * @param pageSize
-	 * @param id
-	 * @return
-	 */
-	public PageResult<VerifyHistory> queryVerifyPage(String key, Integer pageNo, Integer pageSize, String id);
-
+	
+	//public PageResult<Organization> 
 
 	
 
