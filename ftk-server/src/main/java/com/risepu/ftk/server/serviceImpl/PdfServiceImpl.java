@@ -26,7 +26,7 @@ public class PdfServiceImpl implements PdfService {
         // 获取二次模板路径
         String filePath = template.getFilePath();
         PdfReplacer textReplacer = new PdfReplacer(filePath);
-        textReplacer.setFont(14);
+        textReplacer.setFont(20);
         textReplacer.replaceText("${_template}", _template);
         textReplacer.replaceText("${_title}", "单据证明");
         textReplacer.replaceText("${_chainHash}", "SFSFSGFDGFDHFD");
