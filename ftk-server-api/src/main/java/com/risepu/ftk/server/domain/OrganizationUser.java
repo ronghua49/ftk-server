@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.risepu.ftk.server.domain;
 
 import javax.persistence.Column;
@@ -11,94 +8,96 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.TimestampObject;
 
 /**
- * 
  * 企业用户表
+ *
  * @author q-wang 企业用户表
  */
 @Entity
 @Table(name = "FTK_ORGANIZATION_USER")
 public class OrganizationUser extends TimestampObject<String> {
-	/*组织机构代码证*/
-	private String id;
 
-	@Override
-	@Id
-	@Column(name = "ID", length = 31)
-	public String getId() {
-		return id;
-	}
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	public void setId(String id) {
-		this.id = id;
-	}
+    /* 组织机构代码证 */
+    private String id;
 
-	/*企业名称*/
-	private String organization;
+    @Override
+    @Id
+    @Column(name = "ID", length = 31)
+    public String getId() {
+        return id;
+    }
 
-	@Column(name = "ORGANIZATION", length = 10)
-	public String getOrganization() {
-		return organization;
-	}
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
-	
-private String password;
-	
-	@Column(name="PASSWORD",length=32)
-	public String getPassword() {
-		return password;
-	}
+    /* 企业名称 */
+    private String organization;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    @Column(name = "ORGANIZATION", length = 10)
+    public String getOrganization() {
+        return organization;
+    }
 
-	private String address;
-	
-	@Column(name="ADDRESS",length=31)
-	public String getAddress() {
-		return address;
-	}
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	
-	private String legalPerson;
-	
-	@Column(name="LEGAL_PERSON",length=10)
-	public String getLegalPerson() {
-		return legalPerson;
-	}
+    private String password;
 
-	public void setLegalPerson(String legalPerson) {
-		this.legalPerson = legalPerson;
-	}
+    @Column(name = "PASSWORD", length = 32)
+    public String getPassword() {
+        return password;
+    }
 
-	private String phoneNo;
-	
-	@Column(name="PHONE_NO",length=11)
-	public String getPhoneNo() {
-		return phoneNo;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setPhoneNo(String phoneNo) {
-		this.phoneNo = phoneNo;
-	}
+    private String address;
 
-	
-	private String imgPath;
-	
-	@Column(name="IMG_PATH",length=225)
-	public String getImgPath() {
-		return imgPath;
-	}
+    @Column(name = "ADDRESS", length = 31)
+    public String getAddress() {
+        return address;
+    }
 
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    private String legalPerson;
+
+    @Column(name = "LEGAL_PERSON", length = 10)
+    public String getLegalPerson() {
+        return legalPerson;
+    }
+
+    public void setLegalPerson(String legalPerson) {
+        this.legalPerson = legalPerson;
+    }
+
+    private String phoneNo;
+
+    @Column(name = "PHONE_NO", length = 11)
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    private String imgPath;
+
+    @Column(name = "IMG_PATH", length = 225)
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
 
 }

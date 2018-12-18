@@ -1,9 +1,4 @@
-/**
- *
- */
 package com.risepu.ftk.server.domain;
-
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,80 +18,136 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Table(name = "FTK_DOMAIN")
 public class Domain extends AuditableObject<Long> {
 
-	/** 主键 */
-	private Long id;
+    private static final long serialVersionUID = 1L;
 
-	/** 模板数据名称 */
-	private String name;
+    /**
+     * 主键
+     */
+    private Long id;
 
-	/** 模板数据类型 */
-	private String type;
+    /**
+     * 数据名称code
+     */
+    private String code;
 
-	/** 描述 */
-	private String description;
-	
-	/**是否删除 0否，1是*/
-	private Integer isDelete;
-	
-	/**创建时间*/
-	private Date create_time;
+    /**
+     * 模板数据名称
+     */
+    private String label;
 
-	@Id
-	@Column(name = "ID", precision = 19)
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Override
-	public Long getId() {
-		return id;
-	}
+    /**
+     * 模板数据类型
+     */
+    private String type;
 
-	@Override
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * 数据最小长度
+     */
+    private Integer min;
 
-	@Column(name = "NAME", length = 100)
-	public String getName() {
-		return name;
-	}
+    /**
+     * 数据最大长度
+     */
+    private Integer max;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * 校验规则
+     */
+    private String kegex;
 
-	@Column(name = "TYPE", length = 20)
-	public String getType() {
-		return type;
-	}
+    /**
+     * 是否删除 0否，1是
+     */
+    private Integer isDelete;
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * 描述
+     */
+    private String description;
 
-	@Column(name = "DESCRIPTION", length = 255)
-	public String getDescription() {
-		return description;
-	}
+    @Id
+    @Column(name = "ID", precision = 19)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	@Column(name = "IS_DELETE", length = 1)
-	public Integer getIsDelete() {
-		return isDelete;
-	}
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setIsDelete(Integer isDelete) {
-		this.isDelete = isDelete;
-	}
+    @Column(name = "CODE", length = 15)
+    public String getCode() {
+        return code;
+    }
 
-	@Column(name = "CREATE_TIME")
-	public Date getCreate_time() {
-		return create_time;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
-	}
+    @Column(name = "LABEL", length = 15)
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    @Column(name = "TYPE", length = 10)
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @Column(name = "MIN", length = 20)
+    public Integer getMin() {
+        return min;
+    }
+
+    public void setMin(Integer min) {
+        this.min = min;
+    }
+
+    @Column(name = "MAX", length = 100)
+    public Integer getMax() {
+        return max;
+    }
+
+    public void setMax(Integer max) {
+        this.max = max;
+    }
+
+    @Column(name = "KEGEX", length = 100)
+    public String getKegex() {
+        return kegex;
+    }
+
+    public void setKegex(String kegex) {
+        this.kegex = kegex;
+    }
+
+    @Column(name = "ISDELETE", length = 1)
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    @Column(name = "DESCRIPTION", length = 200)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }

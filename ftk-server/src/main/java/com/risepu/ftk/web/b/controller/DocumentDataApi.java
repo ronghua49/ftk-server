@@ -1,46 +1,52 @@
 package com.risepu.ftk.web.b.controller;
 
-import javax.servlet.http.HttpSession;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.JsonObject;
-import com.risepu.ftk.web.b.dto.RegistResult;
+import com.risepu.ftk.web.api.Response;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
- * 
  * @author L-heng
- *
  */
 @Api(value = "documentData")
 public interface DocumentDataApi {
-	/**
-	 * 生成文档
-	 * 
-	 * @param template
-	 * @param json
-	 * @throws Exception
-	 */
-	@ApiOperation(value = "生成文档", nickname = "add")
-	@ApiResponses({ @ApiResponse(code = 200, message = "succeed") })
-	@RequestMapping(path = "/add")
-	@ResponseBody
-	public void add(Long template, JsonObject json, HttpSession session) throws Exception;
 
-	/**
-	 * 发送邮件
-	 * 
-	 * @return 邮件发送状态
-	 */
-	@ApiOperation(value = "发送邮件", nickname = "sendEmail")
-	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-	@RequestMapping(path = "/sendEmail")
-	@ResponseBody
-	public String sendEmail(String email);
+    /**
+     * 生成文档
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "生成文档", nickname = "add")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @RequestMapping(path = "/add")
+    @ResponseBody
+    @CrossOrigin
+    ResponseEntity<Response<String>> add(@RequestBody Map<String, String> map, HttpServletResponse response) throws Exception;
+
+    /**
+     * 发送邮件
+     *
+     * @return 邮件发送状态
+     * @throws Exception
+     */
+    @ApiOperation(value = "发送邮件", nickname = "sendEmail")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @RequestMapping(path = "/sendEmail")
+    @ResponseBody
+    @CrossOrigin
+    ResponseEntity<Response<String>> sendEmail(String email) throws Exception;
 }
