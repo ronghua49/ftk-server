@@ -217,7 +217,7 @@ public class OrganizationController {
 	/**
 	 * 校验当前企业的审核状态
 	 * @param request
-	 * @return Organization 企业的信息
+	 * @return Organization 企业的信息 (若为空则未审核)
 	 */
 	@GetMapping("/auth/check")
 	@ResponseBody
@@ -257,30 +257,30 @@ public class OrganizationController {
 	}
 
 	/**
-	 * 企业扫码单据 产生扫码流水
+	 * 企业扫码单据 产生扫码流水(在跳转输入授权码之前)
 	 * 
-	 * @param orgId
-	 *            企业id
+	 
 	 * @param cardNo
 	 *            用户身份证号
 	 * @return
 	 */
 	@GetMapping("/scanQR")
 	@ResponseBody
-	public ResponseEntity<Response<String>> scanQR(@RequestParam String orgId, @RequestParam String cardNo,HttpServletRequest request) {
+	public ResponseEntity<Response<String>> scanQR(@RequestParam String cardNo,HttpServletRequest request) {
 		
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
 		
 		Organization org = organizationService.findAuthenOrgById(currUser.getId());
-		
+		/** 只有审核通过后的企业才可以扫描单据 */
 		if(org!=null && org.getState().equals(Organization.CHECK_PASS_STATE)) {
-			organizationService.InsertAuthorStream(orgId, cardNo);
+			
+			organizationService.InsertAuthorStream(currUser.getId(), cardNo);
 			
 			return ResponseEntity.ok(Response.succeed("流水产生成功！"));
 			
 		}
-		return ResponseEntity.ok(Response.succeed("请认证通过后扫描"));
+		return ResponseEntity.ok(Response.succeed("请审核通过后扫描"));
 	}
 	
 

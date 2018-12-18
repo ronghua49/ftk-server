@@ -22,22 +22,7 @@ public interface AdminService {
 	public void updateAdminUser(AdminUser adminUser);
 
 	
-//	
-//	/**
-//	 * 查询发起认证的企业信息
-//	 * @param key 关键字
-//	 * @param pageNo 页码
-//	 * @param pageSize 显示条数
-//	 * @return
-//	 */
-//	public PageResult<Organization> queryAuthByParam(String key, Integer pageNo, Integer pageSize);
-//
-//	
-//	/**
-//	 * 保存修改后的企业信息
-//	 * @param organization 修改后的企业信息
-//	 */
-//	public void saveCheckedInfo(Organization organization);
+
 //	
 	
 	

@@ -33,16 +33,10 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 		return "success";
 	}
 
+	
 	@Override
-	public PersonalUser personLogin(String cardNo,String phone) {
-		
-		PersonalUser user = new PersonalUser();
-		user.setMobile(phone);
-		user.setId(cardNo);
-		crudService.save(user);
-		return user;
-		
-		
+	public String savePersonUser(PersonalUser user) {
+		return crudService.save(user);
 	}
 
 	@Override
@@ -67,7 +61,6 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 			history.setAuthState(stream.getState());
 			history.setOrgAddress(organization.getAddress());
 			history.setOrgTel(organization.getTel());
-			
 			historyList.add(history);
 			
 		}
@@ -83,7 +76,7 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	@Override
 	public Map<String,Object> findNewRequestByCardNo(String cardNo) {
 		
-		List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personalCardNo =?1 and state=0 order by createTimestamp desc", cardNo);
+		List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state=0 order by createTimestamp desc", cardNo);
 		
 		if(streams!=null && !streams.isEmpty()) {
 			/** 只查询最近扫描单据的一个企业id */
@@ -101,8 +94,14 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	}
 
 	@Override
-	public AuthorizationStream findAuthorizationStreamById(Integer streamId) {
+	public AuthorizationStream findAuthorizationStreamById(long streamId) {
 		return crudService.uniqueResultByProperty(AuthorizationStream.class, "id", streamId);
+	}
+
+
+	@Override
+	public PersonalUser findUserByNo(String cardNo) {
+		return crudService.uniqueResultByProperty(PersonalUser.class, "id", cardNo);
 	}
 
 }

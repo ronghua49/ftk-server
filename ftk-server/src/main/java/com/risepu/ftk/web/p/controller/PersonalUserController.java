@@ -9,12 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.service.PersonalUserService;
@@ -72,18 +72,27 @@ public class PersonalUserController   {
 			
 			if(cardNo.equals(loginRequest.getCardNo())) {
 				
-				PersonalUser personalUser = personalService.personLogin(loginRequest.getCardNo(),loginRequest.getPhone());
+				PersonalUser personalUser = personalService.findUserByNo(cardNo);
 				
+				if(personalUser!=null) {
+					loginResult.setMessage("登录成功");
+					loginResult.setPersonalUser(personalUser);
+				}else {
+					PersonalUser user = new PersonalUser();
+					user.setId(cardNo);
+					user.setMobile(loginRequest.getPhone());
+					personalService.savePersonUser(user);
+					personalUser= user;
+				}
 				request.getSession().setAttribute(Constant.getSessionCurrUser(), personalUser);
 				
-				loginResult.setMessage("登录成功");
-				
 				/** 根据身份证 查询新的请求授权的企业名和 当前授权流水的id*/
-				
 				Map<String, Object> map  = personalService.findNewRequestByCardNo(cardNo);
 				
-				loginResult.setOrgName((String)map.get("orgName"));
-				loginResult.setStreamId((Integer)map.get("streamId"));;
+				if(map!=null) {
+					loginResult.setOrgName((String)map.get("orgName"));
+					loginResult.setStreamId((Integer)map.get("streamId"));;
+				}
 				
 				logger.debug("用户手机号--{}，登录成功",personalUser.getMobile());
 				
@@ -91,12 +100,12 @@ public class PersonalUserController   {
 				
 			}else {
 				loginResult.setMessage("非本人单据，扫描无效");
-				return ResponseEntity.ok(Response.succeed(loginResult));
+				return ResponseEntity.ok(Response.failed(10, loginResult.getMessage()));
 			}
 			
 		}else {
 			loginResult.setMessage("验证码输入错误");
-			return ResponseEntity.ok(Response.succeed(loginResult));
+			return ResponseEntity.ok(Response.failed(2,loginResult.getMessage()));
 		}
 		
 	}
@@ -114,14 +123,15 @@ public class PersonalUserController   {
 	 * @return
 	 */
 	@GetMapping("/authen")
-	public ResponseEntity<Response<String>> personAuth(@RequestParam Integer streamId,@RequestParam String state, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> personAuth(@RequestParam String streamId,@RequestParam String state, HttpServletRequest request) {
 		
 		String message ="";
 		PersonalUser personalUser = getSession(request);
 		
-		AuthorizationStream stream =   personalService.findAuthorizationStreamById(streamId);
+		AuthorizationStream stream =   personalService.findAuthorizationStreamById(Long.parseLong(streamId));
+		
 		if(stream==null) {
-			return ResponseEntity.ok(Response.failed(400,"错误的流水id"));
+			return ResponseEntity.ok(Response.failed(11,"错误的流水id"));
 		}
 		
 		/** 判断授权 */
@@ -154,10 +164,9 @@ public class PersonalUserController   {
 	 * @param pageSize 显示条数
 	 * @return
 	 */
-	@GetMapping("/authen/history/{key:\\w+}")
-	public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@PathVariable(required=false) String key,@RequestParam(defaultValue="1") Integer pageNo,@RequestParam Integer pageSize,
+	@GetMapping("/authen/history")
+	public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestParam (required=false) String key,@RequestParam(defaultValue="1") Integer pageNo,@RequestParam Integer pageSize,
 																				HttpServletRequest request){
-		
 		PersonalUser user = getCurrUser(request);
 		
 		PageResult<AuthHistoryInfo> pageResult =  personalService.queryHistoryByParam(key,pageNo,pageSize,user.getId());

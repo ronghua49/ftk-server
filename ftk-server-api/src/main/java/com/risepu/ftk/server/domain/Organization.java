@@ -54,10 +54,10 @@ public class Organization extends AuditableObject<String> {
 		this.name = name;
 	}
 
-	/** 组织机构代码 */
+	/** 无证合一证件号码 */
 	private String organization;
 
-	@Column(name = "ORGANIZATION", length = 10)
+	@Column(name = "ORGANIZATION", length = 18)
 	public String getOrganization() {
 		return organization;
 	}
