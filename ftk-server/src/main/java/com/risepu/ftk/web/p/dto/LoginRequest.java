@@ -8,6 +8,10 @@ public class LoginRequest {
 
 	private String inCode;
 
+	private String qrCode;
+	
+	private String documentHash;
+	
 	public String getPhone() {
 		return phone;
 	}
@@ -32,4 +36,23 @@ public class LoginRequest {
 		this.cardNo = cardNo;
 	}
 
+	public String getQrCode() {
+		return qrCode;
+	}
+
+	public void setQrCode(String qrCode) {
+		this.qrCode = qrCode;
+	}
+
+	public String getDocumentHash() {
+		return documentHash;
+	}
+
+	public void setDocumentHash(String documentHash) {
+		this.documentHash = documentHash;
+	}
+
+	
+
+	
 }

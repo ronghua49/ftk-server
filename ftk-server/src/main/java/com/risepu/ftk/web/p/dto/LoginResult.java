@@ -8,16 +8,9 @@ public class LoginResult {
 	
 	private PersonalUser personalUser;
 	
+	private String orgName;
 	
-	private boolean isSuccess;
-	
-	public boolean isSuccess() {
-		return isSuccess;
-	}
-
-	public void setSuccess(boolean isSuccess) {
-		this.isSuccess = isSuccess;
-	}
+	private Integer streamId;
 
 	public String getMessage() {
 		return message;
@@ -35,6 +28,23 @@ public class LoginResult {
 		this.personalUser = personalUser;
 	}
 
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public Integer getStreamId() {
+		return streamId;
+	}
+
+	public void setStreamId(Integer streamId) {
+		this.streamId = streamId;
+	}
+
+	
 	
 	
 	

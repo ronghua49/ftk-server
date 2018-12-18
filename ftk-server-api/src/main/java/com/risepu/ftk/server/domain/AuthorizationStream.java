@@ -1,7 +1,5 @@
 package com.risepu.ftk.server.domain;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,11 +18,12 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Entity
 @Table(name = "FTK_AUTHORIZATION_STREAM")
 public class AuthorizationStream extends AuditableObject<Long>{
-	
+	/** 等待授权*/
+	public  static final int AUTH_STATE_NEW=0;
 	/** 授权通过*/
-	public  static final int AUTH_STATE_PASS=0;
+	public  static final int AUTH_STATE_PASS=1;
 	/** 拒绝授权*/
-	public  static final int AUTH_STATE_REFUSE=1;
+	public  static final int AUTH_STATE_REFUSE=2;
 	
 
 
@@ -32,8 +31,8 @@ public class AuthorizationStream extends AuditableObject<Long>{
 	
 	/** 主键*/
 	private Long  id;
-	/** 用户id*/
-	private String userId;
+	/** 用户身份证号*/
+	private String personId;
 	/** 企业id*/
 	private String orgId;
 	/** 授权状态*/
@@ -52,18 +51,24 @@ public class AuthorizationStream extends AuditableObject<Long>{
 		this.id=id;
 	}
 
-	@Column(name="USER_ID",length=32)
-	public String getUserId() {
-		return userId;
+	@Column(name="PERSON_ID",length=18)
+	public String getPersonId() {
+		return personId;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+
+	public void setPersonId(String personId) {
+		this.personId = personId;
 	}
+	
+	
 	
 	@Column(name="ORG_ID",length=11)
 	public String getOrgId() {
 		return orgId;
 	}
+
+	
+
 	public void setOrgId(String orgId) {
 		this.orgId = orgId;
 	}

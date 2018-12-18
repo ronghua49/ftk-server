@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationUser;
@@ -55,22 +56,27 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 		if (StringUtils.isNumeric(phoneOrName)) {
 			/** 使用手机号登录 */
-			try {
+			
 				OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
 
+				if(org==null) {
+					loginResult.setMessage("此手机号还未注册，请注册！");
+				}
+				
 				if (org != null && org.getPassword().equals(password)) {
-					loginResult.setSuccess(true);
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(org);
+					/** 判断是否为审核通过的企业用户 */
+					Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", phoneOrName);
+					
+					if(organization!=null && organization.getState().equals(Organization.CHECK_PASS_STATE) ) {
+						loginResult.setOrganization(organization);
+					}
+					
 				} else {
-					loginResult.setSuccess(false);
 					loginResult.setMessage("密码错误！");
 				}
 
-			} catch (Exception e) {
-				loginResult.setSuccess(false);
-				loginResult.setMessage("此手机号还未注册，请注册！");
-			}
 
 		} else {
 			/** 使用企业名登录 */
@@ -81,12 +87,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 						org.getId());
 				if (orgUser.getPassword().equals(password)) {
 
-					loginResult.setSuccess(true);
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(orgUser);
 				}
 			} else {
-				loginResult.setSuccess(false);
 				loginResult.setMessage("企业名或者密码错误！");
 			}
 		}
@@ -158,14 +162,19 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public Organization checkAuthState(String id) {
+	public Organization findAuthenOrgById(String id) {
 		return crudService.uniqueResultByProperty(Organization.class, "id", id);
 	}
 
 	@Override
-	public void InsertAuthorStream(String orgId, String personId) {
-		// TODO Auto-generated method stub
+	public void InsertAuthorStream(String orgId, String cardNo) {
 		
+		AuthorizationStream stream = new AuthorizationStream();
+		
+		stream.setOrgId(orgId);
+		stream.setPersonId(cardNo);
+		stream.setState(AuthorizationStream.AUTH_STATE_NEW);
+		crudService.save(stream);
 	}
 
 	

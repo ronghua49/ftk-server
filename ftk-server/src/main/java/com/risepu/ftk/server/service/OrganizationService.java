@@ -78,11 +78,11 @@ public interface OrganizationService {
 	public void saveAdviceInfo(OrganizationAdvice advice);
 
 	/**
-	 * 根据企业id校验企业认证结果
+	 * 根据企业id查询认证的企业对象
 	 * @param id 当前的企业id(手机号)
-	 * @return 认证结果
+	 * @return 认证结果对象
 	 */
-	public Organization checkAuthState(String id);
+	public Organization findAuthenOrgById(String id);
 
 	/**
 	 * 插入授权流水

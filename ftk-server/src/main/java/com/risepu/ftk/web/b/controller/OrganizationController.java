@@ -2,6 +2,7 @@ package com.risepu.ftk.web.b.controller;
 
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -93,24 +94,34 @@ public class OrganizationController {
 	@CrossOrigin
 	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestParam(name = "name") String mobileOrName,
 			@RequestParam String password, HttpServletRequest request) {
-		LoginResult loginResult = organizationService.orgLogin(mobileOrName, password);
-
-		if (loginResult.isSuccess()) {
-
-			request.getSession().setAttribute(Constant.getSessionCurrUser(), loginResult.getOrganizationUser());
-			logger.debug("企业用户手机号--{},登录成功！", loginResult.getOrganizationUser().getId());
+		
+			LoginResult loginResult = organizationService.orgLogin(mobileOrName, password);
+			
+			if(loginResult.getMessage().equals("登录成功")) {
+				
+				/** 设置session对象为 未认证的对象 */
+				setCurrUserToSession(request,loginResult.getOrganizationUser());
+				logger.debug("企业用户--{},登录成功！", mobileOrName);
+				
+				
+				
+				
+			}
+			
 			return ResponseEntity.ok(Response.succeed(loginResult));
-		} else {
-			return ResponseEntity.ok(Response.failed(001, loginResult.getMessage()));
-		}
+		
+	}
+	
+	
+	private void setCurrUserToSession(HttpServletRequest request, OrganizationUser organizationUser) {
+		request.getSession().setAttribute(Constant.getSessionCurrUser(), organizationUser);
 	}
 
 	/**
 	 * 忘记密码
-	 * 
-	 * @param forgetRequest
-	 *            表单数据
-	 * @param request
+	 * @param forgetRequest  表单数据
+	 *           
+	 * @param request 请求对象
 	 * @return
 	 */
 	@PostMapping("/forgetPwd")
@@ -148,17 +159,17 @@ public class OrganizationController {
 	public ResponseEntity<Response<String>> orgChangePwd(@RequestParam String password, @RequestParam String newpwd,
 			HttpServletRequest request) {
 
-		OrganizationUser org = getCurrUser(request);
+		OrganizationUser currUser = getCurrUser(request);
 		String message = "密码输入错误";
 		String salt = ConfigUtils.getProperty("salt");
 
 		password = DigestUtils.md5Hex(password + salt);
 		newpwd = DigestUtils.md5Hex(newpwd + salt);
 
-		if (org.getPassword().equals(password)) {
+		if (currUser.getPassword().equals(password)) {
 			message = "密码修改成功";
-			organizationService.changePwd(org.getId(), newpwd);
-			logger.debug("企业用户   {}，修改密码成功！", org.getId());
+			organizationService.changePwd(currUser.getId(), newpwd);
+			logger.debug("企业用户   {}，修改密码成功！", currUser.getId());
 		}
 		return ResponseEntity.ok(Response.succeed(message));
 
@@ -171,7 +182,6 @@ public class OrganizationController {
 	 *            图片文件流
 	 * @return 保存的图片名
 	 */
-	// @Override
 	@PostMapping("/img/upload")
 	public ResponseEntity<Response<String>> upload(@RequestParam(name = "file") MultipartFile file) {
 
@@ -193,7 +203,6 @@ public class OrganizationController {
 	 * @return
 	 */
 	@GetMapping("/img/download/{imgName:\\w+.[a-z]{0,4}}")
-	// @Override
 	public ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response) {
 
 		try {
@@ -209,9 +218,8 @@ public class OrganizationController {
 
 	/**
 	 * 校验当前企业的审核状态
-	 * 
 	 * @param request
-	 * @return 审核结果 0 未审核 1审核中 2审核通过 3审核失败
+	 * @return Organization 企业的信息
 	 */
 	@GetMapping("/auth/check")
 	@ResponseBody
@@ -219,7 +227,7 @@ public class OrganizationController {
 	public ResponseEntity<Response<Organization>> checkAuthState(HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
-		Organization org = organizationService.checkAuthState(currUser.getId());
+		Organization org = organizationService.findAuthenOrgById(currUser.getId());
 
 		return ResponseEntity.ok(Response.succeed(org));
 	}
@@ -232,7 +240,6 @@ public class OrganizationController {
 	 * @param request
 	 * @return 上传结果
 	 */
-	// @Override
 	@PostMapping("/authen/info")
 	@ResponseBody
 	@CrossOrigin
@@ -247,7 +254,7 @@ public class OrganizationController {
 		organization.setState(Organization.CHECKING_STATE);
 
 		organizationService.saveOrUpdateOrgInfo(organization);
-		// logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
+		 logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
 		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
 
 	}
@@ -261,11 +268,20 @@ public class OrganizationController {
 	 *            用户身份证号
 	 * @return
 	 */
-	public ResponseEntity<Response<String>> scanQR(@RequestParam String orgId, @RequestParam String cardNo) {
-
-		organizationService.InsertAuthorStream(orgId, cardNo);
-
-		return ResponseEntity.ok(Response.succeed("流水产生成功！"));
+	public ResponseEntity<Response<String>> scanQR(@RequestParam String orgId, @RequestParam String cardNo,HttpServletRequest request) {
+		
+		/** 未审核通过的企业不允许扫描单据 */
+		OrganizationUser currUser = getCurrUser(request);
+		
+		Organization org = organizationService.findAuthenOrgById(currUser.getId());
+		
+		if(org!=null && org.getState().equals(Organization.CHECK_PASS_STATE)) {
+			organizationService.InsertAuthorStream(orgId, cardNo);
+			
+			return ResponseEntity.ok(Response.succeed("流水产生成功！"));
+			
+		}
+		return ResponseEntity.ok(Response.succeed("请认证通过后扫描"));
 	}
 
 	/**
@@ -302,11 +318,25 @@ public class OrganizationController {
 		advice.setOrgId(currUser.getId());
 		organizationService.saveAdviceInfo(advice);
 		return ResponseEntity.ok(Response.succeed("意见反馈成功！"));
+		
 
 	}
 
-	private OrganizationUser getCurrUser(HttpServletRequest request) {
-		return (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+
+	
+	private  OrganizationUser getCurrUser(HttpServletRequest request) {
+		 return(OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 	}
 
+	
+	/**
+	 * 退出登录
+	 */
+	@GetMapping("/logout")
+	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
+		
+		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
+		return ResponseEntity.ok(Response.succeed("退出登录"));
+	}
+	
 }

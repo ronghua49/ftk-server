@@ -1,23 +1,17 @@
 package com.risepu.ftk.web.b.dto;
 
+import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationUser;
 
 public class LoginResult {
 	
 	private String message;
-	
+	/** 未认证企业 */
 	private OrganizationUser organizationUser;
+	/** 认证企业 */
+	private Organization organization;
 	
 	
-	private boolean isSuccess;
-	
-	public boolean isSuccess() {
-		return isSuccess;
-	}
-
-	public void setSuccess(boolean isSuccess) {
-		this.isSuccess = isSuccess;
-	}
 
 	public String getMessage() {
 		return message;
@@ -34,6 +28,15 @@ public class LoginResult {
 	public void setOrganizationUser(OrganizationUser organizationUser) {
 		this.organizationUser = organizationUser;
 	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+	
 	
 	
 

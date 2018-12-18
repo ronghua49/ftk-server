@@ -11,6 +11,8 @@ public class AuthHistoryInfo {
 	private String orgAddress;
 	
 	private String orgTel;
+	
+	private Integer authState;
 
 	public String getOrgName() {
 		return orgName;
@@ -43,6 +45,15 @@ public class AuthHistoryInfo {
 	public void setOrgTel(String orgTel) {
 		this.orgTel = orgTel;
 	}
+
+	public Integer getAuthState() {
+		return authState;
+	}
+
+	public void setAuthState(Integer authState) {
+		this.authState = authState;
+	}
+	
 	
 	
 }
