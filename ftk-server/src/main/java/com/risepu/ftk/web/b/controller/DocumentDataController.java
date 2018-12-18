@@ -76,7 +76,7 @@ public class DocumentDataController implements DocumentDataApi {
 
         }
         // 文档保存路径
-        String filePath = pdfService.pdf(templateId, _template,response);
+        String filePath = pdfService.pdf(templateId, _template);
 
         ProofDocument proofDocument = new ProofDocument();
         proofDocument.setFilePath(filePath);
