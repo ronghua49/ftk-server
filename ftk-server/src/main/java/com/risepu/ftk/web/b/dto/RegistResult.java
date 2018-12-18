@@ -17,5 +17,17 @@ public class RegistResult { // Data Transfer Object
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	private String message;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	
 
 }

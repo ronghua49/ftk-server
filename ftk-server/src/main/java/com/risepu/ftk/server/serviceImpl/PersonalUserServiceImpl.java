@@ -1,75 +1,106 @@
 package com.risepu.ftk.server.serviceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.alibaba.dubbo.config.annotation.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.risepu.ftk.server.domain.AuthorizationStream;
+import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.service.PersonalUserService;
+import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
 @Service
 public class PersonalUserServiceImpl implements PersonalUserService {
 
-    @Autowired
-    private GenericCrudService crudService;
+	@Autowired
+	private GenericCrudService crudService;
 
-    @Override
-    /**
-     * 验证码注册
-     */
-    public String personReg(String phone, String code, String password) {
+	@Override
+	public String personReg(String mobile, String cardNo, String userName) {
+		PersonalUser personalUser = new PersonalUser();
+		personalUser.setId(cardNo);
+		personalUser.setMobile(mobile);
+		personalUser.setUserName(userName);
+		crudService.save(personalUser);
+		return "success";
+	}
 
-        // 从session 获取code
-        if (code != null) {
-            if ("123122".equals(code)) {
-                //用户入库
-                PersonalUser user = new PersonalUser();
-                user.setMobile(phone);
-                user.setPassword(password);
-                crudService.save(user);
-                return "注册成功！";
-            } else {
+	@Override
+	public PersonalUser personLogin(String cardNo, String phone) {
 
-                return "验证码输入错误";
-            }
+		PersonalUser user = new PersonalUser();
+		user.setMobile(phone);
+		user.setId(cardNo);
+		crudService.save(user);
+		return user;
 
-        } else {
-            return "验证码已过期，请重新获取！";
-        }
+	}
 
-    }
+	@Override
+	public void update(AuthorizationStream authStream) {
+		crudService.update(authStream);
+	}
 
-    @Override
-    public String personLoginUsePwd(String phone, String password) {
-        PersonalUser personalUser = crudService.uniqueResultByProperty(PersonalUser.class, "phone", phone);
-        if (personalUser != null) {
-            if (personalUser.getPassword().equals(password)) {
-                //存入用户到当前session
+	@Override
+	public PageResult<AuthHistoryInfo> queryHistoryByParam(String key, Integer pageNo, Integer pageSize, String personId) {
 
+		List<AuthHistoryInfo> historyList = new ArrayList<>();
 
-                return "登录成功";
-            } else {
-                return "密码错误";
-            }
+		/** 根据当前用户身份证号查询所有授权流水记录*/
+		List<AuthorizationStream> streamList = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state in (1,2) ", personId);
 
-        } else {
-            return "您还没有注册，请注册后登录";
-        }
-    }
+		for (AuthorizationStream stream : streamList) {
+			AuthHistoryInfo history = new AuthHistoryInfo();
+			Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", stream.getOrgId());
+			history.setAuthTime(stream.getModifyTimestamp());
+			history.setOrgName(organization.getName());
+			history.setAuthState(stream.getState());
+			history.setOrgAddress(organization.getAddress());
+			history.setOrgTel(organization.getTel());
 
-    @Override
-    /**
-     * 验证码登录
-     */
-    public String personLoginUseCode(String phone, String code) {
-        //判断用户输入的code和阿里云 session code 是否一致
+			historyList.add(history);
 
-        if ("123123".equals(code)) {
+		}
 
+		PageResult<AuthHistoryInfo> page = new PageResult<>();
 
-        }
-        return null;
-    }
+		page.setCount(pageSize);
+		page.setData(historyList);
+
+		return page;
+	}
+
+	@Override
+	public Map<String, Object> findNewRequestByCardNo(String cardNo) {
+
+		List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personalCardNo =?1 and state=0 order by createTimestamp desc", cardNo);
+
+		if (streams != null && !streams.isEmpty()) {
+			/** 只查询最近扫描单据的一个企业id */
+			String orgId = streams.get(0).getOrgId();
+
+			Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", orgId);
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("orgName", organization.getName());
+			map.put("streamId", streams.get(0).getId());
+
+			return map;
+		}
+		return null;
+	}
+
+	@Override
+	public AuthorizationStream findAuthorizationStreamById(Integer streamId) {
+		return crudService.uniqueResultByProperty(AuthorizationStream.class, "id", streamId);
+	}
 
 }

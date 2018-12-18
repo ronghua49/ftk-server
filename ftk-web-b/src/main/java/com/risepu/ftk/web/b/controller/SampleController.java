@@ -6,7 +6,6 @@ package com.risepu.ftk.web.b.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import com.risepu.ftk.server.service.SampleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

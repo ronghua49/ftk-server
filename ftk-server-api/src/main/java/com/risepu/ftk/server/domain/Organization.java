@@ -18,68 +18,154 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Entity
 @Table(name = "FTK_ORGANIZATION")
 public class Organization extends AuditableObject<String> {
+	/** 未审核 */
+	public static final Integer UNCHECK_STATE = 0;
+	/** 审核中 */
+	public static final Integer CHECKING_STATE = 1;
+	/** 审核通过 */
+	public static final Integer CHECK_PASS_STATE = 2;
+	/** 审核未通过 */
+	public static final Integer CHECK_FAIL_STATE = 3;
 
-    private static final long serialVersionUID = 1L;
+	private String phone;
 
-    private String id;
+	@Column(name = "PHONE", length = 11, nullable = false)
+	public String getPhone() {
+		return phone;
+	}
 
-    @Override
-    @Id
-    @Column(name = "ID", length = 10)
-    public String getId() {
-        return id;
-    }
+	public void setPhone(String phnoe) {
+		this.phone = phnoe;
+	}
 
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
+	private String password;
 
-    /**
-     * 企业名称
-     */
-    private String name;
+	@Column(name = "PASSWORD", length = 32)
+	public String getPassword() {
+		return password;
+	}
 
-    @Column(name = "NAME", length = 255, nullable = false)
-    public String getName() {
-        return name;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	/** 发起认证的企业用户手机号 */
+	private String id;
 
-    private String phone;
+	@Override
+	@Id
+	@Column(name = "ID", length = 11)
+	public String getId() {
+		return id;
+	}
 
-    @Column(name = "PHONE", length = 11, nullable = false)
-    public String getPhone() {
-        return phone;
-    }
+	@Override
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setPhone(String phnoe) {
-        this.phone = phnoe;
-    }
+	/** 企业名 */
+	private String name;
 
-    private String password;
+	@Column(name = "NAME", length = 255, nullable = false)
+	public String getName() {
+		return name;
+	}
 
-    @Column(name = "PASSWORD", length = 32)
-    public String getPassword() {
-        return password;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	/** 组织机构代码 */
+	private String organization;
 
-    private boolean state;
+	@Column(name = "ORGANIZATION", length = 10)
+	public String getOrganization() {
+		return organization;
+	}
 
-    @Column(name = "STATE", length = 1)
-    public boolean isState() {
-        return state;
-    }
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
 
-    public void setState(boolean state) {
-        this.state = state;
-    }
+	/** 审核状态   默认未审核 */
+	private Integer state = UNCHECK_STATE;
+
+	@Column(name = "STATE", length = 1)
+
+	public Integer getState() {
+
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	private String address;
+
+	@Column(name = "ADDRESS", length = 31)
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	private String legalPerson;
+
+	@Column(name = "LEGAL_PERSON", length = 10)
+	public String getLegalPerson() {
+		return legalPerson;
+	}
+
+	public void setLegalPerson(String legalPerson) {
+		this.legalPerson = legalPerson;
+	}
+
+	private String idCardImgName;
+
+	@Column(name = "IDCARD_IMG_NAME", length = 50)
+	public String getIdCardImgName() {
+		return idCardImgName;
+	}
+
+	public void setIdCardImgName(String idCardImgName) {
+		this.idCardImgName = idCardImgName;
+	}
+
+	private String licenseImgName;
+
+	@Column(name = "LICENCE_IMG_NAME")
+	public String getLicenseImgName() {
+		return licenseImgName;
+	}
+
+	public void setLicenseImgName(String licenseImgName) {
+		this.licenseImgName = licenseImgName;
+	}
+
+	private String remark;
+
+	@Column(name = "REMARK", length = 225)
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	private String tel;
+
+	@Column(name = "TEL", length = 15)
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
 
 }

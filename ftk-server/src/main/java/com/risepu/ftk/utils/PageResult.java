@@ -3,62 +3,63 @@ package com.risepu.ftk.utils;
 import java.util.List;
 
 public class PageResult<T> {
-    private int code; // 状态码, 0表示成功
 
-    private String msg; // 提示信息
+	private int code; // 状态码, 0表示成功
 
-    private long count; // 总数量, total
+	private String msg; // 提示信息
 
-    private List<T> data; // 当前数据, bootstrapTable是rows
+	private long count; // 总数量, total
 
-    public PageResult() {
-    }
+	private List<T> data; // 当前数据, bootstrapTable是rows
 
-    public PageResult(List<T> rows) {
-        this.data = rows;
-        this.count = rows.size();
-        this.code = 0;
-        this.msg = "";
-    }
+	public PageResult() {
+	}
 
-    public PageResult(long total, List<T> rows) {
-        this.count = total;
-        this.data = rows;
-        this.code = 0;
-        this.msg = "";
-    }
+	public PageResult(List<T> rows) {
+		this.data = rows;
+		this.count = rows.size();
+		this.code = 0;
+		this.msg = "";
+	}
 
-    public int getCode() {
-        return code;
-    }
+	public PageResult(long total, List<T> rows) {
+		this.count = total;
+		this.data = rows;
+		this.code = 0;
+		this.msg = "";
+	}
 
-    public void setCode(int code) {
-        this.code = code;
-    }
+	public int getCode() {
+		return code;
+	}
 
-    public String getMsg() {
-        return msg;
-    }
+	public void setCode(int code) {
+		this.code = code;
+	}
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+	public String getMsg() {
+		return msg;
+	}
 
-    public long getCount() {
-        return count;
-    }
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 
-    public void setCount(long count) {
-        this.count = count;
-    }
+	public long getCount() {
+		return count;
+	}
 
-    public List<T> getData() {
-        return data;
-    }
+	public void setCount(long count) {
+		this.count = count;
+	}
 
-    public void setData(List<T> data) {
-        this.data = data;
-        this.count = data.size();
-    }
+	public List<T> getData() {
+		return data;
+	}
+
+	public void setData(List<T> data) {
+		this.data = data;
+		this.count = data.size();
+	}
 
 }
