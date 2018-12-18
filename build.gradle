@@ -284,6 +284,12 @@ subprojects {
 					}
 					entry.value.files.clear()
 				}
+				xml.property(name: 'project.' + project.name, location: project.name)
+				xml.property(name: 'src.' + project.name + '.java', location: '${project.' + project.name + '}/src/main/java')
+				xml.property(name: 'src.' + project.name + '.resources', location: '${project.' + project.name + '}/src/main/resources')
+				xml.property(name: 'res.' + project.name, location: '${build.resources}/' + project.name)
+				xml.property(name: 'classes.' + project.name, location: '${build.classes}/' + project.name)
+				xml.property(name: 'jar.' + project.name, location: 'build/jar/' + project.name + ".jar")
 				it.println()
 			}
 		}

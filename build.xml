@@ -1,8 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project [
-<!ENTITY commonsApi SYSTEM "lib/commons-api.ant.xml">
-<!ENTITY walletCommon SYSTEM "lib/wallet-common.ant.xml">
-<!ENTITY walletService SYSTEM "lib/wallet-service.ant.xml">
+<!ENTITY commons-api SYSTEM "lib/commons-api.ant.xml">
+<!ENTITY ftk-chain-api SYSTEM "lib/ftk-chain-api.ant.xml">
+<!ENTITY ftk-chain SYSTEM "lib/ftk-chain.ant.xml">
+<!ENTITY ftk-server-api SYSTEM "lib/ftk-server-api.ant.xml">
+<!ENTITY ftk-server SYSTEM "lib/ftk-server.ant.xml">
+<!ENTITY ftk-web-b SYSTEM "lib/ftk-web-b.ant.xml">
+<!ENTITY ftk-web-m SYSTEM "lib/ftk-web-m.ant.xml">
+<!ENTITY ftk-web-p SYSTEM "lib/ftk-web-p.ant.xml">
 ]>
 <project name="wallet" default="default" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
@@ -37,41 +42,16 @@
 	<fileset id="jars.provided" dir="${lib.provided}" includes="*.jar" />
 	<fileset id="jars.test" dir="${lib.test}" includes="*.jar" />
 
-	<macrodef name="PROJECT">
-		<attribute name="name" />
-		<sequential>
-			<echo message="define project: @{name}" />
-			<property name="project.@{name}" location="${name}" />
-			<property name="src.@{name}.java" location="${project.@{name}}/src/main/java" />
-			<property name="src.@{name}.resources" location="${project.@{name}}/src/main/resources" />
-			<property name="res.@{name}" location="${build.resources}/@{name}" />
-			<property name="classes.@{name}" location="${build.classes}/@{name}" />
-			<property name="jar.@{name}" location="build/jar/@{name}.jar" />
-		</sequential>
-	</macrodef>
-
-	<property name="project.wallet-lib" location="wallet-lib" />
-	<property name="project.wallet-common" location="wallet-common" />
-	<property name="project.wallet-service" location="wallet-service" />
-
-	<property name="src.wallet-lib.java" location="${project.wallet-lib}/src/main/java" />
-	<property name="src.wallet-lib.resources" location="${project.wallet-lib}/src/main/resources" />
-	<property name="src.wallet-common.java" location="${project.wallet-common}/src/main/java" />
-	<property name="src.wallet-common.resources" location="${project.wallet-common}/src/main/resources" />
-	<property name="src.wallet-service.java" location="${project.wallet-service}/src/main/java" />
-	<property name="src.wallet-service.resources" location="${project.wallet-service}/src/main/resources" />
-
-	<property name="res.wallet-lib" location="${build.resources}/wallet-lib" />
-	<property name="res.wallet-service" location="${build.resources}/wallet-service" />
-	<property name="res.wallet-common" location="${build.resources}/wallet-common" />
-
-	<property name="classes.wallet-lib" location="${build.classes}/wallet-lib" />
-	<property name="classes.wallet-service" location="${build.classes}/wallet-service" />
-	<property name="classes.wallet-common" location="${build.classes}/wallet-common" />
-
-	<property name="jar.wallet-lib" location="build/jar/wallet-lib.jar" />
-	<property name="jar.wallet-service" location="build/jar/wallet-service.jar" />
-	<property name="jar.wallet-common" location="build/jar/wallet-common.jar" />
+	<path id="classpath.provided">
+		<fileset dir="${lib.provided}" includes="*.jar" />
+	</path>
+	<path id="classpath.test">
+		<fileset dir="${lib.test}" includes="*.jar" />
+	</path>
+	<path id="classpath.all-compile">
+		<fileset dir="${lib.compile}" includes="*.jar" />
+		<path refid="classpath.provided" />
+	</path>
 
 	<!-- 192.168.8.20 -->
 	<condition property="host.node">
@@ -91,25 +71,46 @@
 			<javac encoding="UTF-8" debug="true" srcdir="@{src}" destdir="@{dest}" includeantruntime="false" source="1.8" target="1.8" classpathref="@{path}" includes="**/*.java" />
 		</sequential>
 	</macrodef>
+
+	<macrodef name="COMPILE" taskname="project">
+		<attribute name="project" />
+		<element name="path-refs" optional="true" />
+		<element name="before-jar" optional="true" />
+		<sequential>
+			<path id="classpath.@{project}">
+				<fileset dir="${lib.compile}">
+					<patternset refid="ps.@{project}.compile" />
+				</fileset>
+				<path refid="classpath.provided" />
+				<path-refs />
+			</path>
+			<JAVAC src="${src.@{project}.java}" dest="${classes.@{project}}" path="classpath.@{project}" />
+			<copy todir="${res.@{project}}">
+				<fileset dir="${src.@{project}.resources}" includes="**/*" />
+			</copy>
+			<before-jar />
+			<jar destfile="${jar.@{project}}">
+				<fileset dir="${classes.@{project}}" />
+				<fileset dir="${res.@{project}}" />
+			</jar>
+		</sequential>
+	</macrodef>
 	
-	&walletLib;
-	&walletCommon;
-	&walletService;
+	&commons-api;
+	&ftk-chain-api;
+	&ftk-chain;
+	&ftk-server-api;
+	&ftk-server;
+	&ftk-web-b;
+	&ftk-web-m;
+	&ftk-web-p;
 	
 	<target name="env">
+		<COMPILE project="commons-api" />
+		<echo message="Path for commons-api: ${cp.commons-api}" />
 	</target>
 
 	<target name="prepare">
-		<path id="classpath.provided">
-			<fileset dir="${lib.provided}" includes="*.jar" />
-		</path>
-		<path id="classpath.test">
-			<fileset dir="${lib.test}" includes="*.jar" />
-		</path>
-		<path id="classpath.all-compile">
-			<fileset dir="${lib.compile}" includes="*.jar" />
-			<path refid="classpath.provided" />
-		</path>
 	</target>
 
 	<target name="init" depends="prepare">
@@ -123,79 +124,99 @@
 		<delete dir="build" />
 	</target>
 
-	<target name="compile.wallet-lib" depends="init">
-		<path id="classpath.wallet-lib">
-			<fileset dir="${lib.compile}">
-				<patternset refid="ps.wallet-lib.compile" />
-			</fileset>
-			<path refid="classpath.provided" />
-		</path>
-		<JAVAC src="${src.wallet-lib.java}" dest="${classes.wallet-lib}" path="classpath.wallet-lib" />
-		<copy todir="${res.wallet-lib}">
-			<fileset dir="${src.wallet-lib.resources}" includes="**/*" />
-		</copy>
-		<jar destfile="${jar.wallet-lib}">
-			<fileset dir="${classes.wallet-lib}" />
-			<fileset dir="${res.wallet-lib}" />
-		</jar>
+	<target name="compile.commons-api" depends="init">
+		<COMPILE project="commons-api" />
 	</target>
 
-	<target name="compile.wallet-common" depends="compile.wallet-lib">
-		<path id="classpath.wallet-common">
-			<fileset dir="${lib.compile}">
-				<patternset refid="ps.wallet-common.compile" />
-			</fileset>
-			<path refid="classpath.provided" />
-			<path location="${jar.wallet-lib}" />
-		</path>
-		<JAVAC src="${src.wallet-common.java}" dest="${classes.wallet-common}" path="classpath.wallet-common" />
-		<copy todir="${res.wallet-common}">
-			<fileset dir="${src.wallet-common.resources}" includes="**/*" />
-		</copy>
-		<jar destfile="${jar.wallet-common}">
-			<fileset dir="${classes.wallet-common}" />
-			<fileset dir="${res.wallet-common}" />
-		</jar>
+	<target name="compile.ftk-chain-api" depends="compile.commons-api">
+		<COMPILE project="ftk-chain-api">
+			<path-refs>
+				<path location="${jar.commons-api}" />
+			</path-refs>
+		</COMPILE>
 	</target>
 
-	<target name="compile.wallet-service" depends="compile.wallet-common">
-		<path id="classpath.wallet-service">
-			<fileset dir="${lib.compile}">
-				<patternset refid="ps.wallet-service.compile" />
-			</fileset>
-			<path refid="classpath.provided" />
-			<path location="${jar.wallet-common}" />
-			<path location="${jar.wallet-lib}" />
-		</path>
-		<JAVAC src="${src.wallet-service.java}" dest="${classes.wallet-service}" path="classpath.wallet-service" />
-		<copy todir="${res.wallet-service}">
-			<fileset dir="${src.wallet-service.java}" excludes="**/*.java" />
-			<fileset dir="${src.wallet-service.resources}" includes="**/*" />
-		</copy>
-		<copy todir="${res.wallet-service}" file="${user.home}/config/watching-keys.properties" overwrite="true" />
-		<propertyfile file="${res.wallet-service}/application.properties">
-			<entry key="db.mysql.username" value="${db.mysql.username}" />
-			<entry key="db.mysql.password" value="${db.mysql.password}" />
-			<entry key="db.mysql.database" value="${db.mysql.database}" />
-			<entry key="db.mysql.hostname" value="${db.mysql.hostname}" />
-			<entry key="web3j.rpc.remoteAddress" value="${web3j.rpc.remoteAddress}" />
-			<entry key="redis.database" value="${redis.database}" />
-			<entry key="redis.hostname" value="${redis.hostname}" />
-			<entry key="wallet.account" value="${wallet.account}" />
-			<entry key="chain.eth.fromBlock" value="${chain.eth.fromBlock}" />
-			<entry key="chain.btc.peers" value="${chain.btc.peers}" />
-			<entry key="chain.btc.network.type" value="${chain.btc.network.type}" />
-			<entry key="chain.btc.blockstore.location" value="${chain.btc.blockstore.location}" />
-			<entry key="chain.btc.wallet.file" value="${chain.btc.wallet.file}" />
-			<entry key="chain.btc.wallet.watchingKey" value="${chain.btc.wallet.watchingKey}" />
-		</propertyfile>
-		<jar destfile="${jar.wallet-service}">
-			<fileset dir="${classes.wallet-service}" />
-		</jar>
+	<target name="compile.ftk-server-api" depends="compile.commons-api">
+		<COMPILE project="ftk-server-api">
+			<path-refs>
+				<path location="${jar.commons-api}" />
+			</path-refs>
+		</COMPILE>
 	</target>
 
-	<target name="compile" depends="compile.wallet-service" />
+	<target name="compile.ftk-chain" depends="compile.ftk-chain-api">
+		<COMPILE project="ftk-chain">
+			<path-refs>
+				<path location="${jar.commons-api}" />
+				<path location="${jar.ftk-chain-api}" />
+			</path-refs>
+		</COMPILE>
+	</target>
 
-	<target name="default" depends="compile" />
+	<target name="compile.ftk-server" depends="compile.ftk-server-api">
+		<COMPILE project="ftk-server">
+			<path-refs>
+				<path location="${jar.commons-api}" />
+				<path location="${jar.ftk-server-api}" />
+			</path-refs>
+		</COMPILE>
+	</target>
+
+	<target name="compile.ftk-web-b" depends="compile.ftk-server-api">
+		<COMPILE project="ftk-web-b">
+			<path-refs>
+				<path location="${jar.commons-api}" />
+				<path location="${jar.ftk-server-api}" />
+			</path-refs>
+		</COMPILE>
+	</target>
+
+	<target name="compile.ftk-web-m" depends="compile.ftk-server-api">
+		<COMPILE project="ftk-web-m">
+			<path-refs>
+				<path location="${jar.commons-api}" />
+				<path location="${jar.ftk-server-api}" />
+			</path-refs>
+		</COMPILE>
+	</target>
+
+	<target name="compile.ftk-web-p" depends="compile.ftk-server-api">
+		<COMPILE project="ftk-web-p">
+			<path-refs>
+				<path location="${jar.commons-api}" />
+				<path location="${jar.ftk-server-api}" />
+			</path-refs>
+		</COMPILE>
+	</target>
+
+	<target name="compile" depends="compile.ftk-chain, compile.ftk-server, compile.ftk-web-b, compile.ftk-web-m, compile.ftk-web-p" />
+
+	<target name="war.ftk-server" depends="compile.ftk-server">
+		<war destfile="build/dist/ftk-server.war" webxml="${project.ftk-server}/src/main/webapps/WEB-INF/web.xml">
+			<webinf dir="${project.ftk-server}/src/main/webapps/WEB-INF/">
+				<exclude name="web.xml" />
+			</webinf>
+			<!--
+			<metainf dir="${project.ftk-server}/META-INF">
+				<include name="context.xml" />
+			</metainf>
+			-->
+			<lib dir="${lib.compile}">
+				<patternset refid="ps.ftk-server.compile" />
+			</lib>
+			<fileset dir="${project.ftk-server}/src/main/webapps">
+				<include name="**/*" />
+			</fileset>
+			<lib file="${jar.commons-api}" />
+			<lib file="${jar.ftk-server-api}" />
+			<classes dir="${classes.ftk-server}" />
+			<classes dir="${res.ftk-server}" />
+		</war>
+	</target>
+	
+	<target name="war" depends="war.ftk-server">
+	</target>
+
+	<target name="default" depends="war" />
 
 </project>
