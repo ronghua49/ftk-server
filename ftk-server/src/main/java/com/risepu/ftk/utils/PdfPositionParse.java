@@ -10,9 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author L-heng
+ */
 public class PdfPositionParse {
     private PdfReader reader;
-    private List<String> findText = new ArrayList<String>();    //需要查找的文本
+    private List<String> findText = new ArrayList<>();    //需要查找的文本
     private PdfReaderContentParser parser;
 
     public PdfPositionParse(String fileName) throws IOException {

@@ -9,6 +9,9 @@ import com.itextpdf.text.pdf.parser.ImageRenderInfo;
 import com.itextpdf.text.pdf.parser.RenderListener;
 import com.itextpdf.text.pdf.parser.TextRenderInfo;
 
+/**
+ * @author L-heng
+ */
 public class PositionRenderListener implements RenderListener {
     private List<String> findText;
     private float defaultH;        ///出现无法取到值的情况，默认为12
@@ -40,7 +43,7 @@ public class PositionRenderListener implements RenderListener {
     public void renderImage(ImageRenderInfo imageInfo) {
     }
 
-    private Map<String, ReplaceRegion> result = new HashMap<String, ReplaceRegion>();
+    private Map<String, ReplaceRegion> result = new HashMap<>();
 
     @Override
     public void renderText(TextRenderInfo textInfo) {

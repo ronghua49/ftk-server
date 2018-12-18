@@ -1,5 +1,8 @@
 package com.risepu.ftk.utils;
 
+/**
+ * @author L-heng
+ */
 public class ReplaceRegion {
     private String aliasName;
     private Float x;

@@ -2,6 +2,9 @@ package com.risepu.ftk.utils;
 
 import java.util.List;
 
+/**
+ * @author L-heng
+ */
 public class PageResult<T> {
     private int code; // 状态码, 0表示成功
 
