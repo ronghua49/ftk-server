@@ -6,6 +6,7 @@ package com.risepu.ftk.web.b.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import com.risepu.ftk.server.service.SampleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.risepu.ftk.server.service.SampleService;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.RegistRequest;
 import com.risepu.ftk.web.b.dto.RegistResult;
