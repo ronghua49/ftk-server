@@ -1,12 +1,11 @@
 package com.risepu.ftk.server.service;
 
-import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * 
  * @author L-heng
- *
  */
 public interface PdfService {
-	public String pdf(Long templateId,String _template) throws Exception;
+    String pdf(Long templateId, String _template, HttpServletResponse response) throws Exception;
 }

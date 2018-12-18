@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.risepu.ftk.web.api;
 
 import java.io.Serializable;
@@ -12,105 +9,100 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class Response<T> implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static class Header implements Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		@ApiModelProperty(value = "ResultCode")
-		private int code;
-		@ApiModelProperty(value = "ResultMessage", example = "SUCCEED")
-		private String message;
-		@ApiModelProperty(value = "ResultDesc")
-		private String desc;
-		@ApiModelProperty(value = "ResultTimestamp")
-		private long timestamp;
+    public static class Header implements Serializable {
 
-		public int getCode() {
-			return code;
-		}
+        private static final long serialVersionUID = 1L;
+        @ApiModelProperty(value = "ResultCode")
+        private int code;
+        @ApiModelProperty(value = "ResultMessage", example = "SUCCEED")
+        private String message;
+        @ApiModelProperty(value = "ResultDesc")
+        private String desc;
+        @ApiModelProperty(value = "ResultTimestamp")
+        private long timestamp;
 
-		public void setCode(int code) {
-			this.code = code;
-		}
+        public int getCode() {
+            return code;
+        }
 
-		public String getMessage() {
-			return message;
-		}
+        public void setCode(int code) {
+            this.code = code;
+        }
 
-		public void setMessage(String message) {
-			this.message = message;
-		}
+        public String getMessage() {
+            return message;
+        }
 
-		public String getDesc() {
-			return desc;
-		}
+        public void setMessage(String message) {
+            this.message = message;
+        }
 
-		public void setDesc(String desc) {
-			this.desc = desc;
-		}
+        public String getDesc() {
+            return desc;
+        }
 
-		public long getTimestamp() {
-			return timestamp;
-		}
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
 
-		public void setTimestamp(long timestamp) {
-			this.timestamp = timestamp;
-		}
+        public long getTimestamp() {
+            return timestamp;
+        }
 
-		@Override
-		public String toString() {
-			return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "")
-					+ (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
-		}
+        public void setTimestamp(long timestamp) {
+            this.timestamp = timestamp;
+        }
 
-	}
+        @Override
+        public String toString() {
+            return "Header [code=" + code + ", " + (message != null ? "message=" + message + ", " : "")
+                    + (desc != null ? "desc=" + desc + ", " : "") + "timestamp=" + timestamp + "]";
+        }
 
-	@ApiModelProperty(value = "header")
-	private Header header;
+    }
 
-	@ApiModelProperty(value = "body")
-	private T body;
+    @ApiModelProperty(value = "header")
+    private Header header;
 
-	public Header getHeader() {
-		return header;
-	}
+    @ApiModelProperty(value = "body")
+    private T body;
 
-	public void setHeader(Header header) {
-		this.header = header;
-	}
+    public Header getHeader() {
+        return header;
+    }
 
-	public T getBody() {
-		return body;
-	}
+    public void setHeader(Header header) {
+        this.header = header;
+    }
 
-	public void setBody(T body) {
-		this.body = body;
-	}
+    public T getBody() {
+        return body;
+    }
 
-	public static <T> Response<T> succeed(T body) {
-		Response<T> result = new Response<>();
-		Header header = new Header();
-		header.code = 0;
-		header.timestamp = System.currentTimeMillis();
-		result.body = body;
-		result.header = header;
-		return result;
-	}
+    public void setBody(T body) {
+        this.body = body;
+    }
 
-	public static <T> Response<T> failed(int code, String message) {
-		Header header = new Header();
-		header.code = code;
-		header.message = message;
-		header.timestamp = System.currentTimeMillis();
-		Response<T> result = new Response<>();
-		result.setHeader(header);
-		return result;
-	}
+    public static <T> Response<T> succeed(T body) {
+        Response<T> result = new Response<>();
+        Header header = new Header();
+        header.code = 0;
+        header.timestamp = System.currentTimeMillis();
+        result.body = body;
+        result.header = header;
+        return result;
+    }
+
+    public static <T> Response<T> failed(int code, String message) {
+        Header header = new Header();
+        header.code = code;
+        header.message = message;
+        header.timestamp = System.currentTimeMillis();
+        Response<T> result = new Response<>();
+        result.setHeader(header);
+        return result;
+    }
 
 }

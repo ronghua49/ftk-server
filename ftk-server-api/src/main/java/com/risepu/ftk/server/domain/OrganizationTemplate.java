@@ -11,61 +11,61 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.BaseEntity;
 
 /**
- * 
  * @author L-heng
- *
  */
 @Entity
 @Table(name = "FTK_ORGANIZATION_TEMPLATE")
 public class OrganizationTemplate implements BaseEntity<OrganizationTemplate.ID> {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	@Embeddable
-	public static class ID implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+    @Embeddable
+    public static class ID implements Serializable {
 
-		/** 企业id */
-		private String organizationId;
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		/** 模板id */
-		private Long templateId;
+        /**
+         * 企业id
+         */
+        private String organizationId;
 
-		@Column(name = "ORGANIZATION")
-		public String getOrganizationId() {
-			return organizationId;
-		}
+        /**
+         * 模板id
+         */
+        private Long templateId;
 
-		public void setOrganizationId(String organizationId) {
-			this.organizationId = organizationId;
-		}
+        @Column(name = "ORGANIZATION")
+        public String getOrganizationId() {
+            return organizationId;
+        }
 
-		@Column(name = "TEMPLATE")
-		public Long getTemplateId() {
-			return templateId;
-		}
+        public void setOrganizationId(String organizationId) {
+            this.organizationId = organizationId;
+        }
 
-		public void setTemplateId(Long templateId) {
-			this.templateId = templateId;
-		}
-	}
+        @Column(name = "TEMPLATE")
+        public Long getTemplateId() {
+            return templateId;
+        }
 
-	private ID id;
+        public void setTemplateId(Long templateId) {
+            this.templateId = templateId;
+        }
+    }
 
-	@EmbeddedId
-	@Override
-	public ID getId() {
-		return id;
-	}
+    private ID id;
 
-	@Override
-	public void setId(ID id) {
-		this.id = id;
-	}
+    @EmbeddedId
+    @Override
+    public ID getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(ID id) {
+        this.id = id;
+    }
 }

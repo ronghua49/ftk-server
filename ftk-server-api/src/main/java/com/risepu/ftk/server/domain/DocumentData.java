@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.risepu.ftk.server.domain;
 
 import java.io.Serializable;
@@ -14,114 +11,111 @@ import javax.persistence.Table;
 import net.lc4ever.framework.domain.TimestampObject;
 
 /**
- * 
  * 文档数据
+ *
  * @author q-wang
  */
 @Entity
 @Table(name = "FTK_DOCUMENT_DATA")
 public class DocumentData extends TimestampObject<DocumentData.ID> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Embeddable
-	public static class ID implements Serializable {
-		
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+    @Embeddable
+    public static class ID implements Serializable {
 
-		/** 模板数据id */
-		private Long domainId;
-		
-		/**文档id*/
-		private Long documentId;
-		
-		@Column(name = "DOMAIN")
-		public Long getDomainId() {
-			return domainId;
-		}
+        private static final long serialVersionUID = 1L;
 
-		public void setDomainId(Long domainId) {
-			this.domainId = domainId;
-		}
+        /**
+         * 模板数据id
+         */
+        private Long domainId;
 
-		@Column(name = "DOCUMENT")
-		public Long getDocumentId() {
-			return documentId;
-		}
+        /**
+         * 文档id
+         */
+        private Long documentId;
 
-		public void setDocumentId(Long documentId) {
-			this.documentId = documentId;
-		}
+        @Column(name = "DOMAIN")
+        public Long getDomainId() {
+            return domainId;
+        }
 
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((documentId == null) ? 0 : documentId.hashCode());
-			result = prime * result + ((domainId == null) ? 0 : domainId.hashCode());
-			return result;
-		}
+        public void setDomainId(Long domainId) {
+            this.domainId = domainId;
+        }
 
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (getClass() != obj.getClass()) {
-				return false;
-			}
-			ID other = (ID) obj;
-			if (documentId == null) {
-				if (other.documentId != null) {
-					return false;
-				}
-			} else if (!documentId.equals(other.documentId)) {
-				return false;
-			}
-			if (domainId == null) {
-				if (other.domainId != null) {
-					return false;
-				}
-			} else if (!domainId.equals(other.domainId)) {
-				return false;
-			}
-			return true;
-		}
+        @Column(name = "DOCUMENT")
+        public Long getDocumentId() {
+            return documentId;
+        }
 
-	}
+        public void setDocumentId(Long documentId) {
+            this.documentId = documentId;
+        }
 
-	private ID id;
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((documentId == null) ? 0 : documentId.hashCode());
+            result = prime * result + ((domainId == null) ? 0 : domainId.hashCode());
+            return result;
+        }
 
-	@EmbeddedId
-	@Override
-	public ID getId() {
-		return id;
-	}
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            ID other = (ID) obj;
+            if (documentId == null) {
+                if (other.documentId != null) {
+                    return false;
+                }
+            } else if (!documentId.equals(other.documentId)) {
+                return false;
+            }
+            if (domainId == null) {
+                if (other.domainId != null) {
+                    return false;
+                }
+            } else if (!domainId.equals(other.domainId)) {
+                return false;
+            }
+            return true;
+        }
 
-	@Override
-	public void setId(ID id) {
-		this.id = id;
-	}
-	
-	private String value;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    private ID id;
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	
+    @EmbeddedId
+    @Override
+    public ID getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(ID id) {
+        this.id = id;
+    }
+
+    private String value;
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
 
 }

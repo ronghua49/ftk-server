@@ -12,37 +12,35 @@ import com.risepu.ftk.server.service.TemplateService;
 import net.lc4ever.framework.service.GenericCrudService;
 
 /**
- * 
  * @author L-heng
- *
  */
 @Service
 public class TemplateServiceImpl implements TemplateService {
-	private GenericCrudService crudService;
+    private GenericCrudService crudService;
 
-	@Autowired
-	public void setCrudService(GenericCrudService crudService) {
-		this.crudService = crudService;
-	}
+    @Autowired
+    public void setCrudService(GenericCrudService crudService) {
+        this.crudService = crudService;
+    }
 
-	@Override
-	public Long add(Template template) {
-		// TODO Auto-generated method stub
-		template.setState(0);
-		return crudService.save(template);
-	}
+    @Override
+    public Long add(Template template) {
+        // TODO Auto-generated method stub
+        template.setState(0);
+        return crudService.save(template);
+    }
 
-	@Override
-	public List<Template> select() {
-		// TODO Auto-generated method stub
-		return crudService.hql(Template.class, "from Template");
-	}
+    @Override
+    public List<Template> select() {
+        // TODO Auto-generated method stub
+        return crudService.hql(Template.class, "from Template");
+    }
 
-	@Override
-	public Template getTemplate(Long template) {
-		// TODO Auto-generated method stub
-		Template temp = crudService.uniqueResultHql(Template.class, "from Template where id = ?1 ", template);
-		return temp;
-	}
+    @Override
+    public Template getTemplate(Long template) {
+        // TODO Auto-generated method stub
+        Template temp = crudService.uniqueResultHql(Template.class, "from Template where id = ?1 ", template);
+        return temp;
+    }
 
 }
