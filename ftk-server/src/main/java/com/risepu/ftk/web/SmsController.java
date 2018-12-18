@@ -22,7 +22,6 @@ public class SmsController {
 	private SmsService smsService;
 	
 	@PostMapping("/get")
-	@CrossOrigin
 	public ResponseEntity<Response<String>> sendSms(@RequestBody MesRequest mesRequest,HttpServletRequest request){
 		
 		System.out.println("发送短信的请求sessionid:"+request.getSession().getId());
@@ -37,7 +36,7 @@ public class SmsController {
 			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(),sendCode);
 			return ResponseEntity.ok(Response.succeed("验证码已下发"));
 		}else {
-			return ResponseEntity.ok(Response.succeed("图片验证码错误"));
+			return ResponseEntity.ok(Response.failed(1, "图片验证码错误"));
 		}
 		
 	}

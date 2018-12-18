@@ -5,6 +5,8 @@ import com.risepu.ftk.server.domain.OrganizationUser;
 
 public class LoginResult {
 	
+	private int code; 
+	
 	private String message;
 	/** 未认证企业 */
 	private OrganizationUser organizationUser;
@@ -12,6 +14,14 @@ public class LoginResult {
 	private Organization organization;
 	
 	
+
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
 
 	public String getMessage() {
 		return message;

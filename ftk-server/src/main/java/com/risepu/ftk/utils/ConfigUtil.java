@@ -1,4 +1,4 @@
-package com.risepu.ftk.web;
+package com.risepu.ftk.utils;
 
 import java.io.IOException;
 import java.util.Properties;

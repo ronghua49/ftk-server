@@ -2,7 +2,6 @@ package com.risepu.ftk.web.b.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,17 +21,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.dubbo.common.utils.ConfigUtils;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
+import com.risepu.ftk.utils.ConfigUtil;
+import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.ForgetRequest;
 import com.risepu.ftk.web.b.dto.LoginResult;
 import com.risepu.ftk.web.b.dto.RegistRequest;
 import com.risepu.ftk.web.b.dto.RegistResult;
+import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 @Controller
 @RequestMapping("/org")
@@ -51,10 +52,9 @@ public class OrganizationController {
 
 	@PostMapping("/regist")
 	@ResponseBody
-	public ResponseEntity<Response<RegistResult>> orgRegist(@RequestBody RegistRequest registVo,
+	public ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo,
 			HttpServletRequest request) {
 		// 判断smsCode
-		RegistResult registResult = new RegistResult();
 
 		String code = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
 
@@ -63,19 +63,18 @@ public class OrganizationController {
 			/** 判断企业是否已经注册 */
 			String orgId = organizationService.checkOrgName(registVo.getMobile());
 
-			if (orgId != null) {
+			if (orgId == null) {
 				organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
 				logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
-				registResult.setMessage("注册成功！");
+				
+				return ResponseEntity.ok(Response.succeed("注册成功！"));
 
 			} else {
-				registResult.setMessage("该企业已经注册，请直接登录");
+				return ResponseEntity.ok(Response.failed(3, "该企业已经注册，请直接登录"));
 			}
 		} else {
-			registResult.setMessage("验证码输入错误！");
+			return ResponseEntity.ok(Response.failed(2, "验证码输入错误！"));
 		}
-
-		return ResponseEntity.ok(Response.succeed(registResult));
 	}
 
 	/**
@@ -86,29 +85,26 @@ public class OrganizationController {
 	 * @param password
 	 * @param request
 	 * @return 登录结果
+	 * @throws  
 	 */
 
-	// @Override
 	@PostMapping("/login")
 	@ResponseBody
-	@CrossOrigin
 	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestParam(name = "name") String mobileOrName,
-			@RequestParam String password, HttpServletRequest request) {
+			@RequestParam String password, HttpServletRequest request)   {
 		
 			LoginResult loginResult = organizationService.orgLogin(mobileOrName, password);
 			
-			if(loginResult.getMessage().equals("登录成功")) {
+			if(loginResult.getCode()==0) {
 				
 				/** 设置session对象为 未认证的对象 */
 				setCurrUserToSession(request,loginResult.getOrganizationUser());
 				logger.debug("企业用户--{},登录成功！", mobileOrName);
-				
-				
-				
-				
+				return ResponseEntity.ok(Response.succeed(loginResult));
 			}
 			
-			return ResponseEntity.ok(Response.succeed(loginResult));
+			return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
+			
 		
 	}
 	
@@ -143,10 +139,10 @@ public class OrganizationController {
 				return ResponseEntity.ok(Response.succeed("密码修改成功"));
 			} else {
 
-				return ResponseEntity.ok(Response.failed(001, "验证码输入错误"));
+				return ResponseEntity.ok(Response.failed(2, "验证码输入错误"));
 			}
 		} else {
-			return ResponseEntity.ok(Response.failed(002, "该账号还未注册"));
+			return ResponseEntity.ok(Response.failed(4, "该账号还未注册"));
 		}
 	}
 
@@ -160,18 +156,20 @@ public class OrganizationController {
 			HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
-		String message = "密码输入错误";
-		String salt = ConfigUtils.getProperty("salt");
+		
+		String salt = ConfigUtil.getValue("salt");
 
 		password = DigestUtils.md5Hex(password + salt);
 		newpwd = DigestUtils.md5Hex(newpwd + salt);
 
 		if (currUser.getPassword().equals(password)) {
-			message = "密码修改成功";
+			
 			organizationService.changePwd(currUser.getId(), newpwd);
 			logger.debug("企业用户   {}，修改密码成功！", currUser.getId());
+			return ResponseEntity.ok(Response.succeed("密码修改成功"));
+		}else {
+			return ResponseEntity.ok(Response.failed(7, "修改失败，输入密码和服务端密码不一致"));
 		}
-		return ResponseEntity.ok(Response.succeed(message));
 
 	}
 
@@ -190,7 +188,7 @@ public class OrganizationController {
 			return ResponseEntity.ok(Response.succeed(fileName));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.ok(Response.failed(002, "上传失败"));
+			return ResponseEntity.ok(Response.failed(8, "上传失败"));
 		}
 	}
 
@@ -211,7 +209,7 @@ public class OrganizationController {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return ResponseEntity.ok(Response.failed(002, "图片下载失败"));
+			return ResponseEntity.ok(Response.failed(9, "图片下载失败"));
 		}
 
 	}
@@ -242,7 +240,6 @@ public class OrganizationController {
 	 */
 	@PostMapping("/authen/info")
 	@ResponseBody
-	@CrossOrigin
 	public ResponseEntity<Response<String>> orgAuthen(@RequestBody Organization organization,
 			HttpServletRequest request) {
 
@@ -285,7 +282,7 @@ public class OrganizationController {
 	}
 
 	/**
-	 * 企业扫码验证单据信息
+	 * 企业扫码验证历史查询
 	 * 
 	 * @param authCode
 	 *            授权码
@@ -293,14 +290,17 @@ public class OrganizationController {
 	 *            用户身份证号
 	 * @return 单据信息 集合
 	 */
-	// public ResponseEntity<Response<PageResult<String>>> identify(@RequestParam
-	// String authCode,@RequestParam String cardNo) {
-	// chainService.verifyDocument(authCode,cardNo);
-	//
-	//
-	//
-	//
-	// }
+	@GetMapping("/history/verify")
+	 public ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
+		 	
+		OrganizationUser orgUser = getCurrUser(request);
+		
+		PageResult<VerifyHistory>  page = organizationService.queryVerifyPage(key,pageNo,pageSize,orgUser.getId());
+	
+		
+		return ResponseEntity.ok(Response.succeed(page));
+	
+	 }
 	/**
 	 * 企业反馈信息录入
 	 * 
@@ -310,7 +310,6 @@ public class OrganizationController {
 	 */
 	@PostMapping("/advice")
 	@ResponseBody
-	@CrossOrigin
 	public ResponseEntity<Response<String>> adviceInfo(@RequestBody OrganizationAdvice advice,
 			HttpServletRequest request) {
 

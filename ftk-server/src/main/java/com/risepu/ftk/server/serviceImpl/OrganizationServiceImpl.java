@@ -22,8 +22,10 @@ import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
-import com.risepu.ftk.web.ConfigUtil;
+import com.risepu.ftk.utils.ConfigUtil;
+import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
+import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
@@ -53,17 +55,19 @@ public class OrganizationServiceImpl implements OrganizationService {
 	public LoginResult orgLogin(String phoneOrName, String password) {
 		password = DigestUtils.md5Hex(password + SALT);
 		LoginResult loginResult = new LoginResult();
-
+		
 		if (StringUtils.isNumeric(phoneOrName)) {
 			/** 使用手机号登录 */
 			
 				OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
 
 				if(org==null) {
+					loginResult.setCode(4);
 					loginResult.setMessage("此手机号还未注册，请注册！");
 				}
 				
 				if (org != null && org.getPassword().equals(password)) {
+					loginResult.setCode(0);
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(org);
 					/** 判断是否为审核通过的企业用户 */
@@ -74,6 +78,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 					}
 					
 				} else {
+					loginResult.setCode(5);
 					loginResult.setMessage("密码错误！");
 				}
 
@@ -89,9 +94,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(orgUser);
+				}else {
+					loginResult.setCode(5);
+					loginResult.setMessage("密码错误！");
 				}
 			} else {
-				loginResult.setMessage("企业名或者密码错误！");
+				loginResult.setCode(6);
+				loginResult.setMessage("企业不存在，或未认证！");
 			}
 		}
 		return loginResult;
@@ -175,6 +184,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 		stream.setPersonId(cardNo);
 		stream.setState(AuthorizationStream.AUTH_STATE_NEW);
 		crudService.save(stream);
+	}
+
+	@Override
+	public PageResult<VerifyHistory> queryVerifyPage(String key, Integer pageNo, Integer pageSize, String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

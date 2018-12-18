@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
+import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
+import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 //@Remote(path="/org")
 public interface OrganizationService {
@@ -90,6 +92,17 @@ public interface OrganizationService {
 	 * @param cardNo 单据上用户身份证号
 	 */
 	public void InsertAuthorStream(String orgId, String cardNo);
+
+	/**
+	 * 企业的历史验证 页面查询
+	 * @param key
+	 * @param pageNo
+	 * @param pageSize
+	 * @param id
+	 * @return
+	 */
+	public PageResult<VerifyHistory> queryVerifyPage(String key, Integer pageNo, Integer pageSize, String id);
+
 
 	
 
