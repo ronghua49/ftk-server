@@ -4,6 +4,8 @@ import com.risepu.ftk.server.domain.PersonalUser;
 
 public class LoginResult {
 	
+	private int code;
+	
 	private String message;
 	
 	private PersonalUser personalUser;
@@ -44,6 +46,15 @@ public class LoginResult {
 		this.streamId = streamId;
 	}
 
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+
+	
 	
 	
 	

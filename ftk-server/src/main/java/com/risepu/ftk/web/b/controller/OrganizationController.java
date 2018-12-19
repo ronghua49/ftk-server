@@ -89,7 +89,7 @@ public class OrganizationController {
 
 	@PostMapping("/login")
 	@ResponseBody
-	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestParam(name = "name") String mobileOrName,
+	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestParam(name ="name") String mobileOrName,
 			@RequestParam String password, HttpServletRequest request)   {
 		
 			LoginResult loginResult = organizationService.orgLogin(mobileOrName, password);
@@ -103,8 +103,6 @@ public class OrganizationController {
 			}
 			
 			return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
-			
-		
 	}
 	
 	
@@ -224,6 +222,8 @@ public class OrganizationController {
 	public ResponseEntity<Response<Organization>> checkAuthState(HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
+		
+		/** 为空 未认证   不为空  state 判断*/
 		Organization org = organizationService.findAuthenOrgById(currUser.getId());
 
 		return ResponseEntity.ok(Response.succeed(org));
@@ -244,7 +244,6 @@ public class OrganizationController {
 		
 		
 		OrganizationUser user = getCurrUser(request);
-
 		/** 增加关联 id 为发起认证的企业用户手机号 */
 		organization.setId(user.getId());
 
@@ -259,7 +258,6 @@ public class OrganizationController {
 	/**
 	 * 企业扫码单据 产生扫码流水(在跳转输入授权码之前)
 	 * 
-	 
 	 * @param cardNo
 	 *            用户身份证号
 	 * @return
@@ -285,7 +283,7 @@ public class OrganizationController {
 	
 
 	/**
-	 * 企业扫码验证历史查询
+	 * 企业扫码验单历史查询
 	 * @param key 查询参数
 	 * @param pageNo 当前页码
 	 * @param pageSize 每页显示数量
@@ -298,6 +296,7 @@ public class OrganizationController {
 		 	
 		OrganizationUser orgUser = getCurrUser(request);
 		
+		
 		//PageResult<DocumentInfo>  page = organizationService.queryVerifyPage(key,pageNo,pageSize,orgUser.getId());
 	
 		
@@ -306,7 +305,7 @@ public class OrganizationController {
 	 }
 	
 	/**
-	 * 企业历史单据查询
+	 * 企业开单历史单据查询
 	 * @param key 搜索参数
  	 * @param pageNo 页码
 	 * @param pageSize 每页显示数量
@@ -322,6 +321,20 @@ public class OrganizationController {
 //		
 //	}
 	
+	
+	/**
+	 * 验证单据是否合格
+	 * @param qrCardNo 所扫描的二维码 用户身份证号
+	 * @param inputCardNo 输入的身份证号
+	 * @param streamId 当前扫描二维码的流水id
+	 * @return
+	 */
+//	@PostMapping("/qualify")
+//	public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId ,@RequestParam String qrCardNo, @RequestParam String inputCardNo) {
+//	
+//		
+//		
+//	}
 	
 	
 	
@@ -341,7 +354,6 @@ public class OrganizationController {
 		advice.setOrgId(currUser.getId());
 		organizationService.saveAdviceInfo(advice);
 		return ResponseEntity.ok(Response.succeed("意见反馈成功！"));
-		
 
 	}
 

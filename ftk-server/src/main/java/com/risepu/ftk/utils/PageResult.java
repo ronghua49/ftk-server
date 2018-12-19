@@ -1,65 +1,107 @@
 package com.risepu.ftk.utils;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PageResult<T> {
+public class PageResult<T> implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private String resultCode;
+
+	/** 总页数 */
+	private Integer totalPages;
+	/** 总条数 */
+	private Integer totalElements;
+	/** 当前页数 */
+	private Integer number;
+	/** 每页显示条数 */
+	private Integer size;
 	
-	private int code; //状态码, 0表示成功
 
-    private String msg;  //提示信息
+	private List<T> content;
+	/** 总页码数组 */
+	private List<Integer> pages = new ArrayList<Integer>();
 
-    private long count; // 总数量,  total
+	public String getResultCode() {
+		return resultCode;
+	}
 
-    private List<T> data; // 当前数据, bootstrapTable是rows
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
+	}
 
-    public PageResult() {
-    }
+	public Integer getTotalPages() {
+		return totalPages;
+	}
 
-    public PageResult(List<T> rows) {
-        this.data = rows;
-        this.count = rows.size();
-        this.code = 0;
-        this.msg = "";
-    }
+	
+	public void setTotalPages(int count, int size) {
+		int totalPages = 1;
+		if (count >= size) {
+			// 如果总条数大于 分页的条数
+			totalPages = count / size;
+			// 如果余数不为0
+			if (!(count % size == 0)) {
+				totalPages++;
+			}
+		}
+		this.totalPages = totalPages;
+		
+		for(int i=0;i<totalPages;i++) {
+			this.pages.add(i+1);
+		}
+	}
 
-    public PageResult(long total, List<T> rows) {
-        this.count = total;
-        this.data = rows;
-        this.code = 0;
-        this.msg = "";
-    }
+	
+	
+	public Integer getTotalElements() {
+		return totalElements;
+	}
 
-    public int getCode() {
-        return code;
-    }
+	public void setTotalElements(Integer totalElements) {
+		this.totalElements = totalElements;
+	}
 
-    public void setCode(int code) {
-        this.code = code;
-    }
+	public Integer getNumber() {
+		return number;
+	}
 
-    public String getMsg() {
-        return msg;
-    }
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+	public Integer getSize() {
+		return size;
+	}
 
-    public long getCount() {
-        return count;
-    }
+	public void setSize(Integer size) {
+		this.size = size;
+	}
 
-    public void setCount(long count) {
-        this.count = count;
-    }
+	public List<T> getContent() {
+		return content;
+	}
 
-    public List<T> getData() {
-        return data;
-    }
+	public void setContent(List<T> content) {
+		this.content = content;
+	}
 
-    public void setData(List<T> data) {
-        this.data = data;
-        this.count = data.size();
-    }
+	public List<Integer> getPages() {
+		return pages;
+	}
+
+	@Override
+	public String toString() {
+		return "PageResult [resultCode=" + resultCode + ", totalPages=" + totalPages + ", totalElements="
+				+ totalElements + ", number=" + number + ", size=" + size + ", content=" + content + ", pages=" + pages
+				+ "]";
+	}
+	
+	
+
+	
+	
 
 }

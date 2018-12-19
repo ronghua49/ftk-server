@@ -2,6 +2,7 @@ package com.risepu.ftk.server.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
+import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
 
 //@Remote(path="/org")
@@ -92,7 +94,14 @@ public interface OrganizationService {
 	public void InsertAuthorStream(String orgId, String cardNo);
 
 	
-	//public PageResult<Organization> 
+	/**
+	 * 根据条件查询 企业信息
+	 * @param map 查询条件参数
+	 * @param pageNo 当前页
+	 * @param pageSize 每条显示数量
+	 * @return PageResult 对象
+	 */
+	public PageResult<Organization> findByParam(Map<String,Object> map,Integer pageNo,Integer pageSize);
 
 	
 

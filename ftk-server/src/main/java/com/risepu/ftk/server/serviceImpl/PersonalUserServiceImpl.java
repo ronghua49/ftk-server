@@ -1,10 +1,12 @@
 package com.risepu.ftk.server.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,8 +69,8 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 		
 		PageResult<AuthHistoryInfo> page = new PageResult<>();
 		
-		page.setCount(pageSize);
-		page.setData(historyList);
+		page.setTotalElements(historyList.size());
+		page.setContent(historyList);
 		
 		return page;
 	}
@@ -76,10 +78,15 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	@Override
 	public Map<String,Object> findNewRequestByCardNo(String cardNo) {
 		
-		List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state=0 order by createTimestamp desc", cardNo);
+		/** 只查询 10 分钟之内的 最近扫描单据的一个企业id */
+		DateTime dateTime = new DateTime();
+		DateTime  minusTime= dateTime.minusMinutes(10);
+
+		Date time = minusTime.toDate();
+		List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo,time);
 		
 		if(streams!=null && !streams.isEmpty()) {
-			/** 只查询最近扫描单据的一个企业id */
+			
 			String orgId = streams.get(0).getOrgId();
 			
 			Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", orgId);

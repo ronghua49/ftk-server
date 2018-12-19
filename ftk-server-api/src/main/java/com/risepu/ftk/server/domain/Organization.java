@@ -104,21 +104,21 @@ public class Organization extends AuditableObject<String> {
 	}
 
 	
-	private String idCardImgName;
+	private Long defaultTemId;
 	
-	@Column(name="IDCARD_IMG_NAME",length=50)
-	public String getIdCardImgName() {
-		return idCardImgName;
+	
+	@Column(name="DEFAULT_TEP_ID",length=19)
+	public Long getDefaultTemId() {
+		return defaultTemId;
 	}
 	
-	public void setIdCardImgName(String idCardImgName) {
-		this.idCardImgName = idCardImgName;
+	public void setDefaultTemId(Long defaultTemId) {
+		this.defaultTemId = defaultTemId;
 	}
-	
-	
 	
 	
 	private String licenseImgName;
+
 
 	@Column(name="LICENCE_IMG_NAME")
 	public String getLicenseImgName() {
