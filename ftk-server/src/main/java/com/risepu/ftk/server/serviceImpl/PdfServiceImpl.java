@@ -1,5 +1,6 @@
 package com.risepu.ftk.server.serviceImpl;
 
+import com.risepu.ftk.utils.PdfPositionParse;
 import com.risepu.ftk.utils.PdfReplacer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +27,16 @@ public class PdfServiceImpl implements PdfService {
         // 获取二次模板路径
         String filePath = template.getFilePath();
         PdfReplacer textReplacer = new PdfReplacer(filePath);
-        textReplacer.setFont(14);
+        textReplacer.setFont(20);
         textReplacer.replaceText("${_template}", _template);
         textReplacer.replaceText("${_title}", "单据证明");
         textReplacer.replaceText("${_chainHash}", "SFSFSGFDGFDHFD");
         textReplacer.toPdf(newPath);
         return newPath;
+    }
+
+    public static void main(String[] args) {
+//        PdfPositionParse a=new PdfPositionParse();
     }
 
 }
