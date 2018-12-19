@@ -1,6 +1,5 @@
 package com.risepu.ftk.web.b.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +32,15 @@ public class TemplateController implements TemplateApi {
     private TemplateDomainService templateDomainService;
 
     @Override
-    public ResponseEntity<Response<List<String>>> getAllTemplate() {
+    public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
+        Template template = templateService.getTemplate(templateId);
+        return ResponseEntity.ok(Response.succeed(template));
+    }
+
+    @Override
+    public ResponseEntity<Response<List<Template>>> getAllTemplate() {
         List<Template> templates = templateService.select();
-        List<String> filePath = new ArrayList<>();
-        for (Template template : templates) {
-            filePath.add(template.getFilePath());
-        }
-        return ResponseEntity.ok(Response.succeed(filePath));
+        return ResponseEntity.ok(Response.succeed(templates));
     }
 
     @Override
@@ -49,23 +50,53 @@ public class TemplateController implements TemplateApi {
     }
 
     @Override
+    public ResponseEntity<Response<String>> updateTemplate(Template template) {
+        templateService.update(template);
+        String _templat = template.get_template();
+        List<Domain> domains = domainService.selectAll();
+        for (int i = 0; i < domains.size(); i++) {
+            Domain domain = domains.get(i);
+            String code = "${" + domain.getCode() + "}";
+            if (_templat.contains(code)) {
+                templateDomainService.addOrUpdate(template.getId(), domain.getId());
+            }
+        }
+        return ResponseEntity.ok(Response.succeed("添加成功"));
+    }
+
+    @Override
     public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) {
         // TODO Auto-generated method stub
-        if (templateService.add(template) != null) {
+        Long templateId = templateService.add(template);
+        if (templateId != null) {
+            String _templat = template.get_template();
+            List<Domain> domains = domainService.selectAll();
+            for (int i = 0; i < domains.size(); i++) {
+                Domain domain = domains.get(i);
+                String code = "${" + domain.getCode() + "}";
+                if (_templat.contains(code)) {
+                    templateDomainService.addOrUpdate(templateId, domain.getId());
+                }
+            }
             return ResponseEntity.ok(Response.succeed("添加成功"));
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
 
     @Override
-    public ResponseEntity<Response<String>> addTemplateData(Long templateId, Domain domain) {
+    public ResponseEntity<Response<String>> addTemplateData(Domain domain) {
         // TODO Auto-generated method stub
         Long domainId = domainService.add(domain);
         if (domainId != null) {
-            templateDomainService.add(templateId, domainId);
             return ResponseEntity.ok(Response.succeed("添加成功"));
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
 
+    @Override
+    public ResponseEntity<Response<String>> updateTemplateState(Long templateId) {
+        Template template = templateService.getTemplate(templateId);
+        template.setState(1);
+        return ResponseEntity.ok(Response.succeed("更改成功"));
+    }
 }

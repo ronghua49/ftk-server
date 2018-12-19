@@ -19,13 +19,13 @@ import java.util.Hashtable;
 @Service
 public class QrCodeUtilServiceImpl implements QrCodeUtilSerevice {
     @Override
-    public boolean createQrCode(String filePath, String content, int qrCodeSize, String imageFormat) throws Exception {
+    public boolean createQrCode(String filePath, String content) throws Exception {
         //设置二维码纠错级别ＭＡＰ
         Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);  // 矫错级别
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         //创建比特矩阵(位矩阵)的QR码编码的字符串
-        BitMatrix byteMatrix = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, qrCodeSize, qrCodeSize, hintMap);
+        BitMatrix byteMatrix = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, 900, 900, hintMap);
         // 使BufferedImage勾画QRCode  (matrixWidth 是行二维码像素点)
         int matrixWidth = byteMatrix.getWidth();
         BufferedImage image = new BufferedImage(matrixWidth - 200, matrixWidth - 200, BufferedImage.TYPE_INT_RGB);
@@ -43,7 +43,7 @@ public class QrCodeUtilServiceImpl implements QrCodeUtilSerevice {
             }
         }
         OutputStream outputStream = new FileOutputStream(new File(filePath));
-        return ImageIO.write(image, imageFormat, outputStream);
+        return ImageIO.write(image, "JPEG", outputStream);
     }
 
     @Override
@@ -61,17 +61,5 @@ public class QrCodeUtilServiceImpl implements QrCodeUtilSerevice {
             e.printStackTrace();
         }
         System.out.println(result.getText());
-    }
-
-    /**
-     * 测试代码
-     *
-     * @throws WriterException
-     */
-    public static void main(String[] args) throws Exception {
-        //createQrCode(new FileOutputStream(new File("d:\\qrcode.jpg")),"china is good",900,"JPEG");
-        QrCodeUtilServiceImpl q = new QrCodeUtilServiceImpl();
-        q.createQrCode("C:/Users/MACHEMIKE/Desktop/测试.jpg", "china is good", 900, "JPEG");
-        q.readQrCode(new FileInputStream(new File("C:/Users/MACHEMIKE/Desktop/测试.jpg")));
     }
 }

@@ -38,12 +38,8 @@ public class SampleController implements SampleApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> add(Long templateId, String _template, HttpServletResponse response) throws Exception {
-        PdfReplacer textReplacer = new PdfReplacer("C:/Users/MACHEMIKE/Desktop/一次模板V1.1.pdf");
-        textReplacer.replaceText("${_template}", _template);
-        textReplacer.replaceText("${_title}", "小白撒反对大师傅但是放松放松放松");
-        textReplacer.replaceText("${{_chainHash}", "小白撒反对大师傅但是放松放松放松");
-        textReplacer.toPdf("C:/Users/MACHEMIKE/Desktop/测试.pdf");
+    public ResponseEntity<Response<String>> add(Long templateId, String _template) throws Exception {
+//        pdfService.pdf(templateId, _template);
         return ResponseEntity.ok(Response.succeed("生成文档成功"));
     }
 }

@@ -34,5 +34,5 @@ public interface SampleApi {
     @RequestMapping(path = "/add")
     @ResponseBody
     @CrossOrigin
-    ResponseEntity<Response<String>> add(Long templateId, String _template, HttpServletResponse response) throws Exception;
+    ResponseEntity<Response<String>> add(Long templateId, String _template) throws Exception;
 }
