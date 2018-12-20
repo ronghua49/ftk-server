@@ -78,7 +78,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(org);
 					/** 判断是否为审核通过的企业用户 */
-					Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", phoneOrName);
+					Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", org.getOrganizationId());
 					
 					if(organization!=null ) {
 						loginResult.setOrganization(organization);
@@ -96,7 +96,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 			if (org != null) {
 				
-				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "id",
+				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",
 						org.getId());
 				
 				if (orgUser.getPassword().equals(secutityPwd)) {
@@ -117,7 +117,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public void changePwd(String id, String newPwd) {
-		OrganizationUser orgUser = new OrganizationUser();
+		
+		OrganizationUser orgUser=new OrganizationUser();
+		
 		orgUser.setId(id);
 		orgUser.setPassword(newPwd);
 		crudService.update(orgUser);
@@ -178,7 +180,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public Organization findAuthenOrgById(String id) {
-		return crudService.uniqueResultByProperty(Organization.class, "id", id);
+		
+		OrganizationUser user = crudService.get(OrganizationUser.class, id);
+		
+		return crudService.uniqueResultByProperty(Organization.class, "id", user.getOrganizationId());
 	}
 
 	@Override
@@ -195,6 +200,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public PageResult<Organization> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
 		Integer firstIndex=0;
+		
 		if(pageNo!=0) {
 			firstIndex=(pageNo-1)*pageSize;
 		}
@@ -202,7 +208,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 		String hql2 = "select count(*) ";
 		int total=0;
 		List<Organization> orgs=new ArrayList<Organization>();
-		
 		
 		String key=(String) map.get("key");
 		String startTime = (String) map.get("startTime");
@@ -212,16 +217,18 @@ public class OrganizationServiceImpl implements OrganizationService {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startDate=null;
 		Date endDate=null;
+		Date nextDate =null;
 		
 		if(startTime!=""&&startTime!=null) {
 			try {
-				startDate = format.parse(startTime);
 				
+				startDate = format.parse(startTime);
 				endDate = format.parse(endTime);
-				//Date startOfDay = DateFormatter(DateFormatter.nextDay(endDate));
+				
+				nextDate= DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
 				
 				System.out.println("开始时间："+startDate);
-				System.out.println("结束时间"+endDate);
+				System.out.println("结束时间"+nextDate);
 				
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -248,22 +255,22 @@ public class OrganizationServiceImpl implements OrganizationService {
 			
 			hql="from Organization where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
 			
-			total=crudService.uniqueResultHql(Long.class, hql2+hql, "%"+key+"%",state,startDate,endDate).intValue();
-			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state,startDate,endDate);
+			total=crudService.uniqueResultHql(Long.class, hql2+hql, "%"+key+"%",state,startDate,nextDate).intValue();
+			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state,startDate,nextDate);
 			
 		}else if(key==""&&state==null&&startDate!=null) {
 			
 			hql = "from Organization where createTimestamp between ?1 and ?2 order by createTimestamp desc";
 			
-			total=crudService.uniqueResultHql(Long.class, hql2+hql, startDate,endDate).intValue();
-			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, startDate,endDate );
+			total=crudService.uniqueResultHql(Long.class, hql2+hql, startDate,nextDate).intValue();
+			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, startDate,nextDate );
 			
 		}else if(key==""&&state!=null&&startDate!=null) {
 			
 			hql = "from Organization where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
 			
-			total=crudService.uniqueResultHql(Long.class, hql2+hql, state,startDate,endDate).intValue();
-			orgs = crudService.hql(Organization.class,firstIndex,pageSize,  hql, state,startDate,endDate);
+			total=crudService.uniqueResultHql(Long.class, hql2+hql, state,startDate,nextDate).intValue();
+			orgs = crudService.hql(Organization.class,firstIndex,pageSize,  hql, state,startDate,nextDate);
 			
 		}else if(key==""&&state!=null&&startDate==null) {
 			hql = "from Organization where state=?1 order by createTimestamp desc";

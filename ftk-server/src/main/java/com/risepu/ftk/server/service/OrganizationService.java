@@ -35,7 +35,7 @@ public interface OrganizationService {
 	
 	/**
 	 * 
-	 * @param id 手机号
+	 * @param id 手机号 获得 组织机构代码号
 	 * @param newPwd 新密码
 	 */
 	public void changePwd(String id,String newPwd);
