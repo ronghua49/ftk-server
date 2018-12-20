@@ -1,9 +1,13 @@
 package com.risepu.ftk.web.b.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.risepu.ftk.server.service.*;
+import com.risepu.ftk.server.serviceImpl.QrCodeUtilServiceImpl;
+import com.risepu.ftk.utils.ChartGraphics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.domain.Template;
-import com.risepu.ftk.server.service.DocumentDateService;
-import com.risepu.ftk.server.service.DomainService;
-import com.risepu.ftk.server.service.PdfService;
-import com.risepu.ftk.server.service.ProofDocumentService;
-import com.risepu.ftk.server.service.SendMailService;
-import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.api.Response;
 
 import javax.servlet.http.HttpServletResponse;
@@ -49,11 +47,14 @@ public class DocumentDataController implements DocumentDataApi {
     @Autowired
     private DomainService domainService;
 
+    @Autowired
+    private QrCodeUtilSerevice qrCodeUtilSerevice;
+
     @Override
     public ResponseEntity<Response<String>> add(Map<String, String> map, HttpServletResponse response) throws Exception {
-
         logger.debug("Request Uri: /documentData/add");
-
+        File file = new File("/file-path");
+        file.mkdirs();
         Long templateId = Long.parseLong(map.get("templateId"));
         // 根据模板id得到模板数据
         List<Domain> list = domainService.selectByTemplate(templateId);
@@ -69,17 +70,27 @@ public class DocumentDataController implements DocumentDataApi {
             Domain domain1 = domainService.selectByCode(domain.getCode());
             if (domain1 != null) {
                 list2.add(domain1);
+            } else {
+                return ResponseEntity.ok(Response.succeed("参数错误"));
             }
             String key = "${" + domain.getCode() + "}";
             String value = map.get(domain.getCode());
             _template = _template.replace(key, value);
-
         }
+        //生成二维码图片
+        qrCodeUtilSerevice.createQrCode("/file-path/Person.jpg", "china is good");
+
+        //生成盖章图片
+        ChartGraphics cg = new ChartGraphics();
+        cg.graphicsGeneration("北京声谱科技有限公司", "/file-path/Organization.jpg");
+        String hash = "SGDHHFSGFSGFSGFS";
+        String title = map.get("title");
         // 文档保存路径
-        String filePath = pdfService.pdf(templateId, _template);
+        String filePath = pdfService.pdf(_template, hash, "单据证明");
 
         ProofDocument proofDocument = new ProofDocument();
         proofDocument.setFilePath(filePath);
+        proofDocument.setPersonalUser(map.get("idCard"));
         proofDocument.setTemplate(templateId);
         Long proDocumentId = proofDocumentService.add(proofDocument);
         if (proDocumentId != null) {

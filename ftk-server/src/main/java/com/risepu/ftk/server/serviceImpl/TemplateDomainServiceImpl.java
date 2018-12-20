@@ -14,6 +14,7 @@ import net.lc4ever.framework.service.GenericCrudService;
  */
 @Service
 public class TemplateDomainServiceImpl implements TemplateDomainService {
+
 	private GenericCrudService crudService;
 
 	@Autowired
@@ -22,14 +23,14 @@ public class TemplateDomainServiceImpl implements TemplateDomainService {
 	}
 
 	@Override
-	public ID add(Long templateId, Long domainId) {
+	public void addOrUpdate(Long templateId, Long domainId) {
 		// TODO Auto-generated method stub
 		TemplateDomain templateDomain = new TemplateDomain();
 		ID id = new ID();
 		id.setDomainId(domainId);
 		id.setTemplateId(templateId);
 		templateDomain.setId(id);
-		return crudService.save(templateDomain);
+		crudService.saveOrUpdate(templateDomain);
 	}
 
 	@Override
