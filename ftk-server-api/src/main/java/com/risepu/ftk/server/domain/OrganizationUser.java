@@ -48,21 +48,17 @@ public class OrganizationUser extends TimestampObject<String> {
 		this.password = password;
 	}
 	
-	
-	
-	@ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "ORGANIZATION_ID")
-	private Organization organization;
+	/** 根据企业的组织机构代码证查询 对应的企业*/
+	@Column(name="ORGANIZATION_ID")
+	private String organizationId;
 
-	public Organization getOrganization() {
-		return organization;
+	public String getOrganizationId() {
+		return organizationId;
 	}
 
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
+	public void setOrganizationId(String organizationId) {
+		this.organizationId = organizationId;
 	}
-	
-	
 	
 	
 

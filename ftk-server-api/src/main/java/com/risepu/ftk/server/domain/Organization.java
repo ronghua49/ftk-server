@@ -32,7 +32,7 @@ public class Organization extends AuditableObject<String> {
 	public static final Integer CHECK_FAIL_STATE = 3;
 	
 	
-
+	
 	/** 企业组织机构代码证 */
 	private String id;
 	
@@ -141,24 +141,5 @@ public class Organization extends AuditableObject<String> {
 		this.tel = tel;
 	}
 
-	
-	private Set<OrganizationUser> organizationUserSet;
-
-	
-	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)//企业为一的一方
-	public Set<OrganizationUser> getOrganizationUserSet() {
-		return organizationUserSet;
-	}
-	
-	public void setOrganizationUserSet(Set<OrganizationUser> organizationUserSet) {
-		this.organizationUserSet = organizationUserSet;
-	}
-   
-	
-
-	
-	
-	
-	
 
 }

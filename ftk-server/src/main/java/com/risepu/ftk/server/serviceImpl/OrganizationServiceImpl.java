@@ -32,6 +32,7 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
 
+import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 
 @Service
@@ -215,7 +216,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 		if(startTime!=""&&startTime!=null) {
 			try {
 				startDate = format.parse(startTime);
+				
 				endDate = format.parse(endTime);
+				//Date startOfDay = DateFormatter(DateFormatter.nextDay(endDate));
 				
 				System.out.println("开始时间："+startDate);
 				System.out.println("结束时间"+endDate);
@@ -228,41 +231,41 @@ public class OrganizationServiceImpl implements OrganizationService {
 		
 		Integer state = (Integer) map.get("state");
 		
-		if(key!=null&&state==null&&startDate==null) {
+		if(key!=""&&state==null&&startDate==null) {
 			
 			hql = "from Organization where name like ?1 order by createTimestamp desc";
 					
 			total = crudService.uniqueResultHql(Long.class, hql2+hql,"%"+key+"%").intValue();
 			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%");
 			
-		}else if(key!=null&&state!=null&&startDate==null ) {
+		}else if(key!=""&&state!=null&&startDate==null ) {
 			hql = "from Organization where name like ?1 and state=?2 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql,"%"+key+"%",state).intValue();
 			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state);
 			
-		}else if(key!=null&&state!=null&&startDate!=null ) {
+		}else if(key!=""&&state!=null&&startDate!=null ) {
 			
 			hql="from Organization where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, "%"+key+"%",state,startDate,endDate).intValue();
 			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state,startDate,endDate);
 			
-		}else if(key==null&&state==null&&startDate!=null) {
+		}else if(key==""&&state==null&&startDate!=null) {
 			
 			hql = "from Organization where createTimestamp between ?1 and ?2 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, startDate,endDate).intValue();
 			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, startDate,endDate );
 			
-		}else if(key==null&&state!=null&&startDate!=null) {
+		}else if(key==""&&state!=null&&startDate!=null) {
 			
 			hql = "from Organization where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, state,startDate,endDate).intValue();
 			orgs = crudService.hql(Organization.class,firstIndex,pageSize,  hql, state,startDate,endDate);
 			
-		}else if(key==null&&state!=null&&startDate==null) {
+		}else if(key==""&&state!=null&&startDate==null) {
 			hql = "from Organization where state=?1 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, state).intValue();
