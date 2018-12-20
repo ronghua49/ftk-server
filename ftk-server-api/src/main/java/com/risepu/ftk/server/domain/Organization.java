@@ -3,10 +3,15 @@
  */
 package com.risepu.ftk.server.domain;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 
 import net.lc4ever.framework.domain.AuditableObject;
 
@@ -25,20 +30,22 @@ public class Organization extends AuditableObject<String> {
 	public static final Integer CHECK_PASS_STATE = 2;
 	/** 审核未通过 */
 	public static final Integer CHECK_FAIL_STATE = 3;
-
-	/** 发起认证的企业用户手机号 */
+	
+	
+	
+	/** 企业组织机构代码证 */
 	private String id;
-
+	
 	@Override
 	@Id
-	@Column(name = "ID", length = 11)
+	@Column(name = "ORGANIZATION", length = 11)
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	@Override
 	public void setId(String id) {
-		this.id = id;
+		this.id=id;
 	}
 
 	/** 企业名 */
@@ -53,17 +60,6 @@ public class Organization extends AuditableObject<String> {
 		this.name = name;
 	}
 
-	/** 无证合一证件号码 */
-	private String organization;
-
-	@Column(name = "ORGANIZATION", length = 18)
-	public String getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
 
 	/** 审核状态   默认未审核 */
 	private Integer state = UNCHECK_STATE;
@@ -144,5 +140,6 @@ public class Organization extends AuditableObject<String> {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
+
 
 }

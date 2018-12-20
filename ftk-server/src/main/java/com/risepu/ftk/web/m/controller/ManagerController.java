@@ -1,6 +1,7 @@
 package com.risepu.ftk.web.m.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,8 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
+
+import net.lc4ever.framework.format.DateFormatter;
 
 @RestController
 @RequestMapping("/admin")
@@ -115,17 +118,18 @@ public class ManagerController {
 																HttpServletRequest request)   {
 		Map<String, Object> map = new HashMap<>();
 		
-		try {
-			key = new String(key.getBytes("ISO-8859-1"), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.debug("查询参数不支持 utf8 解码");
-			e.printStackTrace();
-		}
+		
+		
+
 		
 		map.put("key", key);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("state", state);
+		
+		
+		//Date startOfDay = DateFormatter(DateFormatter.nextDay(endDate));
+		
 		
 		PageResult<Organization> pageResult = organizationService.findByParam(map, pageNo, pageSize);
 		
