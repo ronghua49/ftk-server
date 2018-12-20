@@ -31,10 +31,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 /**
  * 时间戳类Domain抽象父类.
  *
@@ -64,7 +60,7 @@ public abstract class TimestampObject<K extends Serializable> extends AbstractEn
 
 	//	/**
 	//	 * 删除标记位.
-	//	 * 
+	//	 *
 	//	 * DELETION_TAG
 	//	 */
 	//	protected Boolean deletionTag = Boolean.FALSE;
@@ -119,9 +115,9 @@ public abstract class TimestampObject<K extends Serializable> extends AbstractEn
 
 	//	/**
 	//	 * 删除标记位.
-	//	 * 
+	//	 *
 	//	 * DELETION_TAG
-	//	 * 
+	//	 *
 	//	 * @return the deletionTag
 	//	 */
 	//	@Column(name = "DELETION_TAG")
@@ -131,9 +127,9 @@ public abstract class TimestampObject<K extends Serializable> extends AbstractEn
 	//
 	//	/**
 	//	 * 删除标记位.
-	//	 * 
+	//	 *
 	//	 * DELETION_TAG
-	//	 * 
+	//	 *
 	//	 * @param deletionTag the deletionTag to set
 	//	 */
 	//	public void setDeletionTag(final Boolean deletionTag) {

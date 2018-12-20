@@ -324,6 +324,7 @@ public class GenericCrudServiceImpl implements GenericCrudService {
 	/**
 	 * @see net.lc4ever.framework.dao.GenericDao#iterate(java.lang.Class, java.lang.String, java.lang.Object[])
 	 */
+	@Deprecated
 	@Override
 	public <T> Iterator<T> iterate(final Class<T> clazz, final String hql, final Object... args) {
 		return genericDao.iterate(clazz, hql, args);
