@@ -34,4 +34,10 @@ public interface SampleApi {
 	@ResponseBody
 	ResponseEntity<Response<RegistResult>> regist();
 
+	@ApiOperation(value = "生成文档", nickname = "add")
+	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
+	@RequestMapping(path = "/add")
+	@ResponseBody
+	@CrossOrigin
+	ResponseEntity<Response<String>> add(Long templateId, String _template) throws Exception;
 }

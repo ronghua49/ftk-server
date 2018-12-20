@@ -3,10 +3,7 @@ package com.risepu.ftk.web.b.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.risepu.ftk.web.api.Response;
 
@@ -32,7 +29,7 @@ public interface DocumentDataApi {
      */
     @ApiOperation(value = "生成文档", nickname = "add")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
-    @RequestMapping(path = "/add")
+    @PostMapping(path = "/add")
     @ResponseBody
     @CrossOrigin
     ResponseEntity<Response<String>> add(@RequestBody Map<String, String> map, HttpServletResponse response) throws Exception;
@@ -45,7 +42,7 @@ public interface DocumentDataApi {
      */
     @ApiOperation(value = "发送邮件", nickname = "sendEmail")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
-    @RequestMapping(path = "/sendEmail")
+    @GetMapping(path = "/sendEmail")
     @ResponseBody
     @CrossOrigin
     ResponseEntity<Response<String>> sendEmail(String email) throws Exception;

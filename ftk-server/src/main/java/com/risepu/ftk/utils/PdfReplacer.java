@@ -1,6 +1,5 @@
 package com.risepu.ftk.utils;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,7 +19,9 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
-
+/**
+ * @author L-heng
+ */
 public class PdfReplacer {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -66,7 +67,6 @@ public class PdfReplacer {
         if (output != null) {
             output.close();
         }
-
         output = null;
         replaceRegionMap = null;
         replaceTextMap = null;
@@ -114,6 +114,7 @@ public class PdfReplacer {
                 canvas.showText((String) replaceTextMap.get(value.getAliasName()));
             }
             canvas.endText();
+
         } finally {
             if (stamper != null) {
                 stamper.close();
@@ -232,5 +233,4 @@ public class PdfReplacer {
         }
         this.font = font;
     }
-
 }

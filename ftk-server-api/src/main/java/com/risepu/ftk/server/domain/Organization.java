@@ -76,10 +76,10 @@ public class Organization extends AuditableObject<String> {
 		this.name = name;
 	}
 
-	/** 组织机构代码 */
+	/** 无证合一证件号码 */
 	private String organization;
 
-	@Column(name = "ORGANIZATION", length = 10)
+	@Column(name = "ORGANIZATION", length = 18)
 	public String getOrganization() {
 		return organization;
 	}
@@ -133,6 +133,17 @@ public class Organization extends AuditableObject<String> {
 
 	public void setIdCardImgName(String idCardImgName) {
 		this.idCardImgName = idCardImgName;
+	}
+
+	private Long defaultTemId;
+
+	@Column(name = "DEFAULT_TEP_ID", length = 19)
+	public Long getDefaultTemId() {
+		return defaultTemId;
+	}
+
+	public void setDefaultTemId(Long defaultTemId) {
+		this.defaultTemId = defaultTemId;
 	}
 
 	private String licenseImgName;

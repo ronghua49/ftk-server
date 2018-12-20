@@ -14,12 +14,22 @@ public interface TemplateService {
     Long add(Template template);
 
     /**
-     * 查询模板
+     * 更新模板
      */
-    List<Template> select();
+    void update(Template template);
 
     /**
-     * 根据模板id得到模板路径
+     * 查询所有模板
+     */
+    List<Template> getAllTemplate();
+
+    /**
+     * 查询已启用模板
+     */
+    List<Template> getTemplates();
+
+    /**
+     * 根据模板id查找模板
      */
     Template getTemplate(Long template);
 

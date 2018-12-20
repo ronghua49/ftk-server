@@ -54,7 +54,7 @@ public class SendMailServiceImpl implements SendMailService {
         // 创建邮件附件
         MimeBodyPart attach = new MimeBodyPart();
 //			DataHandler dh = new DataHandler(new FileDataSource("src\\2.jpg"));
-        DataHandler dh = new DataHandler(new FileDataSource("C:\\Users\\MACHEMIKE\\Desktop\\测试文件1.pdf"));
+        DataHandler dh = new DataHandler(new FileDataSource("/file-path/test.pdf"));
         attach.setDataHandler(dh);
         attach.setFileName(dh.getName());
         // 创建容器描述数据关系

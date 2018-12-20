@@ -8,6 +8,8 @@ import com.risepu.ftk.server.service.ProofDocumentService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
+import java.util.List;
+
 /**
  * @author L-heng
  */
@@ -23,8 +25,13 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     @Override
     public Long add(ProofDocument proofDocument) {
         // TODO Auto-generated method stub
-        System.out.println("22222222222222222" + proofDocument.getFilePath());
         return crudService.save(proofDocument);
+    }
+
+    @Override
+    public List<ProofDocument> getByOrganization(String organization) {
+        List<ProofDocument> list = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1", organization);
+        return list;
     }
 
 }

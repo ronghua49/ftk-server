@@ -5,6 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,14 +31,13 @@ import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
-import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
 
-	private static final String SALT = ConfigUtil.getValue("salt");
+	private static final String SALT = ConfigUtil.getValue("salt"); 
 
 	@Autowired
 	private GenericCrudService crudService;
@@ -53,46 +58,51 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public LoginResult orgLogin(String phoneOrName, String password) {
-		password = DigestUtils.md5Hex(password + SALT);
+		System.out.println("登录获取的盐："+SALT);
+		String secutityPwd = DigestUtils.md5Hex(password + SALT);
 		LoginResult loginResult = new LoginResult();
-
+		
 		if (StringUtils.isNumeric(phoneOrName)) {
 			/** 使用手机号登录 */
+			
+				OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
 
-			OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
-
-			if (org == null) {
-				loginResult.setCode(4);
-				loginResult.setMessage("此手机号还未注册，请注册！");
-			}
-
-			if (org != null && org.getPassword().equals(password)) {
-				loginResult.setCode(0);
-				loginResult.setMessage("登录成功！");
-				loginResult.setOrganizationUser(org);
-				/** 判断是否为审核通过的企业用户 */
-				Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", phoneOrName);
-
-				if (organization != null && organization.getState().equals(Organization.CHECK_PASS_STATE)) {
-					loginResult.setOrganization(organization);
+				if(org==null) {
+					loginResult.setCode(4);
+					loginResult.setMessage("此手机号还未注册，请注册！");
+				}
+				
+				if (org != null && org.getPassword().equals(secutityPwd)) {
+					loginResult.setCode(0);
+					loginResult.setMessage("登录成功！");
+					loginResult.setOrganizationUser(org);
+					/** 判断是否为审核通过的企业用户 */
+					Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", phoneOrName);
+					
+					if(organization!=null ) {
+						loginResult.setOrganization(organization);
+					}
+					
+				} else {
+					loginResult.setCode(5);
+					loginResult.setMessage("密码错误！");
 				}
 
-			} else {
-				loginResult.setCode(5);
-				loginResult.setMessage("密码错误！");
-			}
 
 		} else {
 			/** 使用企业名登录 */
 			Organization org = crudService.uniqueResultByProperty(Organization.class, "name", phoneOrName);
 
 			if (org != null) {
-				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "id", org.getId());
-				if (orgUser.getPassword().equals(password)) {
-
+				
+				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "id",
+						org.getId());
+				
+				if (orgUser.getPassword().equals(secutityPwd)) {
+					loginResult.setCode(0);
 					loginResult.setMessage("登录成功！");
-					loginResult.setOrganizationUser(orgUser);
-				} else {
+					loginResult.setOrganization(org);
+				}else {
 					loginResult.setCode(5);
 					loginResult.setMessage("密码错误！");
 				}
@@ -106,9 +116,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public void changePwd(String id, String newPwd) {
-
-		newPwd = DigestUtils.md5Hex(newPwd + SALT);
-
 		OrganizationUser orgUser = new OrganizationUser();
 		orgUser.setId(id);
 		orgUser.setPassword(newPwd);
@@ -175,9 +182,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public void InsertAuthorStream(String orgId, String cardNo) {
-
+		
 		AuthorizationStream stream = new AuthorizationStream();
-
+		
 		stream.setOrgId(orgId);
 		stream.setPersonId(cardNo);
 		stream.setState(AuthorizationStream.AUTH_STATE_NEW);
@@ -185,9 +192,98 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public PageResult<VerifyHistory> queryVerifyPage(String key, Integer pageNo, Integer pageSize, String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageResult<Organization> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
+		Integer firstIndex=0;
+		if(pageNo!=0) {
+			firstIndex=(pageNo-1)*pageSize;
+		}
+		String hql = "";
+		String hql2 = "select count(*) ";
+		int total=0;
+		List<Organization> orgs=new ArrayList<Organization>();
+		
+		
+		String key=(String) map.get("key");
+		String startTime = (String) map.get("startTime");
+		String endTime = (String) map.get("endTime");
+		
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate=null;
+		Date endDate=null;
+		
+		if(startTime!=""&&startTime!=null) {
+			try {
+				startDate = format.parse(startTime);
+				endDate = format.parse(endTime);
+				
+				System.out.println("开始时间："+startDate);
+				System.out.println("结束时间"+endDate);
+				
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		Integer state = (Integer) map.get("state");
+		
+		if(key!=null&&state==null&&startDate==null) {
+			
+			hql = "from Organization where name like ?1 order by createTimestamp desc";
+					
+			total = crudService.uniqueResultHql(Long.class, hql2+hql,"%"+key+"%").intValue();
+			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%");
+			
+		}else if(key!=null&&state!=null&&startDate==null ) {
+			hql = "from Organization where name like ?1 and state=?2 order by createTimestamp desc";
+			
+			total=crudService.uniqueResultHql(Long.class, hql2+hql,"%"+key+"%",state).intValue();
+			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state);
+			
+		}else if(key!=null&&state!=null&&startDate!=null ) {
+			
+			hql="from Organization where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
+			
+			total=crudService.uniqueResultHql(Long.class, hql2+hql, "%"+key+"%",state,startDate,endDate).intValue();
+			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state,startDate,endDate);
+			
+		}else if(key==null&&state==null&&startDate!=null) {
+			
+			hql = "from Organization where createTimestamp between ?1 and ?2 order by createTimestamp desc";
+			
+			total=crudService.uniqueResultHql(Long.class, hql2+hql, startDate,endDate).intValue();
+			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, startDate,endDate );
+			
+		}else if(key==null&&state!=null&&startDate!=null) {
+			
+			hql = "from Organization where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
+			
+			total=crudService.uniqueResultHql(Long.class, hql2+hql, state,startDate,endDate).intValue();
+			orgs = crudService.hql(Organization.class,firstIndex,pageSize,  hql, state,startDate,endDate);
+			
+		}else if(key==null&&state!=null&&startDate==null) {
+			hql = "from Organization where state=?1 order by createTimestamp desc";
+			
+			total=crudService.uniqueResultHql(Long.class, hql2+hql, state).intValue();
+			orgs = crudService.hql(Organization.class,firstIndex,pageSize, hql, state);
+		}else {
+			hql="from Organization order by createTimestamp desc";
+			
+			total=crudService.uniqueResultHql(Long.class, hql2+hql).intValue();
+			orgs = crudService.hql(Organization.class,firstIndex,pageSize,hql);
+		}
+			PageResult<Organization> pageResult = new PageResult<>();
+			pageResult.setResultCode("SUCCESS");
+			pageResult.setNumber(pageNo);
+			pageResult.setSize(pageSize);
+			pageResult.setTotalPages(total, pageSize);
+			pageResult.setTotalElements(total);
+			pageResult.setContent(orgs);
+			return pageResult;
 	}
 
+	
+
+	
 }

@@ -21,12 +21,20 @@ public interface PersonalUserService {
 	public String personReg(String mobile, String cardNo, String userName);
 
 	/**
-	 * 用户通过验证码登录
-	 * @param cardNo 用户身份证号
-	 * @param phone 手机号
+	 * 保存用户
+	 * @param user 用户对象
+	 * @return 保存的用户id
+	 */
+	public String savePersonUser(PersonalUser user );
+	
+	
+	
+	/**
+	 * 根据身份证号查询用户
+	 * @param cardNo 身份证号
 	 * @return
 	 */
-	public PersonalUser personLogin(String cardNo, String phone);
+	public PersonalUser findUserByNo(String cardNo); 
 
 	/**
 	 * 保存授权操作流水记录
@@ -56,6 +64,6 @@ public interface PersonalUserService {
 	 * @param streamId 授权流水id
 	 * @return
 	 */
-	public AuthorizationStream findAuthorizationStreamById(Integer streamId);
+	public AuthorizationStream findAuthorizationStreamById(long streamId);
 
 }

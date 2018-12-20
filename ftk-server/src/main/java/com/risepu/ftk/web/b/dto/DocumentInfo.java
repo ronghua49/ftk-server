@@ -6,7 +6,7 @@ package com.risepu.ftk.web.b.dto;
  * @date:2018年12月18日上午11:06:39
  * @version 1.0
  */
-public class VerifyHistory {
+public class DocumentInfo {
 	
 	private String chainHash;
 	

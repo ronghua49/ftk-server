@@ -5,6 +5,7 @@ apply plugin: 'war'
 dependencies {
 	compile project(':commons-api')
 	compile project(':ftk-server-api')
+	compile project(':ftk-chain-api')
 }
 
 eclipse {

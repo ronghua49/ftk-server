@@ -113,4 +113,10 @@ public class SampleController implements SampleApi {
 		//OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", "135123835407");
 		return orgs;
 	}
+
+	@Override
+	public ResponseEntity<Response<String>> add(Long templateId, String _template) throws Exception {
+		//        pdfService.pdf(templateId, _template);
+		return ResponseEntity.ok(Response.succeed("生成文档成功"));
+	}
 }
