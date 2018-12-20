@@ -32,8 +32,8 @@ public class DomainServiceImpl implements DomainService {
     @Override
     public void deleteById(Long id) {
         // TODO Auto-generated method stub
-        Domain domin = crudService.get(Domain.class, id);
-        crudService.delete(domin);
+        Domain domain = crudService.get(Domain.class, id);
+        crudService.delete(domain);
     }
 
     @Override

@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.service.*;
 import com.risepu.ftk.server.serviceImpl.QrCodeUtilServiceImpl;
 import com.risepu.ftk.utils.ChartGraphics;
+import com.risepu.ftk.web.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.web.api.Response;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -51,7 +54,7 @@ public class DocumentDataController implements DocumentDataApi {
     private QrCodeUtilSerevice qrCodeUtilSerevice;
 
     @Override
-    public ResponseEntity<Response<String>> add(Map<String, String> map, HttpServletResponse response) throws Exception {
+    public ResponseEntity<Response<String>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.debug("Request Uri: /documentData/add");
         File file = new File("/file-path");
         file.mkdirs();
@@ -88,9 +91,11 @@ public class DocumentDataController implements DocumentDataApi {
         // 文档保存路径
         String filePath = pdfService.pdf(_template, hash, "单据证明");
 
+        Organization organization = (Organization) request.getSession().getAttribute(Constant.getSessionCurrUser());
         ProofDocument proofDocument = new ProofDocument();
         proofDocument.setFilePath(filePath);
         proofDocument.setPersonalUser(map.get("idCard"));
+        proofDocument.setOrganization(organization.getId());
         proofDocument.setTemplate(templateId);
         Long proDocumentId = proofDocumentService.add(proofDocument);
         if (proDocumentId != null) {

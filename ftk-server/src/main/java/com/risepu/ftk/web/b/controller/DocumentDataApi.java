@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -32,7 +33,7 @@ public interface DocumentDataApi {
     @PostMapping(path = "/add")
     @ResponseBody
     @CrossOrigin
-    ResponseEntity<Response<String>> add(@RequestBody Map<String, String> map, HttpServletResponse response) throws Exception;
+    ResponseEntity<Response<String>> add(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     /**
      * 发送邮件
