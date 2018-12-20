@@ -67,9 +67,6 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 
 		PageResult<AuthHistoryInfo> page = new PageResult<>();
 
-		page.setCount(pageSize);
-		page.setData(historyList);
-
 		page.setTotalElements(historyList.size());
 		page.setContent(historyList);
 

@@ -80,8 +80,6 @@ public class SampleController implements SampleApi {
 		int pageSize = 5;
 		int firstIndex = (pageNo - 1) * pageSize;
 		List<Organization> orgList = crudService.hql(Organization.class, firstIndex, pageSize, "from Organization where name like ?1 order by createTimestamp desc", "%" + "阿里" + "%");
-		pageResult.setCount(orgList.size());
-		pageResult.setData(orgList);
 		return pageResult;
 
 	}
