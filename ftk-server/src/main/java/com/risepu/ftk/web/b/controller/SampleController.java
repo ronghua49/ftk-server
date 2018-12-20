@@ -114,9 +114,4 @@ public class SampleController implements SampleApi {
 		return orgs;
 	}
 
-	@Override
-	public ResponseEntity<Response<String>> add(Long templateId, String _template) throws Exception {
-		//        pdfService.pdf(templateId, _template);
-		return ResponseEntity.ok(Response.succeed("生成文档成功"));
-	}
 }
