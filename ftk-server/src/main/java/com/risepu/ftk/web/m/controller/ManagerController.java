@@ -1,7 +1,5 @@
 package com.risepu.ftk.web.m.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +27,6 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 
-import net.lc4ever.framework.format.DateFormatter;
 
 @RestController
 @RequestMapping("/admin")
@@ -117,9 +114,6 @@ public class ManagerController {
 																@RequestParam(required=false) Integer state,
 																HttpServletRequest request)   {
 		Map<String, Object> map = new HashMap<>();
-		
-		
-		
 
 		
 		map.put("key", key);
@@ -128,7 +122,7 @@ public class ManagerController {
 		map.put("state", state);
 		
 		
-		//Date startOfDay = DateFormatter(DateFormatter.nextDay(endDate));
+		
 		
 		
 		PageResult<Organization> pageResult = organizationService.findByParam(map, pageNo, pageSize);

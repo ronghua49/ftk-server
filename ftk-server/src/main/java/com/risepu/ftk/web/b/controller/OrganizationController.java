@@ -31,6 +31,7 @@ import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.DocumentInfo;
 import com.risepu.ftk.web.b.dto.ForgetRequest;
+import com.risepu.ftk.web.b.dto.LoginRequest;
 import com.risepu.ftk.web.b.dto.LoginResult;
 import com.risepu.ftk.web.b.dto.RegistRequest;
 
@@ -89,16 +90,14 @@ public class OrganizationController {
 
 	@PostMapping("/login")
 	@ResponseBody
-	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestParam(name ="name") String mobileOrName,
-			@RequestParam String password, HttpServletRequest request)   {
+	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request)   {
 		
-			LoginResult loginResult = organizationService.orgLogin(mobileOrName, password);
+			LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 			
 			if(loginResult.getCode()==0) {
-				
 				/** 设置session对象为 未认证的对象 */
 				setCurrUserToSession(request,loginResult.getOrganizationUser());
-				logger.debug("企业用户--{},登录成功！", mobileOrName);
+				logger.debug("企业用户--{},登录成功！", loginRequest.getName());
 				return ResponseEntity.ok(Response.succeed(loginResult));
 			}
 			
@@ -119,10 +118,9 @@ public class OrganizationController {
 	 */
 	@PostMapping("/forgetPwd")
 	@ResponseBody
-	@CrossOrigin
 	public ResponseEntity<Response<String>> orgForgetPwd(@RequestBody ForgetRequest forgetRequest,
 			HttpServletRequest request) {
-		/** 判断输入的企业信息是否存在 */
+		/** 判断输入的企业信息是否存在  返回各自的id */
 		String orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
 
 		if (orgId != null) {
@@ -139,9 +137,8 @@ public class OrganizationController {
 				return ResponseEntity.ok(Response.failed(2, "验证码输入错误"));
 			}
 			
-			
 		} else {
-			return ResponseEntity.ok(Response.failed(4, "该账号还未注册"));
+			return ResponseEntity.ok(Response.failed(4, "该账号还未注册,请先注册"));
 		}
 	}
 
@@ -168,7 +165,6 @@ public class OrganizationController {
 		}else {
 			return ResponseEntity.ok(Response.failed(7, "修改失败，输入密码和服务端密码不一致"));
 		}
-
 	}
 
 	/**
@@ -244,6 +240,7 @@ public class OrganizationController {
 		
 		
 		OrganizationUser user = getCurrUser(request);
+		
 		/** 增加关联 id 为发起认证的企业用户手机号 */
 		organization.setId(user.getId());
 
@@ -351,6 +348,7 @@ public class OrganizationController {
 			HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
+		
 		advice.setOrgId(currUser.getId());
 		organizationService.saveAdviceInfo(advice);
 		return ResponseEntity.ok(Response.succeed("意见反馈成功！"));
