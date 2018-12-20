@@ -9,6 +9,8 @@ import com.risepu.ftk.server.service.DocumentDateService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
+import java.util.List;
+
 /**
  * @author L-heng
  */
@@ -43,6 +45,12 @@ public class DocumentDateServiceImpl implements DocumentDateService {
         documentData.setId(id);
         documentData.setValue(value);
         crudService.delete(documentData);
+    }
+
+    @Override
+    public List<DocumentData> getByDocumentId(Long documentId) {
+        List<DocumentData> list = crudService.hql(DocumentData.class, "from DocumentData where id.documentId = ?1", documentId);
+        return list;
     }
 
 }

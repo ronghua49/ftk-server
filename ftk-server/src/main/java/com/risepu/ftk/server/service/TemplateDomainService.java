@@ -8,7 +8,7 @@ public interface TemplateDomainService {
     /**
      * 新增模板与数据的关联
      */
-    void addOrUpdate(Long templateId, Long domainId);
+    void add(Long templateId, Long domainId);
 
     /**
      * 删除模板与数据间的关联

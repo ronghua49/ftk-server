@@ -3,6 +3,7 @@ package com.risepu.ftk.utils;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -25,8 +26,10 @@ public class ChartGraphics {
             try {
                 FileOutputStream fos = new FileOutputStream(fileLocation);
                 bos = new BufferedOutputStream(fos);
-                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bos);
-                encoder.encode(image);
+//                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bos);
+//                encoder.encode(image);
+                //保存新图片
+                ImageIO.write(image, "JPG", bos);
                 bos.close();
             } catch (Exception e) {
                 e.printStackTrace();
