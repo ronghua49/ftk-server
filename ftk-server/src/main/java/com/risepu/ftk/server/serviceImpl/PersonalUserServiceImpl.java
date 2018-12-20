@@ -1,10 +1,12 @@
 package com.risepu.ftk.server.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +36,8 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	}
 
 	@Override
-	public PersonalUser personLogin(String cardNo, String phone) {
-
-		PersonalUser user = new PersonalUser();
-		user.setMobile(phone);
-		user.setId(cardNo);
-		crudService.save(user);
-		return user;
-
+	public String savePersonUser(PersonalUser user) {
+		return crudService.save(user);
 	}
 
 	@Override
@@ -65,7 +61,6 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 			history.setAuthState(stream.getState());
 			history.setOrgAddress(organization.getAddress());
 			history.setOrgTel(organization.getTel());
-
 			historyList.add(history);
 
 		}
@@ -75,16 +70,24 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 		page.setCount(pageSize);
 		page.setData(historyList);
 
+		page.setTotalElements(historyList.size());
+		page.setContent(historyList);
+
 		return page;
 	}
 
 	@Override
 	public Map<String, Object> findNewRequestByCardNo(String cardNo) {
 
-		List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personalCardNo =?1 and state=0 order by createTimestamp desc", cardNo);
+		/** 只查询 10 分钟之内的 最近扫描单据的一个企业id */
+		DateTime dateTime = new DateTime();
+		DateTime minusTime = dateTime.minusMinutes(10);
+
+		Date time = minusTime.toDate();
+		List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo, time);
 
 		if (streams != null && !streams.isEmpty()) {
-			/** 只查询最近扫描单据的一个企业id */
+
 			String orgId = streams.get(0).getOrgId();
 
 			Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", orgId);
@@ -99,8 +102,13 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	}
 
 	@Override
-	public AuthorizationStream findAuthorizationStreamById(Integer streamId) {
+	public AuthorizationStream findAuthorizationStreamById(long streamId) {
 		return crudService.uniqueResultByProperty(AuthorizationStream.class, "id", streamId);
+	}
+
+	@Override
+	public PersonalUser findUserByNo(String cardNo) {
+		return crudService.uniqueResultByProperty(PersonalUser.class, "id", cardNo);
 	}
 
 }

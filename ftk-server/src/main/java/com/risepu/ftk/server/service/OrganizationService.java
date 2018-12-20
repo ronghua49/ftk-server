@@ -2,6 +2,7 @@ package com.risepu.ftk.server.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,7 +12,6 @@ import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
-import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 //@Remote(path="/org")
 public interface OrganizationService {
@@ -61,8 +61,8 @@ public interface OrganizationService {
 	
 	/**
 	 * 保存
-	 * @param organization 认证的企业信息
-	 * @return 是否发送成功
+	 * @param organization 认证的企业信息和管理员审核后添加的信息
+	 * @return 
 	 */
 	public void saveOrUpdateOrgInfo(Organization organization);
 
@@ -93,16 +93,15 @@ public interface OrganizationService {
 	 */
 	public void InsertAuthorStream(String orgId, String cardNo);
 
+	
 	/**
-	 * 企业的历史验证 页面查询
-	 * @param key
-	 * @param pageNo
-	 * @param pageSize
-	 * @param id
-	 * @return
+	 * 根据条件查询 企业信息
+	 * @param map 查询条件参数
+	 * @param pageNo 当前页
+	 * @param pageSize 每条显示数量
+	 * @return PageResult 对象
 	 */
-	public PageResult<VerifyHistory> queryVerifyPage(String key, Integer pageNo, Integer pageSize, String id);
-
+	public PageResult<Organization> findByParam(Map<String,Object> map,Integer pageNo,Integer pageSize);
 
 	
 
