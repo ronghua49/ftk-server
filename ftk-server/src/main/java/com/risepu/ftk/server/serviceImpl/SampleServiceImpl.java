@@ -16,7 +16,6 @@ import net.lc4ever.framework.service.GenericCrudService;
  */
 @Service
 public class SampleServiceImpl implements SampleService {
-
     private GenericCrudService crudService;
 
     @Autowired

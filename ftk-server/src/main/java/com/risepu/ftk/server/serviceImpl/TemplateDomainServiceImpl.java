@@ -16,7 +16,6 @@ import net.lc4ever.framework.service.GenericCrudService;
 public class TemplateDomainServiceImpl implements TemplateDomainService {
 
 	private GenericCrudService crudService;
-
 	@Autowired
 	public void setCrudService(GenericCrudService crudService) {
 		this.crudService = crudService;
@@ -43,5 +42,4 @@ public class TemplateDomainServiceImpl implements TemplateDomainService {
 		templateDomain.setId(id);
 		crudService.delete(templateDomain);
 	}
-
 }

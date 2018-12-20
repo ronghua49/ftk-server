@@ -163,7 +163,5 @@ public class ManagerController {
 	private AdminUser getCurrAdmin(HttpServletRequest request) {
 		return (AdminUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 	}
-	
-
-	
 }
+
