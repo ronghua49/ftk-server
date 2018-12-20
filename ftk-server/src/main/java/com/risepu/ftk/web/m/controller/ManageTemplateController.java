@@ -6,12 +6,15 @@ import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.TemplateDomainService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.api.Response;
+import net.lc4ever.framework.format.DateFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,8 +33,26 @@ public class ManageTemplateController implements ManageTemplateApi {
     private TemplateDomainService templateDomainService;
 
     @Override
-    public ResponseEntity<Response<List<Template>>> getAllTemplate() {
-        List<Template> templates = templateService.getAllTemplate();
+    public ResponseEntity<Response<List<Template>>> getAllTemplate(Integer page, Integer pageSize, String startTime, String endTime, String name) throws Exception {
+        Date startDate = null;
+        Date endDate = null;
+        if (startTime.trim() == null) {
+            startTime = null;
+            endTime = null;
+        } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            startDate = formatter.parse(startTime);
+            endDate = formatter.parse(endTime);
+            endDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
+        }
+        String hql = "from Template where 1=1";
+        if (startDate != null) {
+            hql += "and createTimestamp>=" + startDate + "and createTimestamp<=" + endDate;
+        }
+        if (name.trim() != null) {
+            hql += "and name like '%" + name + "%'";
+        }
+        List<Template> templates = templateService.getAllTemplate(hql);
         return ResponseEntity.ok(Response.succeed(templates));
     }
 

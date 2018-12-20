@@ -21,7 +21,7 @@ public interface TemplateService {
     /**
      * 查询所有模板
      */
-    List<Template> getAllTemplate();
+    List<Template> getAllTemplate(String hql);
 
     /**
      * 查询已启用模板

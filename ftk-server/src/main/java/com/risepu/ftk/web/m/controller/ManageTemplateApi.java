@@ -29,7 +29,7 @@ public interface ManageTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
     @GetMapping(path = "/getAllTemplate")
     @ResponseBody
-    ResponseEntity<Response<List<Template>>> getAllTemplate();
+    ResponseEntity<Response<List<Template>>> getAllTemplate(Integer page, Integer pageSize, String startDate, String endDate, String name) throws Exception;
 
     /**
      * 查找所有模板数据
