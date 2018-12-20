@@ -545,6 +545,7 @@ public interface GenericCrudService {
 	 * @param args 参数列表
 	 * @return Itegrator of results.
 	 */
+	@Deprecated
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 	<T> Iterator<T> iterate(final Class<T> clazz, final String hql, final Object... args);
 

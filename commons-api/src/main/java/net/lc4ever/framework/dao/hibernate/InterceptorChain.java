@@ -25,6 +25,7 @@ package net.lc4ever.framework.dao.hibernate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class InterceptorChain extends EmptyInterceptor implements InitializingBe
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (interceptors == null) {
-			interceptors = new ArrayList<Interceptor>(1);
+			interceptors = new ArrayList<>(1);
 		}
 		if (interceptors.isEmpty()) {
 			interceptors.add(EmptyInterceptor.INSTANCE);
@@ -162,7 +163,7 @@ public class InterceptorChain extends EmptyInterceptor implements InitializingBe
 	public Boolean isTransient(final Object entity) {
 		Boolean result = null;
 		for (Interceptor interceptor : interceptors) {
-			if ((result=interceptor.isTransient(entity))!=null) {
+			if ((result = interceptor.isTransient(entity)) != null) {
 				break;
 			}
 		}
@@ -174,8 +175,26 @@ public class InterceptorChain extends EmptyInterceptor implements InitializingBe
 	 */
 	@Override
 	public int[] findDirty(final Object entity, final Serializable id, final Object[] currentState, final Object[] previousState, final String[] propertyNames, final Type[] types) {
-		// TODO not implement yet
-		return super.findDirty(entity, id, currentState, previousState, propertyNames, types);
+		BitSet bitSet = new BitSet(currentState.length);
+		boolean dft = true;
+		for (Interceptor interceptor : interceptors) {
+			int[] r = interceptor.findDirty(entity, id, currentState, previousState, propertyNames, types);
+			if (r != null) {
+				dft = false;
+				for (int i = 0; i < currentState.length; i++) {
+					bitSet.set(i);
+				}
+			}
+		}
+		if (dft) {
+			return null;
+		}
+		int[] result = new int[bitSet.cardinality()];
+		int j = 0;
+		for (int i = bitSet.nextSetBit(0); i != -1; i = bitSet.nextClearBit(i + 1)) {
+			result[j++] = i;
+		}
+		return result;
 	}
 
 	/**

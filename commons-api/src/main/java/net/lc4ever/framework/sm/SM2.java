@@ -39,7 +39,7 @@ public class SM2 {
 	private static final BigInteger X = new BigInteger(1, Hex.decode("32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7"));
 	private static final BigInteger Y = new BigInteger(1, Hex.decode("BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0"));
 
-	private static final ECCurve CURVE = new ECCurve.Fp(P, A, B);
+	private static final ECCurve CURVE = new ECCurve.Fp(P, A, B, null, null);
 	private static final ECPoint G = CURVE.createPoint(X, Y);
 	private static final ECDomainParameters DOMAIN_PARAMS = new ECDomainParameters(CURVE, G, N);
 
