@@ -23,7 +23,7 @@ public class TemplateDomainServiceImpl implements TemplateDomainService {
 	}
 
 	@Override
-	public void addOrUpdate(Long templateId, Long domainId) {
+	public void add(Long templateId, Long domainId) {
 		// TODO Auto-generated method stub
 		TemplateDomain templateDomain = new TemplateDomain();
 		ID id = new ID();

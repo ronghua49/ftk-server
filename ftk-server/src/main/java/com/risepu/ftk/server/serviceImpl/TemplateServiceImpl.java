@@ -36,9 +36,14 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public List<Template> select() {
+    public List<Template> getAllTemplate() {
         // TODO Auto-generated method stub
         return crudService.hql(Template.class, "from Template");
+    }
+
+    @Override
+    public List<Template> getTemplates() {
+        return crudService.hql(Template.class, "from Template where state = 0");
     }
 
     @Override

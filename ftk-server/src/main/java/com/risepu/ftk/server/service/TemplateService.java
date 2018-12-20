@@ -19,9 +19,14 @@ public interface TemplateService {
     void update(Template template);
 
     /**
-     * 查询模板
+     * 查询所有模板
      */
-    List<Template> select();
+    List<Template> getAllTemplate();
+
+    /**
+     * 查询已启用模板
+     */
+    List<Template> getTemplates();
 
     /**
      * 根据模板id查找模板

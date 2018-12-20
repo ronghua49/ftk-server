@@ -42,6 +42,17 @@ public interface TemplateApi {
     ResponseEntity<Response<List<Template>>> getAllTemplate();
 
     /**
+     * 显示已启用模板
+     *
+     * @return 模板JavaBean集合
+     */
+    @ApiOperation(value = "显示已启用模板", nickname = "getTemplates")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
+    @GetMapping(path = "/getTemplates")
+    @ResponseBody
+    ResponseEntity<Response<List<Template>>> getTemplates();
+
+    /**
      * 查找模板对应的所有数据
      *
      * @param templateId
@@ -100,5 +111,17 @@ public interface TemplateApi {
     @GetMapping(path = "/updateTemplateState")
     @ResponseBody
     ResponseEntity<Response<String>> updateTemplateState(Long templateId);
+
+    /**
+     * 单据历史
+     *
+     * @param organization 企业id
+     * @return
+     */
+    @ApiOperation(value = "单据历史", nickname = "getAllDocument")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @GetMapping(path = "/getAllDocument")
+    @ResponseBody
+    ResponseEntity<Response<List>> getAllDocument(String organization);
 
 }
