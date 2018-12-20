@@ -12,7 +12,6 @@ import net.lc4ever.framework.domain.AuditableObject;
 
 /**
  * 企业表
- *
  * @author q-wang
  */
 @Entity
@@ -26,28 +25,6 @@ public class Organization extends AuditableObject<String> {
 	public static final Integer CHECK_PASS_STATE = 2;
 	/** 审核未通过 */
 	public static final Integer CHECK_FAIL_STATE = 3;
-
-	private String phone;
-
-	@Column(name = "PHONE", length = 11, nullable = false)
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phnoe) {
-		this.phone = phnoe;
-	}
-
-	private String password;
-
-	@Column(name = "PASSWORD", length = 32)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	/** 发起认证的企业用户手机号 */
 	private String id;
@@ -122,17 +99,6 @@ public class Organization extends AuditableObject<String> {
 
 	public void setLegalPerson(String legalPerson) {
 		this.legalPerson = legalPerson;
-	}
-
-	private String idCardImgName;
-
-	@Column(name = "IDCARD_IMG_NAME", length = 50)
-	public String getIdCardImgName() {
-		return idCardImgName;
-	}
-
-	public void setIdCardImgName(String idCardImgName) {
-		this.idCardImgName = idCardImgName;
 	}
 
 	private Long defaultTemId;
