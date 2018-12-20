@@ -1,10 +1,6 @@
 package com.risepu.ftk.server.serviceImpl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,27 +46,38 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 
 		List<AuthHistoryInfo> historyList = new ArrayList<>();
 
+		int firstIndex = pageNo*pageSize;
+
 		/** 根据当前用户身份证号查询所有授权流水记录*/
 		List<AuthorizationStream> streamList = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state in (1,2) ", personId);
 
-		for (AuthorizationStream stream : streamList) {
+		Set<String> orgIds = new HashSet<>();
+		for(AuthorizationStream stream : streamList){
+			orgIds.add(stream.getOrgId());
+		}
+
+		int count  = crudService.uniqueResultHql(Long.class, "select count(*) from Organization where name like ?1 and id in ?2","%"+key+"%",orgIds).intValue();
+		List<Organization> orgs = crudService.hql(Organization.class, firstIndex, pageSize, "from Organization where name like ?1 and id in ?2", "%" + key + "%", orgIds);
+
+
+		for (Organization org : orgs) {
 			AuthHistoryInfo history = new AuthHistoryInfo();
-			Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", stream.getOrgId());
-			history.setAuthTime(stream.getModifyTimestamp());
-			history.setOrgName(organization.getName());
-			history.setAuthState(stream.getState());
-			history.setOrgAddress(organization.getAddress());
-			history.setOrgTel(organization.getTel());
+			history.setAuthTime(org.getModifyTimestamp());
+			history.setOrgName(org.getName());
+			history.setAuthState(org.getState());
+			history.setOrgAddress(org.getAddress());
+			history.setOrgTel(org.getTel());
 			historyList.add(history);
 
 		}
 
 		PageResult<AuthHistoryInfo> page = new PageResult<>();
 
-		page.setCount(pageSize);
-		page.setData(historyList);
-
-		page.setTotalElements(historyList.size());
+		page.setResultCode("SUCCESS");
+		page.setNumber(pageNo);
+		page.setSize(pageSize);
+		page.setTotalPages(count, pageSize);
+		page.setTotalElements(count);
 		page.setContent(historyList);
 
 		return page;
