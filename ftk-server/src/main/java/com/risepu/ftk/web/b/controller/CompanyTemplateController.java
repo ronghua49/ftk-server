@@ -35,12 +35,6 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     private DocumentDateService documentDateService;
 
     @Override
-    public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
-        Template template = templateService.getTemplate(templateId);
-        return ResponseEntity.ok(Response.succeed(template));
-    }
-
-    @Override
     public ResponseEntity<Response<PageResult>> getTemplates(Integer pageNo, Integer pageSize) {
         Integer firstIndex = pageNo * pageSize;
         String hql = "from Template where state = 0";

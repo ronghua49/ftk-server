@@ -35,6 +35,12 @@ public class ManageTemplateController implements ManageTemplateApi {
     private TemplateDomainService templateDomainService;
 
     @Override
+    public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
+        Template template = templateService.getTemplate(templateId);
+        return ResponseEntity.ok(Response.succeed(template));
+    }
+
+    @Override
     public ResponseEntity<Response<PageResult>> getAllTemplate(Integer pageNo, Integer pageSize, String startTime, String endTime, String name) throws Exception {
         Integer firstIndex = pageNo * pageSize;
         Date startDate = null;
@@ -98,7 +104,11 @@ public class ManageTemplateController implements ManageTemplateApi {
 
     @Override
     public ResponseEntity<Response<String>> updateTemplate(Template template) {
-        templateService.update(template);
+        Template template1 = templateService.getTemplate(template.getId());
+        template1.set_template(template.get_template());
+        template1.setDescription(template.getDescription());
+        template1.setName(template.getName());
+        templateService.update(template1);
         List<Domain> list = domainService.selectByTemplate(template.getId());
         for (int j = 0; j < list.size(); j++) {
             Domain domain = list.get(j);
@@ -124,12 +134,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         }
         Long templateId = templateService.add(template);
         if (templateId != null) {
-            String _templat = template.get_template();
+            String _template = template.get_template();
             List<Domain> domains = domainService.selectAll();
             for (int i = 0; i < domains.size(); i++) {
                 Domain domain = domains.get(i);
                 String code = "${" + domain.getCode() + "}";
-                if (_templat.contains(code)) {
+                if (_template.contains(code)) {
                     templateDomainService.add(templateId, domain.getId());
                 }
             }
@@ -162,6 +172,12 @@ public class ManageTemplateController implements ManageTemplateApi {
 
     @Override
     public ResponseEntity<Response<String>> updateTemplateData(Domain domain) {
+        Domain domain1=domainService.selectById(domain.getId());
+        domain1.setCode(domain.getCode());
+        domain1.setKegex(domain.getKegex());
+        domain1.setDescription(domain.getDescription());
+        domain1.setLabel(domain.getLabel());
+        domain1.setType(domain.getType());
         domainService.update(domain);
         return ResponseEntity.ok(Response.succeed("修改成功"));
     }

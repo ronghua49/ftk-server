@@ -18,6 +18,18 @@ import java.util.List;
  */
 @Api(value = "template")
 public interface ManageTemplateApi {
+
+    /**
+     * 根据id查找模板
+     *
+     * @return 模板JavaBean
+     */
+    @ApiOperation(value = "回显模板", nickname = "getTemplate")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = Template.class)})
+    @GetMapping(path = "/getTemplate")
+    @ResponseBody
+    ResponseEntity<Response<Template>> getTemplate(Long templateId);
+
     /**
      * 显示所有模板
      *
@@ -25,9 +37,9 @@ public interface ManageTemplateApi {
      */
     @ApiOperation(value = "显示所有模板", nickname = "getAllTemplate")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
-    @GetMapping(path = "/getAllTemplate")
+    @GetMapping(path = "/getAllTemplate/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> getAllTemplate(Integer pageNo, Integer pageSize, String startDate, String endDate, String name) throws Exception;
+    ResponseEntity<Response<PageResult>> getAllTemplate(@PathVariable Integer pageNo, Integer pageSize, String startDate, String endDate, String name) throws Exception;
 
     /**
      * 查找所有模板数据(有分页）
