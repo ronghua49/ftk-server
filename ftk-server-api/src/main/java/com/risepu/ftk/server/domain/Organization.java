@@ -125,6 +125,8 @@ public class Organization extends AuditableObject<String> {
 		this.remark = remark;
 	}
 
+	
+	
 	private String tel;
 
 	@Column(name = "TEL", length = 15)
@@ -136,5 +138,94 @@ public class Organization extends AuditableObject<String> {
 		this.tel = tel;
 	}
 
+	
+	private String orgType;
+	
+	private String signSts;
+	private String registedCapital;
+	private String scope;
+	private String registedDate;
+	private String insuranceNum;
+	private String staffSize;
+	private String website ;
+	
+	
+	@Column(name = "ORG_TYPE", length = 20)
+	public String getOrgType() {
+		return orgType;
+	}
+
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+
+	@Column(name = "SIGN_STS", length = 10)
+	public String getSignSts() {
+		return signSts;
+	}
+	
+	public void setSignSts(String signSts) {
+		this.signSts = signSts;
+	}
+	
+
+	@Column(name = "REG_CAPITAL", length = 20)
+	public String getRegistedCapital() {
+		return registedCapital;
+	}
+
+
+	public void setRegistedCapital(String registedCapital) {
+		this.registedCapital = registedCapital;
+	}
+
+	@Column(name = "SCOPE", length = 20)
+	public String getScope() {
+		return scope;
+	}
+
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+
+	@Column(name = "REG_DATE", length = 10)
+	public String getRegistedDate() {
+		return registedDate;
+	}
+
+	public void setRegistedDate(String registedDate) {
+		this.registedDate = registedDate;
+	}
+
+	@Column(name = "INSURANCE_NUM", length = 20)
+	public String getInsuranceNum() {
+		return insuranceNum;
+	}
+
+	public void setInsuranceNum(String insuranceNum) {
+		this.insuranceNum = insuranceNum;
+	}
+
+	@Column(name = "STAFF_SIZE", length = 20)
+	public String getStaffSize() {
+		return staffSize;
+	}
+
+	public void setStaffSize(String staffSize) {
+		this.staffSize = staffSize;
+	}
+
+	@Column(name = "WEBSITE", length = 20)
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+	
+	
+	
+	
 
 }
