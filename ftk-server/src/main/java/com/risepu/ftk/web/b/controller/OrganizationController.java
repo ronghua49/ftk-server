@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +37,8 @@ import com.risepu.ftk.web.b.dto.LoginResult;
 import com.risepu.ftk.web.b.dto.RegistRequest;
 
 @Controller
-@RequestMapping("/org")
-public class OrganizationController {
+@RequestMapping("/api/org")
+public class OrganizationController implements OrganizationApi{
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -49,11 +50,10 @@ public class OrganizationController {
 	 * 
 	 * @return
 	 */
-
-	@PostMapping("/regist")
-	@ResponseBody
-	public ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo,
+	@Override
+	public ResponseEntity<Response<String>> orgRegist(RegistRequest registVo,
 			HttpServletRequest request) {
+
 		// 判断smsCode
 
 		String code = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
@@ -76,21 +76,17 @@ public class OrganizationController {
 			return ResponseEntity.ok(Response.failed(2, "验证码输入错误！"));
 		}
 	}
-
 	/**
 	 * 企业登录
 	 * 
-	 * @param mobileOrName
-	 *            手机号或者企业名
-	 * @param password
-	 * @param request
+	 * @param loginRequest 登录请求
+	 *
 	 * @return 登录结果
 	 * @throws  
 	 */
 
-	@PostMapping("/login")
-	@ResponseBody
-	public ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request)   {
+	@Override
+	public ResponseEntity<Response<LoginResult>> orgLogin(LoginRequest loginRequest, HttpServletRequest request)   {
 		
 			LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 			
@@ -116,9 +112,8 @@ public class OrganizationController {
 	 * @param request 请求对象
 	 * @return
 	 */
-	@PostMapping("/forgetPwd")
-	@ResponseBody
-	public ResponseEntity<Response<String>> orgForgetPwd(@RequestBody ForgetRequest forgetRequest,
+	@Override
+	public ResponseEntity<Response<String>> orgForgetPwd( ForgetRequest forgetRequest,
 			HttpServletRequest request) {
 		/** 判断输入的企业信息是否存在  返回各自的id */
 		String orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
@@ -145,10 +140,8 @@ public class OrganizationController {
 	/**
 	 * 修改密码
 	 */
-	@PostMapping("/changePwd")
-	@ResponseBody
-
-	public ResponseEntity<Response<String>> orgChangePwd(@RequestParam String password, @RequestParam String newpwd,
+	@Override
+	public ResponseEntity<Response<String>> orgChangePwd( String password,  String newpwd,
 			HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
@@ -174,8 +167,8 @@ public class OrganizationController {
 	 *            图片文件流
 	 * @return 保存的图片名
 	 */
-	@PostMapping("/img/upload")
-	public ResponseEntity<Response<String>> upload(@RequestParam(name = "file") MultipartFile file) {
+	@Override
+	public ResponseEntity<Response<String>> upload( MultipartFile file) {
 
 		try {
 			String fileName = organizationService.upload(file);
@@ -194,7 +187,7 @@ public class OrganizationController {
 	 * @param response
 	 * @return
 	 */
-	@GetMapping("/img/download/{imgName:\\w+.[a-z]{0,4}}")
+	@Override
 	public ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response) {
 
 		try {
@@ -213,8 +206,7 @@ public class OrganizationController {
 	 * @param request
 	 * @return Organization 企业的信息 (若为空则未审核)
 	 */
-	@GetMapping("/auth/check")
-	@ResponseBody
+	@Override
 	public ResponseEntity<Response<Organization>> checkAuthState(HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
@@ -233,9 +225,8 @@ public class OrganizationController {
 	 * @param request
 	 * @return 上传结果
 	 */
-	@PostMapping("/authen/info")
-	@ResponseBody
-	public ResponseEntity<Response<String>> orgAuthen(@RequestBody Organization organization,
+	@Override
+	public ResponseEntity<Response<String>> orgAuthen( Organization organization,
 			HttpServletRequest request) {
 		
 		
@@ -259,9 +250,8 @@ public class OrganizationController {
 	 *            用户身份证号
 	 * @return
 	 */
-	@GetMapping("/scanQR")
-	@ResponseBody
-	public ResponseEntity<Response<String>> scanQR(@RequestParam String cardNo,HttpServletRequest request) {
+	@Override
+	public ResponseEntity<Response<String>> scanQR( String cardNo,HttpServletRequest request) {
 		
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
@@ -287,9 +277,8 @@ public class OrganizationController {
 	 * @param request
 	 * @return
 	 */
-	@GetMapping("/history/verify")
-	@ResponseBody
-	 public ResponseEntity<Response<PageResult<DocumentInfo>>> verifyHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
+	@Override
+	 public ResponseEntity<Response<PageResult<DocumentInfo>>> verifyHistory(String key,  Integer pageNo,Integer pageSize,HttpServletRequest request) {
 		 	
 		OrganizationUser orgUser = getCurrUser(request);
 		
@@ -338,13 +327,12 @@ public class OrganizationController {
 	/**
 	 * 企业反馈信息录入
 	 * 
-	 * @param adviceRequest
+	 * @param advice
 	 *            企业反馈信息
 	 * @return 保存结果
 	 */
-	@PostMapping("/advice")
-	@ResponseBody
-	public ResponseEntity<Response<String>> adviceInfo(@RequestBody OrganizationAdvice advice,
+	@Override
+	public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice,
 			HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
@@ -365,7 +353,7 @@ public class OrganizationController {
 	/**
 	 * 退出登录
 	 */
-	@GetMapping("/logout")
+	@Override
 	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
 		
 		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
