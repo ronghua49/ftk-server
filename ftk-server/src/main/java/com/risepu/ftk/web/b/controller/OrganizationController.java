@@ -1,20 +1,5 @@
 package com.risepu.ftk.web.b.controller;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationUser;
@@ -23,15 +8,22 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
-import com.risepu.ftk.web.b.dto.DocumentInfo;
-import com.risepu.ftk.web.b.dto.ForgetRequest;
-import com.risepu.ftk.web.b.dto.LoginRequest;
-import com.risepu.ftk.web.b.dto.LoginResult;
-import com.risepu.ftk.web.b.dto.RegistRequest;
+import com.risepu.ftk.web.b.dto.*;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
-@RequestMapping("/api/org")
-public class OrganizationController implements OrganizationApi {
+public class OrganizationController implements OrganizationApi{
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,7 +36,8 @@ public class OrganizationController implements OrganizationApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> orgRegist(RegistRequest registVo, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> orgRegist(RegistRequest registVo,
+													  HttpServletRequest request) {
 
 		// 判断smsCode
 
@@ -68,7 +61,6 @@ public class OrganizationController implements OrganizationApi {
 			return ResponseEntity.ok(Response.failed(2, "验证码输入错误！"));
 		}
 	}
-
 	/**
 	 * 企业登录
 	 *
@@ -79,19 +71,20 @@ public class OrganizationController implements OrganizationApi {
 	 */
 
 	@Override
-	public ResponseEntity<Response<LoginResult>> orgLogin(LoginRequest loginRequest, HttpServletRequest request) {
+	public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request)   {
 
 		LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
-		if (loginResult.getCode() == 0) {
+		if(loginResult.getCode()==0) {
 			/** 设置session对象为 未认证的对象 */
-			setCurrUserToSession(request, loginResult.getOrganizationUser());
+			setCurrUserToSession(request,loginResult.getOrganizationUser());
 			logger.debug("企业用户--{},登录成功！", loginRequest.getName());
 			return ResponseEntity.ok(Response.succeed(loginResult));
 		}
 
 		return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
 	}
+
 
 	private void setCurrUserToSession(HttpServletRequest request, OrganizationUser organizationUser) {
 		request.getSession().setAttribute(Constant.getSessionCurrUser(), organizationUser);
@@ -105,7 +98,8 @@ public class OrganizationController implements OrganizationApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> orgForgetPwd(ForgetRequest forgetRequest, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> orgForgetPwd( ForgetRequest forgetRequest,
+														  HttpServletRequest request) {
 		/** 判断输入的企业信息是否存在  返回各自的id */
 		String orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
 
@@ -132,7 +126,8 @@ public class OrganizationController implements OrganizationApi {
 	 * 修改密码
 	 */
 	@Override
-	public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> orgChangePwd( String password,  String newpwd,
+														  HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
 
@@ -145,7 +140,7 @@ public class OrganizationController implements OrganizationApi {
 			organizationService.changePwd(currUser.getId(), newpwd);
 			logger.debug("企业用户   {}，修改密码成功！", currUser.getId());
 			return ResponseEntity.ok(Response.succeed("密码修改成功"));
-		} else {
+		}else {
 			return ResponseEntity.ok(Response.failed(7, "修改失败，输入密码和服务端密码不一致"));
 		}
 	}
@@ -158,7 +153,7 @@ public class OrganizationController implements OrganizationApi {
 	 * @return 保存的图片名
 	 */
 	@Override
-	public ResponseEntity<Response<String>> upload(MultipartFile file) {
+	public ResponseEntity<Response<String>> upload( MultipartFile file) {
 
 		try {
 			String fileName = organizationService.upload(file);
@@ -202,7 +197,7 @@ public class OrganizationController implements OrganizationApi {
 		OrganizationUser currUser = getCurrUser(request);
 
 		/** 为空 未认证   不为空  state 判断*/
-		Organization org = organizationService.findAuthenOrgById(currUser.getId());
+		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 
 		return ResponseEntity.ok(Response.succeed(org));
 	}
@@ -216,7 +211,9 @@ public class OrganizationController implements OrganizationApi {
 	 * @return 上传结果
 	 */
 	@Override
-	public ResponseEntity<Response<String>> orgAuthen(Organization organization, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> orgAuthen( Organization organization,
+													   HttpServletRequest request) {
+
 
 		OrganizationUser user = getCurrUser(request);
 
@@ -225,7 +222,6 @@ public class OrganizationController implements OrganizationApi {
 		organizationService.updateOrgUser(user);
 
 		organization.setState(Organization.CHECKING_STATE);
-
 		organizationService.saveOrUpdateOrgInfo(organization);
 		logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
 		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
@@ -240,14 +236,14 @@ public class OrganizationController implements OrganizationApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> scanQR(String cardNo, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> scanQR( String cardNo,HttpServletRequest request) {
 
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
 
 		Organization org = organizationService.findAuthenOrgById(currUser.getId());
 		/** 只有审核通过后的企业才可以扫描单据 */
-		if (org != null && org.getState().equals(Organization.CHECK_PASS_STATE)) {
+		if(org!=null && org.getState().equals(Organization.CHECK_PASS_STATE)) {
 
 			organizationService.InsertAuthorStream(currUser.getId(), cardNo);
 
@@ -256,6 +252,7 @@ public class OrganizationController implements OrganizationApi {
 		}
 		return ResponseEntity.ok(Response.succeed("请审核通过后扫描"));
 	}
+
 
 	/**
 	 * 企业扫码验单历史查询
@@ -266,11 +263,13 @@ public class OrganizationController implements OrganizationApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<DocumentInfo>>> verifyHistory(String key, Integer pageNo, Integer pageSize, HttpServletRequest request) {
+	public ResponseEntity<Response<PageResult<DocumentInfo>>> verifyHistory(String key,  Integer pageNo,Integer pageSize,HttpServletRequest request) {
 
 		OrganizationUser orgUser = getCurrUser(request);
 
+
 		//PageResult<DocumentInfo>  page = organizationService.queryVerifyPage(key,pageNo,pageSize,orgUser.getId());
+
 
 		return null;
 
@@ -284,14 +283,15 @@ public class OrganizationController implements OrganizationApi {
 	 * @param request
 	 * @return
 	 */
-	//	@GetMapping("/history/document")
-	//	@ResponseBody
-	//	public ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
-	//		/** 查询企业历史单据信息 */	
-	//		
-	//		
-	//		
-	//	}
+//	@GetMapping("/history/document")
+//	@ResponseBody
+//	public ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
+//		/** 查询企业历史单据信息 */
+//
+//
+//
+//	}
+
 
 	/**
 	 * 验证单据是否合格
@@ -300,12 +300,14 @@ public class OrganizationController implements OrganizationApi {
 	 * @param streamId 当前扫描二维码的流水id
 	 * @return
 	 */
-	//	@PostMapping("/qualify")
-	//	public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId ,@RequestParam String qrCardNo, @RequestParam String inputCardNo) {
-	//	
-	//		
-	//		
-	//	}
+//	@PostMapping("/qualify")
+//	public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId ,@RequestParam String qrCardNo, @RequestParam String inputCardNo) {
+//
+//
+//
+//	}
+
+
 
 	/**
 	 * 企业反馈信息录入
@@ -315,7 +317,8 @@ public class OrganizationController implements OrganizationApi {
 	 * @return 保存结果
 	 */
 	@Override
-	public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice,
+													   HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
 
@@ -325,18 +328,21 @@ public class OrganizationController implements OrganizationApi {
 
 	}
 
-	private OrganizationUser getCurrUser(HttpServletRequest request) {
-		return (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+
+
+	private  OrganizationUser getCurrUser(HttpServletRequest request) {
+		return(OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 	}
+
 
 	/**
 	 * 退出登录
 	 */
 	@Override
-	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request) {
+	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
 
-		request.getSession().setAttribute(Constant.getSessionCurrUser(), null);
-		return ResponseEntity.ok(Response.succeed("退出登录"));
+		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
+		return ResponseEntity.ok(Response.succeed("退出登录成功"));
 	}
 
 }
