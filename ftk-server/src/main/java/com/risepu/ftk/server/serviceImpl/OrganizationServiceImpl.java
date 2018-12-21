@@ -119,7 +119,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public void changePwd(String id, String newPwd) {
-		newPwd = DigestUtils.md5Hex(newPwd + SALT);
 		OrganizationUser orgUser=new OrganizationUser();
 		orgUser.setId(id);
 		orgUser.setPassword(newPwd);

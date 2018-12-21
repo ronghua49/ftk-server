@@ -100,6 +100,7 @@ public class OrganizationController implements OrganizationApi{
 	@Override
 	public ResponseEntity<Response<String>> orgForgetPwd( ForgetRequest forgetRequest,
 			HttpServletRequest request) {
+		String salt = ConfigUtil.getValue("salt");
 		/** 判断输入的企业信息是否存在  返回各自的id */
 		String orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
 
@@ -107,8 +108,8 @@ public class OrganizationController implements OrganizationApi{
 			String smsCode = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
 
 			if (forgetRequest.getSmsCode().equals(smsCode)) {
-
-				organizationService.changePwd(orgId, forgetRequest.getPassword());
+				String newPwd =  DigestUtils.md5Hex(forgetRequest.getPassword() + salt);
+				organizationService.changePwd(orgId, newPwd);
 				logger.debug("企业用户   {}，修改密码成功！", forgetRequest.getMobileOrName());
 
 				return ResponseEntity.ok(Response.succeed("密码修改成功"));
