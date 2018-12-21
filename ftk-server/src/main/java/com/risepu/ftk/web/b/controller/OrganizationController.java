@@ -108,6 +108,7 @@ public class OrganizationController implements OrganizationApi{
 			String smsCode = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
 
 			if (forgetRequest.getSmsCode().equals(smsCode)) {
+
 				String newPwd =  DigestUtils.md5Hex(forgetRequest.getPassword() + salt);
 				organizationService.changePwd(orgId, newPwd);
 				logger.debug("企业用户   {}，修改密码成功！", forgetRequest.getMobileOrName());
