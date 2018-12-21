@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.risepu.ftk.web.api.Response;
 
 @Controller
-@RequestMapping("/captcha/v1")
+@RequestMapping("/api/captcha/v1")
 public class CaptchaController implements InitializingBean,CaptchaApi {
 	
 	private final int OFFSET = 538309;
@@ -55,7 +55,7 @@ public class CaptchaController implements InitializingBean,CaptchaApi {
 		request.getSession().setAttribute(Constant.getSessionVerificationCodeImg(), code);
 		
 		try {
-			captchaEnabled=true;
+			captchaEnabled=false;
 			return ResponseEntity.ok(Response.succeed(imgBase64(request,code)));
 			
 		} catch (Exception e) {

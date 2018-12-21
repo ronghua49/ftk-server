@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.risepu.ftk.server.domain.OrganizationUser;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.risepu.ftk.server.domain.Organization;
@@ -103,9 +104,13 @@ public interface OrganizationService {
 	 */
 	public PageResult<Organization> findByParam(Map<String,Object> map,Integer pageNo,Integer pageSize);
 
-	
+	/**
+	 * 修改企业用户信息
+	 * @param user
+	 */
+	void updateOrgUser(OrganizationUser user);
 
-	
+
 	/**
 	 * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败
 	 * 

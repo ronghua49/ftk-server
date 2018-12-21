@@ -13,7 +13,7 @@ import net.lc4ever.framework.remote.annotation.Remote;
 public interface PersonalUserService {
 	/**
 	 * 个人用户注册
-	 * @param phone 电话
+	 * @param mobile 电话
 	 * @param cardNo 身份证号
 	 * @param userName 用户名
 	 * @return

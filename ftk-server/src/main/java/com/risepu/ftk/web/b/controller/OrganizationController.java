@@ -221,7 +221,8 @@ public class OrganizationController implements OrganizationApi {
 		OrganizationUser user = getCurrUser(request);
 
 		/** 增加关联 id 为发起认证的企业用户手机号 */
-		organization.setId(user.getId());
+		user.setOrganizationId(organization.getId());
+		organizationService.updateOrgUser(user);
 
 		organization.setState(Organization.CHECKING_STATE);
 

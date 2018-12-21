@@ -8,12 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.PersonalUser;
@@ -28,8 +23,8 @@ import com.risepu.ftk.web.p.dto.LoginResult;
 
 
 @RestController
-@RequestMapping("/personal")
-public class PersonalUserController   {
+@RequestMapping("/api/personal")
+public class PersonalUserController implements PersonzalUserApi  {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -49,8 +44,8 @@ public class PersonalUserController   {
 	 * @param request
 	 * @return 需要
 	 */
-	@PostMapping("/login")
-	public ResponseEntity<Response<LoginResult>> personalLogin(@RequestBody LoginRequest loginRequest,HttpServletRequest request){
+	@Override
+	public ResponseEntity<Response<LoginResult>> personalLogin(LoginRequest loginRequest,HttpServletRequest request){
 		
 		
 		String smsCode =getSmsCode(request);  
@@ -91,9 +86,10 @@ public class PersonalUserController   {
 				
 				if(map!=null) {
 					loginResult.setOrgName((String)map.get("orgName"));
-					loginResult.setStreamId((Integer)map.get("streamId"));;
+					loginResult.setStreamId((Long)map.get("streamId"));;
 				}
-				
+
+
 				logger.debug("用户手机号--{}，登录成功",personalUser.getMobile());
 				
 				return ResponseEntity.ok(Response.succeed(loginResult));
@@ -118,12 +114,13 @@ public class PersonalUserController   {
 
 	/**
 	 * 用户发起授权或拒绝
-	 * @param scanRequest 请求数据
+	 * @param streamId 当前扫描流水id
+	 * @param state 授权状态
 	 * @param request
 	 * @return
 	 */
-	@GetMapping("/authen")
-	public ResponseEntity<Response<String>> personAuth(@RequestParam String streamId,@RequestParam String state, HttpServletRequest request) {
+	@Override
+	public ResponseEntity<Response<String>> personAuth( String streamId, String state, HttpServletRequest request) {
 		
 		String message ="";
 		PersonalUser personalUser = getSession(request);
@@ -164,9 +161,9 @@ public class PersonalUserController   {
 	 * @param pageSize 显示条数
 	 * @return
 	 */
-	@GetMapping("/authen/history")
-	public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestParam (required=false) String key,@RequestParam(defaultValue="1") Integer pageNo,@RequestParam Integer pageSize,
-																				HttpServletRequest request){
+	@Override
+	public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(String key,  Integer pageNo, Integer pageSize,
+																				 HttpServletRequest request){
 		PersonalUser user = getCurrUser(request);
 		
 		PageResult<AuthHistoryInfo> pageResult =  personalService.queryHistoryByParam(key,pageNo,pageSize,user.getId());
@@ -174,6 +171,8 @@ public class PersonalUserController   {
 		return ResponseEntity.ok(Response.succeed(pageResult));
 		
 	}
+
+
 
 
 	private PersonalUser getCurrUser(HttpServletRequest request) {

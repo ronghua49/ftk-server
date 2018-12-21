@@ -20,16 +20,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "template")
 public interface CompanyTemplateApi {
-    /**
-     * 根据id查找模板
-     *
-     * @return 模板JavaBean
-     */
-    @ApiOperation(value = "回显模板", nickname = "getTemplate")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = Template.class)})
-    @GetMapping(path = "/getTemplate")
-    @ResponseBody
-    ResponseEntity<Response<Template>> getTemplate(Long templateId);
+
 
     /**
      * 显示已启用模板
