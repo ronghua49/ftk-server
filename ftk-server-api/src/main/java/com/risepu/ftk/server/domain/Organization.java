@@ -33,7 +33,7 @@ public class Organization extends AuditableObject<String> {
 	
 	@Override
 	@Id
-	@Column(name = "ORGANIZATION", length = 11)
+	@Column(name = "ORGANIZATION", length = 18)
 	public String getId() {
 		return this.id;
 	}
