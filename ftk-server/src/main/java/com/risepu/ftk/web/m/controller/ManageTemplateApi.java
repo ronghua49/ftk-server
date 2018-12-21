@@ -2,16 +2,14 @@ package com.risepu.ftk.web.m.controller;
 
 import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
+import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,17 +24,28 @@ public interface ManageTemplateApi {
      * @return 模板JavaBean集合
      */
     @ApiOperation(value = "显示所有模板", nickname = "getAllTemplate")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @GetMapping(path = "/getAllTemplate")
     @ResponseBody
-    ResponseEntity<Response<List<Template>>> getAllTemplate(Integer page, Integer pageSize, String startDate, String endDate, String name) throws Exception;
+    ResponseEntity<Response<PageResult>> getAllTemplate(Integer pageNo, Integer pageSize, String startDate, String endDate, String name) throws Exception;
 
     /**
-     * 查找所有模板数据
+     * 查找所有模板数据(有分页）
      *
      * @return
      */
-    @ApiOperation(value = "查找所有模板数据", nickname = "getAllDomain")
+    @ApiOperation(value = "查找所有模板数据(有分页）", nickname = "getAnyDomain")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
+    @GetMapping(path = "/getAnyDomain/{pageNo:\\d+}")
+    @ResponseBody
+    ResponseEntity<Response<PageResult>> getAnyDomain(@PathVariable Integer pageNo, Integer pageSize, String code, String label);
+
+    /**
+     * 查找所有模板数据(无分页）
+     *
+     * @return
+     */
+    @ApiOperation(value = "查找所有模板数据(无分页）", nickname = "getAllDomain")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
     @GetMapping(path = "/getAllDomain")
     @ResponseBody
@@ -125,5 +134,4 @@ public interface ManageTemplateApi {
     @GetMapping(path = "/updateTemplateState")
     @ResponseBody
     ResponseEntity<Response<String>> updateTemplateState(Long templateId);
-
 }

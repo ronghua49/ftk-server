@@ -33,4 +33,13 @@ public interface TemplateService {
      */
     Template getTemplate(Long template);
 
+    /**
+     *
+     * @param firstIndex
+     * @param pageSize
+     * @param hql
+     * @return
+     */
+    List getAnyTemplate(Integer firstIndex, Integer pageSize, String hql);
+
 }

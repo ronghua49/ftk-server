@@ -52,4 +52,10 @@ public class TemplateServiceImpl implements TemplateService {
         return temp;
     }
 
+    @Override
+    public List getAnyTemplate(Integer firstIndex, Integer pageSize, String hql) {
+        List list = crudService.hql(firstIndex, pageSize, hql);
+        return list;
+    }
+
 }

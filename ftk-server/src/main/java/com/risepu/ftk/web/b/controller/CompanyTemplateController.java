@@ -5,16 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.risepu.ftk.server.domain.DocumentData;
-import com.risepu.ftk.server.domain.ProofDocument;
+import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.*;
+import com.risepu.ftk.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.risepu.ftk.server.domain.Domain;
-import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.web.api.Response;
 
 /**
@@ -43,13 +41,23 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<List<Template>>> getTemplates() {
+    public ResponseEntity<Response<PageResult>> getTemplates(Integer pageNo, Integer pageSize) {
+        Integer firstIndex = pageNo * pageSize;
+        String hql = "from Template where state = 0";
         List<Template> templates = templateService.getTemplates();
-        return ResponseEntity.ok(Response.succeed(templates));
+        List list = templateService.getAnyTemplate(firstIndex, pageSize, hql);
+        PageResult<Template> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(templates.size(), pageSize);
+        pageResult.setTotalElements(templates.size());
+        pageResult.setContent(list);
+        return ResponseEntity.ok(Response.succeed(pageResult));
     }
 
     @Override
-    public ResponseEntity<Response<List<Domain>>> getAllTemplateData(Long templateId) {
+    public ResponseEntity<Response<List<Domain>>> getAllTemplateData(Long templateId, Integer pageNo, Integer pageSize) {
         List<Domain> domains = domainService.selectByTemplate(templateId);
         return ResponseEntity.ok(Response.succeed(domains));
     }

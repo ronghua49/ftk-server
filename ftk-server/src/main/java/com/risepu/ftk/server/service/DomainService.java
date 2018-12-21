@@ -47,4 +47,18 @@ public interface DomainService {
      * 根据code查找模板数据
      */
     Domain selectByCode(String code);
+
+    /**
+     * @param firstIndex
+     * @param pageSize
+     * @return
+     */
+    List getAnyDomain(Integer firstIndex, Integer pageSize,String hql);
+
+    /**
+     *
+     * @param hql
+     * @return
+     */
+    List<Domain> getDomains(String hql);
 }

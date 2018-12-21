@@ -78,4 +78,14 @@ public class DomainServiceImpl implements DomainService {
         Domain domain = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", code);
         return domain;
     }
+
+    @Override
+    public List getAnyDomain(Integer firstIndex, Integer pageSize, String hql) {
+        return crudService.hql(firstIndex, pageSize, hql);
+    }
+
+    @Override
+    public List<Domain> getDomains(String hql) {
+        return crudService.hql(Domain.class, hql);
+    }
 }

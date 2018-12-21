@@ -2,6 +2,7 @@ package com.risepu.ftk.web.b.controller;
 
 import java.util.List;
 
+import com.risepu.ftk.utils.PageResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,10 +37,10 @@ public interface CompanyTemplateApi {
      * @return 模板JavaBean集合
      */
     @ApiOperation(value = "显示已启用模板", nickname = "getTemplates")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
-    @GetMapping(path = "/getTemplates")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
+    @GetMapping(path = "/getTemplates/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<List<Template>>> getTemplates();
+    ResponseEntity<Response<PageResult>> getTemplates(@PathVariable Integer pageNo, Integer pageSize);
 
     /**
      * 查找模板对应的所有数据
@@ -49,9 +50,9 @@ public interface CompanyTemplateApi {
      */
     @ApiOperation(value = "查找模板对应的所有数据", nickname = "getAllTemplateData")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
-    @GetMapping(path = "/getAllTemplateData")
+    @GetMapping(path = "/getAllTemplateData/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<List<Domain>>> getAllTemplateData(Long templateId);
+    ResponseEntity<Response<List<Domain>>> getAllTemplateData(Long templateId,@PathVariable Integer pageNo, Integer pageSize);
 
     /**
      * 单据历史
