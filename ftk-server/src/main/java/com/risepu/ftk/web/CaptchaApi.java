@@ -24,21 +24,7 @@ public interface CaptchaApi {
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
 	@RequestMapping(path = "/get")
 	@ResponseBody
-	@CrossOrigin
 	public ResponseEntity<Response<String>> captcha(HttpServletResponse response, HttpServletRequest request);
 
-	
-//	@ApiOperation(value = "校验验证码", nickname = "IdentifyCapcha")
-//	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-//	@RequestMapping(path = "/identify")
-//	@ResponseBody
-//	@CrossOrigin
-//	ResponseEntity<Response<String>> identify(String inputCaptcha, String phone, HttpServletRequest request);
 
-//	@ApiOperation(value = "返回图片", nickname = "imgCode")
-//	@ApiResponses({ @ApiResponse(code = 200, message = "succeed",response = String.class)})
-//	@RequestMapping(path = "/img")
-//	@ResponseBody
-//	@CrossOrigin
-//	public String imgBase64(HttpServletRequest request);
 }

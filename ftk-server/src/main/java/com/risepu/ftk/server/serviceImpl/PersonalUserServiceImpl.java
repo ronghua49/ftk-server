@@ -45,8 +45,8 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	public PageResult<AuthHistoryInfo> queryHistoryByParam(String key, Integer pageNo, Integer pageSize, String personId) {
 
 		List<AuthHistoryInfo> historyList = new ArrayList<>();
-
 		int firstIndex = pageNo*pageSize;
+		int count=0;
 
 		/** 根据当前用户身份证号查询所有授权流水记录*/
 		List<AuthorizationStream> streamList = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state in (1,2) ", personId);
@@ -56,19 +56,18 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 			orgIds.add(stream.getOrgId());
 		}
 
-		int count  = crudService.uniqueResultHql(Long.class, "select count(*) from Organization where name like ?1 and id in ?2","%"+key+"%",orgIds).intValue();
-		List<Organization> orgs = crudService.hql(Organization.class, firstIndex, pageSize, "from Organization where name like ?1 and id in ?2", "%" + key + "%", orgIds);
-
-
-		for (Organization org : orgs) {
-			AuthHistoryInfo history = new AuthHistoryInfo();
-			history.setAuthTime(org.getModifyTimestamp());
-			history.setOrgName(org.getName());
-			history.setAuthState(org.getState());
-			history.setOrgAddress(org.getAddress());
-			history.setOrgTel(org.getTel());
-			historyList.add(history);
-
+		if(!orgIds.isEmpty()){
+			 count  = crudService.uniqueResultHql(Long.class, "select count(*) from Organization where name like ?1 and id in ?2","%"+key+"%",orgIds).intValue();
+			List<Organization> orgs = crudService.hql(Organization.class, firstIndex, pageSize, "from Organization where name like ?1 and id in ?2", "%" + key + "%", orgIds);
+			for (Organization org : orgs) {
+				AuthHistoryInfo history = new AuthHistoryInfo();
+				history.setAuthTime(org.getModifyTimestamp());
+				history.setOrgName(org.getName());
+				history.setAuthState(org.getState());
+				history.setOrgAddress(org.getAddress());
+				history.setOrgTel(org.getTel());
+				historyList.add(history);
+			}
 		}
 
 		PageResult<AuthHistoryInfo> page = new PageResult<>();

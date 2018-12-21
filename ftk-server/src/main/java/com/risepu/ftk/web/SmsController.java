@@ -15,14 +15,14 @@ import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.dto.MesRequest;
 
 @Controller
-@RequestMapping("/sms")
-public class SmsController {
+@RequestMapping("/api/sms")
+public class SmsController implements SmsControllerApi{
 	
 	@Autowired
 	private SmsService smsService;
 	
-	@PostMapping("/get")
-	public ResponseEntity<Response<String>> sendSms(@RequestBody MesRequest mesRequest,HttpServletRequest request){
+	@Override
+	public ResponseEntity<Response<String>> sendSms( MesRequest mesRequest,HttpServletRequest request){
 		
 		System.out.println("发送短信的请求sessionid:"+request.getSession().getId());
 		

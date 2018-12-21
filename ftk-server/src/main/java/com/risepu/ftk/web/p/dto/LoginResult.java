@@ -12,7 +12,7 @@ public class LoginResult {
 	
 	private String orgName;
 	
-	private Integer streamId;
+	private Long streamId;
 
 	public String getMessage() {
 		return message;
@@ -38,11 +38,11 @@ public class LoginResult {
 		this.orgName = orgName;
 	}
 
-	public Integer getStreamId() {
+	public Long getStreamId() {
 		return streamId;
 	}
 
-	public void setStreamId(Integer streamId) {
+	public void setStreamId(Long streamId) {
 		this.streamId = streamId;
 	}
 

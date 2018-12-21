@@ -39,7 +39,8 @@
 		<logger level="INFO" name="org.springframework.remoting.support.RemoteInvocationTraceInterceptor" />
 		<logger level="INFO" name="net.lc4ever" />
 		<logger level="INFO" name="net.lc4ever.framework.remote" />
-		<logger level="DEBUG" name="org.springframework" />
+		<logger level="INFO" name="org.springframework" />
+		<logger level="DEBUG" name="org.hibernate.SQL" />
 
 <!-- 		<logger level="DEBUG" name="org.hibernate.SQL" /> -->
 

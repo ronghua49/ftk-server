@@ -77,12 +77,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 					loginResult.setCode(0);
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganizationUser(org);
+
 					/** 判断是否为审核通过的企业用户 */
-					Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", org.getOrganizationId());
-					
-					if(organization!=null ) {
-						loginResult.setOrganization(organization);
+					Organization organization=null;
+					if(org.getOrganizationId()!=null){
+						organization = crudService.uniqueResultByProperty(Organization.class, "id", org.getOrganizationId());
 					}
+
+					loginResult.setOrganization(organization);
+
 					
 				} else {
 					loginResult.setCode(5);
@@ -288,7 +291,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 			return pageResult;
 	}
 
-	
+	/**
+	 * 修改企业用户信息
+	 *
+	 * @param user
+	 */
+	@Override
+	public void updateOrgUser(OrganizationUser user) {
+		crudService.update(user);
+	}
 
-	
+
 }

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.risepu.ftk.server.domain.AdminUser;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.service.AdminService;
@@ -100,7 +99,8 @@ public class ManagerController {
 	 * @param key 关键字
 	 * @param pageNo
 	 * @param pageSize
-	 * @param order 升降序参数 0：降序 1：升序
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
 	 * @param state 审核状态
 	 * @param request
 	 * @return
@@ -114,7 +114,6 @@ public class ManagerController {
 																@RequestParam(required=false) Integer state,
 																HttpServletRequest request)   {
 		Map<String, Object> map = new HashMap<>();
-
 		
 		map.put("key", key);
 		map.put("startTime", startTime);
@@ -133,15 +132,28 @@ public class ManagerController {
 	
 	/**
 	 * 保存修改后的企业信息
-	 * @param orgnization
+	 * @param organization 审核后的企业信息
 	 * @return
 	 */
-	@PostMapping("/checkOrg")
+	@PostMapping("/editOrg")
 	public ResponseEntity<Response<String>> checkOrgInfo(@RequestBody Organization organization){
 		
-		organizationService.saveOrUpdateOrgInfo(organization);
+		Organization org = organizationService.findAuthenOrgById(organization.getId());
 		
-		return ResponseEntity.ok(Response.succeed("审核成功"));
+		org.setInsuranceNum(organization.getInsuranceNum());
+		org.setOrgType(organization.getOrgType());
+		org.setRegistedCapital(organization.getRegistedCapital());
+		org.setRegistedDate(organization.getRegistedDate());
+		org.setRemark(organization.getRemark());
+		org.setScope(organization.getScope());
+		org.setSignSts(organization.getSignSts());
+		org.setStaffSize(organization.getStaffSize());
+		org.setState(organization.getState());
+		org.setWebsite(organization.getWebsite());
+
+		organizationService.saveOrUpdateOrgInfo(org);
+		
+		return ResponseEntity.ok(Response.succeed("提交成功"));
 		
 	}
 	
