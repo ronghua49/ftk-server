@@ -55,7 +55,7 @@ public class ManageTemplateController implements ManageTemplateApi {
         }
         String hql = "from Template where 1 = 1";
         if (endTime != null) {
-            hql += " and createTimestamp between '" + startTime + "' and '" + endTime + "'";
+            hql += " and createTimestamp >= '" + startTime + "' and createTimestamp < '" + endTime + "'";
         }
         if (StringUtils.isNotEmpty(name)) {
             hql += " and name like '%" + name + "%'";
