@@ -5,13 +5,18 @@ import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.TemplateDomainService;
 import com.risepu.ftk.server.service.TemplateService;
+import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
+import net.lc4ever.framework.format.DateFormatter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,15 +35,65 @@ public class ManageTemplateController implements ManageTemplateApi {
     private TemplateDomainService templateDomainService;
 
     @Override
-    public ResponseEntity<Response<List<Template>>> getAllTemplate() {
-        List<Template> templates = templateService.getAllTemplate();
-        return ResponseEntity.ok(Response.succeed(templates));
+    public ResponseEntity<Response<PageResult>> getAllTemplate(Integer pageNo, Integer pageSize, String startTime, String endTime, String name) throws Exception {
+        Integer firstIndex = pageNo * pageSize;
+        Date startDate = null;
+        Date endDate = null;
+        if (startTime == null) {
+            startTime = null;
+            endTime = null;
+        } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            startDate = formatter.parse(startTime);
+            endDate = formatter.parse(endTime);
+            endDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
+        }
+        String hql = "from Template where 1 = 1";
+        if (StringUtils.isNotEmpty(startTime)) {
+            hql += " and createTimestamp>='" + startDate + "' and createTimestamp<='" + endDate + "'";
+        }
+        if (StringUtils.isNotEmpty(name)) {
+            hql += " and name like '%" + name + "%'";
+        }
+        List<Template> templates = templateService.getAllTemplate(hql);
+
+        List list = templateService.getAnyTemplate(firstIndex, pageSize, hql);
+        PageResult<Template> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(templates.size(), pageSize);
+        pageResult.setTotalElements(templates.size());
+        pageResult.setContent(list);
+        return ResponseEntity.ok(Response.succeed(pageResult));
+    }
+
+    @Override
+    public ResponseEntity<Response<PageResult>> getAnyDomain(Integer pageNo, Integer pageSize, String code, String label) {
+        Integer firstIndex = pageNo * pageSize;
+        String hql = "from Domain where 1 = 1";
+        if (StringUtils.isNotEmpty(code)) {
+            hql += " and code = '" + code + "'";
+        }
+        if (StringUtils.isNotEmpty(label)) {
+            hql += " and label = '" + label + "'";
+        }
+        List<Domain> domains = domainService.getDomains(hql);
+        List list = domainService.getAnyDomain(firstIndex, pageSize, hql);
+        PageResult<Domain> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(domains.size(), pageSize);
+        pageResult.setTotalElements(domains.size());
+        pageResult.setContent(list);
+        return ResponseEntity.ok(Response.succeed(pageResult));
     }
 
     @Override
     public ResponseEntity<Response<List<Domain>>> getAllDomain() {
-        List<Domain> list = domainService.selectAll();
-        return ResponseEntity.ok(Response.succeed(list));
+        List<Domain> domains = domainService.selectAll();
+        return ResponseEntity.ok(Response.succeed(domains));
     }
 
     @Override
@@ -64,6 +119,9 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Override
     public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) {
         // TODO Auto-generated method stub
+        if (StringUtils.isEmpty(template.get_template())) {
+            return ResponseEntity.ok(Response.failed(400, "二次模板不能为空"));
+        }
         Long templateId = templateService.add(template);
         if (templateId != null) {
             String _templat = template.get_template();
@@ -83,6 +141,13 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Override
     public ResponseEntity<Response<String>> addTemplateData(Domain domain) {
         // TODO Auto-generated method stub
+        if (StringUtils.isEmpty(domain.getCode())) {
+            return ResponseEntity.ok(Response.failed(400, "模板要素code不能为空"));
+        } else if (StringUtils.isEmpty(domain.getLabel())) {
+            return ResponseEntity.ok(Response.failed(400, "模板要素名称不能为空"));
+        } else if (StringUtils.isEmpty(domain.getKegex())) {
+            return ResponseEntity.ok(Response.failed(400, "校验规则不能为空"));
+        }
         Long domainId = domainService.add(domain);
         if (domainId != null) {
             return ResponseEntity.ok(Response.succeed("添加成功"));

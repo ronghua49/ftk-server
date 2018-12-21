@@ -15,41 +15,47 @@ import net.lc4ever.framework.service.GenericCrudService;
  */
 @Service
 public class TemplateServiceImpl implements TemplateService {
-	private GenericCrudService crudService;
+    private GenericCrudService crudService;
 
-	@Autowired
-	public void setCrudService(GenericCrudService crudService) {
-		this.crudService = crudService;
-	}
+    @Autowired
+    public void setCrudService(GenericCrudService crudService) {
+        this.crudService = crudService;
+    }
 
-	@Override
-	public Long add(Template template) {
-		// TODO Auto-generated method stub
-		template.setState(0);
-		return crudService.save(template);
-	}
+    @Override
+    public Long add(Template template) {
+        // TODO Auto-generated method stub
+        template.setState(0);
+        return crudService.save(template);
+    }
 
-	@Override
-	public void update(Template template) {
-		crudService.update(template);
-	}
+    @Override
+    public void update(Template template) {
+        crudService.update(template);
+    }
 
-	@Override
-	public List<Template> getAllTemplate() {
-		// TODO Auto-generated method stub
-		return crudService.hql(Template.class, "from Template");
-	}
+    @Override
+    public List<Template> getAllTemplate(String hql) {
+        // TODO Auto-generated method stub
+        return crudService.hql(Template.class, hql);
+    }
 
-	@Override
-	public List<Template> getTemplates() {
-		return crudService.hql(Template.class, "from Template where state = 0");
-	}
+    @Override
+    public List<Template> getTemplates() {
+        return crudService.hql(Template.class, "from Template where state = 0");
+    }
 
-	@Override
-	public Template getTemplate(Long template) {
-		// TODO Auto-generated method stub
-		Template temp = crudService.uniqueResultHql(Template.class, "from Template where id = ?1 ", template);
-		return temp;
-	}
+    @Override
+    public Template getTemplate(Long template) {
+        // TODO Auto-generated method stub
+        Template temp = crudService.uniqueResultHql(Template.class, "from Template where id = ?1 ", template);
+        return temp;
+    }
+
+    @Override
+    public List getAnyTemplate(Integer firstIndex, Integer pageSize, String hql) {
+        List list = crudService.hql(firstIndex, pageSize, hql);
+        return list;
+    }
 
 }

@@ -21,7 +21,7 @@ public interface TemplateService {
     /**
      * 查询所有模板
      */
-    List<Template> getAllTemplate();
+    List<Template> getAllTemplate(String hql);
 
     /**
      * 查询已启用模板
@@ -32,5 +32,14 @@ public interface TemplateService {
      * 根据模板id查找模板
      */
     Template getTemplate(Long template);
+
+    /**
+     *
+     * @param firstIndex
+     * @param pageSize
+     * @param hql
+     * @return
+     */
+    List getAnyTemplate(Integer firstIndex, Integer pageSize, String hql);
 
 }
