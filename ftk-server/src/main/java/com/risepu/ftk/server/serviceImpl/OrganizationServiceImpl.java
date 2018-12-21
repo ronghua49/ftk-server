@@ -155,6 +155,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 		crudService.saveOrUpdate(organization);
 	}
 
+	
+	
 	@Override
 	public String checkOrgName(String mobileOrName) {
 
@@ -181,9 +183,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public Organization findAuthenOrgById(String id) {
 		
-		OrganizationUser user = crudService.get(OrganizationUser.class, id);
-		
-		return crudService.uniqueResultByProperty(Organization.class, "id", user.getOrganizationId());
+		return crudService.get(Organization.class, id);
 	}
 
 	@Override
@@ -199,11 +199,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public PageResult<Organization> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
-		Integer firstIndex=0;
-		
-		if(pageNo!=0) {
-			firstIndex=(pageNo-1)*pageSize;
-		}
+		Integer firstIndex=(pageNo)*pageSize;
+	
 		String hql = "";
 		String hql2 = "select count(*) ";
 		int total=0;
@@ -221,7 +218,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 		
 		if(startTime!=""&&startTime!=null) {
 			try {
-				
 				startDate = format.parse(startTime);
 				endDate = format.parse(endTime);
 				
@@ -234,7 +230,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 				e.printStackTrace();
 			}
 		}
-		
 		
 		Integer state = (Integer) map.get("state");
 		
