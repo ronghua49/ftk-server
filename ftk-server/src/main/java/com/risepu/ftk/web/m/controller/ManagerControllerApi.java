@@ -6,6 +6,7 @@ package com.risepu.ftk.web.m.controller;    /*
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -13,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+@Api("admin")
+@RequestMapping("/api/admin")
 public interface ManagerControllerApi {
 
 

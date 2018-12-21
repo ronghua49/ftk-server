@@ -59,7 +59,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public LoginResult orgLogin(String phoneOrName, String password) {
-		System.out.println("登录获取的盐："+SALT);
 		String secutityPwd = DigestUtils.md5Hex(password + SALT);
 		LoginResult loginResult = new LoginResult();
 		
@@ -120,9 +119,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public void changePwd(String id, String newPwd) {
-		
+		newPwd = DigestUtils.md5Hex(newPwd + SALT);
 		OrganizationUser orgUser=new OrganizationUser();
-		
 		orgUser.setId(id);
 		orgUser.setPassword(newPwd);
 		crudService.update(orgUser);

@@ -23,7 +23,7 @@ import com.risepu.ftk.web.p.dto.LoginResult;
 
 
 @RestController
-@RequestMapping("/api/personal")
+
 public class PersonalUserController implements PersonzalUserApi  {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
