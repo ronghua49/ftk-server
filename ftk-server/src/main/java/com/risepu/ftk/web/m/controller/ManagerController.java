@@ -28,7 +28,7 @@ import com.risepu.ftk.web.api.Response;
 
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class ManagerController {
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
