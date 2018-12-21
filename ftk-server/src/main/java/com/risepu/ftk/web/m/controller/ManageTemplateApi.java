@@ -25,9 +25,9 @@ public interface ManageTemplateApi {
      */
     @ApiOperation(value = "显示所有模板", nickname = "getAllTemplate")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
-    @GetMapping(path = "/getAllTemplate")
+    @GetMapping(path = "/getAllTemplate/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> getAllTemplate(Integer pageNo, Integer pageSize, String startDate, String endDate, String name) throws Exception;
+    ResponseEntity<Response<PageResult>> getAllTemplate(@PathVariable Integer pageNo, Integer pageSize, String startDate, String endDate, String name) throws Exception;
 
     /**
      * 查找所有模板数据(有分页）
@@ -107,9 +107,9 @@ public interface ManageTemplateApi {
      */
     @ApiOperation(value = "修改模板数据", nickname = "updateTemplateData")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
-    @PostMapping(path = "/updateTemplateData", consumes = {"application/json"})
+    @PostMapping(path = "/updateTemplateData")
     @ResponseBody
-    ResponseEntity<Response<String>> updateTemplateData(@RequestBody Domain domain);
+    ResponseEntity<Response<String>> updateTemplateData(Domain domain);
 
     /**
      * 删除模板数据

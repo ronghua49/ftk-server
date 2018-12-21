@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.service.*;
-import com.risepu.ftk.server.serviceImpl.QrCodeUtilServiceImpl;
 import com.risepu.ftk.utils.ChartGraphics;
 import com.risepu.ftk.web.Constant;
 import org.slf4j.Logger;
@@ -89,7 +88,7 @@ public class DocumentDataController implements DocumentDataApi {
         String hash = "SGDHHFSGFSGFSGFS";
         String title = map.get("title");
         // 文档保存路径
-        String filePath = pdfService.pdf(_template, hash, "单据证明");
+        String filePath = pdfService.pdf(_template, hash, map.get("title"));
 
         Organization organization = (Organization) request.getSession().getAttribute(Constant.getSessionCurrUser());
         ProofDocument proofDocument = new ProofDocument();
