@@ -1,22 +1,5 @@
 package com.risepu.ftk.web.m.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.risepu.ftk.server.domain.AdminUser;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.service.AdminService;
@@ -25,11 +8,21 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/admin")
-public class ManagerController {
+public class ManagerController implements ManagerControllerApi {
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -49,8 +42,8 @@ public class ManagerController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/login")
-	public ResponseEntity<Response<String>> orgLogin(@RequestParam(name = "name") String adminName,
+	@Override
+	public ResponseEntity<Response<String>> orgLogin( String adminName,
 			@RequestParam String password, HttpServletRequest request)   {
 		
 		password = DigestUtils.md5Hex(password+SALT);
@@ -74,9 +67,9 @@ public class ManagerController {
 	 * @param request
 	 * @return
 	 */
-	@PostMapping("/changePwd")
-	public ResponseEntity<Response<String>> changePwd(@RequestParam String password,
-			@RequestParam String newPwd, HttpServletRequest request)   {
+	@Override
+	public ResponseEntity<Response<String>> changePwd( String password,
+			 String newPwd, HttpServletRequest request)   {
 		
 		password = DigestUtils.md5Hex(password+SALT);
 		newPwd = DigestUtils.md5Hex(password+SALT);
@@ -95,7 +88,7 @@ public class ManagerController {
 	}
 	
 	/**
-	 * 根据参数查询企业信息
+	 * 根据参数查询认证的企业信息
 	 * @param key 关键字
 	 * @param pageNo
 	 * @param pageSize
@@ -105,7 +98,7 @@ public class ManagerController {
 	 * @param request
 	 * @return
 	 */
-	@GetMapping("/queryList/{pageNo:\\d+}")
+	@Override
 	public ResponseEntity<Response<PageResult<Organization>>> queryOrganization(@RequestParam(required=false) String key,
 																@PathVariable Integer pageNo,
 																@RequestParam Integer pageSize,
@@ -135,7 +128,7 @@ public class ManagerController {
 	 * @param organization 审核后的企业信息
 	 * @return
 	 */
-	@PostMapping("/editOrg")
+	@Override
 	public ResponseEntity<Response<String>> checkOrgInfo(@RequestBody Organization organization){
 		
 		Organization org = organizationService.findAuthenOrgById(organization.getId());
@@ -158,7 +151,7 @@ public class ManagerController {
 	}
 	
 	
-	@GetMapping("/queryOne/{orgId:\\w+}")
+	@Override
 	public ResponseEntity<Response<Organization>> queryOrgById(@PathVariable String orgId ){
 		
 		Organization organization = organizationService.findAuthenOrgById(orgId);
@@ -169,7 +162,17 @@ public class ManagerController {
 	private AdminUser getCurrAdmin(HttpServletRequest request) {
 		return (AdminUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 	}
-	
+
+
+	/**
+	 * 退出登录
+	 */
+	@Override
+	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
+
+		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
+		return ResponseEntity.ok(Response.succeed("退出登录"));
+	}
 
 	
 }
