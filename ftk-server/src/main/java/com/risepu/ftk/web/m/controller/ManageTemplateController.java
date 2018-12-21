@@ -190,7 +190,12 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Override
     public ResponseEntity<Response<String>> updateTemplateState(Long templateId) {
         Template template = templateService.getTemplate(templateId);
-        template.setState(1);
+        if (template.getState() == 0) {
+            template.setState(1);
+        } else if (template.getState() == 1) {
+            template.setState(0);
+        }
+        templateService.update(template);
         return ResponseEntity.ok(Response.succeed("更改成功"));
     }
 }
