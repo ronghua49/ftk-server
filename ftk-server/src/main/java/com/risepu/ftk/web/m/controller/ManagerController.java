@@ -21,7 +21,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/admin")
+
 public class ManagerController implements ManagerControllerApi {
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -171,7 +171,7 @@ public class ManagerController implements ManagerControllerApi {
 	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
 
 		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
-		return ResponseEntity.ok(Response.succeed("退出登录"));
+		return ResponseEntity.ok(Response.succeed("退出登录成功"));
 	}
 
 	

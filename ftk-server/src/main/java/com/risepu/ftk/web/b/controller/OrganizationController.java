@@ -1,27 +1,5 @@
 package com.risepu.ftk.web.b.controller;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationUser;
@@ -30,14 +8,21 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
-import com.risepu.ftk.web.b.dto.DocumentInfo;
-import com.risepu.ftk.web.b.dto.ForgetRequest;
-import com.risepu.ftk.web.b.dto.LoginRequest;
-import com.risepu.ftk.web.b.dto.LoginResult;
-import com.risepu.ftk.web.b.dto.RegistRequest;
+import com.risepu.ftk.web.b.dto.*;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
-@RequestMapping("/api/org")
 public class OrganizationController implements OrganizationApi{
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -86,7 +71,7 @@ public class OrganizationController implements OrganizationApi{
 	 */
 
 	@Override
-	public ResponseEntity<Response<LoginResult>> orgLogin(LoginRequest loginRequest, HttpServletRequest request)   {
+	public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request)   {
 		
 			LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 			
@@ -212,7 +197,7 @@ public class OrganizationController implements OrganizationApi{
 		OrganizationUser currUser = getCurrUser(request);
 		
 		/** 为空 未认证   不为空  state 判断*/
-		Organization org = organizationService.findAuthenOrgById(currUser.getId());
+		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 
 		return ResponseEntity.ok(Response.succeed(org));
 	}
@@ -237,7 +222,6 @@ public class OrganizationController implements OrganizationApi{
 		organizationService.updateOrgUser(user);
 
 		organization.setState(Organization.CHECKING_STATE);
-
 		organizationService.saveOrUpdateOrgInfo(organization);
 		 logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
 		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
@@ -358,7 +342,7 @@ public class OrganizationController implements OrganizationApi{
 	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
 		
 		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
-		return ResponseEntity.ok(Response.succeed("退出登录"));
+		return ResponseEntity.ok(Response.succeed("退出登录成功"));
 	}
 	
 }

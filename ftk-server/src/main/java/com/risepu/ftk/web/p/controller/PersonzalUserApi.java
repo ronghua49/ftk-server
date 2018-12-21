@@ -9,6 +9,7 @@ import com.risepu.ftk.web.b.dto.RegistRequest;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Api("personal")
+@RequestMapping("/api/personal")
 public interface PersonzalUserApi {
 
 

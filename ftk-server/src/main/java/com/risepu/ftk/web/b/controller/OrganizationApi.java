@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Api(value = "org")
+@RequestMapping("/api/org")
 public interface OrganizationApi {
 
 	@ApiOperation(value = "企业注册", nickname = "regist")
@@ -28,17 +29,16 @@ public interface OrganizationApi {
 	ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo, HttpServletRequest request);
 
 	
-	@ApiOperation(value = "企业登录", nickname = "login")
+	@ApiOperation(value = "企业登录", nickname = "Orglogin")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = LoginResult.class) })
 	@RequestMapping(path = "/login")
 	@ResponseBody
-	ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request);
+	ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request);
 
 	@ApiOperation(value = "忘记密码", nickname = "forgetPwd")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
 	@RequestMapping(path = "/forgetPwd")
 	@ResponseBody
-	@CrossOrigin
 	ResponseEntity<Response<String>> orgForgetPwd(@RequestBody ForgetRequest forgetRequest, HttpServletRequest request);
 	
 	@ApiOperation(value = "修改密码", nickname = "changePwd")
