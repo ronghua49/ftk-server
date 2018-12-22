@@ -108,7 +108,7 @@ public class ManageTemplateController implements ManageTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> updateTemplate(Template template) throws Exception{
+    public ResponseEntity<Response<String>> updateTemplate(Template template) throws Exception {
         Template template1 = templateService.getTemplate(template.getId());
 
         List<Domain> list = domainService.selectByTemplate(template.getId());
@@ -168,7 +168,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             Template template1 = templateService.getTemplate(templateId);
             template1.setFilePath(filePath1);
             templateService.update(template1);
-
+            return ResponseEntity.ok(Response.succeed("添加成功"));
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
