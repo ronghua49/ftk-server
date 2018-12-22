@@ -110,6 +110,13 @@ public interface OrganizationService {
 	 */
 	void updateOrgUser(OrganizationUser user);
 
+	/**
+	 * 根据id查询OrganizationUser
+	 * @param id
+	 * @return
+	 */
+	OrganizationUser findOrgUserById(String id);
+
 
 	/**
 	 * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败

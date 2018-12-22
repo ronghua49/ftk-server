@@ -141,16 +141,17 @@ public class OrganizationController implements OrganizationApi{
 	public ResponseEntity<Response<String>> orgChangePwd( String password,  String newpwd,
 			HttpServletRequest request) {
 
+
 		OrganizationUser currUser = getCurrUser(request);
+		OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
 		
 		String salt = ConfigUtil.getValue("salt");
 		password = DigestUtils.md5Hex(password + salt);
 		newpwd = DigestUtils.md5Hex(newpwd + salt);
 
-		if (currUser.getPassword().equals(password)) {
-			
-			organizationService.changePwd(currUser.getId(), newpwd);
-			logger.debug("企业用户   {}，修改密码成功！", currUser.getId());
+		if (user.getPassword().equals(password)) {
+			organizationService.changePwd(user.getId(), newpwd);
+			logger.debug("企业用户   {}，修改密码成功！", user.getId());
 			return ResponseEntity.ok(Response.succeed("密码修改成功"));
 		}else {
 			return ResponseEntity.ok(Response.failed(7, "修改失败，输入密码和服务端密码不一致"));

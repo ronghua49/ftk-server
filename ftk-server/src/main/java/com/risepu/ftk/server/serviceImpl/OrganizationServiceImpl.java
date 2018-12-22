@@ -298,5 +298,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 		crudService.update(user);
 	}
 
+	/**
+	 * 根据id查询OrganizationUser
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public OrganizationUser findOrgUserById(String id) {
+		return crudService.get(OrganizationUser.class,id);
+	}
+
 
 }
