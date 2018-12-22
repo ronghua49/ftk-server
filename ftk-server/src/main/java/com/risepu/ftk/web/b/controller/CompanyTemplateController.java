@@ -1,5 +1,6 @@
 package com.risepu.ftk.web.b.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Override
     public ResponseEntity<Response<List<String>>> getTemplates() {
         List<Template> templates = templateService.getTemplates();
-        List<String> list = null;
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < templates.size(); i++) {
             list.add(templates.get(i).getFilePath());
         }
