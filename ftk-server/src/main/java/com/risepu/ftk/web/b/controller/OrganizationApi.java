@@ -18,6 +18,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.util.Map;
+
 @Api(value = "org")
 @RequestMapping("/api/org")
 public interface OrganizationApi {
@@ -89,10 +91,20 @@ public interface OrganizationApi {
 
 
     @ApiOperation(value = "企业扫码历史单据查询", nickname = "QRHistory")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = DocumentInfo.class)})
-    @RequestMapping(path = "/history/verify/{pageNo:\\d+}")
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Map.class)})
+    @RequestMapping(path = "/history/verify")
     @ResponseBody
-    public ResponseEntity<Response<PageResult<DocumentInfo>>> verifyHistory(@RequestParam(required=false) String key, @PathVariable Integer pageNo, Integer pageSize, HttpServletRequest request);
+    ResponseEntity<Response<PageResult<Map<String,Object>>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request);
+
+
+
+
+    @ApiOperation(value = "企业开单历史", nickname = "documentHistory")
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Map.class)})
+    @RequestMapping(path = "/history/document")
+    @ResponseBody
+    ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request);
+
 
 
 
@@ -111,5 +123,15 @@ public interface OrganizationApi {
     @RequestMapping(path = "/logout")
     @ResponseBody
     ResponseEntity<Response<String>> loginOut(HttpServletRequest request);
+
+
+
+    @ApiOperation(value = "设置默认模板", nickname = "defaultTemplate")
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @RequestMapping(path = "/defaultTem")
+    @ResponseBody
+    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String  templateId, HttpServletRequest request);
+
+
 
 }
