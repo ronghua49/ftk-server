@@ -167,6 +167,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath);
             Template template1 = templateService.getTemplate(templateId);
             template1.setFilePath(filePath1);
+            templateService.update(template1);
 
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
