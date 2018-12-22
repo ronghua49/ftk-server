@@ -25,7 +25,7 @@ public interface ProofDocumentService {
     List<ProofDocument> getByOrganization(String organization);
 
     /**
-     * 单据历史
+     * 单据历史(全部）
      *
      * @param organization 企业id
      * @param pageNo       当前页码
@@ -33,6 +33,17 @@ public interface ProofDocumentService {
      * @param name         搜索条件
      * @return
      */
-    PageResult getAllDocument(String organization, Integer pageNo, Integer pageSize, String name);
+//    PageResult getAllDocument(String organization, Integer pageNo, Integer pageSize, String name);
+
+    /**
+     * 单据历史（固定）
+     *
+     * @param organization
+     * @param pageNo
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    PageResult getDocument(String organization, Integer pageNo, Integer pageSize, String name);
 
 }
