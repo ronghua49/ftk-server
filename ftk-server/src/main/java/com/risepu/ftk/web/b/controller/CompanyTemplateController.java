@@ -28,13 +28,9 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     private DomainService domainService;
 
     @Override
-    public ResponseEntity<Response<List<String>>> getTemplates() {
+    public ResponseEntity<Response<List<Template>>> getTemplates() {
         List<Template> templates = templateService.getTemplates();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < templates.size(); i++) {
-            list.add(templates.get(i).getFilePath());
-        }
-        return ResponseEntity.ok(Response.succeed(list));
+        return ResponseEntity.ok(Response.succeed(templates));
     }
 
     @Override

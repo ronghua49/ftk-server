@@ -2,6 +2,7 @@ package com.risepu.ftk.web.b.controller;
 
 import java.util.List;
 
+import com.risepu.ftk.server.domain.Template;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public interface CompanyTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
     @PostMapping(path = "/getTemplates")
     @ResponseBody
-    ResponseEntity<Response<List<String>>> getTemplates();
+    ResponseEntity<Response<List<Template>>> getTemplates();
 
     /**
      * 查找模板对应的所有数据
