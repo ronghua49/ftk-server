@@ -1,9 +1,8 @@
 package com.risepu.ftk.web.b.controller;
 
-import com.risepu.ftk.server.domain.Organization;
-import com.risepu.ftk.server.domain.OrganizationAdvice;
-import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.OrganizationService;
+import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
@@ -16,11 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class OrganizationController implements OrganizationApi{
@@ -29,6 +35,10 @@ public class OrganizationController implements OrganizationApi{
 
 	@Autowired
 	private OrganizationService organizationService;
+
+
+	@Autowired
+	private ProofDocumentService proofDocumentService;
 
 	/**
 	 * 企业端注册
@@ -76,7 +86,7 @@ public class OrganizationController implements OrganizationApi{
 			LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 			
 			if(loginResult.getCode()==0) {
-				/** 设置session对象为 未认证的对象 */
+				/** 设置session对象为 企业用户对象 */
 				setCurrUserToSession(request,loginResult.getOrganizationUser());
 				logger.debug("企业用户--{},登录成功！", loginRequest.getName());
 				return ResponseEntity.ok(Response.succeed(loginResult));
@@ -108,6 +118,7 @@ public class OrganizationController implements OrganizationApi{
 			String smsCode = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
 
 			if (forgetRequest.getSmsCode().equals(smsCode)) {
+
 				String newPwd =  DigestUtils.md5Hex(forgetRequest.getPassword() + salt);
 				organizationService.changePwd(orgId, newPwd);
 				logger.debug("企业用户   {}，修改密码成功！", forgetRequest.getMobileOrName());
@@ -198,7 +209,10 @@ public class OrganizationController implements OrganizationApi{
 		OrganizationUser currUser = getCurrUser(request);
 		
 		/** 为空 未认证   不为空  state 判断*/
-		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+		Organization org =null;
+		if(currUser.getOrganizationId()!=null){
+			org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+		}
 
 		return ResponseEntity.ok(Response.succeed(org));
 	}
@@ -253,45 +267,54 @@ public class OrganizationController implements OrganizationApi{
 		}
 		return ResponseEntity.ok(Response.succeed("请审核通过后扫描"));
 	}
-	
+
 
 	/**
 	 * 企业扫码验单历史查询
-	 * @param key 查询参数
-	 * @param pageNo 当前页码
-	 * @param pageSize 每页显示数量
+	 * @param pageRequest 分页请求参数
 	 * @param request
 	 * @return
 	 */
 	@Override
-	 public ResponseEntity<Response<PageResult<DocumentInfo>>> verifyHistory(String key,  Integer pageNo,Integer pageSize,HttpServletRequest request) {
-		 	
+	 public ResponseEntity<Response<PageResult<Map<String,Object>>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
+
 		OrganizationUser orgUser = getCurrUser(request);
-		
-		
-		//PageResult<DocumentInfo>  page = organizationService.queryVerifyPage(key,pageNo,pageSize,orgUser.getId());
-	
+
+		/** 根据企业id查询 已经验证成功的流水idlist*/
+		//List<AuthorizationStream>  streams = organizationService.findAuthorizationStreamByOrgId(orgUser.getOrganizationId());
+		Set<String> chainHashs = new HashSet<>();
+
+//		for(AuthorizationStream stream:streams){
+//				chainHashs.add(stream.getChainHash());
+//		}
+
+
+
+		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
+		//PageResult<Map<String,Object>>  page = proofDocumentService.queryVerifyPage(key,pageNo,pageSize,chainHashs);
+
 		
 		return null;
 	
 	 }
-	
+
 	/**
 	 * 企业开单历史单据查询
-	 * @param key 搜索参数
- 	 * @param pageNo 页码
-	 * @param pageSize 每页显示数量
-	 * @param request 
+	 * @param pageRequest 分页请求参数
+	 * @param request
 	 * @return
 	 */
-//	@GetMapping("/history/document")
-//	@ResponseBody
-//	public ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestParam(required=false) String key, @RequestParam(defaultValue="1") Integer pageNo,Integer pageSize,HttpServletRequest request) {
-//		/** 查询企业历史单据信息 */	
-//		
-//		
-//		
-//	}
+	@Override
+	public ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request) {
+		/** 查询企业开单历史 */
+		//TODO
+		OrganizationUser currUser = getCurrUser(request);
+		List<ProofDocument> proofDocuments = proofDocumentService.getByOrganization(currUser.getOrganizationId());
+
+
+
+		return null;
+	}
 	
 	
 	/**
@@ -301,12 +324,12 @@ public class OrganizationController implements OrganizationApi{
 	 * @param streamId 当前扫描二维码的流水id
 	 * @return
 	 */
-//	@PostMapping("/qualify")
-//	public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId ,@RequestParam String qrCardNo, @RequestParam String inputCardNo) {
-//	
-//		
-//		
-//	}
+	@PostMapping("/qualify")
+	public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId ,@RequestParam String qrCardNo, @RequestParam String inputCardNo) {
+		//TODO
+
+		return  null;
+	}
 	
 	
 	
@@ -343,7 +366,20 @@ public class OrganizationController implements OrganizationApi{
 	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
 		
 		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
+
 		return ResponseEntity.ok(Response.succeed("退出登录成功"));
 	}
-	
+
+	@Override
+	public ResponseEntity<Response<String>> setDefaultTemplate(String  templateId,HttpServletRequest request) {
+
+		OrganizationUser currUser = getCurrUser(request);
+		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+		org.setDefaultTemId(Long.parseLong(templateId));
+
+		organizationService.saveOrUpdateOrgInfo(org);
+		return ResponseEntity.ok(Response.succeed("设置默认模板成功"));
+	}
+
+
 }
