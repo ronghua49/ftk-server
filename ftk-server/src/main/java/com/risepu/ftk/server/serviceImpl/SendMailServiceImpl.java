@@ -23,7 +23,7 @@ import com.risepu.ftk.server.service.SendMailService;
 public class SendMailServiceImpl implements SendMailService {
 
     @Override
-    public void sendMail(String email) throws Exception {
+    public void sendMail(String email, String filePath) throws Exception {
         Properties prop = new Properties();
         prop.setProperty("mail.host", "smtp.qq.com");
         prop.setProperty("mail.transport.protocol", "smtp");
@@ -54,7 +54,7 @@ public class SendMailServiceImpl implements SendMailService {
         // 创建邮件附件
         MimeBodyPart attach = new MimeBodyPart();
 //			DataHandler dh = new DataHandler(new FileDataSource("src\\2.jpg"));
-        DataHandler dh = new DataHandler(new FileDataSource("/file-path/test.pdf"));
+        DataHandler dh = new DataHandler(new FileDataSource(filePath));
         attach.setDataHandler(dh);
         attach.setFileName(dh.getName());
         // 创建容器描述数据关系

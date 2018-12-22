@@ -20,7 +20,7 @@ public class ChartGraphics {
     private int imageHeight = 100; //图片的高度
 
     //生成图片文件
-    public void createImage(String fileLocation) {
+    public String createImage(String fileLocation) {
         BufferedOutputStream bos = null;
         if (image != null) {
             try {
@@ -43,9 +43,10 @@ public class ChartGraphics {
                 }
             }
         }
+        return fileLocation;
     }
 
-    public void graphicsGeneration(String name, String imgurl) {
+    public String graphicsGeneration(String name, String imgurl) {
         image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
         //设置图片的背景色
         Graphics2D main = image.createGraphics();
@@ -68,6 +69,6 @@ public class ChartGraphics {
         tip.setColor(Color.RED);
         tip.setStroke(new BasicStroke(8));
         tip.drawRoundRect(0, 0, imageWidth - 1, imageHeight - 1, 40, 40);
-        createImage(imgurl);
+        return createImage(imgurl);
     }
 }

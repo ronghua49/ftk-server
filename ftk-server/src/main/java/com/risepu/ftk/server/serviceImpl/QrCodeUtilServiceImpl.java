@@ -19,7 +19,7 @@ import java.util.Hashtable;
 @Service
 public class QrCodeUtilServiceImpl implements QrCodeUtilSerevice {
     @Override
-    public boolean createQrCode(String filePath, String content) throws Exception {
+    public String createQrCode(String filePath, String content) throws Exception {
         //设置二维码纠错级别ＭＡＰ
         Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);  // 矫错级别
@@ -43,7 +43,8 @@ public class QrCodeUtilServiceImpl implements QrCodeUtilSerevice {
             }
         }
         OutputStream outputStream = new FileOutputStream(new File(filePath));
-        return ImageIO.write(image, "JPEG", outputStream);
+        ImageIO.write(image, "JPEG", outputStream);
+        return filePath;
     }
 
     @Override

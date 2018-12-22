@@ -20,7 +20,7 @@ import java.util.Date;
 public class PdfServiceImpl implements PdfService {
 
     @Override
-    public String pdf(String _template,String hash,String title) throws Exception {
+    public String pdf(String _template,String hash,String title,String qrFilePath,String GrFilePath) throws Exception {
         // TODO Auto-generated method stub
         SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
         String date = "" + ft.format(new Date());
@@ -83,13 +83,13 @@ public class PdfServiceImpl implements PdfService {
         }
 
         //插入一个二维码图片
-        Image image = Image.getInstance("/file-path/Person.jpg");
+        Image image = Image.getInstance(qrFilePath);
         image.setAbsolutePosition(30, 400);//坐标
         image.scaleAbsolute(90, 90);//自定义大小
         doc.add(image);
 
         //插入公司盖章图片
-        Image image1 = Image.getInstance("/file-path/Organization.jpg");
+        Image image1 = Image.getInstance(GrFilePath);
         image1.setAbsolutePosition(400, 440);//坐标
         image1.scaleAbsolute(175, 50);//自定义大小
         doc.add(image1);

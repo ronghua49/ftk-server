@@ -64,7 +64,7 @@ public class DocumentDataController implements DocumentDataApi {
         Template template = templateService.getTemplate(templateId);
         // 获取一次模板
         String _template = template.get_template();
-
+        Organization organization = (Organization) request.getSession().getAttribute(Constant.getSessionCurrUser());
         List<Domain> list2 = new ArrayList<>();
         // 替换一次模板中的数据
         for (int i = 0; i < list.size(); i++) {
@@ -79,18 +79,18 @@ public class DocumentDataController implements DocumentDataApi {
             String value = map.get(domain.getCode());
             _template = _template.replace(key, value);
         }
+        int t = 0;
         //生成二维码图片
-        qrCodeUtilSerevice.createQrCode("/file-path/Person.jpg", "china is good");
-
+        String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t + ").jpg", "china is good");
         //生成盖章图片
         ChartGraphics cg = new ChartGraphics();
-        cg.graphicsGeneration("北京声谱科技有限公司", "/file-path/Organization.jpg");
+        String GrFilePath = cg.graphicsGeneration(organization.getName(), "/file-path/" + organization.getId() + "(" + t + ").jpg");
+        t++;
         String hash = "SGDHHFSGFSGFSGFS";
         String title = map.get("title");
         // 文档保存路径
-        String filePath = pdfService.pdf(_template, hash, map.get("title"));
+        String filePath = pdfService.pdf(_template, hash, title, qrFilePath, GrFilePath);
 
-        Organization organization = (Organization) request.getSession().getAttribute(Constant.getSessionCurrUser());
         ProofDocument proofDocument = new ProofDocument();
         proofDocument.setFilePath(filePath);
         proofDocument.setPersonalUser(map.get("idCard"));
@@ -102,14 +102,15 @@ public class DocumentDataController implements DocumentDataApi {
                 documentDateService.add(list2.get(i).getId(), proDocumentId, map.get(list2.get(i).getCode()));
             }
         }
-        return ResponseEntity.ok(Response.succeed("文档添加成功"));
+        return ResponseEntity.ok(Response.succeed(filePath));
     }
 
     @Override
-    public ResponseEntity<Response<String>> sendEmail(String email) throws Exception {
+    public ResponseEntity<Response<String>> sendEmail(String email, String filePath) throws Exception {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
-        sendMailService.sendMail(email);
+
+        sendMailService.sendMail(email,filePath);
         return ResponseEntity.ok(Response.succeed("邮件发送成功"));
     }
 

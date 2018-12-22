@@ -43,8 +43,8 @@ public interface DocumentDataApi {
      */
     @ApiOperation(value = "发送邮件", nickname = "sendEmail")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
-    @GetMapping(path = "/sendEmail")
+    @PostMapping(path = "/sendEmail")
     @ResponseBody
     @CrossOrigin
-    ResponseEntity<Response<String>> sendEmail(String email) throws Exception;
+    ResponseEntity<Response<String>> sendEmail(String email,String filePath) throws Exception;
 }

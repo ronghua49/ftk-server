@@ -2,9 +2,8 @@ package com.risepu.ftk.web.m.controller;
 
 import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
-import com.risepu.ftk.server.service.DomainService;
-import com.risepu.ftk.server.service.TemplateDomainService;
-import com.risepu.ftk.server.service.TemplateService;
+import com.risepu.ftk.server.service.*;
+import com.risepu.ftk.utils.ChartGraphics;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import net.lc4ever.framework.format.DateFormatter;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +33,12 @@ public class ManageTemplateController implements ManageTemplateApi {
 
     @Autowired
     private TemplateDomainService templateDomainService;
+
+    @Autowired
+    private QrCodeUtilSerevice qrCodeUtilSerevice;
+
+    @Autowired
+    private PdfService pdfService;
 
     @Override
     public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
@@ -102,12 +108,9 @@ public class ManageTemplateController implements ManageTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> updateTemplate(Template template) {
+    public ResponseEntity<Response<String>> updateTemplate(Template template) throws Exception{
         Template template1 = templateService.getTemplate(template.getId());
-        template1.set_template(template.get_template());
-        template1.setDescription(template.getDescription());
-        template1.setName(template.getName());
-        templateService.update(template1);
+
         List<Domain> list = domainService.selectByTemplate(template.getId());
         for (int j = 0; j < list.size(); j++) {
             Domain domain = list.get(j);
@@ -115,18 +118,26 @@ public class ManageTemplateController implements ManageTemplateApi {
         }
         String _template = template1.get_template();
         List<Domain> domains = domainService.selectAll();
+        String _template1 = "";
         for (int i = 0; i < domains.size(); i++) {
             Domain domain = domains.get(i);
             String code = "${" + domain.getCode() + "}";
             if (_template.contains(code)) {
+                _template1 = _template.replace(code, "________");
                 templateDomainService.add(template.getId(), domain.getId());
             }
         }
+        String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg");
+        template1.set_template(template.get_template());
+        template1.setDescription(template.getDescription());
+        template1.setName(template.getName());
+        template1.setFilePath(filePath1);
+        templateService.update(template1);
         return ResponseEntity.ok(Response.succeed("更新成功"));
     }
 
     @Override
-    public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) {
+    public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) throws Exception {
         // TODO Auto-generated method stub
         if (StringUtils.isEmpty(template.get_template())) {
             return ResponseEntity.ok(Response.failed(400, "二次模板不能为空"));
@@ -134,15 +145,29 @@ public class ManageTemplateController implements ManageTemplateApi {
         Long templateId = templateService.add(template);
         if (templateId != null) {
             String _template = template.get_template();
+            String _template1 = "";
             List<Domain> domains = domainService.selectAll();
             for (int i = 0; i < domains.size(); i++) {
                 Domain domain = domains.get(i);
                 String code = "${" + domain.getCode() + "}";
                 if (_template.contains(code)) {
+                    _template1 = _template.replace(code, "________");
                     templateDomainService.add(templateId, domain.getId());
                 }
             }
-            return ResponseEntity.ok(Response.succeed("添加成功"));
+            File file = new File("/file-path");
+            file.mkdirs();
+
+            //生成二维码图片
+            String QrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/示例二维码.jpg", "china is good");
+
+            ChartGraphics cg = new ChartGraphics();
+            String GrFilePath = cg.graphicsGeneration("******有限公司", "/file-path/示例盖章.jpg");
+
+            String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath);
+            Template template1 = templateService.getTemplate(templateId);
+            template1.setFilePath(filePath1);
+
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
