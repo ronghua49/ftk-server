@@ -45,36 +45,9 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 	public PageResult<AuthHistoryInfo> queryHistoryByParam(String key, Integer pageNo, Integer pageSize, String personId) {
 
 		List<AuthHistoryInfo> historyList = new ArrayList<>();
-		int firstIndex = pageNo*pageSize;
-		String sql = "select a.STATE,a.MODIFY_TIMESTAMP,o.ADDRESS,o.`NAME`,o.TEL from ftk_authorization_stream a, ftk_organization o where a.ORG_ID=o.ORGANIZATION and a.PERSON_ID= ?1 and o.`NAME` like ?2  ORDER BY a.MODIFY_TIMESTAMP DESC";
-		historyList = crudService.sql(AuthHistoryInfo.class, firstIndex, pageSize, sql, personId, key);
-
-//		int count=0;
-//
-//		/** 根据当前用户身份证号查询所有授权流水记录*/
-//		List<AuthorizationStream> streamList = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state in (1,2) ", personId);
-//
-//		Set<String> orgIds = new HashSet<>();
-//		for(AuthorizationStream stream : streamList){
-//			orgIds.add(stream.getOrgId());
-//		}
-//
-//		if(!orgIds.isEmpty()){
-//			 count  = crudService.uniqueResultHql(Long.class, "select count(*) from Organization where name like ?1 and id in ?2","%"+key+"%",orgIds).intValue();
-//			List<Organization> orgs = crudService.hql(Organization.class, firstIndex, pageSize, "from Organization where name like ?1 and id in ?2", "%" + key + "%", orgIds);
-//			for (Organization org : orgs) {
-//				AuthHistoryInfo history = new AuthHistoryInfo();
-//				history.setAuthTime(org.getModifyTimestamp());
-//				history.setOrgName(org.getName());
-//				history.setAuthState(org.getState());
-//				history.setOrgAddress(org.getAddress());
-//				history.setOrgTel(org.getTel());
-//				historyList.add(history);
-//			}
-//		}
-
+		String sql = "select a.STATE,a.MODIFY_TIMESTAMP,o.ADDRESS,o.`NAME`,o.TEL from ftk_authorization_stream a, ftk_organization o where a.ORG_ID=o.ORGANIZATION and a.PERSON_ID = ? and o.`NAME` like ? ORDER BY a.MODIFY_TIMESTAMP DESC";
+		historyList = crudService.sql(AuthHistoryInfo.class, pageNo*pageSize, pageSize, sql, personId,"%"+key+"%");
 		PageResult<AuthHistoryInfo> page = new PageResult<>();
-
 		page.setTotalElements(historyList.size());
 		page.setContent(historyList);
 

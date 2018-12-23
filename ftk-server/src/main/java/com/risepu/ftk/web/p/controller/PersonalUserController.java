@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.risepu.ftk.web.b.dto.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,20 +154,19 @@ public class PersonalUserController implements PersonzalUserApi  {
 	private PersonalUser getSession(HttpServletRequest request) {
 		return (PersonalUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 	}
-	
+
 	/**
 	 * 查询历史授权记录
-	 * @param key 关键字
-	 * @param pageNo 查询页码
-	 * @param pageSize 显示条数
+	 * @param pageRequest 分页参数
+	 * @param request
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(String key,  Integer pageNo, Integer pageSize,
+	public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(PageRequest pageRequest,
 																				 HttpServletRequest request){
 		PersonalUser user = getCurrUser(request);
 		
-		PageResult<AuthHistoryInfo> pageResult =  personalService.queryHistoryByParam(key,pageNo,pageSize,user.getId());
+		PageResult<AuthHistoryInfo> pageResult =  personalService.queryHistoryByParam(pageRequest.getKey(),pageRequest.getPageNo(),pageRequest.getPageSize(),user.getId());
 		
 		return ResponseEntity.ok(Response.succeed(pageResult));
 		
