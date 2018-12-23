@@ -45,7 +45,7 @@ public interface PersonzalUserApi {
 
     @ApiOperation(value = "个人授权历史查询", nickname = "authorization history")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = AuthHistoryInfo.class) })
-    @RequestMapping(path = "/authen/history/{pageNo:\\d+}")
+    @RequestMapping(path = "/authen/history")
     @ResponseBody
      ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
                                                                                  HttpServletRequest request);

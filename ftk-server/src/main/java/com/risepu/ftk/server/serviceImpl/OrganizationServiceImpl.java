@@ -119,7 +119,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public void changePwd(String id, String newPwd) {
-		OrganizationUser orgUser=new OrganizationUser();
+		OrganizationUser orgUser=crudService.get(OrganizationUser.class,id);
 		orgUser.setId(id);
 		orgUser.setPassword(newPwd);
 		crudService.update(orgUser);
