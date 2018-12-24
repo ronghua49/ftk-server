@@ -97,14 +97,14 @@ public class PdfServiceImpl implements PdfService {
         doc.add(image1);
 
         p1 = new Paragraph(" ");
-        p1.setLeading(170);
+        p1.setLeading(250);
         p1.setAlignment(Element.ALIGN_CENTER);
         doc.add(p1);
 
         p1 = new Paragraph();
         ph1 = new Phrase();
         Chunk c1 = new Chunk(date, boldFont);
-        p1.setFirstLineIndent(510);
+        p1.setFirstLineIndent(410);
         p1.setSpacingAfter(15);
         ph1.add(c1);
         p1.add(ph1);
@@ -114,19 +114,16 @@ public class PdfServiceImpl implements PdfService {
         return pdfFilePath;
     }
 
-
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         QrCodeUtilServiceImpl q = new QrCodeUtilServiceImpl();
         //生成二维码图片
         String QrFilePath = q.createQrCode("/file-path/示例二维码.jpg", "china is good");
-
         int t = 0;
         String pdfFilePath = "/file-path/test（" + t++ + ").pdf";
-
         ChartGraphics cg = new ChartGraphics();
         String GrFilePath = cg.graphicsGeneration("******有限公司", "/file-path/示例盖章.jpg");
         PdfServiceImpl pdfService = new PdfServiceImpl();
         pdfService.pdf("的石帆胜丰沙发上v", "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath, pdfFilePath);
 
-    }
+    }*/
 }
