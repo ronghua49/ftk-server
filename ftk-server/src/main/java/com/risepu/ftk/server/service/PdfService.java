@@ -11,5 +11,5 @@ public interface PdfService {
      * @return 生成pdf的路径
      * @throws Exception
      */
-    String pdf(String _template,String hash,String title,String qrFilePath,String GrFilePath) throws Exception;
+    String pdf(String _template,String hash,String title,String qrFilePath,String GrFilePath,String pdfFilePath) throws Exception;
 }

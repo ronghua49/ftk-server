@@ -52,6 +52,8 @@ public class DocumentDataController implements DocumentDataApi {
     @Autowired
     private QrCodeUtilSerevice qrCodeUtilSerevice;
 
+    private Integer t = 0;
+
     @Override
     public ResponseEntity<Response<String>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.debug("Request Uri: /documentData/add");
@@ -79,17 +81,16 @@ public class DocumentDataController implements DocumentDataApi {
             String value = map.get(domain.getCode());
             _template = _template.replace(key, value);
         }
-        int t = 0;
         //生成二维码图片
-        String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t + ").jpg", "china is good");
+        String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + ".jpg", "china is good");
         //生成盖章图片
         ChartGraphics cg = new ChartGraphics();
-        String GrFilePath = cg.graphicsGeneration(organization.getName(), "/file-path/" + organization.getId() + "(" + t + ").jpg");
-        t++;
+        String GrFilePath = cg.graphicsGeneration(organization.getName(), "/file-path/" + organization.getId() + ".jpg");
+        String pdfFilePat = "/file-path/" + t++ + ".pdf";
         String hash = "SGDHHFSGFSGFSGFS";
         String title = map.get("title");
         // 文档保存路径
-        String filePath = pdfService.pdf(_template, hash, title, qrFilePath, GrFilePath);
+        String filePath = pdfService.pdf(_template, hash, title, qrFilePath, GrFilePath, pdfFilePat);
 
         ProofDocument proofDocument = new ProofDocument();
         proofDocument.setFilePath(filePath);
@@ -110,7 +111,7 @@ public class DocumentDataController implements DocumentDataApi {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
 
-        sendMailService.sendMail(email,filePath);
+        sendMailService.sendMail(email, filePath);
         return ResponseEntity.ok(Response.succeed("邮件发送成功"));
     }
 

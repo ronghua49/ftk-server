@@ -40,6 +40,8 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Autowired
     private PdfService pdfService;
 
+    private Integer t = 0;
+
     @Override
     public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
         Template template = templateService.getTemplate(templateId);
@@ -107,10 +109,10 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(domains));
     }
 
+
     @Override
     public ResponseEntity<Response<String>> updateTemplate(Template template) throws Exception {
         Template template1 = templateService.getTemplate(template.getId());
-
         List<Domain> list = domainService.selectByTemplate(template.getId());
         for (int j = 0; j < list.size(); j++) {
             Domain domain = list.get(j);
@@ -127,7 +129,8 @@ public class ManageTemplateController implements ManageTemplateApi {
                 templateDomainService.add(template.getId(), domain.getId());
             }
         }
-        String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg");
+        String pdfFilePath = "/file-path/test（" + t++ + ").pdf";
+        String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", pdfFilePath);
         template1.set_template(template.get_template());
         template1.setDescription(template.getDescription());
         template1.setName(template.getName());
@@ -157,14 +160,13 @@ public class ManageTemplateController implements ManageTemplateApi {
             }
             File file = new File("/file-path");
             file.mkdirs();
-
             //生成二维码图片
             String QrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/示例二维码.jpg", "china is good");
 
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", "/file-path/示例盖章.jpg");
-
-            String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath);
+            String pdfFilePath = "/file-path/" + templateId + ".pdf";
+            String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath, pdfFilePath);
             Template template1 = templateService.getTemplate(templateId);
             template1.setFilePath(filePath1);
             templateService.update(template1);

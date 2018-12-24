@@ -3,9 +3,11 @@ package com.risepu.ftk.server.serviceImpl;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.risepu.ftk.utils.ChartGraphics;
 import org.springframework.stereotype.Service;
 
 import com.risepu.ftk.server.service.PdfService;
+import sun.applet.Main;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,12 +22,12 @@ import java.util.Date;
 public class PdfServiceImpl implements PdfService {
 
     @Override
-    public String pdf(String _template,String hash,String title,String qrFilePath,String GrFilePath) throws Exception {
+    public String pdf(String _template, String hash, String title, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
         // TODO Auto-generated method stub
         SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
         String date = "" + ft.format(new Date());
         //pdf文档输出路径
-        String outPath = "/file-path/test.pdf";
+//        String outPath = "/file-path/test.pdf";
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
         //创建文档实例
@@ -39,7 +41,7 @@ public class PdfServiceImpl implements PdfService {
         Font secondTitleFont = new Font(bfChinese, 15, Font.BOLD); //标题
 
         //创建输出流
-        PdfWriter.getInstance(doc, new FileOutputStream(new File(outPath)));
+        PdfWriter.getInstance(doc, new FileOutputStream(new File(pdfFilePath)));
         doc.open();
         doc.newPage();
         //段落
@@ -102,13 +104,29 @@ public class PdfServiceImpl implements PdfService {
         p1 = new Paragraph();
         ph1 = new Phrase();
         Chunk c1 = new Chunk(date, boldFont);
-        p1.setFirstLineIndent(410);
+        p1.setFirstLineIndent(510);
         p1.setSpacingAfter(15);
         ph1.add(c1);
         p1.add(ph1);
         doc.add(p1);
 
         doc.close();
-        return outPath;
+        return pdfFilePath;
+    }
+
+
+    public static void main(String[] args) throws Exception {
+        QrCodeUtilServiceImpl q = new QrCodeUtilServiceImpl();
+        //生成二维码图片
+        String QrFilePath = q.createQrCode("/file-path/示例二维码.jpg", "china is good");
+
+        int t = 0;
+        String pdfFilePath = "/file-path/test（" + t++ + ").pdf";
+
+        ChartGraphics cg = new ChartGraphics();
+        String GrFilePath = cg.graphicsGeneration("******有限公司", "/file-path/示例盖章.jpg");
+        PdfServiceImpl pdfService = new PdfServiceImpl();
+        pdfService.pdf("的石帆胜丰沙发上v", "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath, pdfFilePath);
+
     }
 }
