@@ -6,10 +6,8 @@ import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DocumentDateService;
 import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.web.api.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.risepu.ftk.server.domain.ProofDocument;

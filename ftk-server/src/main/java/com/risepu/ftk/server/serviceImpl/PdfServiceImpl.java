@@ -3,11 +3,9 @@ package com.risepu.ftk.server.serviceImpl;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.risepu.ftk.utils.ChartGraphics;
 import org.springframework.stereotype.Service;
 
 import com.risepu.ftk.server.service.PdfService;
-import sun.applet.Main;
 
 import java.io.File;
 import java.io.FileOutputStream;
