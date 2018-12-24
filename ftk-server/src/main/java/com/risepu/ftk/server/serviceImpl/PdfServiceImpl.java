@@ -2,6 +2,7 @@ package com.risepu.ftk.server.serviceImpl;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,7 @@ public class PdfServiceImpl implements PdfService {
         // TODO Auto-generated method stub
         SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
         String date = "" + ft.format(new Date());
-        //pdf文档输出路径
-//        String outPath = "/file-path/test.pdf";
+
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
         //创建文档实例
@@ -34,14 +34,17 @@ public class PdfServiceImpl implements PdfService {
         //添加中文字体
         BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
         //设置字体样式
-        Font textFont = new Font(bfChinese, 11, Font.BOLD); //正常
+        Font textFont = new Font(bfChinese, 15, Font.BOLD); //正常
         Font boldFont = new Font(bfChinese, 13, Font.BOLD); //加粗
-        Font secondTitleFont = new Font(bfChinese, 15, Font.BOLD); //标题
+        Font secondTitleFont = new Font(bfChinese, 20, Font.BOLD); //标题
 
         //创建输出流
-        PdfWriter.getInstance(doc, new FileOutputStream(new File(pdfFilePath)));
+        PdfWriter pdfWriter = PdfWriter.getInstance(doc, new FileOutputStream(new File(pdfFilePath)));
+
         doc.open();
+        PdfContentByte cd = pdfWriter.getDirectContent();
         doc.newPage();
+
         //段落
         Paragraph p1 = new Paragraph();
         //短语
@@ -84,44 +87,28 @@ public class PdfServiceImpl implements PdfService {
 
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(30, 400);//坐标
+        image.setAbsolutePosition(30, 300);//坐标
         image.scaleAbsolute(90, 90);//自定义大小
         doc.add(image);
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(400, 440);//坐标
+        image1.setAbsolutePosition(400, 330);//坐标
         image1.scaleAbsolute(175, 50);//自定义大小
         doc.add(image1);
 
-        p1 = new Paragraph(" ");
-        p1.setLeading(250);
-        p1.setAlignment(Element.ALIGN_CENTER);
-        doc.add(p1);
+        cd.beginText();
+        //文字加粗
+        //设置文本描边宽度
+        cd.setLineWidth(0.5);
+        //设置文本为描边模式
+        cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
-        p1 = new Paragraph();
-        ph1 = new Phrase();
-        Chunk c1 = new Chunk(date, boldFont);
-        p1.setFirstLineIndent(410);
-        p1.setSpacingAfter(15);
-        ph1.add(c1);
-        p1.add(ph1);
-        doc.add(p1);
-
+        cd.setFontAndSize(bfChinese, 20);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 430, 310, 0);
+        cd.endText();
         doc.close();
         return pdfFilePath;
     }
 
-    /*public static void main(String[] args) throws Exception {
-        QrCodeUtilServiceImpl q = new QrCodeUtilServiceImpl();
-        //生成二维码图片
-        String QrFilePath = q.createQrCode("/file-path/示例二维码.jpg", "china is good");
-        int t = 0;
-        String pdfFilePath = "/file-path/test（" + t++ + ").pdf";
-        ChartGraphics cg = new ChartGraphics();
-        String GrFilePath = cg.graphicsGeneration("******有限公司", "/file-path/示例盖章.jpg");
-        PdfServiceImpl pdfService = new PdfServiceImpl();
-        pdfService.pdf("的石帆胜丰沙发上v", "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath, pdfFilePath);
-
-    }*/
 }
