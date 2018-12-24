@@ -291,7 +291,9 @@ public class OrganizationController implements OrganizationApi{
 	@Override
 	 public ResponseEntity<Response<PageResult<Map<String,Object>>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
 
+
 		OrganizationUser orgUser = getCurrUser(request);
+
 
 		/** 根据企业id查询 已经验证成功的流水idlist*/
 		//List<AuthorizationStream>  streams = organizationService.findAuthorizationStreamByOrgId(orgUser.getOrganizationId());
@@ -318,15 +320,16 @@ public class OrganizationController implements OrganizationApi{
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request) {
+	public ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request) {
 		/** 查询企业开单历史 */
 		//TODO
 		OrganizationUser currUser = getCurrUser(request);
-		List<ProofDocument> proofDocuments = proofDocumentService.getByOrganization(currUser.getOrganizationId());
+
+		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 
 
-
-		return null;
+		PageResult document = proofDocumentService.getDocument(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+		return ResponseEntity.ok(Response.succeed(document));
 	}
 	
 	
