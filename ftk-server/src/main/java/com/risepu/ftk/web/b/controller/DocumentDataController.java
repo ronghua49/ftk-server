@@ -91,7 +91,7 @@ public class DocumentDataController implements DocumentDataApi {
         String GrFilePath = cg.graphicsGeneration(org.getName(), "/file-path/" + org.getId() + "(" + t++ + ").jpg");
         String pdfFilePat = "/file-path/" + t++ + ".pdf";
         String hash = "SGDHHFSGFSGFSGFS";
-        String title = map.get("title");
+        String title = template.getName();
         // 文档保存路径
         String filePath = pdfService.pdf(_template, hash, title, qrFilePath, GrFilePath, pdfFilePat);
 

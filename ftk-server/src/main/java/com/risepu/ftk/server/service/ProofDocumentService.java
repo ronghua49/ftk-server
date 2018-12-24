@@ -24,16 +24,6 @@ public interface ProofDocumentService {
      */
     List<ProofDocument> getByOrganization(String organization);
 
-    /**
-     * 单据历史(全部）
-     *
-     * @param organization 企业id
-     * @param pageNo       当前页码
-     * @param pageSize     每页显示条数
-     * @param name         搜索条件
-     * @return
-     */
-//    PageResult getAllDocument(String organization, Integer pageNo, Integer pageSize, String name);
 
     /**
      * 单据历史（固定）
@@ -44,6 +34,14 @@ public interface ProofDocumentService {
      * @param name
      * @return
      */
-    PageResult getDocument(String organization, Integer pageNo, Integer pageSize, String name);
+    PageResult getDocuments(String organization, Integer pageNo, Integer pageSize, String name);
+
+    /**
+     * 单据历史详情页
+     *
+     * @param chainHash 区块链哈希
+     * @return
+     */
+    String getDocument(String chainHash);
 
 }

@@ -45,11 +45,9 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         if (org.getDefaultTemId() != null) {
             Template template = templateService.getTemplate(org.getDefaultTemId());
             templates.add(template);
-
         } else {
             templates = templateService.getTemplates();
         }
-
         return ResponseEntity.ok(Response.succeed(templates));
     }
 
