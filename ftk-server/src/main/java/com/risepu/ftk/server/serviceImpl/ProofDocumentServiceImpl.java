@@ -107,10 +107,10 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
                 documentDataList = crudService.hql(DocumentData.class, "from DocumentData where id.documentId = ?1 and value = ?2", proofDocument.getId(), name);
                 documentDataList2 = crudService.hql(firstIndex, pageSize, "from DocumentData where id.documentId = ?1 and value like ?2", proofDocument.getId(), "%" + name + "%");
             }
-            for (int j = 0; j < documentDataList.size(); j++) {
+            for (int j = 0; j < documentDataList2.size(); j++) {
                 map.put("chainHash", proofDocument.getChainHash());
                 map.put("number", proofDocument.getId());
-                DocumentData documentData = documentDataList.get(j);
+                DocumentData documentData = (DocumentData) documentDataList2.get(j);
                 Domain domain = domainService.selectById(documentData.getId().getDomainId());
                 map.put(domain.getCode(), documentData.getValue());
             }
@@ -122,7 +122,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         pageResult.setSize(pageSize);
         pageResult.setTotalPages(documentDataList.size(), pageSize);
         pageResult.setTotalElements(documentDataList.size());
-        pageResult.setContent(documentDataList2);
+        pageResult.setContent(list);
         return pageResult;
     }
 
