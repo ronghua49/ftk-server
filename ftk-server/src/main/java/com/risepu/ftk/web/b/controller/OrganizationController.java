@@ -154,7 +154,7 @@ public class OrganizationController implements OrganizationApi {
             logger.debug("企业用户   {}，修改密码成功！", user.getId());
             return ResponseEntity.ok(Response.succeed("密码修改成功"));
         } else {
-            return ResponseEntity.ok(Response.failed(7, "修改失败，输入密码和服务端密码不一致"));
+            return ResponseEntity.ok(Response.failed(7, "原始密码输入错误，请重新输入"));
         }
     }
 
@@ -324,6 +324,12 @@ public class OrganizationController implements OrganizationApi {
         Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
         PageResult document = proofDocumentService.getDocuments(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
         return ResponseEntity.ok(Response.succeed(document));
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> documentInfo(String chainHash) {
+        String filePath = proofDocumentService.getDocument(chainHash);
+        return ResponseEntity.ok(Response.succeed(filePath));
     }
 
 
