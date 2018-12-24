@@ -318,7 +318,7 @@ public class OrganizationController implements OrganizationApi{
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request) {
+	public ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request) {
 		/** 查询企业开单历史 */
 		//TODO
 		OrganizationUser currUser = getCurrUser(request);
