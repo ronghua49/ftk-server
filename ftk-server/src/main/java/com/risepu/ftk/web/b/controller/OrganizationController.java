@@ -324,7 +324,6 @@ public class OrganizationController implements OrganizationApi{
 		OrganizationUser currUser = getCurrUser(request);
 
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-
 		PageResult document = proofDocumentService.getDocument(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
 		return ResponseEntity.ok(Response.succeed(document));
 	}
