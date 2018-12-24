@@ -82,10 +82,10 @@ public class DocumentDataController implements DocumentDataApi {
             _template = _template.replace(key, value);
         }
         //生成二维码图片
-        String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + ".jpg", "china is good");
+        String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t++ + ").jpg", "china is good");
         //生成盖章图片
         ChartGraphics cg = new ChartGraphics();
-        String GrFilePath = cg.graphicsGeneration(organization.getName(), "/file-path/" + organization.getId() + ".jpg");
+        String GrFilePath = cg.graphicsGeneration(organization.getName(), "/file-path/" + organization.getId() + "(" + t++ + ").jpg");
         String pdfFilePat = "/file-path/" + t++ + ".pdf";
         String hash = "SGDHHFSGFSGFSGFS";
         String title = map.get("title");
