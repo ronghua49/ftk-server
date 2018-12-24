@@ -129,7 +129,7 @@ public class ManageTemplateController implements ManageTemplateApi {
                 templateDomainService.add(template.getId(), domain.getId());
             }
         }
-        String pdfFilePath = "/file-path/test（" + t++ + ").pdf";
+        String pdfFilePath = "/file-path/" + template.getId() + "（" + t++ + ").pdf";
         String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", pdfFilePath);
         template1.set_template(template.get_template());
         template1.setDescription(template.getDescription());

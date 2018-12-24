@@ -3,6 +3,7 @@ package com.risepu.ftk.web.b.controller;
 import java.util.List;
 
 import com.risepu.ftk.server.domain.Template;
+import com.risepu.ftk.web.m.dto.IdRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +42,5 @@ public interface CompanyTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
     @PostMapping(path = "/getAllTemplateData")
     @ResponseBody
-    ResponseEntity<Response<List<Domain>>> getAllTemplateData(Long templateId);
+    ResponseEntity<Response<List<Domain>>> getAllTemplateData(@RequestBody IdRequest templateId);
 }

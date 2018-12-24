@@ -1,8 +1,8 @@
 package com.risepu.ftk.web.b.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.risepu.ftk.web.m.dto.IdRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,8 +34,8 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<List<Domain>>> getAllTemplateData(Long templateId) {
-        List<Domain> domains = domainService.selectByTemplate(templateId);
+    public ResponseEntity<Response<List<Domain>>> getAllTemplateData(IdRequest templateId) {
+        List<Domain> domains = domainService.selectByTemplate(templateId.getTemplateId());
         return ResponseEntity.ok(Response.succeed(domains));
     }
 }
