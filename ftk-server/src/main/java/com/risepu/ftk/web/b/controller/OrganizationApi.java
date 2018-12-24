@@ -100,7 +100,7 @@ public interface OrganizationApi {
 
 
     @ApiOperation(value = "企业开单历史", nickname = "documentHistory")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Map.class)})
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/history/document")
     @ResponseBody
     ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request);
