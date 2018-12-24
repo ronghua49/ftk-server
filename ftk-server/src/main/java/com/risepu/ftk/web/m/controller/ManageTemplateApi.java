@@ -73,7 +73,7 @@ public interface ManageTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @PostMapping(path = "/updateTemplate", consumes = {"application/json"})
     @ResponseBody
-    ResponseEntity<Response<String>> updateTemplate(@RequestBody Template template) throws Exception;
+    ResponseEntity<Response<String>> updateTemplate(@RequestBody Template template);
 
     /**
      * 添加模板

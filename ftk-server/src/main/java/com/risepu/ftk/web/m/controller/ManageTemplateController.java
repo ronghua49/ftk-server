@@ -111,32 +111,38 @@ public class ManageTemplateController implements ManageTemplateApi {
 
 
     @Override
-    public ResponseEntity<Response<String>> updateTemplate(Template template) throws Exception {
-        Template template1 = templateService.getTemplate(template.getId());
-        List<Domain> list = domainService.selectByTemplate(template.getId());
-        for (int j = 0; j < list.size(); j++) {
-            Domain domain = list.get(j);
-            templateDomainService.delete(template.getId(), domain.getId());
-        }
-        String _template = template1.get_template();
-        List<Domain> domains = domainService.selectAll();
-        String _template1 = "";
-        for (int i = 0; i < domains.size(); i++) {
-            Domain domain = domains.get(i);
-            String code = "${" + domain.getCode() + "}";
-            if (_template.contains(code)) {
-                _template1 = _template.replace(code, "________");
-                templateDomainService.add(template.getId(), domain.getId());
+    public ResponseEntity<Response<String>> updateTemplate(Template template) {
+        try {
+            Template template1 = templateService.getTemplate(template.getId());
+            List<Domain> list = domainService.selectByTemplate(template.getId());
+            for (int j = 0; j < list.size(); j++) {
+                Domain domain = list.get(j);
+                templateDomainService.delete(template.getId(), domain.getId());
             }
+            String _template = template1.get_template();
+            List<Domain> domains = domainService.selectAll();
+            String _template1 = "";
+            for (int i = 0; i < domains.size(); i++) {
+                Domain domain = domains.get(i);
+                String code = "${" + domain.getCode() + "}";
+                if (_template.contains(code)) {
+                    _template1 = _template.replace(code, "________");
+                    templateDomainService.add(template.getId(), domain.getId());
+                }
+            }
+            String pdfFilePath = "/file-path/" + template.getId() + "（" + t++ + ").pdf";
+            String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", pdfFilePath);
+            template1.set_template(template.get_template());
+            template1.setDescription(template.getDescription());
+            template1.setName(template.getName());
+            template1.setFilePath(filePath1);
+            templateService.update(template1);
+            return ResponseEntity.ok(Response.succeed("更新成功"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(Response.failed(400, "更新失败"));
         }
-        String pdfFilePath = "/file-path/" + template.getId() + "（" + t++ + ").pdf";
-        String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", pdfFilePath);
-        template1.set_template(template.get_template());
-        template1.setDescription(template.getDescription());
-        template1.setName(template.getName());
-        template1.setFilePath(filePath1);
-        templateService.update(template1);
-        return ResponseEntity.ok(Response.succeed("更新成功"));
+
     }
 
     @Override
