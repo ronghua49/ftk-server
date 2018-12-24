@@ -4,56 +4,64 @@ import java.util.Date;
 
 public class AuthHistoryInfo {
 
-	private String orgName;
+	private String name;
 	
-	private Date authTime;
+	private Date modifyTimestamp;
 	
-	private String orgAddress;
+	private String address;
 	
-	private String orgTel;
+	private String tel;
 	
-	private Integer authState;
+	private Integer state;
 
-	public String getOrgName() {
-		return orgName;
+	public String getName() {
+		return name;
 	}
 
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public Date getAuthTime() {
-		return authTime;
+	public Date getModifyTimestamp() {
+		return modifyTimestamp;
 	}
 
-	public void setAuthTime(Date authTime) {
-		this.authTime = authTime;
+	public void setModifyTimestamp(Date modifyTimestamp) {
+		this.modifyTimestamp = modifyTimestamp;
 	}
 
-	public String getOrgAddress() {
-		return orgAddress;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setOrgAddress(String orgAddress) {
-		this.orgAddress = orgAddress;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public String getOrgTel() {
-		return orgTel;
+	public String getTel() {
+		return tel;
 	}
 
-	public void setOrgTel(String orgTel) {
-		this.orgTel = orgTel;
+	public void setTel(String tel) {
+		this.tel = tel;
 	}
 
-	public Integer getAuthState() {
-		return authState;
+	public Integer getState() {
+		return state;
 	}
 
-	public void setAuthState(Integer authState) {
-		this.authState = authState;
+	public void setState(Integer state) {
+		this.state = state;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "AuthHistoryInfo{" +
+				"name='" + name + '\'' +
+				", modifyTimestamp=" + modifyTimestamp +
+				", address='" + address + '\'' +
+				", tel='" + tel + '\'' +
+				", state=" + state +
+				'}';
+	}
 }

@@ -150,8 +150,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public void saveOrUpdateOrgInfo(Organization organization) {
-		crudService.saveOrUpdate(organization);
+	public void save(Organization organization) {
+		crudService.save(organization);
 	}
 
 	
@@ -306,6 +306,38 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public OrganizationUser findOrgUserById(String id) {
 		return crudService.get(OrganizationUser.class,id);
+	}
+
+	/**
+	 * 更新企业信息
+	 *
+	 * @param currOrg
+	 */
+	@Override
+	public void updateOrg(Organization currOrg) {
+		crudService.update(currOrg);
+	}
+
+    /**
+     * 根据企业id查询验证成功的扫描单据流水
+     *
+     * @param organizationId
+     * @return
+     */
+    @Override
+    public List<AuthorizationStream> querySucceedAuthStreamByOrgId(String organizationId) {
+        return crudService.hql(AuthorizationStream.class,"from AuthorizationStream where orgId =?1 and state= ?2",organizationId,AuthorizationStream.VERIFY_STATE_PASS);
+    }
+
+	/**
+	 * 根据企业id查询用户
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public OrganizationUser findOrgUserByOrgId(String id) {
+		return crudService.uniqueResultHql(OrganizationUser.class,"from OrganizationUser where organizationId =?1",id);
 	}
 
 

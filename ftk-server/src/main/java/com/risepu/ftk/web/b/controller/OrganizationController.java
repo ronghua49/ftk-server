@@ -231,15 +231,24 @@ public class OrganizationController implements OrganizationApi{
 			HttpServletRequest request) {
 
 		OrganizationUser user = getCurrUser(request);
+		Organization currOrg = organizationService.findAuthenOrgById(user.getOrganizationId());
 		Organization org = organizationService.findAuthenOrgById(organization.getId());
 
-		if(organization.getState()!=null){
+		if(currOrg!=null&&currOrg.getState().equals(Organization.CHECK_FAIL_STATE)){
 			/** 表示修改时组织机构代码证和审核成功的或者审核中的重复*/
 			if(!user.getOrganizationId().equals(organization.getId())&&org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
 				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
 			}
-			organization.setState(organization.getState());
-		}else{
+			currOrg.setId(organization.getId());
+			currOrg.setAddress(organization.getAddress());
+			currOrg.setLicenseImgName(organization.getLicenseImgName());
+			currOrg.setLegalPerson(organization.getLegalPerson());
+			currOrg.setName(organization.getName());
+			currOrg.setTel(organization.getTel());
+            currOrg.setState(Organization.CHECKING_STATE);
+            organizationService.updateOrg(currOrg);
+
+        }else{
 			/** 表示第一提交组织机构代码证重复*/
 			if(org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
 				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
@@ -247,9 +256,10 @@ public class OrganizationController implements OrganizationApi{
 			/** 增加关联 id 为发起认证的企业用户手机号 */
 			user.setOrganizationId(organization.getId());
 			organizationService.updateOrgUser(user);
-			organization.setState(Organization.CHECKING_STATE);
-		}
-		organizationService.saveOrUpdateOrgInfo(organization);
+
+            organization.setState(Organization.CHECKING_STATE);
+            organizationService.save(organization);
+        }
 		logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
 		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
 	}
@@ -294,17 +304,17 @@ public class OrganizationController implements OrganizationApi{
 
 
 		/** 根据企业id查询 已经验证成功的流水idlist*/
-		//List<AuthorizationStream>  streams = organizationService.findAuthorizationStreamByOrgId(orgUser.getOrganizationId());
+		List<AuthorizationStream>  streams = organizationService.querySucceedAuthStreamByOrgId(orgUser.getOrganizationId());
 		Set<String> chainHashs = new HashSet<>();
 
-//		for(AuthorizationStream stream:streams){
-//				chainHashs.add(stream.getChainHash());
-//		}
+		for(AuthorizationStream stream:streams){
+				chainHashs.add(stream.getChainHash());
+		}
 
 
 
 		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
-		//PageResult<Map<String,Object>>  page = proofDocumentService.queryVerifyPage(key,pageNo,pageSize,chainHashs);
+		//PageResult  page = proofDocumentService.
 
 		
 		return null;
@@ -389,7 +399,7 @@ public class OrganizationController implements OrganizationApi{
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 		org.setDefaultTemId(Long.parseLong(templateId));
 
-		organizationService.saveOrUpdateOrgInfo(org);
+		organizationService.updateOrg(org);
 		return ResponseEntity.ok(Response.succeed("设置默认模板成功"));
 	}
 
