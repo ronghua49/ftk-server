@@ -103,7 +103,7 @@ public interface OrganizationApi {
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Map.class)})
     @RequestMapping(path = "/history/document")
     @ResponseBody
-    ResponseEntity<Response<PageResult<DocumentInfo>>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request);
+    ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request);
 
 
 
