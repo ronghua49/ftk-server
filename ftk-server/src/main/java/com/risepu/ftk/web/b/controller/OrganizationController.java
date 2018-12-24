@@ -235,14 +235,14 @@ public class OrganizationController implements OrganizationApi{
 		Organization org = organizationService.findAuthenOrgById(organization.getId());
 
 		if(organization.getState()!=null){
-			/** 表示修改时组织机构代码证重复*/
-			if(!user.getOrganizationId().equals(organization.getId())&&org!=null){
+			/** 表示修改时组织机构代码证和审核成功的或者审核中的重复*/
+			if(!user.getOrganizationId().equals(organization.getId())&&org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
 				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
 			}
 			organization.setState(organization.getState());
 		}else{
 			/** 表示第一提交组织机构代码证重复*/
-			if(org!=null){
+			if(org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
 				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
 			}
 			/** 增加关联 id 为发起认证的企业用户手机号 */
