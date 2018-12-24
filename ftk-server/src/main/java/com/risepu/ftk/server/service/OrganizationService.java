@@ -2,10 +2,12 @@ package com.risepu.ftk.server.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -65,7 +67,7 @@ public interface OrganizationService {
 	 * @param organization 认证的企业信息和管理员审核后添加的信息
 	 * @return 
 	 */
-	public void saveOrUpdateOrgInfo(Organization organization);
+	public void save(Organization organization);
 
 	/**
 	 * 判断企业用户名是否存在
@@ -116,6 +118,26 @@ public interface OrganizationService {
 	 * @return
 	 */
 	OrganizationUser findOrgUserById(String id);
+
+	/**
+	 * 更新企业信息
+	 * @param currOrg
+	 */
+	void updateOrg(Organization currOrg);
+
+	/**
+	 * 根据企业id查询验证成功的扫描单据流水
+	 * @param organizationId
+	 * @return
+	 */
+	List<AuthorizationStream> querySucceedAuthStreamByOrgId(String organizationId);
+
+	/**
+	 * 根据企业id查询用户
+	 * @param id
+	 * @return
+	 */
+	OrganizationUser findOrgUserByOrgId(String id);
 
 
 	/**

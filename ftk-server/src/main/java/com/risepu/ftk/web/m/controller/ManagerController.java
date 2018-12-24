@@ -2,6 +2,7 @@ package com.risepu.ftk.web.m.controller;
 
 import com.risepu.ftk.server.domain.AdminUser;
 import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.AdminService;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
@@ -112,15 +113,15 @@ public class ManagerController implements ManagerControllerApi {
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("state", state);
-
-
-
-
-
 		PageResult<Organization> pageResult = organizationService.findByParam(map, pageNo, pageSize);
 
+		for(Organization org:pageResult.getContent()){
+           OrganizationUser user =  organizationService.findOrgUserByOrgId(org.getId());
+           if(user!=null){
+               org.setApplicationPhone(user.getId());
+           }
+		}
 		return ResponseEntity.ok(Response.succeed(pageResult));
-
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class ManagerController implements ManagerControllerApi {
 		org.setState(organization.getState());
 		org.setWebsite(organization.getWebsite());
 
-		organizationService.saveOrUpdateOrgInfo(org);
+		organizationService.updateOrg(org);
 
 		return ResponseEntity.ok(Response.succeed("提交成功"));
 
