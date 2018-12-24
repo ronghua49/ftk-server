@@ -5,6 +5,7 @@ package com.risepu.ftk.web.p.controller;    /*
 
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.b.dto.PageRequest;
 import com.risepu.ftk.web.b.dto.RegistRequest;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
@@ -44,9 +45,9 @@ public interface PersonzalUserApi {
 
     @ApiOperation(value = "个人授权历史查询", nickname = "authorization history")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = AuthHistoryInfo.class) })
-    @RequestMapping(path = "/authen/history/{pageNo:\\d+}")
+    @RequestMapping(path = "/authen/history")
     @ResponseBody
-     ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestParam (required=false) String key, @PathVariable  Integer pageNo, @RequestParam Integer pageSize,
+     ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
                                                                                  HttpServletRequest request);
 
 
