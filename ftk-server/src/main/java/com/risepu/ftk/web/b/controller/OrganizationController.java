@@ -232,12 +232,24 @@ public class OrganizationController implements OrganizationApi{
 		
 		
 		OrganizationUser user = getCurrUser(request);
-		
-		/** 增加关联 id 为发起认证的企业用户手机号 */
-		user.setOrganizationId(organization.getId());
-		organizationService.updateOrgUser(user);
+		Organization org = organizationService.findAuthenOrgById(organization.getId());
 
-		organization.setState(Organization.CHECKING_STATE);
+		if(organization.getState()!=null){
+			/** 表示修改时组织机构代码证重复*/
+			if(!user.getOrganizationId().equals(organization.getId())&&org!=null){
+				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
+			}
+			organization.setState(organization.getState());
+		}else{
+			/** 表示第一提交组织机构代码证重复*/
+			if(org!=null){
+				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
+			}
+			/** 增加关联 id 为发起认证的企业用户手机号 */
+			user.setOrganizationId(organization.getId());
+			organizationService.updateOrgUser(user);
+			organization.setState(Organization.CHECKING_STATE);
+		}
 		organizationService.saveOrUpdateOrgInfo(organization);
 		 logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
 		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
