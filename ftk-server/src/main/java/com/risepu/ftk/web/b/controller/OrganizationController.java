@@ -229,20 +229,19 @@ public class OrganizationController implements OrganizationApi{
 	@Override
 	public ResponseEntity<Response<String>> orgAuthen( Organization organization,
 			HttpServletRequest request) {
-		
-		
+
 		OrganizationUser user = getCurrUser(request);
 		Organization org = organizationService.findAuthenOrgById(organization.getId());
 
 		if(organization.getState()!=null){
-			/** 表示修改时组织机构代码证重复*/
-			if(!user.getOrganizationId().equals(organization.getId())&&org!=null){
+			/** 表示修改时组织机构代码证和审核成功的或者审核中的重复*/
+			if(!user.getOrganizationId().equals(organization.getId())&&org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
 				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
 			}
 			organization.setState(organization.getState());
 		}else{
 			/** 表示第一提交组织机构代码证重复*/
-			if(org!=null){
+			if(org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
 				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
 			}
 			/** 增加关联 id 为发起认证的企业用户手机号 */
@@ -251,9 +250,8 @@ public class OrganizationController implements OrganizationApi{
 			organization.setState(Organization.CHECKING_STATE);
 		}
 		organizationService.saveOrUpdateOrgInfo(organization);
-		 logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
+		logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
 		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
-
 	}
 
 	/**
@@ -326,7 +324,6 @@ public class OrganizationController implements OrganizationApi{
 		OrganizationUser currUser = getCurrUser(request);
 
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-
 
 		PageResult document = proofDocumentService.getDocument(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
 		return ResponseEntity.ok(Response.succeed(document));
