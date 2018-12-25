@@ -55,22 +55,27 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     @Override
     public PageResult getDocuments(String organization, Integer pageNo, Integer pageSize, String name) {
         Integer firstIndex = pageNo * pageSize;
-        List<ProofDocument> proofDocuments1 = proofDocumentService.getByOrganization(organization);
-        List proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1", organization);
+        List<ProofDocument> proofDocuments1 = new ArrayList<>();
+        List proofDocuments = new ArrayList();
+        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
+        if (StringUtils.isEmpty(name)) {
+            proofDocuments1 = proofDocumentService.getByOrganization(organization);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1", organization);
+        } else {
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId=?2 and value = ?3)", organization, domain1.getId(), name);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId=?2 and value = ?3)", organization, domain1.getId(), name);
+        }
+
         List list = new ArrayList();
         List<DocumentData> documentDataList = new ArrayList<>();
         PageResult<Template> pageResult = new PageResult<>();
         for (int i = 0; i < proofDocuments.size(); i++) {
             Map map = new HashMap();
             ProofDocument proofDocument = (ProofDocument) proofDocuments.get(i);
-            if (StringUtils.isEmpty(name)) {
-                documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
-            } else {
-                documentDataList = crudService.hql(DocumentData.class, "from DocumentData where id.documentId = ?1 and value = ?2", proofDocument.getId(), name);
-            }
+            documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
+            map.put("chainHash", proofDocument.getChainHash());
+            map.put("number", proofDocument.getId());
             for (int j = 0; j < documentDataList.size(); j++) {
-                map.put("chainHash", proofDocument.getChainHash());
-                map.put("number", proofDocument.getId());
                 DocumentData documentData = documentDataList.get(j);
                 Domain domain = domainService.selectById(documentData.getId().getDomainId());
                 map.put(domain.getCode(), documentData.getValue());
@@ -89,5 +94,48 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         return proofDocument.getFilePath();
     }
 
+    @Override
+    public PageResult getDocuments(List<String> chainHashs, Integer pageNo, Integer pageSize, String name) {
+        String chainHash = "";
+        for (int i = 0; i < chainHashs.size(); i++) {
+            if (i == chainHashs.size() - 1) {
+                chainHash = chainHash + "'" + chainHashs.get(i) + "'";
+            } else {
+                chainHash = chainHash + "'" + chainHashs.get(i) + "'" + ",";
+            }
+        }
+        chainHash = "(" + chainHash + ")";
+        Integer firstIndex = pageNo * pageSize;
+        List<ProofDocument> proofDocuments1 = new ArrayList<>();
+        List proofDocuments = new ArrayList();
+        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
+        if (StringUtils.isEmpty(name)) {
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash);
+        } else {
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId=?1 and value = ?2)", domain1.getId(), name);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId=?1 and value = ?2)", domain1.getId(), name);
+        }
 
+        List list = new ArrayList();
+        List<DocumentData> documentDataList = new ArrayList<>();
+        PageResult<Template> pageResult = new PageResult<>();
+        for (int i = 0; i < proofDocuments.size(); i++) {
+            Map map = new HashMap();
+            ProofDocument proofDocument = (ProofDocument) proofDocuments.get(i);
+            documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
+            map.put("chainHash", proofDocument.getChainHash());
+            map.put("number", proofDocument.getId());
+            for (int j = 0; j < documentDataList.size(); j++) {
+                DocumentData documentData = documentDataList.get(j);
+                Domain domain = domainService.selectById(documentData.getId().getDomainId());
+                map.put(domain.getCode(), documentData.getValue());
+
+            }
+            list.add(map);
+        }
+        pageResult.setTotalElements(proofDocuments1.size());
+        pageResult.setContent(list);
+        return pageResult;
+    }
 }

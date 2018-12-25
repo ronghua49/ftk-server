@@ -26,8 +26,6 @@ public class ChartGraphics {
             try {
                 FileOutputStream fos = new FileOutputStream(fileLocation);
                 bos = new BufferedOutputStream(fos);
-                //                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bos);
-                //                encoder.encode(image);
                 //保存新图片
                 ImageIO.write(image, "JPG", bos);
                 bos.close();
@@ -61,7 +59,7 @@ public class ChartGraphics {
         //设置字体颜色，先设置颜色，再填充内容
         tip.setColor(Color.RED);
         //设置字体
-        Font tipFont = new Font("宋体", Font.BOLD, 24);
+        Font tipFont = new Font("/STSONG.TTF", Font.BOLD, 24);
         tip.setFont(tipFont);
         tip.drawString(name, 60, imageHeight / 2 - 10);
         tip.drawString("声明有效", 120, imageHeight / 2 + 15);

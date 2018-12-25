@@ -121,17 +121,16 @@ public class ManageTemplateController implements ManageTemplateApi {
             }
             String _template = template1.get_template();
             List<Domain> domains = domainService.selectAll();
-            String _template1 = "";
             for (int i = 0; i < domains.size(); i++) {
                 Domain domain = domains.get(i);
                 String code = "${" + domain.getCode() + "}";
                 if (_template.contains(code)) {
-                    _template1 = _template.replace(code, "________");
+                    _template = _template.replace(code, "____");
                     templateDomainService.add(template.getId(), domain.getId());
                 }
             }
             String pdfFilePath = "/file-path/" + template.getId() + "（" + t++ + ").pdf";
-            String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", pdfFilePath);
+            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", "示例文档", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", pdfFilePath);
             template1.set_template(template.get_template());
             template1.setDescription(template.getDescription());
             template1.setName(template.getName());
@@ -154,13 +153,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         Long templateId = templateService.add(template);
         if (templateId != null) {
             String _template = template.get_template();
-            String _template1 = "";
             List<Domain> domains = domainService.selectAll();
             for (int i = 0; i < domains.size(); i++) {
                 Domain domain = domains.get(i);
                 String code = "${" + domain.getCode() + "}";
                 if (_template.contains(code)) {
-                    _template1 = _template.replace(code, "________");
+                    _template = _template.replace(code, "___");
                     templateDomainService.add(templateId, domain.getId());
                 }
             }
@@ -172,7 +170,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", "/file-path/示例盖章.jpg");
             String pdfFilePath = "/file-path/" + templateId + ".pdf";
-            String filePath1 = pdfService.pdf(_template1, "DSFSDFSADADWDSFSDF", "示例文档", QrFilePath, GrFilePath, pdfFilePath);
+            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), QrFilePath, GrFilePath, pdfFilePath);
             Template template1 = templateService.getTemplate(templateId);
             template1.setFilePath(filePath1);
             templateService.update(template1);
