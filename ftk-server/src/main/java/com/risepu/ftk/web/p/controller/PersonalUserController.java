@@ -4,7 +4,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.web.b.dto.PageRequest;
+import com.risepu.ftk.web.exception.NotLoginException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,9 @@ public class PersonalUserController implements PersonzalUserApi  {
 	
 	@Autowired
 	private SmsService smsService;
-	
+
+	@Autowired
+	private ProofDocumentService proofDocumentService;
 //	@Autowired
 //	private ChainService chainService;
 
@@ -58,24 +62,27 @@ public class PersonalUserController implements PersonzalUserApi  {
 		
 		if(identify) {
 			/** 解析单据信息 */
-			//Integer documentId = chainService.praseDocumentData(loginRequest.getQrCode(),loginRequest.getDocumentHash());
+			String chainHash=null;
+			// chainHash = chainService.praseDocumentData(loginRequest.getQrCode(),loginRequest.getDocumentHash());
+			if(chainHash==null){
+				return ResponseEntity.ok(Response.failed(400, "伪单据扫描无效"));
+			}
 			
 			/** 根据文档id查询 文档数据*/
+			String no = proofDocumentService.getDocumentPersonCardNo(chainHash);
 			
 			/** 校验用户输入的身份证号是否和单据信息一致 */
-			
-			String  cardNo="410181199105232512";
-			
-			if(cardNo.equals(loginRequest.getCardNo())) {
+
+			if(no.equals(loginRequest.getCardNo())) {
 				
-				PersonalUser personalUser = personalService.findUserByNo(cardNo);
+				PersonalUser personalUser = personalService.findUserByNo(no);
 				
 				if(personalUser!=null) {
 					loginResult.setMessage("登录成功");
 					loginResult.setPersonalUser(personalUser);
 				}else {
 					PersonalUser user = new PersonalUser();
-					user.setId(cardNo);
+					user.setId(no);
 					user.setMobile(loginRequest.getPhone());
 					personalService.savePersonUser(user);
 					personalUser= user;
@@ -83,7 +90,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 				request.getSession().setAttribute(Constant.getSessionCurrUser(), personalUser);
 				
 				/** 根据身份证 查询新的请求授权的企业名和 当前授权流水的id*/
-				Map<String, Object> map  = personalService.findNewRequestByCardNo(cardNo);
+				Map<String, Object> map  = personalService.findNewRequestByCardNo(no);
 				
 				if(map!=null) {
 					loginResult.setOrgName((String)map.get("orgName"));
@@ -122,10 +129,13 @@ public class PersonalUserController implements PersonzalUserApi  {
 	 */
 	@Override
 	public ResponseEntity<Response<String>> personAuth( String streamId, String state, HttpServletRequest request) {
+
 		
 		String message ="";
-		PersonalUser personalUser = getSession(request);
-		
+		PersonalUser personalUser = getCurrUser(request);
+		if(personalUser==null){
+			throw new NotLoginException();
+		}
 		AuthorizationStream stream =   personalService.findAuthorizationStreamById(Long.parseLong(streamId));
 		
 		if(stream==null) {
@@ -151,9 +161,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 
 
 
-	private PersonalUser getSession(HttpServletRequest request) {
-		return (PersonalUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-	}
 
 	/**
 	 * 查询历史授权记录
@@ -165,6 +172,9 @@ public class PersonalUserController implements PersonzalUserApi  {
 	public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(PageRequest pageRequest,
 																				 HttpServletRequest request){
 		PersonalUser user = getCurrUser(request);
+		if(user==null){
+			throw new NotLoginException();
+		}
 		
 		PageResult<AuthHistoryInfo> pageResult =  personalService.queryHistoryByParam(pageRequest.getKey(),pageRequest.getPageNo(),pageRequest.getPageSize(),user.getId());
 		

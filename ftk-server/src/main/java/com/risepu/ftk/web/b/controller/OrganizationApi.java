@@ -52,8 +52,7 @@ public interface OrganizationApi {
 
 
     @ApiOperation(value = "图片上传", nickname = "imgupload")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class),
-            @ApiResponse(code = 500, message = "failed", response = String.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class), @ApiResponse(code = 500, message = "failed", response = String.class)})
     @RequestMapping(path = "/img/upload")
     @ResponseBody
     ResponseEntity<Response<String>> upload(MultipartFile file);
@@ -61,9 +60,9 @@ public interface OrganizationApi {
 
     @ApiOperation(value = "图片下载", nickname = "imgdownload")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class),
-            @ApiResponse(code = 500, message = "failed", response = String.class)})
-@RequestMapping(path = "/img/download/{imgName:\\w+.[a-z]{0,4}}")
-@ResponseBody
+    @ApiResponse(code = 500, message = "failed", response = String.class)})
+    @RequestMapping(path = "/img/download/{imgName:\\w+.[a-z]{0,4}}")
+    @ResponseBody
     ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response);
 
     @ApiOperation(value = "企业发起的认证信息", nickname = "orgInfo")

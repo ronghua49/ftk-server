@@ -10,6 +10,7 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +77,9 @@ public class ManagerController implements ManagerControllerApi {
 		password = DigestUtils.md5Hex(password+SALT);
 		newPwd = DigestUtils.md5Hex(password+SALT);
 		AdminUser admin = getCurrAdmin(request);
+		if(admin==null){
+			throw new NotLoginException();
+		}
 
 		if(password.equals(admin.getPassword())) {
 

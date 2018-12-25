@@ -8,6 +8,7 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.*;
+import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,6 +141,11 @@ public class OrganizationController implements OrganizationApi{
 
 
         OrganizationUser currUser = getCurrUser(request);
+        if(currUser==null){
+			throw new NotLoginException();
+		}
+
+
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
 
         String salt = ConfigUtil.getValue("salt");
@@ -164,6 +170,7 @@ public class OrganizationController implements OrganizationApi{
 	 */
 	@Override
 	public ResponseEntity<Response<String>> upload( MultipartFile file) {
+
 
 		try {
 			String fileName = organizationService.upload(file);
@@ -205,7 +212,9 @@ public class OrganizationController implements OrganizationApi{
 	public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
-
+		if(currUser==null){
+			throw new NotLoginException();
+		}
 
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
@@ -224,6 +233,9 @@ public class OrganizationController implements OrganizationApi{
 			HttpServletRequest request) {
 
 		OrganizationUser user = getCurrUser(request);
+		if(user==null){
+			throw new NotLoginException();
+		}
 
         /** 查找当前用户提交的组织机构代码证 是否已经通过审核*/
         Organization org = organizationService.findAuthenOrgById(organizationStream.getOrganization());
@@ -269,7 +281,10 @@ public class OrganizationController implements OrganizationApi{
 		
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
-		
+
+		if(currUser==null){
+			throw new NotLoginException();
+		}
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 		/** 只有审核通过后的企业才可以扫描单据 */
 		if(org!=null) {
@@ -294,6 +309,9 @@ public class OrganizationController implements OrganizationApi{
 
 
 		OrganizationUser orgUser = getCurrUser(request);
+		if(orgUser==null){
+			throw new NotLoginException();
+		}
 
 		/** 根据企业id查询 已经验证成功的流水idlist*/
 		List<AuthorizationStream>  streams = organizationService.querySucceedAuthStreamByOrgId(orgUser.getOrganizationId());
@@ -322,6 +340,9 @@ public class OrganizationController implements OrganizationApi{
 		/** 查询企业开单历史 */
 		//TODO
 		OrganizationUser currUser = getCurrUser(request);
+		if(currUser==null){
+			throw new NotLoginException();
+		}
 
         Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
         PageResult document = proofDocumentService.getDocuments(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
@@ -369,6 +390,9 @@ public class OrganizationController implements OrganizationApi{
 			HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
+		if(currUser==null){
+			throw new NotLoginException();
+		}
 		
 		advice.setOrgId(currUser.getId());
 		organizationService.saveAdviceInfo(advice);
@@ -398,6 +422,9 @@ public class OrganizationController implements OrganizationApi{
 	public ResponseEntity<Response<String>> setDefaultTemplate(String  templateId,HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
+		if(currUser==null){
+			throw new NotLoginException();
+		}
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 		org.setDefaultTemId(Long.parseLong(templateId));
 

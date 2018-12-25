@@ -138,4 +138,15 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         pageResult.setContent(list);
         return pageResult;
     }
+
+    /**
+     * 根据chainHash 查询文档用户身份证号
+     *
+     * @param chainHash
+     * @return
+     */
+    @Override
+    public String getDocumentPersonCardNo(String chainHash) {
+        return crudService.uniqueResultHql(ProofDocument.class,"from ProofDocument where chainHash=?1",chainHash).getPersonalUser();
+    }
 }

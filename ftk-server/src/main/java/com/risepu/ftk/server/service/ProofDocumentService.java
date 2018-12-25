@@ -53,4 +53,10 @@ public interface ProofDocumentService {
      */
     PageResult getDocuments(List<String> chainHash, Integer pageNo, Integer pageSize, String name);
 
+    /**
+     * 根据chainHash 查询文档用户身份证号
+     * @param chainHash
+     * @return
+     */
+    String getDocumentPersonCardNo(String chainHash);
 }
