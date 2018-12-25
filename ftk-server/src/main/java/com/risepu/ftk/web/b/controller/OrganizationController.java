@@ -142,21 +142,21 @@ public class OrganizationController implements OrganizationApi{
 			HttpServletRequest request) {
 
 
-		OrganizationUser currUser = getCurrUser(request);
-		OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
-		
-		String salt = ConfigUtil.getValue("salt");
-		password = DigestUtils.md5Hex(password + salt);
-		newpwd = DigestUtils.md5Hex(newpwd + salt);
+        OrganizationUser currUser = getCurrUser(request);
+        OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
 
-		if (user.getPassword().equals(password)) {
-			organizationService.changePwd(user.getId(), newpwd);
-			logger.debug("企业用户   {}，修改密码成功！", user.getId());
-			return ResponseEntity.ok(Response.succeed("密码修改成功"));
-		}else {
-			return ResponseEntity.ok(Response.failed(7, "修改失败，输入密码和服务端密码不一致"));
-		}
-	}
+        String salt = ConfigUtil.getValue("salt");
+        password = DigestUtils.md5Hex(password + salt);
+        newpwd = DigestUtils.md5Hex(newpwd + salt);
+
+        if (user.getPassword().equals(password)) {
+            organizationService.changePwd(user.getId(), newpwd);
+            logger.debug("企业用户   {}，修改密码成功！", user.getId());
+            return ResponseEntity.ok(Response.succeed("密码修改成功"));
+        } else {
+            return ResponseEntity.ok(Response.failed(7, "原始密码输入错误，请重新输入"));
+        }
+    }
 
 	/**
 	 * 图片上传
@@ -332,22 +332,29 @@ public class OrganizationController implements OrganizationApi{
 		//TODO
 		OrganizationUser currUser = getCurrUser(request);
 
-		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-		PageResult document = proofDocumentService.getDocument(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
-		return ResponseEntity.ok(Response.succeed(document));
-	}
-	
-	
-	/**
-	 * 验证单据是否合格
-	 * @param qrCardNo 所扫描的二维码 用户身份证号
-	 * @param inputCardNo 输入的身份证号
-	 * @param streamId 当前扫描二维码的流水id
-	 * @return
-	 */
-	@PostMapping("/qualify")
-	public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId ,@RequestParam String qrCardNo, @RequestParam String inputCardNo) {
-		//TODO
+        Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+        PageResult document = proofDocumentService.getDocuments(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+        return ResponseEntity.ok(Response.succeed(document));
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> documentInfo(String chainHash) {
+        String filePath = proofDocumentService.getDocument(chainHash);
+        return ResponseEntity.ok(Response.succeed(filePath));
+    }
+
+
+    /**
+     * 验证单据是否合格
+     *
+     * @param qrCardNo    所扫描的二维码 用户身份证号
+     * @param inputCardNo 输入的身份证号
+     * @param streamId    当前扫描二维码的流水id
+     * @return
+     */
+    @PostMapping("/qualify")
+    public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId, @RequestParam String qrCardNo, @RequestParam String inputCardNo) {
+        //TODO
 
 		return  null;
 	}
