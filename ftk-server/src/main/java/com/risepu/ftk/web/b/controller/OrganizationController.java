@@ -303,11 +303,6 @@ public class OrganizationController implements OrganizationApi{
 				chainHashs.add(stream.getChainHash());
 		}
 
-		Map<String,Object> map = new HashMap<>();
-		map.put("key",pageRequest.getKey());
-		map.put("pageNo",pageRequest.getPageNo());
-		map.put("pageSize",pageRequest.getPageSize());
-		map.put("chainHashs",chainHashs);
 
 		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
 		PageResult page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
