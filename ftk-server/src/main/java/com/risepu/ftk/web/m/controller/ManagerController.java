@@ -140,12 +140,12 @@ public class ManagerController implements ManagerControllerApi {
 			organizationService.updateOrgUser(user);
 
 			Organization organization = new Organization();
-			organization.setTel(organizationStream.getTel());
-			organization.setName(organizationStream.getName());
-			organization.setLegalPerson(organizationStream.getLegalPerson());
-			organization.setAddress(organizationStream.getAddress());
-			organization.setLicenseImgName(organizationStream.getLicenseImgName());
-			organization.setId(organizationStream.getOrganization());
+			organization.setTel(stream.getTel());
+			organization.setName(stream.getName());
+			organization.setLegalPerson(stream.getLegalPerson());
+			organization.setAddress(stream.getAddress());
+			organization.setLicenseImgName(stream.getLicenseImgName());
+			organization.setId(stream.getOrganization());
 
 			organization.setInsuranceNum(organizationStream.getInsuranceNum());
 			organization.setOrgType(organizationStream.getOrgType());

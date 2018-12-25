@@ -236,7 +236,7 @@ public class OrganizationController implements OrganizationApi{
             return ResponseEntity.ok(Response.failed(400,"该账号已经和企业绑定，不得重复申请！"));
         }
         /** 根据当前用户查询发起的流水 */
-        OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
+ //       OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
 
 //        /** 表示修改*/
 //        if(stream!=null&&stream.getState().equals(OrganizationStream.CHECK_FAIL_STATE)){
