@@ -15,6 +15,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author L-heng
  */
@@ -30,7 +32,7 @@ public interface CompanyTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
     @PostMapping(path = "/getTemplates")
     @ResponseBody
-    ResponseEntity<Response<List<Template>>> getTemplates();
+    ResponseEntity<Response<List<Template>>> getTemplates(HttpServletRequest request);
 
     /**
      * 查找模板对应的所有数据

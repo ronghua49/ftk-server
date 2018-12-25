@@ -548,7 +548,7 @@ public class GenericDaoHibernate implements GenericDao {
 		logger.trace("SQL query, sql:[{}], args count:{}.", sql, args == null ? 0 : args.length);
 		NativeQuery<?> query = getSession().createSQLQuery(sql);
 		for (int i = 0; args != null && i < args.length; i++) {
-			query.setParameter(i, args[i]);
+			query.setParameter(i + 1, args[i]);
 		}
 		if (resultTransformer != null) {
 			query.setResultTransformer(resultTransformer);
