@@ -297,11 +297,10 @@ public class OrganizationController implements OrganizationApi{
 	 * @return
 	 */
 	@Override
-	 public ResponseEntity<Response<PageResult<Map<String,Object>>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
+	 public ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
 
 
 		OrganizationUser orgUser = getCurrUser(request);
-
 
 		/** 根据企业id查询 已经验证成功的流水idlist*/
 		List<AuthorizationStream>  streams = organizationService.querySucceedAuthStreamByOrgId(orgUser.getOrganizationId());

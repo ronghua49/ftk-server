@@ -91,10 +91,10 @@ public interface OrganizationApi {
 
 
     @ApiOperation(value = "企业扫码历史单据查询", nickname = "QRHistory")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Map.class)})
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/history/verify")
     @ResponseBody
-    ResponseEntity<Response<PageResult<Map<String,Object>>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request);
+    ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request);
 
 
 
