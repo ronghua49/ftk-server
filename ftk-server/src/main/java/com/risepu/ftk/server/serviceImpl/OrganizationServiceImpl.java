@@ -356,7 +356,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public OrganizationStream findAuthStreamByPhone(String id) {
 		List<OrganizationStream> streamList = crudService.hql(OrganizationStream.class, "from OrganizationStream where applicationPhone =?1 order by createTimestamp desc ", id);
-		if(streamList!=null){
+		if(streamList!=null&&!streamList.isEmpty()){
 			return streamList.get(0);
 		}
 		return null;
