@@ -297,7 +297,7 @@ public class OrganizationController implements OrganizationApi{
 
 		/** 根据企业id查询 已经验证成功的流水idlist*/
 		List<AuthorizationStream>  streams = organizationService.querySucceedAuthStreamByOrgId(orgUser.getOrganizationId());
-		Set<String> chainHashs = new HashSet<>();
+		List<String> chainHashs = new ArrayList<>();
 
 		for(AuthorizationStream stream:streams){
 				chainHashs.add(stream.getChainHash());
@@ -310,9 +310,9 @@ public class OrganizationController implements OrganizationApi{
 		map.put("chainHashs",chainHashs);
 
 		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
+		PageResult page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
 
-
-		return  ResponseEntity.ok(Response.succeed(null));
+		return  ResponseEntity.ok(Response.succeed(page));
 	
 	 }
 
