@@ -106,7 +106,11 @@ public interface OrganizationApi {
     ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request);
 
 
-
+    @ApiOperation(value = "开单历史详情", nickname = "documentInfo")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @RequestMapping(path = "/history/documentInfo")
+    @ResponseBody
+    ResponseEntity<Response<String>> documentInfo(String chainHash);
 
 
     @ApiOperation(value = "企业反馈意见", nickname = "advice")
@@ -127,13 +131,10 @@ public interface OrganizationApi {
 
 
     @ApiOperation(value = "设置默认模板", nickname = "defaultTemplate")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/defaultTem")
     @ResponseBody
-    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String  templateId, HttpServletRequest request);
-
-
-
+    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String templateId, HttpServletRequest request);
 
 
 }

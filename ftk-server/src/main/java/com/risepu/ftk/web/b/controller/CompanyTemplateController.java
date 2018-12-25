@@ -1,7 +1,12 @@
 package com.risepu.ftk.web.b.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.server.service.OrganizationService;
+import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.m.dto.IdRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +18,8 @@ import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.api.Response;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author L-heng
@@ -27,9 +34,20 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Autowired
     private DomainService domainService;
 
+    @Autowired
+    private OrganizationService organizationService;
+
     @Override
-    public ResponseEntity<Response<List<Template>>> getTemplates() {
-        List<Template> templates = templateService.getTemplates();
+    public ResponseEntity<Response<List<Template>>> getTemplates(HttpServletRequest request) {
+        OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+        Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
+        List<Template> templates = new ArrayList<>();
+        if (org.getDefaultTemId() != null) {
+            Template template = templateService.getTemplate(org.getDefaultTemId());
+            templates.add(template);
+        } else {
+            templates = templateService.getTemplates();
+        }
         return ResponseEntity.ok(Response.succeed(templates));
     }
 

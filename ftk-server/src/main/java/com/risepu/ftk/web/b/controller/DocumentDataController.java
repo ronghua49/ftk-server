@@ -9,11 +9,13 @@ import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.*;
 import com.risepu.ftk.utils.ChartGraphics;
 import com.risepu.ftk.web.Constant;
+import com.risepu.ftk.web.m.dto.EmailRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.risepu.ftk.web.api.Response;
@@ -89,7 +91,7 @@ public class DocumentDataController implements DocumentDataApi {
         String GrFilePath = cg.graphicsGeneration(org.getName(), "/file-path/" + org.getId() + "(" + t++ + ").jpg");
         String pdfFilePat = "/file-path/" + t++ + ".pdf";
         String hash = "SGDHHFSGFSGFSGFS";
-        String title = map.get("title");
+        String title = template.getName();
         // 文档保存路径
         String filePath = pdfService.pdf(_template, hash, title, qrFilePath, GrFilePath, pdfFilePat);
 
@@ -108,12 +110,14 @@ public class DocumentDataController implements DocumentDataApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> sendEmail(String email, String filePath) throws Exception {
+    public ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest) {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
-
-        sendMailService.sendMail(email, filePath);
-        return ResponseEntity.ok(Response.succeed("邮件发送成功"));
+        try {
+            sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath());
+            return ResponseEntity.ok(Response.succeed("邮件发送成功"));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Response.failed(400, "邮件发送失败"));
+        }
     }
-
 }
