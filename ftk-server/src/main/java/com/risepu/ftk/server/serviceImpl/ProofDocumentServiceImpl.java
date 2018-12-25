@@ -89,4 +89,10 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         return proofDocument.getFilePath();
     }
 
+
+    @Override
+    public PageResult findHistoryDocumentPageByParamMap(Map<String, Object> map) {
+        return null;
+    }
+
 }

@@ -23,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class OrganizationController implements OrganizationApi{
@@ -246,6 +243,12 @@ public class OrganizationController implements OrganizationApi{
 			currOrg.setName(organization.getName());
 			currOrg.setTel(organization.getTel());
             currOrg.setState(Organization.CHECKING_STATE);
+
+            /** 增加关联 id 为发起认证的企业用户手机号 */
+            user.setOrganizationId(organization.getId());
+            organizationService.updateOrgUser(user);
+
+
             organizationService.updateOrg(currOrg);
 
         }else{
@@ -310,13 +313,15 @@ public class OrganizationController implements OrganizationApi{
 				chainHashs.add(stream.getChainHash());
 		}
 
-
-
+		Map<String,Object> map = new HashMap<>();
+		map.put("key",pageRequest.getKey());
+		map.put("pageNo",pageRequest.getPageNo());
+		map.put("pageSize",pageRequest.getPageSize());
+		map.put("chainHashs",chainHashs);
 		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
-		//PageResult  page = proofDocumentService.
+		PageResult  page = proofDocumentService.findHistoryDocumentPageByParamMap(map);
 
-		
-		return null;
+		return  ResponseEntity.ok(Response.succeed(page));
 	
 	 }
 
@@ -337,6 +342,11 @@ public class OrganizationController implements OrganizationApi{
         return ResponseEntity.ok(Response.succeed(document));
     }
 
+    /**
+     * 根据chainhash查询单据详情信息
+     * @param chainHash 证明单据的chainhash
+     * @return 证明文档pdf路径
+     */
     @Override
     public ResponseEntity<Response<String>> documentInfo(String chainHash) {
         String filePath = proofDocumentService.getDocument(chainHash);

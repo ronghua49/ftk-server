@@ -224,8 +224,14 @@ public class Organization extends AuditableObject<String> {
 		this.website = website;
 	}
 	
-	
-	
-	
 
+	private String applicationPhone;
+
+	public String getApplicationPhone() {
+		return applicationPhone;
+	}
+
+	public void setApplicationPhone(String applicationPhone) {
+		this.applicationPhone = applicationPhone;
+	}
 }
