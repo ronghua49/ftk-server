@@ -6,6 +6,7 @@ import com.risepu.ftk.web.api.Response;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author L-heng
@@ -52,4 +53,10 @@ public interface ProofDocumentService {
      */
     PageResult getDocuments(List<String> chainHash);
 
+    /**
+     * 根据参数查询企业历史扫码单据页面
+     * @param map
+     * @return
+     */
+    PageResult findHistoryDocumentPageByParamMap(Map<String,Object> map);
 }
