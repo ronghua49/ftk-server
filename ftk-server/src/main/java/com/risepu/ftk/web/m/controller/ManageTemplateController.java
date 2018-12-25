@@ -5,8 +5,10 @@ import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.*;
 import com.risepu.ftk.utils.ChartGraphics;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.utils.StringUtil;
 import com.risepu.ftk.web.api.Response;
 import net.lc4ever.framework.format.DateFormatter;
+import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,10 +43,16 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Autowired
     private PdfService pdfService;
 
+    @Autowired
+    private GenericCrudService crudService;
+
     private Integer t = 0;
 
     @Override
     public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
+        if (templateId == null) {
+            return ResponseEntity.ok(Response.failed(400, "模板id不能为空"));
+        }
         Template template = templateService.getTemplate(templateId);
         return ResponseEntity.ok(Response.succeed(template));
     }
@@ -113,6 +122,9 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Override
     public ResponseEntity<Response<String>> updateTemplate(Template template) {
         try {
+            if (template.getId() == null) {
+                return ResponseEntity.ok(Response.succeed("模板id不能为空"));
+            }
             Template template1 = templateService.getTemplate(template.getId());
             List<Domain> list = domainService.selectByTemplate(template.getId());
             for (int j = 0; j < list.size(); j++) {
@@ -151,16 +163,34 @@ public class ManageTemplateController implements ManageTemplateApi {
             return ResponseEntity.ok(Response.failed(400, "二次模板不能为空"));
         }
         Long templateId = templateService.add(template);
+        List<String> list2 = new ArrayList();
         if (templateId != null) {
             String _template = template.get_template();
             List<Domain> domains = domainService.selectAll();
             for (int i = 0; i < domains.size(); i++) {
                 Domain domain = domains.get(i);
+                list2.add(domain.getCode());
                 String code = "${" + domain.getCode() + "}";
                 if (_template.contains(code)) {
                     _template = _template.replace(code, "___");
                     templateDomainService.add(templateId, domain.getId());
                 }
+            }
+            StringUtil stringUtil = new StringUtil();
+            List<String> list1 = stringUtil.getStrContainData(template.get_template(), "${", "}", true);
+
+            boolean flag = true;
+
+            if (list1.size() != list2.size())
+                flag = false;
+            for (String object : list1) {
+                if (!list2.contains(object))
+                    flag = false;
+            }
+            if (flag == false) {
+                Template template1 = templateService.getTemplate(templateId);
+                crudService.delete(template1);
+                return ResponseEntity.ok(Response.failed(400, "参数错误"));
             }
             File file = new File("/file-path");
             file.mkdirs();
@@ -215,12 +245,18 @@ public class ManageTemplateController implements ManageTemplateApi {
 
     @Override
     public ResponseEntity<Response<String>> deleteTemplateData(Long domainId) {
+        if (domainId == null) {
+            return ResponseEntity.ok(Response.succeed("要素id不能为空"));
+        }
         domainService.deleteById(domainId);
         return ResponseEntity.ok(Response.succeed("删除成功"));
     }
 
     @Override
     public ResponseEntity<Response<String>> updateTemplateState(Long templateId) {
+        if (templateId == null) {
+            return ResponseEntity.ok(Response.succeed("模板id不能为空"));
+        }
         Template template = templateService.getTemplate(templateId);
         if (template.getState() == 0) {
             template.setState(1);
