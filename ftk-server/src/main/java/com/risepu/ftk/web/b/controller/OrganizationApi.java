@@ -87,10 +87,10 @@ public interface OrganizationApi {
 
 
     @ApiOperation(value = "企业扫码历史单据查询", nickname = "QRHistory")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = Map.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/history/verify")
     @ResponseBody
-    ResponseEntity<Response<PageResult<Map<String, Object>>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request);
+    ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request);
 
 
     @ApiOperation(value = "企业开单历史", nickname = "documentHistory")
@@ -104,7 +104,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/history/documentInfo")
     @ResponseBody
-    ResponseEntity<Response<String>> documentInfo(String chainHash);
+    ResponseEntity<Response<String>> documentInfo(@RequestParam String chainHash);
 
 
     @ApiOperation(value = "企业反馈意见", nickname = "advice")
