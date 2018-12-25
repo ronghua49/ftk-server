@@ -8,6 +8,7 @@ import java.util.Map;
 import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.*;
 import com.risepu.ftk.utils.ChartGraphics;
+import com.risepu.ftk.utils.StringUtil;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.m.dto.EmailRequest;
 import org.slf4j.Logger;
@@ -100,6 +101,7 @@ public class DocumentDataController implements DocumentDataApi {
         proofDocument.setPersonalUser(map.get("idCard"));
         proofDocument.setOrganization(org.getId());
         proofDocument.setTemplate(templateId);
+//        proofDocument.setChainHash(hash);
         Long proDocumentId = proofDocumentService.add(proofDocument);
         if (proDocumentId != null) {
             for (int i = 0; i < list2.size(); i++) {
