@@ -44,4 +44,12 @@ public interface ProofDocumentService {
      */
     String getDocument(String chainHash);
 
+    /**
+     * 验证历史
+     *
+     * @param chainHash 哈希串
+     * @return
+     */
+    PageResult getDocuments(List<String> chainHash);
+
 }

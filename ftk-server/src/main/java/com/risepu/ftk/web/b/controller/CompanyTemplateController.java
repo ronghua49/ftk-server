@@ -38,17 +38,28 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     private OrganizationService organizationService;
 
     @Override
-    public ResponseEntity<Response<List<Template>>> getTemplates(HttpServletRequest request) {
+    public ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
         Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
         List<Template> templates = new ArrayList<>();
-        if (org.getDefaultTemId() != null) {
+        if (defaultState.equals("0")) {
             Template template = templateService.getTemplate(org.getDefaultTemId());
             templates.add(template);
-        } else {
+        }
+        if (defaultState.equals("1")) {
             templates = templateService.getTemplates();
         }
         return ResponseEntity.ok(Response.succeed(templates));
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> getTemplateState(HttpServletRequest request) {
+        OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+        Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
+        if (org.getDefaultTemId() != null) {
+            return ResponseEntity.ok(Response.succeed("0"));
+        }
+        return ResponseEntity.ok(Response.succeed("1"));
     }
 
     @Override

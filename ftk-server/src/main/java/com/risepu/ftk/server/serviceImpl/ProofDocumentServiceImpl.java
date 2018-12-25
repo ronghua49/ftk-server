@@ -89,4 +89,9 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         return proofDocument.getFilePath();
     }
 
+    @Override
+    public PageResult getDocuments(List<String> chainHash) {
+        return null;
+    }
+
 }

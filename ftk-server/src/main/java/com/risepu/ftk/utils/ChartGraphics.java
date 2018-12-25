@@ -61,7 +61,7 @@ public class ChartGraphics {
         //设置字体颜色，先设置颜色，再填充内容
         tip.setColor(Color.RED);
         //设置字体
-        Font tipFont = new Font("宋体", Font.BOLD, 24);
+        Font tipFont = new Font("/STSONG.TTF", Font.BOLD, 24);
         tip.setFont(tipFont);
         tip.drawString(name, 60, imageHeight / 2 - 10);
         tip.drawString("声明有效", 120, imageHeight / 2 + 15);
@@ -70,5 +70,10 @@ public class ChartGraphics {
         tip.setStroke(new BasicStroke(8));
         tip.drawRoundRect(0, 0, imageWidth - 1, imageHeight - 1, 40, 40);
         return createImage(imgurl);
+    }
+
+    public static void main(String[] args) {
+        ChartGraphics a=new ChartGraphics();
+        a.graphicsGeneration("北京大佬科技有限公司","C:/Users/MACHEMIKE/Desktop/test.jpg");
     }
 }

@@ -30,9 +30,21 @@ public interface CompanyTemplateApi {
      */
     @ApiOperation(value = "显示已启用模板", nickname = "getTemplates")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
-    @PostMapping(path = "/getTemplates")
+    @GetMapping(path = "/getTemplates")
     @ResponseBody
-    ResponseEntity<Response<List<Template>>> getTemplates(HttpServletRequest request);
+    ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request);
+
+    /**
+     * 判断是否有默认模板
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "判断是否有默认模板", nickname = "getTemplateState")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @GetMapping(path = "/getTemplateState")
+    @ResponseBody
+    ResponseEntity<Response<String>> getTemplateState(HttpServletRequest request);
 
     /**
      * 查找模板对应的所有数据
