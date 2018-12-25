@@ -51,12 +51,6 @@ public interface ProofDocumentService {
      * @param chainHash 哈希串
      * @return
      */
-    PageResult getDocuments(List<String> chainHash);
+    PageResult getDocuments(List<String> chainHash, Integer pageNo, Integer pageSize, String name);
 
-    /**
-     * 根据参数查询企业历史扫码单据页面
-     * @param map
-     * @return
-     */
-    PageResult findHistoryDocumentPageByParamMap(Map<String,Object> map);
 }

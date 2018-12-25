@@ -26,8 +26,6 @@ public class ChartGraphics {
             try {
                 FileOutputStream fos = new FileOutputStream(fileLocation);
                 bos = new BufferedOutputStream(fos);
-                //                JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bos);
-                //                encoder.encode(image);
                 //保存新图片
                 ImageIO.write(image, "JPG", bos);
                 bos.close();
@@ -70,10 +68,5 @@ public class ChartGraphics {
         tip.setStroke(new BasicStroke(8));
         tip.drawRoundRect(0, 0, imageWidth - 1, imageHeight - 1, 40, 40);
         return createImage(imgurl);
-    }
-
-    public static void main(String[] args) {
-        ChartGraphics a=new ChartGraphics();
-        a.graphicsGeneration("北京大佬科技有限公司","C:/Users/MACHEMIKE/Desktop/test.jpg");
     }
 }
