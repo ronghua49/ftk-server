@@ -7,12 +7,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.risepu.ftk.server.domain.AuthorizationStream;
-import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.server.domain.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.risepu.ftk.server.domain.Organization;
-import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
 
@@ -104,7 +101,7 @@ public interface OrganizationService {
 	 * @param pageSize 每条显示数量
 	 * @return PageResult 对象
 	 */
-	public PageResult<Organization> findByParam(Map<String,Object> map,Integer pageNo,Integer pageSize);
+	public PageResult<OrganizationStream> findByParam(Map<String,Object> map,Integer pageNo,Integer pageSize);
 
 	/**
 	 * 修改企业用户信息
@@ -138,6 +135,32 @@ public interface OrganizationService {
 	 * @return
 	 */
 	OrganizationUser findOrgUserByOrgId(String id);
+
+	/**
+	 * 增加企业认证流水
+	 * @param organizationStream
+	 */
+	void saveOrgStream(OrganizationStream organizationStream);
+
+	/**
+	 * 根据申请人手机号查询授权流水
+	 * @param id
+	 * @return
+	 */
+	OrganizationStream findAuthStreamByPhone(String id);
+
+	/**
+	 * 更新用户发起的认证流水
+	 * @param organizationStream
+	 */
+	void updateOrgStream(OrganizationStream organizationStream);
+
+	/**
+	 * 根据id查询企业认证流水
+	 * @param streamId
+	 * @return
+	 */
+	OrganizationStream findAuthStreamById(Long streamId);
 
 
 	/**

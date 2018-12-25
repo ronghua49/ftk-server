@@ -90,9 +90,4 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     }
 
 
-    @Override
-    public PageResult findHistoryDocumentPageByParamMap(Map<String, Object> map) {
-        return null;
-    }
-
 }

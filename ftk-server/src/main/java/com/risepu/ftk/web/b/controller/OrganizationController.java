@@ -202,68 +202,58 @@ public class OrganizationController implements OrganizationApi{
 	 * @return Organization 企业的信息 (若为空则未审核)
 	 */
 	@Override
-	public ResponseEntity<Response<Organization>> checkAuthState(HttpServletRequest request) {
+	public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
-		
-		/** 为空 未认证   不为空  state 判断*/
-		Organization org =null;
-		if(currUser.getOrganizationId()!=null){
-			org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-		}
 
-		return ResponseEntity.ok(Response.succeed(org));
+
+        OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
+        return ResponseEntity.ok(Response.succeed(stream));
 	}
 
 	/**
 	 * 保存企业认证信息
 	 * 
-	 * @param organization
+	 * @param organizationStream
 	 *            上传的的企业信息
 	 * @param request
 	 * @return 上传结果
 	 */
 	@Override
-	public ResponseEntity<Response<String>> orgAuthen( Organization organization,
+	public ResponseEntity<Response<String>> orgAuthen( OrganizationStream organizationStream,
 			HttpServletRequest request) {
 
 		OrganizationUser user = getCurrUser(request);
-		Organization currOrg = organizationService.findAuthenOrgById(user.getOrganizationId());
-		Organization org = organizationService.findAuthenOrgById(organization.getId());
 
-		if(currOrg!=null&&currOrg.getState().equals(Organization.CHECK_FAIL_STATE)){
-			/** 表示修改时组织机构代码证和审核成功的或者审核中的重复*/
-			if(!user.getOrganizationId().equals(organization.getId())&&org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
-				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
-			}
-			currOrg.setId(organization.getId());
-			currOrg.setAddress(organization.getAddress());
-			currOrg.setLicenseImgName(organization.getLicenseImgName());
-			currOrg.setLegalPerson(organization.getLegalPerson());
-			currOrg.setName(organization.getName());
-			currOrg.setTel(organization.getTel());
-            currOrg.setState(Organization.CHECKING_STATE);
-
-            /** 增加关联 id 为发起认证的企业用户手机号 */
-            user.setOrganizationId(organization.getId());
-            organizationService.updateOrgUser(user);
-
-
-            organizationService.updateOrg(currOrg);
-
-        }else{
-			/** 表示第一提交组织机构代码证重复*/
-			if(org!=null&&!org.getState().equals(Organization.CHECK_FAIL_STATE)){
-				return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
-			}
-			/** 增加关联 id 为发起认证的企业用户手机号 */
-			user.setOrganizationId(organization.getId());
-			organizationService.updateOrgUser(user);
-
-            organization.setState(Organization.CHECKING_STATE);
-            organizationService.save(organization);
+        /** 查找当前用户提交的组织机构代码证 是否已经通过审核*/
+        Organization org = organizationService.findAuthenOrgById(organizationStream.getOrganization());
+        if(org!=null){
+            return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
         }
-		logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
+
+        /** 该用户已经审核通过和一个企业绑定*/
+        if(user.getOrganizationId()!=null){
+            return ResponseEntity.ok(Response.failed(400,"该账号已经和企业绑定，不得重复申请！"));
+        }
+        /** 根据当前用户查询发起的流水 */
+        OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
+
+//        /** 表示修改*/
+//        if(stream!=null&&stream.getState().equals(OrganizationStream.CHECK_FAIL_STATE)){
+//
+//            organizationStream.setState(OrganizationStream.CHECKING_STATE);
+//            organizationStream.setApplicationPhone(user.getId());
+//            organizationService.updateOrgStream(organizationStream);
+//        }else{
+//            organizationStream.setState(OrganizationStream.CHECKING_STATE);
+//            organizationStream.setApplicationPhone(user.getId());
+//            organizationService.saveOrgStream(organizationStream);
+//        }
+        organizationStream.setState(OrganizationStream.CHECKING_STATE);
+        organizationStream.setApplicationPhone(user.getId());
+        organizationService.saveOrgStream(organizationStream);
+
+        logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
 		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
 	}
 
@@ -280,9 +270,9 @@ public class OrganizationController implements OrganizationApi{
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
 		
-		Organization org = organizationService.findAuthenOrgById(currUser.getId());
+		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 		/** 只有审核通过后的企业才可以扫描单据 */
-		if(org!=null && org.getState().equals(Organization.CHECK_PASS_STATE)) {
+		if(org!=null) {
 			
 			organizationService.InsertAuthorStream(currUser.getId(), cardNo);
 			
@@ -318,10 +308,11 @@ public class OrganizationController implements OrganizationApi{
 		map.put("pageNo",pageRequest.getPageNo());
 		map.put("pageSize",pageRequest.getPageSize());
 		map.put("chainHashs",chainHashs);
-		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
-		PageResult  page = proofDocumentService.findHistoryDocumentPageByParamMap(map);
 
-		return  ResponseEntity.ok(Response.succeed(page));
+		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
+
+
+		return  ResponseEntity.ok(Response.succeed(null));
 	
 	 }
 

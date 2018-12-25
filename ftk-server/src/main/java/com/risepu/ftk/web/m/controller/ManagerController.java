@@ -2,6 +2,7 @@ package com.risepu.ftk.web.m.controller;
 
 import com.risepu.ftk.server.domain.AdminUser;
 import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.AdminService;
 import com.risepu.ftk.server.service.OrganizationService;
@@ -100,7 +101,7 @@ public class ManagerController implements ManagerControllerApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<Organization>>> queryOrganization(@RequestParam(required=false) String key,
+	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryOrganization(@RequestParam(required=false) String key,
 																				@PathVariable Integer pageNo,
 																				@RequestParam Integer pageSize,
 																				@RequestParam(required=false) String startTime,
@@ -113,39 +114,62 @@ public class ManagerController implements ManagerControllerApi {
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("state", state);
-		PageResult<Organization> pageResult = organizationService.findByParam(map, pageNo, pageSize);
+		PageResult<OrganizationStream> pageResult = organizationService.findByParam(map, pageNo, pageSize);
 
-		for(Organization org:pageResult.getContent()){
-           OrganizationUser user =  organizationService.findOrgUserByOrgId(org.getId());
-           if(user!=null){
-               org.setApplicationPhone(user.getId());
-           }
-		}
 		return ResponseEntity.ok(Response.succeed(pageResult));
 	}
 
 	/**
 	 * 保存修改后的企业信息
-	 * @param organization 审核后的企业信息
+	 * @param organizationStream 审核后的企业信息
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> checkOrgInfo(@RequestBody Organization organization){
+	public ResponseEntity<Response<String>> checkOrgInfo(@RequestBody OrganizationStream organizationStream){
 
-		Organization org = organizationService.findAuthenOrgById(organization.getId());
 
-		org.setInsuranceNum(organization.getInsuranceNum());
-		org.setOrgType(organization.getOrgType());
-		org.setRegistedCapital(organization.getRegistedCapital());
-		org.setRegistedDate(organization.getRegistedDate());
-		org.setRemark(organization.getRemark());
-		org.setScope(organization.getScope());
-		org.setSignSts(organization.getSignSts());
-		org.setStaffSize(organization.getStaffSize());
-		org.setState(organization.getState());
-		org.setWebsite(organization.getWebsite());
+		/** 需要传个id*/
+		OrganizationStream stream = organizationService.findAuthStreamById(organizationStream.getId());
 
-		organizationService.updateOrg(org);
+
+		if(organizationStream.getState().equals(OrganizationStream.CHECK_PASS_STATE)){
+			/** 审核通过增加和申请手机号的企业关联*/
+			String applyPhone = stream.getApplicationPhone();
+			OrganizationUser user = organizationService.findOrgUserById(applyPhone);
+			user.setOrganizationId(stream.getOrganization());
+			organizationService.updateOrgUser(user);
+
+			Organization organization = new Organization();
+			organization.setTel(organizationStream.getTel());
+			organization.setName(organizationStream.getName());
+			organization.setLegalPerson(organizationStream.getLegalPerson());
+			organization.setAddress(organizationStream.getAddress());
+			organization.setLicenseImgName(organizationStream.getLicenseImgName());
+			organization.setId(organizationStream.getOrganization());
+
+			organization.setInsuranceNum(organizationStream.getInsuranceNum());
+			organization.setOrgType(organizationStream.getOrgType());
+			organization.setRegistedCapital(organizationStream.getRegistedCapital());
+			organization.setRegistedDate(organizationStream.getRegistedDate());
+			organization.setRemark(organizationStream.getRemark());
+			organization.setScope(organizationStream.getScope());
+			organization.setSignSts(organizationStream.getSignSts());
+			organization.setStaffSize(organizationStream.getStaffSize());
+			organization.setWebsite(organizationStream.getWebsite());
+			organizationService.save(organization);
+		}
+
+		stream.setState(organizationStream.getState());
+		stream.setInsuranceNum(organizationStream.getInsuranceNum());
+		stream.setOrgType(organizationStream.getOrgType());
+		stream.setRegistedCapital(organizationStream.getRegistedCapital());
+		stream.setRegistedDate(organizationStream.getRegistedDate());
+		stream.setRemark(organizationStream.getRemark());
+		stream.setScope(organizationStream.getScope());
+		stream.setSignSts(organizationStream.getSignSts());
+		stream.setStaffSize(organizationStream.getStaffSize());
+		stream.setWebsite(organizationStream.getWebsite());
+		organizationService.updateOrgStream(stream);
 
 		return ResponseEntity.ok(Response.succeed("提交成功"));
 
@@ -153,10 +177,9 @@ public class ManagerController implements ManagerControllerApi {
 
 
 	@Override
-	public ResponseEntity<Response<Organization>> queryOrgById(@PathVariable String orgId ){
-
-		Organization organization = organizationService.findAuthenOrgById(orgId);
-		return ResponseEntity.ok(Response.succeed(organization));
+	public ResponseEntity<Response<OrganizationStream>> queryOrgById(@PathVariable Long streamId ){
+		OrganizationStream stream = organizationService.findAuthStreamById(streamId);
+		return ResponseEntity.ok(Response.succeed(stream));
 	}
 
 

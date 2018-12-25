@@ -4,6 +4,7 @@ package com.risepu.ftk.web.m.controller;    /*
  */
 
 import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import io.swagger.annotations.Api;
@@ -38,23 +39,23 @@ public interface ManagerControllerApi {
 
 
 
-    @ApiOperation(value = "查询发起认证的企业信息", nickname = "queryOrgList")
+    @ApiOperation(value = "查询发起认证的企业信息流水", nickname = "queryOrgList")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = PageResult.class) })
     @RequestMapping(path = "/queryList/{pageNo:\\d+}")
     @ResponseBody
-    public ResponseEntity<Response<PageResult<Organization>>> queryOrganization(@RequestParam(required=false) String key,
-                                                                                @PathVariable Integer pageNo,
-                                                                                @RequestParam Integer pageSize,
-                                                                                @RequestParam(required=false) String startTime,
-                                                                                @RequestParam(required=false) String endTime,
-                                                                                @RequestParam(required=false) Integer state,
-                                                                                HttpServletRequest request);
+    public ResponseEntity<Response<PageResult<OrganizationStream>>> queryOrganization(@RequestParam(required=false) String key,
+                                                                                      @PathVariable Integer pageNo,
+                                                                                      @RequestParam Integer pageSize,
+                                                                                      @RequestParam(required=false) String startTime,
+                                                                                      @RequestParam(required=false) String endTime,
+                                                                                      @RequestParam(required=false) Integer state,
+                                                                                      HttpServletRequest request);
 
-    @ApiOperation(value = "查询单个企业详情信息", nickname = "queryOne")
+    @ApiOperation(value = "查询单个企业流水的详情信息", nickname = "queryOne")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Organization.class) })
-    @RequestMapping(path = "/queryOne/{orgId:\\w+}")
+    @RequestMapping(path = "/queryOne/{streamId:\\d+}")
     @ResponseBody
-    public ResponseEntity<Response<Organization>> queryOrgById(@PathVariable String orgId );
+    public ResponseEntity<Response<OrganizationStream>> queryOrgById(@PathVariable Long streamId );
 
 
 
@@ -63,7 +64,7 @@ public interface ManagerControllerApi {
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
     @RequestMapping(path = "/editOrg")
     @ResponseBody
-    public ResponseEntity<Response<String>> checkOrgInfo(@RequestBody Organization organization);
+    public ResponseEntity<Response<String>> checkOrgInfo(@RequestBody OrganizationStream organizationStream);
 
 
 

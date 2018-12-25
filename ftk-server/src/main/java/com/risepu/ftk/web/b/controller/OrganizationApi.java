@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.risepu.ftk.server.domain.OrganizationAdvice;
+import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.*;
 import org.springframework.http.ResponseEntity;
@@ -65,18 +66,18 @@ public interface OrganizationApi {
     @ResponseBody
     ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response);
 
-    @ApiOperation(value = "企业认证信息", nickname = "orgInfo")
+    @ApiOperation(value = "企业发起的认证信息", nickname = "orgInfo")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/authen/info")
     @ResponseBody
-    ResponseEntity<Response<String>> orgAuthen(@RequestBody Organization organization,
+    ResponseEntity<Response<String>> orgAuthen(@RequestBody OrganizationStream organizationStream,
                                                HttpServletRequest request);
 
     @ApiOperation(value = "校验企业认证状态", nickname = "checkState")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = Organization.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = OrganizationStream.class)})
     @RequestMapping(path = "/auth/check")
     @ResponseBody
-    ResponseEntity<Response<Organization>> checkAuthState(HttpServletRequest request);
+    ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request);
 
 
     @ApiOperation(value = "企业扫码", nickname = "scanQR")

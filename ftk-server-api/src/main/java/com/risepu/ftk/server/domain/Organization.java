@@ -17,16 +17,7 @@ import net.lc4ever.framework.domain.AuditableObject;
 @Entity
 @Table(name = "FTK_ORGANIZATION")
 public class Organization extends AuditableObject<String> {
-	/** 未审核 */
-	public static final Integer UNCHECK_STATE = 0;
-	/** 审核中 */
-	public static final Integer CHECKING_STATE = 1;
-	/** 审核通过 */
-	public static final Integer CHECK_PASS_STATE = 2;
-	/** 审核未通过 */
-	public static final Integer CHECK_FAIL_STATE = 3;
-	
-	
+
 	
 	/** 企业组织机构代码证 */
 	private String id;
@@ -56,19 +47,7 @@ public class Organization extends AuditableObject<String> {
 	}
 
 
-	/** 审核状态   默认未审核 */
-	private Integer state = UNCHECK_STATE;
 
-	@Column(name = "STATE", length = 1)
-
-	public Integer getState() {
-
-		return state;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
-	}
 
 	private String address;
 
@@ -225,13 +204,4 @@ public class Organization extends AuditableObject<String> {
 	}
 	
 
-	private String applicationPhone;
-
-	public String getApplicationPhone() {
-		return applicationPhone;
-	}
-
-	public void setApplicationPhone(String applicationPhone) {
-		this.applicationPhone = applicationPhone;
-	}
 }

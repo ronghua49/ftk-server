@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.risepu.ftk.server.domain.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -23,10 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.risepu.ftk.server.domain.AuthorizationStream;
-import com.risepu.ftk.server.domain.Organization;
-import com.risepu.ftk.server.domain.OrganizationAdvice;
-import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
@@ -197,13 +194,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public PageResult<Organization> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
+	public PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
 		Integer firstIndex=(pageNo)*pageSize;
 	
 		String hql = "";
 		String hql2 = "select count(*) ";
 		int total=0;
-		List<Organization> orgs=new ArrayList<Organization>();
+		List<OrganizationStream> orgs=new ArrayList<OrganizationStream>();
 		
 		String key=(String) map.get("key");
 		String startTime = (String) map.get("startTime");
@@ -234,50 +231,50 @@ public class OrganizationServiceImpl implements OrganizationService {
 		
 		if(key!=""&&key!=null&&state==null&&startDate==null) {
 			
-			hql = "from Organization where name like ?1 order by createTimestamp desc";
+			hql = "from OrganizationStream where name like ?1 order by createTimestamp desc";
 					
 			total = crudService.uniqueResultHql(Long.class, hql2+hql,"%"+key+"%").intValue();
-			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%");
+			orgs = crudService.hql(OrganizationStream.class, firstIndex,pageSize, hql, "%"+key+"%");
 			
 		}else if(key!=""&&key!=null&&state!=null&&startDate==null ) {
-			hql = "from Organization where name like ?1 and state=?2 order by createTimestamp desc";
+			hql = "from OrganizationStream where name like ?1 and state=?2 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql,"%"+key+"%",state).intValue();
-			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state);
+			orgs = crudService.hql(OrganizationStream.class, firstIndex,pageSize, hql, "%"+key+"%",state);
 			
 		}else if(key!=""&&key!=null&&state!=null&&startDate!=null ) {
 			
-			hql="from Organization where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
+			hql="from OrganizationStream where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, "%"+key+"%",state,startDate,nextDate).intValue();
-			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, "%"+key+"%",state,startDate,nextDate);
+			orgs = crudService.hql(OrganizationStream.class, firstIndex,pageSize, hql, "%"+key+"%",state,startDate,nextDate);
 			
 		}else if((key==""||key==null)&&state==null&&startDate!=null) {
 			
-			hql = "from Organization where createTimestamp between ?1 and ?2 order by createTimestamp desc";
+			hql = "from OrganizationStream where createTimestamp between ?1 and ?2 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, startDate,nextDate).intValue();
-			orgs = crudService.hql(Organization.class, firstIndex,pageSize, hql, startDate,nextDate );
+			orgs = crudService.hql(OrganizationStream.class, firstIndex,pageSize, hql, startDate,nextDate );
 			
 		}else if((key==""||key==null)&&state!=null&&startDate!=null) {
 			
-			hql = "from Organization where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
+			hql = "from OrganizationStream where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, state,startDate,nextDate).intValue();
-			orgs = crudService.hql(Organization.class,firstIndex,pageSize,  hql, state,startDate,nextDate);
+			orgs = crudService.hql(OrganizationStream.class,firstIndex,pageSize,  hql, state,startDate,nextDate);
 			
 		}else if((key==""||key==null)&&state!=null&&startDate==null) {
-			hql = "from Organization where state=?1 order by createTimestamp desc";
+			hql = "from OrganizationStream where state=?1 order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql, state).intValue();
-			orgs = crudService.hql(Organization.class,firstIndex,pageSize, hql, state);
+			orgs = crudService.hql(OrganizationStream.class,firstIndex,pageSize, hql, state);
 		}else {
-			hql="from Organization order by createTimestamp desc";
+			hql="from OrganizationStream order by createTimestamp desc";
 			
 			total=crudService.uniqueResultHql(Long.class, hql2+hql).intValue();
-			orgs = crudService.hql(Organization.class,firstIndex,pageSize,hql);
+			orgs = crudService.hql(OrganizationStream.class,firstIndex,pageSize,hql);
 		}
-			PageResult<Organization> pageResult = new PageResult<>();
+			PageResult<OrganizationStream> pageResult = new PageResult<>();
 			pageResult.setResultCode("SUCCESS");
 			pageResult.setNumber(pageNo);
 			pageResult.setSize(pageSize);
@@ -338,6 +335,49 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public OrganizationUser findOrgUserByOrgId(String id) {
 		return crudService.uniqueResultHql(OrganizationUser.class,"from OrganizationUser where organizationId =?1",id);
+	}
+
+	/**
+	 * 增加企业认证流水
+	 *
+	 * @param organizationStream
+	 */
+	@Override
+	public void saveOrgStream(OrganizationStream organizationStream) {
+		crudService.save(organizationStream);
+	}
+
+	/**
+	 * 根据申请人手机号查询授权流水
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public OrganizationStream findAuthStreamByPhone(String id) {
+		List<OrganizationStream> streamList = crudService.hql(OrganizationStream.class, "from OrganizationStream where applicationPhone =?1 order by createTimestamp desc ", id);
+		return streamList.get(0);
+	}
+
+	/**
+	 * 更新用户发起的认证流水
+	 *
+	 * @param organizationStream
+	 */
+	@Override
+	public void updateOrgStream(OrganizationStream organizationStream) {
+		crudService.update(organizationStream);
+	}
+
+	/**
+	 * 根据id查询企业认证流水
+	 *
+	 * @param streamId
+	 * @return
+	 */
+	@Override
+	public OrganizationStream findAuthStreamById(Long streamId) {
+		return crudService.get(OrganizationStream.class,streamId);
 	}
 
 

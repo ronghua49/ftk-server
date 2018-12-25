@@ -45,10 +45,5 @@ public interface ProofDocumentService {
      */
     String getDocument(String chainHash);
 
-    /**
-     * 根据参数查询企业历史扫码单据页面
-     * @param map
-     * @return
-     */
-    PageResult findHistoryDocumentPageByParamMap(Map<String,Object> map);
+
 }
