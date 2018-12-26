@@ -25,4 +25,21 @@ public class StringUtil {
 
     }
 
+    /**
+     * 计算字符串在给定字符串出现的次数
+     *
+     * @param src 给定字符串
+     * @param des 目标字符串
+     * @return
+     */
+    public static int findCount(String src, String des) {
+        int index = 0;
+        int count = 0;
+        while ((index = src.indexOf(des, index)) != -1) {
+            count++;
+            index = index + des.length();
+        }
+        return count;
+    }
+
 }
