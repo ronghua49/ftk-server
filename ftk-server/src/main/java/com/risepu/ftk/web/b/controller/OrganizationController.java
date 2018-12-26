@@ -244,7 +244,7 @@ public class OrganizationController implements OrganizationApi{
         }
 		/** 当前组织机构代码证是否在审核*/
 		List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(),OrganizationStream.CHECKING_STATE);
-		if(stream!=null){
+		if(stream!=null&&stream.size()!=0){
 			return ResponseEntity.ok(Response.failed(400,"该组织机构代码证正在审核中，不得重复！"));
 		}
         /** 该用户已经审核通过和一个企业绑定*/

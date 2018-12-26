@@ -94,6 +94,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 			Organization org = crudService.uniqueResultByProperty(Organization.class, "name", phoneOrName);
 
 			if (org != null) {
+
 				
 				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",
 						org.getId());
