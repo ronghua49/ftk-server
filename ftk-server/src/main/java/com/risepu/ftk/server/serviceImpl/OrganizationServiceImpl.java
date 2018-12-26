@@ -94,6 +94,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 			Organization org = crudService.uniqueResultByProperty(Organization.class, "name", phoneOrName);
 
 			if (org != null) {
+
 				
 				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",
 						org.getId());
@@ -381,6 +382,17 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public OrganizationStream findAuthStreamById(Long streamId) {
 		return crudService.get(OrganizationStream.class,streamId);
+	}
+
+	/**
+	 * 根据组织机构代码证查询企业认证流水
+	 *
+	 * @param organization
+	 * @return
+	 */
+	@Override
+	public List<OrganizationStream> findAuthStreamByOrgnization(String organization,Integer state) {
+		return crudService.hql(OrganizationStream.class,"from OrganizationStream where organization =?1 and state =?2",organization,state);
 	}
 
 
