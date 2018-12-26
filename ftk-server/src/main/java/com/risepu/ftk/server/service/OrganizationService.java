@@ -162,6 +162,13 @@ public interface OrganizationService {
 	 */
 	OrganizationStream findAuthStreamById(Long streamId);
 
+	/**
+	 * 根据组织机构代码证和状态查询企业认证流水
+	 * @param organization
+	 * @return
+	 */
+	List<OrganizationStream> findAuthStreamByOrgnization(String organization,Integer state);
+
 
 	/**
 	 * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败
