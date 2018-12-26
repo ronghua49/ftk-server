@@ -4,6 +4,7 @@ package com.risepu.ftk.web.b.dto;    /*
  */
 
 public class VerifyRequest {
+    private Long streamId;
     private String hash;
     private String authCode;
     private String cardNo;
@@ -30,5 +31,13 @@ public class VerifyRequest {
 
     public void setCardNo(String cardNo) {
         this.cardNo = cardNo;
+    }
+
+    public Long getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(Long streamId) {
+        this.streamId = streamId;
     }
 }

@@ -3,6 +3,7 @@ package com.risepu.ftk.web.b.controller;
 import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.ChainService;
 import com.risepu.ftk.server.service.OrganizationService;
+import com.risepu.ftk.server.service.PersonalUserService;
 import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
@@ -42,6 +43,9 @@ public class OrganizationController implements OrganizationApi{
 
 	@Autowired
 	private ChainService chainService;
+
+	@Autowired
+	private PersonalUserService personalUserService;
 
 	/**
 	 * 企业端注册
@@ -279,7 +283,7 @@ public class OrganizationController implements OrganizationApi{
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> scanQR( String hash,HttpServletRequest request) {
+	public ResponseEntity<Response<Long>> scanQR( String hash,HttpServletRequest request) {
 		
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
@@ -291,9 +295,9 @@ public class OrganizationController implements OrganizationApi{
 
 		String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
 
-		organizationService.InsertAuthorStream(org.getId(), cardNo);
+		Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
 
-		return ResponseEntity.ok(Response.succeed("流水产生成功！"));
+		return ResponseEntity.ok(Response.succeed(streamId));
 			
 
 	}
@@ -419,20 +423,28 @@ public class OrganizationController implements OrganizationApi{
 	public ResponseEntity<Response<String>> qualifyQRCode(VerifyRequest verifyRequest, HttpServletRequest request) {
 		ServletContext context = request.getServletContext();
 		String authCode = (String) context.getAttribute("AUTH_CODE");
+		AuthorizationStream authStream = personalUserService.findAuthorizationStreamById(verifyRequest.getStreamId());
+		authStream.setChainHash(verifyRequest.getHash());
 
 		if(verifyRequest.getAuthCode().equals(authCode)){
-            ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());
-            if(document!=null){
-                String filePath = document.getFilePath();
+			ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());
+			if(document!=null){
+				/** 表示验证成功，添加验证历史*/
+				authStream.setState(AuthorizationStream.VERIFY_STATE_PASS);
+				personalUserService.update(authStream);
+				String filePath = document.getFilePath();
                 return ResponseEntity.ok(Response.succeed(filePath));
 
             }else{
+				authStream.setState(AuthorizationStream.VERIFY_STATE_FAIL);
+				personalUserService.update(authStream);
                 return ResponseEntity.ok(Response.failed(400,"输入的身份证号和单据不匹配"));
             }
 
         }else{
 			return ResponseEntity.ok(Response.failed(400,"授权码错误"));
 		}
+
 	}
 
 

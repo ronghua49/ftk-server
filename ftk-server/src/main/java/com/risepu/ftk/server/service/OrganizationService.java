@@ -91,7 +91,7 @@ public interface OrganizationService {
 	 * @param orgId 当前企业id
 	 * @param cardNo 单据上用户身份证号
 	 */
-	public void InsertAuthorStream(String orgId, String cardNo);
+	public Long InsertAuthorStream(String orgId, String cardNo);
 
 	
 	/**
