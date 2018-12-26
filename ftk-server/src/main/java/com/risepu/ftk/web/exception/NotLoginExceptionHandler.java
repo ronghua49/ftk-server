@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 public class NotLoginExceptionHandler {
 
     @ExceptionHandler({NotLoginException.class})
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ResponseBody
     public  ResponseEntity<Response<String>>  notFoundException(){
         return ResponseEntity.ok(Response.failed(-101,"您还未登录，请登录后操作"));
