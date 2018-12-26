@@ -8,6 +8,8 @@ import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.TemplateService;
+import com.risepu.ftk.utils.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ public class PdfServiceImpl implements PdfService {
         // TODO Auto-generated method stub
         SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
         String date = "" + ft.format(new Date());
-        _template = _template.replaceAll("/t", " ");
+//        _template = _template.replaceAll("/t", " ");
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
         //创建文档实例
@@ -146,10 +148,10 @@ public class PdfServiceImpl implements PdfService {
         //添加中文字体
         BaseFont bfChinese = BaseFont.createFont("/simsun.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         //设置字体样式
-        Font textFont = new Font(bfChinese, template.getContentSize(), Font.BOLD); //加粗
-        Font hashFont = new Font(bfChinese, template.getHashSize(), Font.UNDEFINED); //加粗
-        Font contentFont = new Font(bfChinese, template.getContentSize(), Font.UNDEFINED); //正常
-        Font titleFont = new Font(bfChinese, template.getTitleSize(), Font.UNDEFINED); //标题
+        Font textFont = new Font(bfChinese, 15, Font.BOLD); //加粗
+        Font hashFont = new Font(bfChinese, 15, Font.UNDEFINED); //哈希
+        Font contentFont = new Font(bfChinese, 15, Font.UNDEFINED); //正文
+        Font titleFont = new Font(bfChinese, 20, Font.UNDEFINED); //标题
 
         //创建输出流
         PdfWriter pdfWriter = PdfWriter.getInstance(doc, new FileOutputStream(new File(pdfFilePath)));
@@ -163,11 +165,11 @@ public class PdfServiceImpl implements PdfService {
         //短语
         Phrase ph1 = new Phrase();
         //块
-        Chunk c2 = new Chunk("区块链哈希：", hashFont);
-        Chunk c22 = new Chunk(hash, hashFont);
+        Chunk c1 = new Chunk("区块链哈希：", hashFont);
+        Chunk c11 = new Chunk(hash, hashFont);
         //将块添加到短语
-        ph1.add(c2);
-        ph1.add(c22);
+        ph1.add(c1);
+        ph1.add(c11);
         //将短语添加到段落
         p1.add(ph1);
         //将段落添加到短语
@@ -188,27 +190,32 @@ public class PdfServiceImpl implements PdfService {
         p1.setLeading(30);
         doc.add(p1);
 
-        // 替换一次模板中的数据
-        for (int i = 0; i < list.size(); i++) {
-            Domain domain = list.get(i);
+        p1 = new Paragraph();
+        ph1 = new Phrase();
+        p1.setLeading(30);
+        int index = 0;
+        int number = 0;
+        for (int j = 0; j < list.size(); j++) {
+            Domain domain = list.get(j);
             String key = "${" + domain.getCode() + "}";
             //得到页面输入的值
-            String value = map.get(domain.getCode());
-            //将模板中的参数替换为输入的值
-            _template = _template.replace(key, value);
+            while ((index = _template.indexOf(key, number)) != -1) {
+                String value = map.get(domain.getCode());
+                String content = "";
+                if (number > index) {
+                    content = _template.substring(number);
+                } else {
+                    content = _template.substring(number, index);
+                }
+                Chunk c2 = new Chunk(content, contentFont);
+                Chunk c22 = new Chunk(value, textFont);
+                ph1.add(c2);
+                ph1.add(c22);
+                number = index + key.length();
+            }
         }
-
-        String[] a = _template.split("/n");
-        for (int i = 0; i < a.length; i++) {
-            p1 = new Paragraph();
-            ph1 = new Phrase();
-            Chunk c1 = new Chunk(a[i], contentFont);
-            p1.setLeading(30);
-            ph1.add(c1);
-            p1.add(ph1);
-            doc.add(p1);
-        }
-
+        p1.add(ph1);
+        doc.add(p1);
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
         image.setAbsolutePosition(30, 300);//坐标
