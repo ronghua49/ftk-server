@@ -80,10 +80,10 @@ public class DocumentDataController implements DocumentDataApi {
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration(org.getName(), "/file-path/" + org.getId() + "(" + t++ + ").jpg");
 
-            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
             String date = ft.format(new Date());
             //pdf流输出路径
-            String pdfFilePath = "/file-path/职场通行证-" + template.getName() + date + ".pdf";
+            String pdfFilePath = "/file-path/职场通行证-" + template.getName() + "-" + date + ".pdf";
 
             ProofDocument proofDocument = new ProofDocument();
             proofDocument.setPersonalUser(map.get("idCard"));

@@ -8,8 +8,6 @@ import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.TemplateService;
-import com.risepu.ftk.utils.StringUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -193,15 +191,18 @@ public class PdfServiceImpl implements PdfService {
         p1 = new Paragraph();
         ph1 = new Phrase();
         p1.setLeading(30);
-        int index = 0;
-        int number = 0;
+
         for (int j = 0; j < list.size(); j++) {
+            int index = 0;
+            int number = 0;
             Domain domain = list.get(j);
             String key = "${" + domain.getCode() + "}";
+
+            String content = "";
+            int b=_template.indexOf(key, number);
             //得到页面输入的值
             while ((index = _template.indexOf(key, number)) != -1) {
                 String value = map.get(domain.getCode());
-                String content = "";
                 if (number > index) {
                     content = _template.substring(number);
                 } else {
