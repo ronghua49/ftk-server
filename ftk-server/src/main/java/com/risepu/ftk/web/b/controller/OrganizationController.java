@@ -177,7 +177,7 @@ public class OrganizationController implements OrganizationApi{
 			return ResponseEntity.ok(Response.succeed(fileName));
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.ok(Response.failed(8, "上传失败"));
+			return ResponseEntity.ok(Response.failed(500, "上传失败"));
 		}
 	}
 
@@ -216,6 +216,7 @@ public class OrganizationController implements OrganizationApi{
 			throw new NotLoginException();
 		}
 
+
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
 	}
@@ -250,7 +251,7 @@ public class OrganizationController implements OrganizationApi{
 		/** 当前提交的公司名称是否已经审核成功*/
 		Organization org2 = organizationService.findAuthenOrgByName(organizationStream.getName());
 		if(org2!=null){
-			return ResponseEntity.ok(Response.failed(400,"该组织机构名已经被注册，不得重复！"));
+			return ResponseEntity.ok(Response.failed(400,"该公司名已经被注册，不得重复！"));
 		}
 		/** 当前组织机构代码证是否在审核*/
 		List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(),OrganizationStream.CHECKING_STATE);

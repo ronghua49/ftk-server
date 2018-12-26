@@ -131,7 +131,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 		String ext = FilenameUtils.getExtension(file.getOriginalFilename());
 		name = name + "." + ext;
 		/** 上传图片到指定地址路径 */
-		file.transferTo(new File(ConfigUtil.getValue("file.upload.path"), name));
+		File filePath = new File(ConfigUtil.getValue("file.upload.path"));
+		if(!filePath.exists()){
+			filePath.mkdirs();
+		}
+		System.out.println("--------------------------"+filePath);
+		file.transferTo(new File(filePath, name));
 		return name;
 	}
 
