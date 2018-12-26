@@ -33,4 +33,10 @@
 
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
 
+	<!--文件上传解析器-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="12328960"/>
+		<property name="defaultEncoding" value="UTF-8"/>
+	</bean>
+
 </beans>

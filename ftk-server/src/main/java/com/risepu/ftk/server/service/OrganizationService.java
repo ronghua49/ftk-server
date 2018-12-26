@@ -169,6 +169,13 @@ public interface OrganizationService {
 	 */
 	List<OrganizationStream> findAuthStreamByOrgnization(String organization,Integer state);
 
+	/**
+	 * 根据企业名查询已经认证的企业
+	 * @param name
+	 * @return
+	 */
+	Organization findAuthenOrgByName(String name);
+
 
 	/**
 	 * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败
