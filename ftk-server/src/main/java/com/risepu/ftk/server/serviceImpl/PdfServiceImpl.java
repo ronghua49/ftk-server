@@ -25,7 +25,7 @@ public class PdfServiceImpl implements PdfService {
         // TODO Auto-generated method stub
         SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
         String date = "" + ft.format(new Date());
-        _template = _template.replace("/t", " ");
+        _template = _template.replaceAll("/t", " ");
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
         //创建文档实例
