@@ -242,8 +242,12 @@ public class OrganizationController implements OrganizationApi{
         if(org!=null){
             return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
         }
+		/** 该用户已经审核通过和一个企业绑定*/
+		if(user.getOrganizationId()!=null){
+			return ResponseEntity.ok(Response.failed(400,"该账号已经和企业绑定，不得重复申请！"));
+		}
 
-        /** 当前提交的公司名称是否已经审核成功*/
+		/** 当前提交的公司名称是否已经审核成功*/
 		Organization org2 = organizationService.findAuthenOrgByName(organizationStream.getName());
 		if(org2!=null){
 			return ResponseEntity.ok(Response.failed(400,"该组织机构名已经被注册，不得重复！"));
@@ -253,10 +257,6 @@ public class OrganizationController implements OrganizationApi{
 		if(stream!=null&&stream.size()!=0){
 			return ResponseEntity.ok(Response.failed(400,"该组织机构代码证正在审核中，不得重复！"));
 		}
-        /** 该用户已经审核通过和一个企业绑定*/
-        if(user.getOrganizationId()!=null){
-            return ResponseEntity.ok(Response.failed(400,"该账号已经和企业绑定，不得重复申请！"));
-        }
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());
         organizationService.saveOrgStream(organizationStream);

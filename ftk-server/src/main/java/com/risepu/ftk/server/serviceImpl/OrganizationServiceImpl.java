@@ -93,7 +93,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 			/** 使用企业名登录 */
 			Organization org = crudService.uniqueResultByProperty(Organization.class, "name", phoneOrName);
 
+
 			if (org != null) {
+
 
 				
 				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",
@@ -103,6 +105,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 					loginResult.setCode(0);
 					loginResult.setMessage("登录成功！");
 					loginResult.setOrganization(org);
+					loginResult.setOrganizationUser(orgUser);
 				}else {
 					loginResult.setCode(5);
 					loginResult.setMessage("密码错误！");
