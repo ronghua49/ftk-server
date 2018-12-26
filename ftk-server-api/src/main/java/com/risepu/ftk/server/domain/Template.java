@@ -35,6 +35,12 @@ public class Template extends AuditableObject<Long> {
      */
     private Integer state;
 
+    private Integer titleSize;
+
+    private Integer hashSize;
+
+    private Integer contentSize;
+
     /**
      * 模板描述
      */
@@ -72,6 +78,33 @@ public class Template extends AuditableObject<Long> {
         this.name = name;
     }
 
+    @Column(name = "TITLE_SIZE")
+    public Integer getTitleSize() {
+        return titleSize;
+    }
+
+    public void setTitleSize(Integer titleSize) {
+        this.titleSize = titleSize;
+    }
+
+    @Column(name = "HASH_SIZE")
+    public Integer getHashSize() {
+        return hashSize;
+    }
+
+    public void setHashSize(Integer hashSize) {
+        this.hashSize = hashSize;
+    }
+
+    @Column(name = "CONTENT_SIZE")
+    public Integer getContentSize() {
+        return contentSize;
+    }
+
+    public void setContentSize(Integer contentSize) {
+        this.contentSize = contentSize;
+    }
+
     @Column(name = "STATE", length = 1)
     public Integer getState() {
         return state;
@@ -90,7 +123,7 @@ public class Template extends AuditableObject<Long> {
         this.description = description;
     }
 
-    @Column(name = "_TEMPLATE")
+    @Column(name = "_TEMPLATE", length = 1000)
     public String get_template() {
         return _template;
     }
