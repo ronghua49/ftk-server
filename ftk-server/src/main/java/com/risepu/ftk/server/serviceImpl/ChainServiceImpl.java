@@ -22,29 +22,29 @@ import net.lc4ever.framework.service.GenericCrudService;
 @Service
 public class ChainServiceImpl implements ChainService {
 
-	private GenericCrudService crudService;
+    private GenericCrudService crudService;
 
-	@Autowired
-	public void setCrudService(GenericCrudService crudService) {
-		this.crudService = crudService;
-	}
+    @Autowired
+    public void setCrudService(GenericCrudService crudService) {
+        this.crudService = crudService;
+    }
 
-	@Override
-	public String sign(Long documentId) {
-		//		ProofDocument document = crudService.get(ProofDocument.class, documentId);
-		List<DocumentData> datas = crudService.hql(DocumentData.class, "from DocumentData where id.documentId = ? order by id.domainId", documentId);
-		String dataJson = new Gson().toJson(datas);
-		String hash = Sha512DigestUtils.shaHex(dataJson);
-		return hash;
-	}
+    @Override
+    public String sign(Long documentId) {
+        //		ProofDocument document = crudService.get(ProofDocument.class, documentId);
+        List<DocumentData> datas = crudService.hql(DocumentData.class, "from DocumentData where id.documentId = ?1 order by id.domainId", documentId);
+        String dataJson = new Gson().toJson(datas);
+        String hash = Sha512DigestUtils.shaHex(dataJson);
+        return hash;
+    }
 
-	@Override
-	public ProofDocument verify(String hash, String id) {
-		ProofDocument document = crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where chainHash = ?1", hash);
-		if (id.equals(document.getPersonalUser())) {
-			return document;
-		}
-		return null;
-	}
+    @Override
+    public ProofDocument verify(String hash, String id) {
+        ProofDocument document = crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where chainHash = ?1", hash);
+        if (id.equals(document.getPersonalUser())) {
+            return document;
+        }
+        return null;
+    }
 
 }
