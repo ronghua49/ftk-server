@@ -6,11 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.risepu.ftk.chain.api.ChainService;
 import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.*;
 import com.risepu.ftk.utils.ChartGraphics;
-import com.risepu.ftk.utils.StringUtil;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.m.dto.EmailRequest;
 import org.slf4j.Logger;
@@ -82,10 +80,10 @@ public class DocumentDataController implements DocumentDataApi {
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration(org.getName(), "/file-path/" + org.getId() + "(" + t++ + ").jpg");
 
-            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
             String date = ft.format(new Date());
             //pdf流输出路径
-            String pdfFilePath = "/file-path/职场通行证-" + template.getName() + "-" + date + ".pdf";
+            String pdfFilePath = "/file-path/职场通行证-" + template.getName() + date + ".pdf";
 
             ProofDocument proofDocument = new ProofDocument();
             proofDocument.setPersonalUser(map.get("idCard"));
