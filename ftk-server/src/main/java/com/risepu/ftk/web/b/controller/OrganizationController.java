@@ -359,23 +359,6 @@ public class OrganizationController implements OrganizationApi{
         return ResponseEntity.ok(Response.succeed(filePath));
     }
 
-
-    /**
-     * 验证单据是否合格
-     *
-     * @param qrCardNo    所扫描的二维码 用户身份证号
-     * @param inputCardNo 输入的身份证号
-     * @param streamId    当前扫描二维码的流水id
-     * @return
-     */
-    @PostMapping("/qualify")
-    public ResponseEntity<Response<PageResult<DocumentInfo>>> qualifyQRCode(@RequestParam String streamId, @RequestParam String qrCardNo, @RequestParam String inputCardNo) {
-        //TODO
-
-		return  null;
-	}
-	
-	
 	
 	/**
 	 * 企业反馈信息录入
@@ -399,12 +382,10 @@ public class OrganizationController implements OrganizationApi{
 
 	}
 
-
 	
 	private  OrganizationUser getCurrUser(HttpServletRequest request) {
 		 return(OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 	}
-
 	
 	/**
 	 * 退出登录

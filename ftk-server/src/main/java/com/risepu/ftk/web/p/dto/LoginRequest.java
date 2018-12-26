@@ -8,7 +8,7 @@ public class LoginRequest {
 
 	private String inCode;
 
-	private String qrCode;
+
 	
 
 	public String getPhone() {
@@ -35,13 +35,7 @@ public class LoginRequest {
 		this.cardNo = cardNo;
 	}
 
-	public String getQrCode() {
-		return qrCode;
-	}
 
-	public void setQrCode(String qrCode) {
-		this.qrCode = qrCode;
-	}
 
 
 	
