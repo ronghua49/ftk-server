@@ -242,6 +242,12 @@ public class OrganizationController implements OrganizationApi{
         if(org!=null){
             return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
         }
+
+        /** 当前提交的公司名称是否已经审核成功*/
+		Organization org2 = organizationService.findAuthenOrgByName(organizationStream.getName());
+		if(org2!=null){
+			return ResponseEntity.ok(Response.failed(400,"该组织机构名已经被注册，不得重复！"));
+		}
 		/** 当前组织机构代码证是否在审核*/
 		List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(),OrganizationStream.CHECKING_STATE);
 		if(stream!=null&&stream.size()!=0){

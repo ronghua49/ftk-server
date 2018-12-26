@@ -395,5 +395,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 		return crudService.hql(OrganizationStream.class,"from OrganizationStream where organization =?1 and state =?2",organization,state);
 	}
 
+	/**
+	 * 根据企业名查询已经认证的企业
+	 *
+	 * @param name
+	 * @return
+	 */
+	@Override
+	public Organization findAuthenOrgByName(String name) {
+		return crudService.uniqueResultHql(Organization.class,"from Organization where name =?1",name);
+	}
+
 
 }
