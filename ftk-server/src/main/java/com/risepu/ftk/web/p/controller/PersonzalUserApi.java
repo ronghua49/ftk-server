@@ -20,13 +20,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @Api("personal")
-@RequestMapping("/api/personal")
+@RequestMapping("/api")
 public interface PersonzalUserApi {
 
+    @ApiOperation(value = "个人扫码", nickname = "scanDoc")
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = LoginResult.class) })
+    @RequestMapping(path = "/chain/{hash:\\w+}")
+    @ResponseBody
+    ResponseEntity<Response<String>> personalScanDoc(@PathVariable String hash, HttpServletRequest request);
 
     @ApiOperation(value = "个人扫码登录", nickname = "login")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = LoginResult.class) })
-    @RequestMapping(path = "/login")
+    @RequestMapping(path = "/personal/login")
     @ResponseBody
      ResponseEntity<Response<LoginResult>> personalLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request);
 
@@ -35,7 +40,7 @@ public interface PersonzalUserApi {
 
     @ApiOperation(value = "个人点击授权或拒绝", nickname = "authentic orgScanRequest")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-    @RequestMapping(path = "/authen")
+    @RequestMapping(path = "/personal/authen")
     @ResponseBody
      ResponseEntity<Response<String>> personAuth(@RequestParam String streamId,@RequestParam String state, HttpServletRequest request);
 
@@ -45,7 +50,7 @@ public interface PersonzalUserApi {
 
     @ApiOperation(value = "个人授权历史查询", nickname = "authorization history")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = AuthHistoryInfo.class) })
-    @RequestMapping(path = "/authen/history")
+    @RequestMapping(path = "/personal/authen/history")
     @ResponseBody
      ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
                                                                                  HttpServletRequest request);

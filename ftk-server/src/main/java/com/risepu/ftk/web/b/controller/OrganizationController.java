@@ -440,7 +440,7 @@ public class OrganizationController implements OrganizationApi{
 		String authCode = (String) context.getAttribute("AUTH_CODE");
 
 		if(verifyRequest.getAuthCode().equals(authCode)){
-
+			//chainService.verify()
 
 		}else{
 			return ResponseEntity.ok(Response.failed(400,"授权码错误"));
