@@ -95,12 +95,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
 			if (org != null) {
-
-
-				
 				OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",
 						org.getId());
-				
 				if (orgUser.getPassword().equals(secutityPwd)) {
 					loginResult.setCode(0);
 					loginResult.setMessage("登录成功！");
