@@ -33,7 +33,7 @@ public class PdfServiceImpl implements PdfService {
 
         //添加中文字体
         //BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-        BaseFont bfChinese = BaseFont.createFont("/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        BaseFont bfChinese = BaseFont.createFont("/simsun.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         //设置字体样式
         Font textFont = new Font(bfChinese, 15, Font.BOLD); //正常
         Font boldFont = new Font(bfChinese, 15, Font.UNDEFINED); //加粗
