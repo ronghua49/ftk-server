@@ -8,7 +8,6 @@ import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.m.dto.IdRequest;
-import net.lc4ever.framework.service.GenericCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,9 +37,6 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Autowired
     private OrganizationService organizationService;
 
-    @Autowired
-    private GenericCrudService crudService;
-
     @Override
     public ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
@@ -50,6 +46,9 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
         List<Template> templates = new ArrayList<>();
         if (defaultState.equals("0")) {
+            if (org.getDefaultTemId() == null) {
+                return ResponseEntity.ok(Response.failed(400, "无默认模板"));
+            }
             Template template = templateService.getTemplate(org.getDefaultTemId());
             if (template.getState() == 1) {
                 return ResponseEntity.ok(Response.failed(400, "该模板已下架"));
