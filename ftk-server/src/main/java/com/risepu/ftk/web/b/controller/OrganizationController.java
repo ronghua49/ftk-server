@@ -440,12 +440,18 @@ public class OrganizationController implements OrganizationApi{
 		String authCode = (String) context.getAttribute("AUTH_CODE");
 
 		if(verifyRequest.getAuthCode().equals(authCode)){
-			//chainService.verify()
+            ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());
+            if(document!=null){
+                String filePath = document.getFilePath();
+                return ResponseEntity.ok(Response.succeed(filePath));
 
-		}else{
+            }else{
+                return ResponseEntity.ok(Response.failed(400,"输入的身份证号和单据不匹配"));
+            }
+
+        }else{
 			return ResponseEntity.ok(Response.failed(400,"授权码错误"));
 		}
-		return null;
 	}
 
 
