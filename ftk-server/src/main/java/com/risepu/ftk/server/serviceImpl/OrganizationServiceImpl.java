@@ -127,14 +127,23 @@ public class OrganizationServiceImpl implements OrganizationService {
 		String ext = FilenameUtils.getExtension(file.getOriginalFilename());
 		name = name + "." + ext;
 		/** 上传图片到指定地址路径 */
-		file.transferTo(new File(ConfigUtil.getValue("file.upload.path"), name));
+		File filePath = new File(ConfigUtil.getValue("file.upload.path"));
+		if(!filePath.exists()){
+			filePath.mkdirs();
+		}
+		file.transferTo(new File(filePath, name));
 		return name;
 	}
 
 	@Override
 	public void download(String imgName, HttpServletResponse response) throws IOException {
 
-		String filePath = ConfigUtil.getValue("file.upload.path");
+
+		File file = new File(ConfigUtil.getValue("file.upload.path"));
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		String filePath = file.getPath();
 
 		InputStream in = new FileInputStream(new File(filePath, imgName));
 		OutputStream out = response.getOutputStream();

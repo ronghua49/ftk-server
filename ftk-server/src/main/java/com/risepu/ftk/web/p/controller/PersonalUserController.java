@@ -2,11 +2,15 @@ package com.risepu.ftk.web.p.controller;
 
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import com.risepu.ftk.server.domain.ProofDocument;
+import com.risepu.ftk.server.service.ChainService;
 import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.web.b.dto.PageRequest;
 import com.risepu.ftk.web.exception.NotLoginException;
+import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +43,17 @@ public class PersonalUserController implements PersonzalUserApi  {
 
 	@Autowired
 	private ProofDocumentService proofDocumentService;
-//	@Autowired
-//	private ChainService chainService;
 
-	
+	@Autowired
+	private ChainService chainService;
+
+
+	@Override
+	public ResponseEntity<Response<String>> personalScanDoc(String hash, HttpServletRequest request) {
+		request.getSession().setAttribute(Constant.getSessionChainHash(),hash);
+		return ResponseEntity.ok(Response.succeed("扫描单据成功"));
+	}
+
 	/**
 	 * 用户登录　通过扫描二维码跳转登录页面
 	 * @param loginRequest 
@@ -52,31 +63,19 @@ public class PersonalUserController implements PersonzalUserApi  {
 	@Override
 	public ResponseEntity<Response<LoginResult>> personalLogin(LoginRequest loginRequest,HttpServletRequest request){
 		
-		
-		String smsCode =getSmsCode(request);  
-		
+		String smsCode =getSmsCode(request);
 		boolean identify = smsService.identify(loginRequest.getInCode(), smsCode);
-		
 		LoginResult loginResult = new LoginResult();
 		
-		
 		if(identify) {
+			String no = loginRequest.getCardNo();
 			/** 解析单据信息 */
-			String chainHash=null;
-			// chainHash = chainService.praseDocumentData(loginRequest.getQrCode(),loginRequest.getDocumentHash());
-			if(chainHash==null){
-				return ResponseEntity.ok(Response.failed(400, "伪单据扫描无效"));
-			}
-			
-			/** 根据文档id查询 文档数据*/
-			String no = proofDocumentService.getDocumentPersonCardNo(chainHash);
-			
+			String chainHash = (String) request.getSession().getAttribute(Constant.getSessionChainHash());
 			/** 校验用户输入的身份证号是否和单据信息一致 */
+			ProofDocument document = chainService.verify(chainHash, no);
 
-			if(no.equals(loginRequest.getCardNo())) {
-				
+			if(document!=null) {
 				PersonalUser personalUser = personalService.findUserByNo(no);
-				
 				if(personalUser!=null) {
 					loginResult.setMessage("登录成功");
 					loginResult.setPersonalUser(personalUser);
@@ -96,24 +95,18 @@ public class PersonalUserController implements PersonzalUserApi  {
 					loginResult.setOrgName((String)map.get("orgName"));
 					loginResult.setStreamId((Long)map.get("streamId"));;
 				}
-
-
 				logger.debug("用户手机号--{}，登录成功",personalUser.getMobile());
-				
 				return ResponseEntity.ok(Response.succeed(loginResult));
-				
 			}else {
-				loginResult.setMessage("非本人单据，扫描无效");
+				loginResult.setMessage("输入的身份证号和单据不匹配");
 				return ResponseEntity.ok(Response.failed(10, loginResult.getMessage()));
 			}
-			
 		}else {
 			loginResult.setMessage("验证码输入错误");
 			return ResponseEntity.ok(Response.failed(2,loginResult.getMessage()));
 		}
 		
 	}
-
 
 	private String getSmsCode(HttpServletRequest request) {
 		return (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
@@ -145,7 +138,11 @@ public class PersonalUserController implements PersonzalUserApi  {
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
-			smsService.sendCode(personalUser.getMobile());
+			String code = smsService.sendCode(personalUser.getMobile());
+
+			//TODO 将验证码存入一个域
+			ServletContext application = request.getServletContext();
+			application.setAttribute("AUTH_CODE",code);
 			stream.setState(AuthorizationStream.AUTH_STATE_PASS);
 			message="授权码下发成功";
 			
