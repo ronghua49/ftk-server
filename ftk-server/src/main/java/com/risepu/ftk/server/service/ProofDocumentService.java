@@ -55,8 +55,13 @@ public interface ProofDocumentService {
 
     /**
      * 根据chainHash 查询文档用户身份证号
+     *
      * @param chainHash
      * @return
      */
     String getDocumentPersonCardNo(String chainHash);
+
+    ProofDocument getDocumentById(Long documentId);
+
+    void updateDocument(ProofDocument proofDocument);
 }
