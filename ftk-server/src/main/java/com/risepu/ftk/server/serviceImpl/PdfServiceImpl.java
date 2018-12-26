@@ -81,8 +81,8 @@ public class PdfServiceImpl implements PdfService {
             p1 = new Paragraph();
             ph1 = new Phrase();
             Chunk c1 = new Chunk(a[i], boldFont);
-            p1.setFirstLineIndent(23);
-            p1.setSpacingAfter(15);
+//            p1.setFirstLineIndent(23);
+//            p1.setSpacingAfter(15);
             p1.setLeading(30);
             ph1.add(c1);
             p1.add(ph1);

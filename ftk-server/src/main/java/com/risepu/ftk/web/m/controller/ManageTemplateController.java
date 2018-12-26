@@ -125,20 +125,33 @@ public class ManageTemplateController implements ManageTemplateApi {
             if (template.getId() == null) {
                 return ResponseEntity.ok(Response.succeed("模板id不能为空"));
             }
+            //根据id获取模板
             Template template1 = templateService.getTemplate(template.getId());
+            //根据模板获取模板数据
             List<Domain> list = domainService.selectByTemplate(template.getId());
+            //
             for (int j = 0; j < list.size(); j++) {
                 Domain domain = list.get(j);
                 templateDomainService.delete(template.getId(), domain.getId());
             }
             String _template = template1.get_template();
             List<Domain> domains = domainService.selectAll();
+            List<String> list1 = new ArrayList();
             for (int i = 0; i < domains.size(); i++) {
                 Domain domain = domains.get(i);
+                list1.add(domain.getCode());
                 String code = "${" + domain.getCode() + "}";
                 if (_template.contains(code)) {
                     _template = _template.replace(code, "____");
                     templateDomainService.add(template.getId(), domain.getId());
+                }
+            }
+            StringUtil stringUtil = new StringUtil();
+            List<String> list2 = stringUtil.getStrContainData(template.get_template(), "{", "}", true);
+            for (String key : list2) {
+                if (!list1.contains(key)) {
+                    crudService.delete(templateService.getTemplate(template.getId()));
+                    return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
                 }
             }
             String pdfFilePath = "/file-path/" + template.getId() + "（" + t++ + ").pdf";
@@ -163,13 +176,13 @@ public class ManageTemplateController implements ManageTemplateApi {
             return ResponseEntity.ok(Response.failed(400, "二次模板不能为空"));
         }
         Long templateId = templateService.add(template);
-        List<String> list2 = new ArrayList();
+        List<String> list = new ArrayList();
         if (templateId != null) {
             String _template = template.get_template();
             List<Domain> domains = domainService.selectAll();
             for (int i = 0; i < domains.size(); i++) {
                 Domain domain = domains.get(i);
-                list2.add(domain.getCode());
+                list.add(domain.getCode());
                 String code = "${" + domain.getCode() + "}";
                 if (_template.contains(code)) {
                     _template = _template.replace(code, "___");
@@ -177,20 +190,12 @@ public class ManageTemplateController implements ManageTemplateApi {
                 }
             }
             StringUtil stringUtil = new StringUtil();
-            List<String> list1 = stringUtil.getStrContainData(template.get_template(), "${", "}", true);
-
-            boolean flag = true;
-
-            if (list1.size() != list2.size())
-                flag = false;
-            for (String object : list1) {
-                if (!list2.contains(object))
-                    flag = false;
-            }
-            if (flag == false) {
-                Template template1 = templateService.getTemplate(templateId);
-                crudService.delete(template1);
-                return ResponseEntity.ok(Response.failed(400, "参数错误"));
+            List<String> list1 = stringUtil.getStrContainData(template.get_template(), "{", "}", true);
+            for (String key : list1) {
+                if (!list.contains(key)) {
+                    crudService.delete(templateService.getTemplate(templateId));
+                    return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
+                }
             }
             File file = new File("/file-path");
             file.mkdirs();

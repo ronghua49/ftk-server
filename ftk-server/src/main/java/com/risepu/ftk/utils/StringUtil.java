@@ -29,7 +29,7 @@ public class StringUtil {
     public static void main(String[] args) {
         StringUtil s = new StringUtil();
 
-        String str = "1${name}567${sdsdg}2345${sdsd}9";
+        String str = "撒大苏打${name}阿萨大大撒旦${sdsdg}撒大苏打大苏打，${sdsd}9";
         List<String> result = s.getStrContainData(str, "{", "}", true);
         for (String key : result) {
             System.out.println(key);
