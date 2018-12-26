@@ -135,7 +135,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 		if(!filePath.exists()){
 			filePath.mkdirs();
 		}
-		System.out.println("--------------------------"+filePath);
 		file.transferTo(new File(filePath, name));
 		return name;
 	}
