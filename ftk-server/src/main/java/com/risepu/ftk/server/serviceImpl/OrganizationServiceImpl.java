@@ -138,7 +138,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public void download(String imgName, HttpServletResponse response) throws IOException {
 
-		String filePath = ConfigUtil.getValue("file.upload.path");
+
+		File file = new File(ConfigUtil.getValue("file.upload.path"));
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		String filePath = file.getPath();
 
 		InputStream in = new FileInputStream(new File(filePath, imgName));
 		OutputStream out = response.getOutputStream();
