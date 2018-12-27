@@ -160,6 +160,9 @@ public class ManageTemplateController implements ManageTemplateApi {
             template1.setDescription(template.getDescription());
             template1.setName(template.getName());
             template1.setFilePath(filePath1);
+            template1.setContentSize(template.getContentSize());
+            template1.setTitleSize(template.getTitleSize());
+            template1.setHashSize(template.getHashSize());
             templateService.update(template1);
             return ResponseEntity.ok(Response.succeed("更新成功"));
         } catch (Exception e) {
