@@ -96,6 +96,7 @@ public class DocumentDataController implements DocumentDataApi {
             String hash = chainService.sign(proDocumentId);
             //生成二维码图片
             String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t++ + ").jpg", urlPrefix + hash);
+
             // 文档保存路径
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
             proofDocument1.setChainHash(hash);

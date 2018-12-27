@@ -47,7 +47,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 	public void personalScanDoc(String hash, HttpSession session, HttpServletResponse response) throws IOException {
 
         session.setAttribute(Constant.getSessionChainHash(),hash);
-        response.sendRedirect("/");
+        response.sendRedirect("/ftk/p");
 	}
 
 	/**
