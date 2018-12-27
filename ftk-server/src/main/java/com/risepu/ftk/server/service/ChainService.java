@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.risepu.ftk.server.service;
 
 import org.springframework.transaction.annotation.Propagation;

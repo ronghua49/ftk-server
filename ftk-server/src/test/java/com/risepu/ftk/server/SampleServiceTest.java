@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.risepu.ftk.server;
 
 import org.junit.Test;
@@ -8,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.risepu.ftk.server.domain.TemplateDomain;
 import com.risepu.ftk.server.domain.TemplateDomain.ID;
-import com.risepu.ftk.server.service.DomainService;
-import com.risepu.ftk.server.service.SampleService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
@@ -17,12 +12,6 @@ import net.lc4ever.framework.service.GenericCrudService;
  * @author q-wang
  */
 public class SampleServiceTest extends AbstractServerTestCase {
-
-	@Autowired
-	private SampleService sampleService;
-
-	@Autowired
-	private DomainService domainService;
 
 	@Autowired
 	private GenericCrudService crudService;
@@ -34,7 +23,6 @@ public class SampleServiceTest extends AbstractServerTestCase {
 
 	@Test
 	public void testSample() throws Exception {
-		//		sampleService.sample1();
 		Long i = (long) 121211;
 		TemplateDomain templateDomain = new TemplateDomain();
 		ID id = new ID();
@@ -42,19 +30,6 @@ public class SampleServiceTest extends AbstractServerTestCase {
 		id.setTemplateId(i);
 		templateDomain.setId(id);
 		System.out.println(crudService.save(templateDomain).toString());
-		//System.out.println(domainService.selectAll().size());
-	}
-
-	@Test
-	public void testHql() {
-
-		//		for(int i=0;i<20;i++) {
-		//			Organization organization = new Organization();
-		//			organization.setId("133"+i);
-		//			organization.setName("阿里巴巴"+i);
-		//			crudService.save(organization);
-		//		}
-
 	}
 
 }

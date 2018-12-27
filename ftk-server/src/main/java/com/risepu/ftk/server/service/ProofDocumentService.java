@@ -2,11 +2,8 @@ package com.risepu.ftk.server.service;
 
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.web.api.Response;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author L-heng

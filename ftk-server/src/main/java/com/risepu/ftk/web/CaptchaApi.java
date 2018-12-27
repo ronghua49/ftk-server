@@ -15,16 +15,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Api(value="cap")
+@Api(value = "cap")
 public interface CaptchaApi {
-	
-	
 
-	@ApiOperation(value = "获取图片验证码", nickname = "getCapcha")
-	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-	@RequestMapping(path = "/get")
-	@ResponseBody
-	public ResponseEntity<Response<String>> captcha(HttpServletResponse response, HttpServletRequest request);
+    @ApiOperation(value = "获取图片验证码", nickname = "getCapcha")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @RequestMapping(path = "/get")
+    @ResponseBody
+    ResponseEntity<Response<String>> captcha(HttpServletResponse response, HttpServletRequest request);
 
 
 }

@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.web.api.Response;
 
 import io.swagger.annotations.Api;
@@ -19,7 +18,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import java.util.Map;
 
 @Api(value = "org")
 @RequestMapping("/api/org")
@@ -60,7 +58,7 @@ public interface OrganizationApi {
 
     @ApiOperation(value = "图片下载", nickname = "imgdownload")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class),
-    @ApiResponse(code = 500, message = "failed", response = String.class)})
+            @ApiResponse(code = 500, message = "failed", response = String.class)})
     @RequestMapping(path = "/img/download/{imgName:\\w+.[a-z]{0,4}}")
     @ResponseBody
     ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response);
@@ -126,8 +124,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/defaultTem")
     @ResponseBody
-    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String templateId,@RequestParam boolean state, HttpServletRequest request);
-
+    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String templateId, @RequestParam boolean state, HttpServletRequest request);
 
 
     @ApiOperation(value = "企业单据验证", nickname = "verifyDocument")
@@ -135,10 +132,6 @@ public interface OrganizationApi {
     @RequestMapping(path = "/verify")
     @ResponseBody
     ResponseEntity<Response<String>> qualifyQRCode(@RequestBody VerifyRequest verifyRequest, HttpServletRequest request);
-
-
-
-
 
 
 }

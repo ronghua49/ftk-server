@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.risepu.ftk.web;
 
 import java.util.List;
