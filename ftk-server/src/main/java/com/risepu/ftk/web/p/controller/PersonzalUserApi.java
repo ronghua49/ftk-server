@@ -33,7 +33,7 @@ public interface PersonzalUserApi {
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = LoginResult.class) })
     @RequestMapping(path = "/login")
     @ResponseBody
-     ResponseEntity<Response<LoginResult>> personalLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request);
+    ResponseEntity<Response<LoginResult>> personalLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request);
 
 
 
@@ -42,7 +42,7 @@ public interface PersonzalUserApi {
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
     @RequestMapping(path = "/authen")
     @ResponseBody
-     ResponseEntity<Response<String>> personAuth(@RequestParam String streamId,@RequestParam String state, HttpServletRequest request);
+    ResponseEntity<Response<String>> personAuth(@RequestParam String streamId,@RequestParam String state, HttpServletRequest request);
 
 
 
@@ -52,7 +52,7 @@ public interface PersonzalUserApi {
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = AuthHistoryInfo.class) })
     @RequestMapping(path = "/authen/history")
     @ResponseBody
-     ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
+    ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
                                                                                  HttpServletRequest request);
 
 

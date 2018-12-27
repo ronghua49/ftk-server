@@ -277,19 +277,20 @@ public class OrganizationController implements OrganizationApi{
 
 	/**
 	 * 企业扫码单据 产生扫码流水(在跳转输入授权码之前)
-	 * 
+	 *
 	 * @param hash 单据hash
 	 *            用户身份证号
 	 * @return
 	 */
 	@Override
 	public ResponseEntity<Response<Long>> scanQR( String hash,HttpServletRequest request) {
-		
+
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
 		if(currUser==null){
 			throw new NotLoginException();
 		}
+
 
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
 
@@ -298,7 +299,7 @@ public class OrganizationController implements OrganizationApi{
 		Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
 
 		return ResponseEntity.ok(Response.succeed(streamId));
-			
+
 
 	}
 
@@ -421,10 +422,10 @@ public class OrganizationController implements OrganizationApi{
 
 	@Override
 	public ResponseEntity<Response<String>> qualifyQRCode(VerifyRequest verifyRequest, HttpServletRequest request) {
-		ServletContext context = request.getServletContext();
-		String authCode = (String) context.getAttribute("AUTH_CODE");
+
 		AuthorizationStream authStream = personalUserService.findAuthorizationStreamById(verifyRequest.getStreamId());
-		authStream.setChainHash(verifyRequest.getHash());
+        String authCode = authStream.getAuthCode();
+        authStream.setChainHash(verifyRequest.getHash());
 
 		if(verifyRequest.getAuthCode().equals(authCode)){
 			ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());

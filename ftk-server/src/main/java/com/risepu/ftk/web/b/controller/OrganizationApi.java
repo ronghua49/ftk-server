@@ -81,9 +81,9 @@ public interface OrganizationApi {
 
     @ApiOperation(value = "企业扫码", nickname = "scanQR")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = Long.class)})
-    @RequestMapping(path = "/scanQR/{hash:\\w+}")
+    @RequestMapping(path = "/scanQR")
     @ResponseBody
-    ResponseEntity<Response<Long>> scanQR(@PathVariable String hash, HttpServletRequest request);
+    ResponseEntity<Response<Long>> scanQR(@RequestParam String hash, HttpServletRequest request);
 
 
     @ApiOperation(value = "企业扫码历史单据查询", nickname = "QRHistory")
@@ -130,7 +130,7 @@ public interface OrganizationApi {
 
 
 
-    @ApiOperation(value = "企业单据验证", nickname = "verrifyDocument")
+    @ApiOperation(value = "企业单据验证", nickname = "verifyDocument")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/verify")
     @ResponseBody
