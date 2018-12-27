@@ -147,10 +147,10 @@ public class PdfServiceImpl implements PdfService {
         //添加中文字体
         BaseFont bfChinese = BaseFont.createFont("/simsun.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         //设置字体样式
-        Font textFont = new Font(bfChinese, 15, Font.BOLD); //加粗
-        Font hashFont = new Font(bfChinese, 15, Font.UNDEFINED); //哈希
-        Font contentFont = new Font(bfChinese, 15, Font.UNDEFINED); //正文
-        Font titleFont = new Font(bfChinese, 20, Font.UNDEFINED); //标题
+        Font textFont = new Font(bfChinese, template.getContentSize(), Font.BOLD); //加粗
+        Font hashFont = new Font(bfChinese, template.getHashSize(), Font.UNDEFINED); //哈希
+        Font contentFont = new Font(bfChinese, template.getContentSize(), Font.UNDEFINED); //正文
+        Font titleFont = new Font(bfChinese, template.getTitleSize(), Font.BOLD); //标题
 
         //创建输出流
         PdfWriter pdfWriter = PdfWriter.getInstance(doc, new FileOutputStream(new File(pdfFilePath)));
@@ -236,6 +236,9 @@ public class PdfServiceImpl implements PdfService {
             ph1.add(c22);
             number = index + pdf1.getKey().length();
         }
+        content = _template.substring(number);
+        Chunk c2 = new Chunk(content, contentFont);
+        ph1.add(c2);
 
         p1.add(ph1);
         doc.add(p1);
