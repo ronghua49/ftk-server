@@ -62,8 +62,8 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
         }
 
         List list = new ArrayList();
@@ -72,17 +72,15 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         for (int i = 0; i < proofDocuments.size(); i++) {
             Map map = new HashMap();
             ProofDocument proofDocument = (ProofDocument) proofDocuments.get(i);
-            if (proofDocument.getFilePath() != null) {
-                documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
-                map.put("chainHash", proofDocument.getChainHash());
-                map.put("number", proofDocument.getId());
-                for (int j = 0; j < documentDataList.size(); j++) {
-                    DocumentData documentData = documentDataList.get(j);
-                    Domain domain = domainService.selectById(documentData.getId().getDomainId());
-                    map.put(domain.getCode(), documentData.getValue());
-                }
-                list.add(map);
+            documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
+            map.put("chainHash", proofDocument.getChainHash());
+            map.put("number", proofDocument.getId());
+            for (int j = 0; j < documentDataList.size(); j++) {
+                DocumentData documentData = documentDataList.get(j);
+                Domain domain = domainService.selectById(documentData.getId().getDomainId());
+                map.put(domain.getCode(), documentData.getValue());
             }
+            list.add(map);
         }
         pageResult.setTotalElements(proofDocuments1.size());
         pageResult.setContent(list);
