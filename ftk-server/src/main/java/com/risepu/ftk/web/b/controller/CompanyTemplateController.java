@@ -7,6 +7,7 @@ import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.web.Constant;
+import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.m.dto.IdRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +66,9 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Override
     public ResponseEntity<Response<String>> getTemplateState(HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+        if(organizationUser==null){
+            throw  new NotLoginException();
+        }
         if (organizationUser.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }

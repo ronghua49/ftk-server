@@ -36,17 +36,11 @@ public interface PersonzalUserApi {
     ResponseEntity<Response<LoginResult>> personalLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request);
 
 
-
-
     @ApiOperation(value = "个人点击授权或拒绝", nickname = "authentic orgScanRequest")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
     @RequestMapping(path = "/authen")
     @ResponseBody
     ResponseEntity<Response<String>> personAuth(@RequestParam String streamId,@RequestParam String state, HttpServletRequest request);
-
-
-
-
 
     @ApiOperation(value = "个人授权历史查询", nickname = "authorization history")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = AuthHistoryInfo.class) })
@@ -54,8 +48,6 @@ public interface PersonzalUserApi {
     @ResponseBody
     ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
                                                                                  HttpServletRequest request);
-
-
 
 
 
