@@ -71,19 +71,12 @@ public class DocumentDataController implements DocumentDataApi {
             Long templateId = Long.parseLong(map.get("templateId"));
             // 根据模板id得到模板
             Template template = templateService.getTemplate(templateId);
-//            int hashSize = Integer.parseInt(map.get("hashSize"));
-//            int titleSize = Integer.parseInt(map.get("titleSize"));
-//            int contentSize = Integer.parseInt(map.get("contentSize"));
-//            template.setHashSize(hashSize);
-//            template.setTitleSize(titleSize);
-//            template.setContentSize(contentSize);
-//            templateService.update(template);
+
             // 根据模板id得到模板数据
             List<Domain> list = domainService.selectByTemplate(templateId);
 
             OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
             Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
-
 
             //生成盖章图片
             ChartGraphics cg = new ChartGraphics();
