@@ -74,7 +74,7 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }
-        Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
         if (org.getDefaultTemId() != null) {
             return ResponseEntity.ok(Response.succeed("0"));
         }
