@@ -83,7 +83,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/scanQR")
     @ResponseBody
-    ResponseEntity<Response<String>> scanQR(@RequestParam String cardNo, HttpServletRequest request);
+    ResponseEntity<Response<String>> scanQR(@RequestParam String hash, HttpServletRequest request);
 
 
     @ApiOperation(value = "企业扫码历史单据查询", nickname = "QRHistory")
@@ -126,7 +126,19 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/defaultTem")
     @ResponseBody
-    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String templateId, HttpServletRequest request);
+    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String templateId,@RequestParam boolean state, HttpServletRequest request);
+
+
+
+    @ApiOperation(value = "企业单据验证", nickname = "verrifyDocument")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @RequestMapping(path = "/qualify")
+    @ResponseBody
+    ResponseEntity<Response<String>> qualifyQRCode(@RequestBody VerifyRequest verifyRequest, HttpServletRequest request);
+
+
+
+
 
 
 }

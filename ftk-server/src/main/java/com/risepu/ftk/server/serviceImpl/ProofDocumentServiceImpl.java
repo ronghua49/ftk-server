@@ -147,6 +147,16 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
      */
     @Override
     public String getDocumentPersonCardNo(String chainHash) {
-        return crudService.uniqueResultHql(ProofDocument.class,"from ProofDocument where chainHash=?1",chainHash).getPersonalUser();
+        return crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where chainHash=?1", chainHash).getPersonalUser();
+    }
+
+    @Override
+    public ProofDocument getDocumentById(Long documentId) {
+        return crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where id=?1", documentId);
+    }
+
+    @Override
+    public void updateDocument(ProofDocument proofDocument) {
+        crudService.update(proofDocument);
     }
 }

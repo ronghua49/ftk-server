@@ -1,6 +1,7 @@
 package com.risepu.ftk.web.b.controller;
 
 import com.risepu.ftk.server.domain.*;
+import com.risepu.ftk.server.service.ChainService;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.utils.ConfigUtil;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,6 +39,9 @@ public class OrganizationController implements OrganizationApi{
 
 	@Autowired
 	private ProofDocumentService proofDocumentService;
+
+	@Autowired
+	private ChainService chainService;
 
 	/**
 	 * 企业端注册
@@ -269,29 +274,28 @@ public class OrganizationController implements OrganizationApi{
 	/**
 	 * 企业扫码单据 产生扫码流水(在跳转输入授权码之前)
 	 * 
-	 * @param cardNo
+	 * @param hash 单据hash
 	 *            用户身份证号
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> scanQR( String cardNo,HttpServletRequest request) {
+	public ResponseEntity<Response<String>> scanQR( String hash,HttpServletRequest request) {
 		
 		/** 未审核通过的企业不允许扫描单据 */
 		OrganizationUser currUser = getCurrUser(request);
-
 		if(currUser==null){
 			throw new NotLoginException();
 		}
+
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-		/** 只有审核通过后的企业才可以扫描单据 */
-		if(org!=null) {
+
+		String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
+
+		organizationService.InsertAuthorStream(org.getId(), cardNo);
+
+		return ResponseEntity.ok(Response.succeed("流水产生成功！"));
 			
-			organizationService.InsertAuthorStream(currUser.getId(), cardNo);
-			
-			return ResponseEntity.ok(Response.succeed("流水产生成功！"));
-			
-		}
-		return ResponseEntity.ok(Response.succeed("请审核通过后扫描"));
+
 	}
 
 
@@ -318,8 +322,6 @@ public class OrganizationController implements OrganizationApi{
 				chainHashs.add(stream.getChainHash());
 		}
 
-
-		//TODO 根据chainHash查找 证明文档对应的模板字段数据内容
 		PageResult page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
 
 		return  ResponseEntity.ok(Response.succeed(page));
@@ -416,17 +418,40 @@ public class OrganizationController implements OrganizationApi{
 	}
 
 	@Override
-	public ResponseEntity<Response<String>> setDefaultTemplate(String  templateId,HttpServletRequest request) {
+	public ResponseEntity<Response<String>> setDefaultTemplate(String  templateId,boolean state,HttpServletRequest request) {
 
 		OrganizationUser currUser = getCurrUser(request);
 		if(currUser==null){
 			throw new NotLoginException();
 		}
 		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-		org.setDefaultTemId(Long.parseLong(templateId));
-
+		if(state==false){
+			org.setDefaultTemId(null);
+		}else {
+			org.setDefaultTemId(Long.parseLong(templateId));
+		}
 		organizationService.updateOrg(org);
 		return ResponseEntity.ok(Response.succeed("设置默认模板成功"));
+	}
+
+	@Override
+	public ResponseEntity<Response<String>> qualifyQRCode(VerifyRequest verifyRequest, HttpServletRequest request) {
+		ServletContext context = request.getServletContext();
+		String authCode = (String) context.getAttribute("AUTH_CODE");
+
+		if(verifyRequest.getAuthCode().equals(authCode)){
+            ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());
+            if(document!=null){
+                String filePath = document.getFilePath();
+                return ResponseEntity.ok(Response.succeed(filePath));
+
+            }else{
+                return ResponseEntity.ok(Response.failed(400,"输入的身份证号和单据不匹配"));
+            }
+
+        }else{
+			return ResponseEntity.ok(Response.failed(400,"授权码错误"));
+		}
 	}
 
 

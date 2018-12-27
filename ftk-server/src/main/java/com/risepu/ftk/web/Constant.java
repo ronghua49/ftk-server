@@ -5,6 +5,7 @@ public class Constant {
 	private static final String SESSION_VERIFICATION_CODE_IMG = "SESSION_VERIFICATION_CODE_IMG";
 	private static final String SESSION_VERIFICATION_CODE_SMS = "SESSION_VERIFICATION_CODE_SMS";
 	private static final String SESSION_CURR_USER = "SESSION_CURR_USER";
+	private static final String SESSION_CHAIN_HASH = "SESSION_CHAIN_HASH";
 	
 	
 
@@ -20,4 +21,7 @@ public class Constant {
 		return SESSION_VERIFICATION_CODE_SMS;
 	}
 
+	public static String getSessionChainHash() {
+		return SESSION_CHAIN_HASH;
+	}
 }

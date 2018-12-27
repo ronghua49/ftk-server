@@ -10,8 +10,7 @@ public class LoginRequest {
 
 	private String qrCode;
 	
-	private String documentHash;
-	
+
 	public String getPhone() {
 		return phone;
 	}
@@ -44,13 +43,6 @@ public class LoginRequest {
 		this.qrCode = qrCode;
 	}
 
-	public String getDocumentHash() {
-		return documentHash;
-	}
-
-	public void setDocumentHash(String documentHash) {
-		this.documentHash = documentHash;
-	}
 
 	
 
