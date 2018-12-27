@@ -134,7 +134,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
-			String code = smsService.sendCode(personalUser.getMobile());
+			String code = smsService.authSendSms(personalUser.getMobile());
 			stream.setAuthCode(code);
 			stream.setState(AuthorizationStream.AUTH_STATE_PASS);
 			message="授权码下发成功";
