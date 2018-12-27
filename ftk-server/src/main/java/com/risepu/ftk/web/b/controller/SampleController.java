@@ -33,83 +33,83 @@ import net.lc4ever.framework.service.GenericCrudService;
 @RequestMapping(path = "/api/sample")
 public class SampleController implements SampleApi {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private PdfService pdfService;
+    @Autowired
+    private PdfService pdfService;
 
-	@Override
-	public ResponseEntity<Response<String>> add(Long templateId, String _template, HttpServletResponse response) throws Exception {
-		PdfReplacer textReplacer = new PdfReplacer("C:/Users/MACHEMIKE/Desktop/一次模板V1.1.pdf");
-		textReplacer.replaceText("${_template}", _template);
-		textReplacer.replaceText("${_title}", "小白撒反对大师傅但是放松放松放松");
-		textReplacer.replaceText("${{_chainHash}", "小白撒反对大师傅但是放松放松放松");
-		textReplacer.toPdf("C:/Users/MACHEMIKE/Desktop/测试.pdf");
-		return ResponseEntity.ok(Response.succeed("生成文档成功"));
-	}
+    @Override
+    public ResponseEntity<Response<String>> add(Long templateId, String _template, HttpServletResponse response) throws Exception {
+        PdfReplacer textReplacer = new PdfReplacer("C:/Users/MACHEMIKE/Desktop/一次模板V1.1.pdf");
+        textReplacer.replaceText("${_template}", _template);
+        textReplacer.replaceText("${_title}", "小白撒反对大师傅但是放松放松放松");
+        textReplacer.replaceText("${{_chainHash}", "小白撒反对大师傅但是放松放松放松");
+        textReplacer.toPdf("C:/Users/MACHEMIKE/Desktop/测试.pdf");
+        return ResponseEntity.ok(Response.succeed("生成文档成功"));
+    }
 
-	@Autowired
-	private GenericCrudService crudService;
+    @Autowired
+    private GenericCrudService crudService;
 
-	@Override
-	public ResponseEntity<Response<RegistResult>> regist() {
+    @Override
+    public ResponseEntity<Response<RegistResult>> regist() {
 
-		logger.debug("Request Uri: /sample/sample1");
-		Response<List<String>> sample1 = Response.succeed(Arrays.asList(new String[] { "hello", "world" }));
-		RegistResult result = new RegistResult();
+        logger.debug("Request Uri: /sample/sample1");
+        Response<List<String>> sample1 = Response.succeed(Arrays.asList(new String[]{"hello", "world"}));
+        RegistResult result = new RegistResult();
 
-		return ResponseEntity.ok(Response.succeed(result));
-	}
+        return ResponseEntity.ok(Response.succeed(result));
+    }
 
-	@GetMapping("/test")
-	public PageResult<Organization> saveOrg() {
-		// for(int i=0;i<20;i++) {
-		// Organization organization = new Organization();
-		// organization.setId("133"+i);
-		// organization.setName("阿里巴巴"+i);
-		// crudService.save(organization);
-		// System.out.println("hellow ");
-		// }
-		// return "scuess";
+    @GetMapping("/test")
+    public PageResult<Organization> saveOrg() {
+        // for(int i=0;i<20;i++) {
+        // Organization organization = new Organization();
+        // organization.setId("133"+i);
+        // organization.setName("阿里巴巴"+i);
+        // crudService.save(organization);
+        // System.out.println("hellow ");
+        // }
+        // return "scuess";
 
-		// Organization organization =
-		// crudService.uniqueResultByProperty(Organization.class, "id", "1330");
-		PageResult<Organization> pageResult = new PageResult<>();
+        // Organization organization =
+        // crudService.uniqueResultByProperty(Organization.class, "id", "1330");
+        PageResult<Organization> pageResult = new PageResult<>();
 
-		int pageNo = 1;
-		int pageSize = 5;
-		int firstIndex = (pageNo - 1) * pageSize;
-		List<Organization> orgList = crudService.hql(Organization.class, firstIndex, pageSize, "from Organization where name like ?1 order by createTimestamp desc", "%" + "阿里" + "%");
-		return pageResult;
+        int pageNo = 1;
+        int pageSize = 5;
+        int firstIndex = (pageNo - 1) * pageSize;
+        List<Organization> orgList = crudService.hql(Organization.class, firstIndex, pageSize, "from Organization where name like ?1 order by createTimestamp desc", "%" + "阿里" + "%");
+        return pageResult;
 
-	}
+    }
 
-	@GetMapping("/test1")
-	@ResponseBody
-	public String get() {
-		return "success get";
-	}
+    @GetMapping("/test1")
+    @ResponseBody
+    public String get() {
+        return "success get";
+    }
 
-	@PostMapping("/test2")
-	@ResponseBody
-	public String test(@RequestParam String test2) {
-		return test2;
-	}
+    @PostMapping("/test2")
+    @ResponseBody
+    public String test(@RequestParam String test2) {
+        return test2;
+    }
 
-	@GetMapping("/test3")
-	@ResponseBody
-	public List<Organization> testObject() throws ParseException {
-		//多参数的查询
-		//string转换data的问题
-		//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mmm:ss");
-		//		Date date2 = format.parse("2018-12-13 13:37:37");
-		Object[] params = { "13310" };
+    @GetMapping("/test3")
+    @ResponseBody
+    public List<Organization> testObject() throws ParseException {
+        //多参数的查询
+        //string转换data的问题
+        //		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mmm:ss");
+        //		Date date2 = format.parse("2018-12-13 13:37:37");
+        Object[] params = {"13310"};
 
-		List<Organization> orgs = crudService.hql(Organization.class, 0, 5, "from  Organization where id <?1", params);
-		System.out.println(orgs.size());
+        List<Organization> orgs = crudService.hql(Organization.class, 0, 5, "from  Organization where id <?1", params);
+        System.out.println(orgs.size());
 
-		//OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", "135123835407");
-		return orgs;
-	}
+        //OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", "135123835407");
+        return orgs;
+    }
 
 }

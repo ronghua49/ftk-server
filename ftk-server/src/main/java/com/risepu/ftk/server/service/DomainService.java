@@ -53,10 +53,9 @@ public interface DomainService {
      * @param pageSize
      * @return
      */
-    List getAnyDomain(Integer firstIndex, Integer pageSize,String hql);
+    List getAnyDomain(Integer firstIndex, Integer pageSize, String hql);
 
     /**
-     *
      * @param hql
      * @return
      */
