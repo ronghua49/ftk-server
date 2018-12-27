@@ -8,6 +8,7 @@ import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.TemplateService;
+import com.risepu.ftk.web.m.dto.Pdf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,8 @@ import com.risepu.ftk.server.service.PdfService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 
 /**
@@ -60,7 +61,7 @@ public class PdfServiceImpl implements PdfService {
         //短语
         Phrase ph1 = new Phrase();
         //块
-        Chunk c2 = new Chunk("区块链哈希：", boldFont);
+        Chunk c2 = new Chunk("区块链哈希", boldFont);
         Chunk c22 = new Chunk(hash, boldFont);
         //将块添加到短语
         ph1.add(c2);
@@ -192,29 +193,49 @@ public class PdfServiceImpl implements PdfService {
         ph1 = new Phrase();
         p1.setLeading(30);
 
+        Pdf pdf = new Pdf();
+        Map<String, Pdf> map1 = new HashMap<>();
+        List<String> list1 = new ArrayList<>();
+        int index = 0;
         for (int j = 0; j < list.size(); j++) {
-            int index = 0;
-            int number = 0;
             Domain domain = list.get(j);
             String key = "${" + domain.getCode() + "}";
-
-            String content = "";
-            int b=_template.indexOf(key, number);
+            list1.add(domain.getCode());
             //得到页面输入的值
-            while ((index = _template.indexOf(key, number)) != -1) {
+            while ((index = _template.indexOf(key, index)) != -1) {
                 String value = map.get(domain.getCode());
-                if (number > index) {
-                    content = _template.substring(number);
-                } else {
-                    content = _template.substring(number, index);
-                }
-                Chunk c2 = new Chunk(content, contentFont);
-                Chunk c22 = new Chunk(value, textFont);
-                ph1.add(c2);
-                ph1.add(c22);
-                number = index + key.length();
+                pdf.setIndex(index);
+                pdf.setKey(key);
+                pdf.setValue(value);
+                pdf.setCode(domain.getCode());
+                map1.put(domain.getCode(), pdf);
+                index = index + key.length();
             }
         }
+
+        int number = 0;
+        String content = "";
+        //得到页面输入的值
+        while ((index = _template.indexOf("${", number)) != -1) {
+            int index2 = _template.indexOf("}", index);
+            String key = _template.substring(index, index2);
+            if (!list1.contains(key)) {
+                continue;
+            }
+            Pdf pdf1 = map1.get(key);
+            String value = map.get(pdf1.getCode());
+            if (number > index) {
+                content = _template.substring(number);
+            } else {
+                content = _template.substring(number, index);
+            }
+            Chunk c2 = new Chunk(content, contentFont);
+            Chunk c22 = new Chunk(value, textFont);
+            ph1.add(c2);
+            ph1.add(c22);
+            number = index + pdf1.getKey().length();
+        }
+
         p1.add(ph1);
         doc.add(p1);
         //插入一个二维码图片
@@ -230,11 +251,6 @@ public class PdfServiceImpl implements PdfService {
         doc.add(image1);
 
         cd.beginText();
-        //文字加粗
-        //设置文本描边宽度
-        //cd.setLineWidth(0.5);
-        //设置文本为描边模式
-        //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
         cd.setFontAndSize(bfChinese, 20);
         cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 430, 310, 0);
@@ -242,13 +258,4 @@ public class PdfServiceImpl implements PdfService {
         doc.close();
         return pdfFilePath;
     }
-
-    /*public static void main(String[] args) {
-        PdfServiceImpl a = new PdfServiceImpl();
-        try {
-            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFS", "但是发射点发生", "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", "/file-path/test.pdf");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 }
