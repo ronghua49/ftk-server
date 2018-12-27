@@ -5,7 +5,6 @@ import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.service.ChainService;
 import com.risepu.ftk.server.service.PersonalUserService;
-import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
