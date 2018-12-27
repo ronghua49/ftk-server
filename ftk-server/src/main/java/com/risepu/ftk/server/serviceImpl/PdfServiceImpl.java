@@ -135,7 +135,7 @@ public class PdfServiceImpl implements PdfService {
         _template = _template.replaceAll("/t", " ");
         //获取pdf标题
         String title = template.getName();
-
+        int number = 0;
         SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
         String date = "" + ft.format(new Date());
 
@@ -193,7 +193,7 @@ public class PdfServiceImpl implements PdfService {
         ph1 = new Phrase();
         p1.setLeading(30);
 
-        Pdf pdf = new Pdf();
+
         Map<String, Pdf> map1 = new HashMap<>();
         List<String> list1 = new ArrayList<>();
         int index = 0;
@@ -204,6 +204,7 @@ public class PdfServiceImpl implements PdfService {
             //得到页面输入的值
             while ((index = _template.indexOf(key, index)) != -1) {
                 String value = map.get(domain.getCode());
+                Pdf pdf = new Pdf();
                 pdf.setIndex(index);
                 pdf.setKey(key);
                 pdf.setValue(value);
@@ -213,12 +214,12 @@ public class PdfServiceImpl implements PdfService {
             }
         }
 
-        int number = 0;
+
         String content = "";
         //得到页面输入的值
         while ((index = _template.indexOf("${", number)) != -1) {
             int index2 = _template.indexOf("}", index);
-            String key = _template.substring(index, index2);
+            String key = _template.substring(index + 2, index2);
             if (!list1.contains(key)) {
                 continue;
             }
