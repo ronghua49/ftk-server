@@ -18,141 +18,138 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
 @Controller
-public class OrganizationController implements OrganizationApi{
+public class OrganizationController implements OrganizationApi {
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private OrganizationService organizationService;
+    @Autowired
+    private OrganizationService organizationService;
 
 
-	@Autowired
-	private ProofDocumentService proofDocumentService;
+    @Autowired
+    private ProofDocumentService proofDocumentService;
 
-	@Autowired
-	private ChainService chainService;
+    @Autowired
+    private ChainService chainService;
 
-	@Autowired
-	private PersonalUserService personalUserService;
+    @Autowired
+    private PersonalUserService personalUserService;
 
-	/**
-	 * 企业端注册
-	 * 
-	 * @return
-	 */
-	@Override
-	public ResponseEntity<Response<String>> orgRegist(RegistRequest registVo,
-			HttpServletRequest request) {
+    /**
+     * 企业端注册
+     *
+     * @return
+     */
+    @Override
+    public ResponseEntity<Response<String>> orgRegist(RegistRequest registVo,
+                                                      HttpServletRequest request) {
 
-		// 判断smsCode
+        // 判断smsCode
 
-		String code = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
+        String code = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
 
-		if (registVo.getSmsCode().equals(code)) {
+        if (registVo.getSmsCode().equals(code)) {
 
-			/** 判断企业是否已经注册 */
-			String orgId = organizationService.checkOrgName(registVo.getMobile());
+            /** 判断企业是否已经注册 */
+            String orgId = organizationService.checkOrgName(registVo.getMobile());
 
-			if (orgId == null) {
-				organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
-				logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
-				
-				return ResponseEntity.ok(Response.succeed("注册成功！"));
+            if (orgId == null) {
+                organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
+                logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
 
-			} else {
-				return ResponseEntity.ok(Response.failed(3, "该企业已经注册，请直接登录"));
-			}
-		} else {
-			return ResponseEntity.ok(Response.failed(2, "验证码输入错误！"));
-		}
-	}
-	/**
-	 * 企业登录
-	 * 
-	 * @param loginRequest 登录请求
-	 *
-	 * @return 登录结果
-	 * @throws  
-	 */
+                return ResponseEntity.ok(Response.succeed("注册成功！"));
 
-	@Override
-	public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request)   {
-		
-			LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
-			
-			if(loginResult.getCode()==0) {
-				/** 设置session对象为 企业用户对象 */
-				setCurrUserToSession(request,loginResult.getOrganizationUser());
-				logger.debug("企业用户--{},登录成功！", loginRequest.getName());
-				return ResponseEntity.ok(Response.succeed(loginResult));
-			}
-			
-			return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
-	}
-	
-	
-	private void setCurrUserToSession(HttpServletRequest request, OrganizationUser organizationUser) {
-		request.getSession().setAttribute(Constant.getSessionCurrUser(), organizationUser);
-	}
+            } else {
+                return ResponseEntity.ok(Response.failed(3, "该企业已经注册，请直接登录"));
+            }
+        } else {
+            return ResponseEntity.ok(Response.failed(2, "验证码输入错误！"));
+        }
+    }
 
-	/**
-	 * 忘记密码
-	 * @param forgetRequest  表单数据
-	 *           
-	 * @param request 请求对象
-	 * @return
-	 */
-	@Override
-	public ResponseEntity<Response<String>> orgForgetPwd( ForgetRequest forgetRequest,
-			HttpServletRequest request) {
-		String salt = ConfigUtil.getValue("salt");
-		/** 判断输入的企业信息是否存在  返回各自的id */
-		String orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
+    /**
+     * 企业登录
+     *
+     * @param loginRequest 登录请求
+     * @return 登录结果
+     * @throws
+     */
 
-		if (orgId != null) {
-			String smsCode = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
+    @Override
+    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
 
-			if (forgetRequest.getSmsCode().equals(smsCode)) {
+        LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
-				String newPwd =  DigestUtils.md5Hex(forgetRequest.getPassword() + salt);
-				organizationService.changePwd(orgId, newPwd);
-				logger.debug("企业用户   {}，修改密码成功！", forgetRequest.getMobileOrName());
+        if (loginResult.getCode() == 0) {
+            /** 设置session对象为 企业用户对象 */
+            setCurrUserToSession(request, loginResult.getOrganizationUser());
+            logger.debug("企业用户--{},登录成功！", loginRequest.getName());
+            return ResponseEntity.ok(Response.succeed(loginResult));
+        }
 
-				return ResponseEntity.ok(Response.succeed("密码修改成功"));
-			} else {
+        return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
+    }
 
-				return ResponseEntity.ok(Response.failed(2, "验证码输入错误"));
-			}
-			
-		} else {
-			return ResponseEntity.ok(Response.failed(4, "该账号还未注册,请先注册"));
-		}
-	}
 
-	/**
-	 * 修改密码
-	 */
-	@Override
-	public ResponseEntity<Response<String>> orgChangePwd( String password,  String newpwd,
-			HttpServletRequest request) {
+    private void setCurrUserToSession(HttpServletRequest request, OrganizationUser organizationUser) {
+        request.getSession().setAttribute(Constant.getSessionCurrUser(), organizationUser);
+    }
+
+    /**
+     * 忘记密码
+     *
+     * @param forgetRequest 表单数据
+     * @param request       请求对象
+     * @return
+     */
+    @Override
+    public ResponseEntity<Response<String>> orgForgetPwd(ForgetRequest forgetRequest,
+                                                         HttpServletRequest request) {
+        String salt = ConfigUtil.getValue("salt");
+        /** 判断输入的企业信息是否存在  返回各自的id */
+        String orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
+
+        if (orgId != null) {
+            String smsCode = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
+
+            if (forgetRequest.getSmsCode().equals(smsCode)) {
+
+                String newPwd = DigestUtils.md5Hex(forgetRequest.getPassword() + salt);
+                organizationService.changePwd(orgId, newPwd);
+                logger.debug("企业用户   {}，修改密码成功！", forgetRequest.getMobileOrName());
+
+                return ResponseEntity.ok(Response.succeed("密码修改成功"));
+            } else {
+
+                return ResponseEntity.ok(Response.failed(2, "验证码输入错误"));
+            }
+
+        } else {
+            return ResponseEntity.ok(Response.failed(4, "该账号还未注册,请先注册"));
+        }
+    }
+
+    /**
+     * 修改密码
+     */
+    @Override
+    public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd,
+                                                         HttpServletRequest request) {
 
 
         OrganizationUser currUser = getCurrUser(request);
-        if(currUser==null){
-			throw new NotLoginException();
-		}
+        if (currUser == null) {
+            throw new NotLoginException();
+        }
 
 
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
@@ -170,183 +167,183 @@ public class OrganizationController implements OrganizationApi{
         }
     }
 
-	/**
-	 * 图片上传
-	 * 
-	 * @param file
-	 *            图片文件流
-	 * @return 保存的图片名
-	 */
-	@Override
-	public ResponseEntity<Response<String>> upload( MultipartFile file) {
+    /**
+     * 图片上传
+     *
+     * @param file 图片文件流
+     * @return 保存的图片名
+     */
+    @Override
+    public ResponseEntity<Response<String>> upload(MultipartFile file) {
 
 
-		try {
-			String fileName = organizationService.upload(file);
-			return ResponseEntity.ok(Response.succeed(fileName));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.ok(Response.failed(500, "上传失败"));
-		}
-	}
+        try {
+            String fileName = organizationService.upload(file);
+            return ResponseEntity.ok(Response.succeed(fileName));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(Response.failed(500, "上传失败"));
+        }
+    }
 
-	/**
-	 * 图片下载
-	 * 
-	 * @param imgName
-	 *            图片名称
-	 * @param response
-	 * @return
-	 */
-	@Override
-	public ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response) {
+    /**
+     * 图片下载
+     *
+     * @param imgName  图片名称
+     * @param response
+     * @return
+     */
+    @Override
+    public ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response) {
 
-		try {
-			organizationService.download(imgName, response);
-			return ResponseEntity.ok(Response.succeed("图片下载成功"));
+        try {
+            organizationService.download(imgName, response);
+            return ResponseEntity.ok(Response.succeed("图片下载成功"));
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			return ResponseEntity.ok(Response.failed(9, "图片下载失败"));
-		}
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(Response.failed(9, "图片下载失败"));
+        }
 
-	}
+    }
 
-	/**
-	 * 校验当前企业的审核状态
-	 * @param request
-	 * @return Organization 企业的信息 (若为空则未审核)
-	 */
-	@Override
-	public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
+    /**
+     * 校验当前企业的审核状态
+     *
+     * @param request
+     * @return Organization 企业的信息 (若为空则未审核)
+     */
+    @Override
+    public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
 
-		OrganizationUser currUser = getCurrUser(request);
-		if(currUser==null){
-			throw new NotLoginException();
-		}
+        OrganizationUser currUser = getCurrUser(request);
+        if (currUser == null) {
+            throw new NotLoginException();
+        }
 
 
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
-	}
+    }
 
-	/**
-	 * 保存企业认证信息
-	 * 
-	 * @param organizationStream
-	 *            上传的的企业信息
-	 * @param request
-	 * @return 上传结果
-	 */
-	@Override
-	public ResponseEntity<Response<String>> orgAuthen( OrganizationStream organizationStream,
-			HttpServletRequest request) {
+    /**
+     * 保存企业认证信息
+     *
+     * @param organizationStream 上传的的企业信息
+     * @param request
+     * @return 上传结果
+     */
+    @Override
+    public ResponseEntity<Response<String>> orgAuthen(OrganizationStream organizationStream,
+                                                      HttpServletRequest request) {
 
-		OrganizationUser user = getCurrUser(request);
-		if(user==null){
-			throw new NotLoginException();
-		}
+        OrganizationUser user = getCurrUser(request);
+        if (user == null) {
+            throw new NotLoginException();
+        }
 
         /** 查找当前用户提交的组织机构代码证 是否已经通过审核*/
         Organization org = organizationService.findAuthenOrgById(organizationStream.getOrganization());
-        if(org!=null){
-            return ResponseEntity.ok(Response.failed(400,"该组织机构代码证书已经被注册，不得重复！"));
+        if (org != null) {
+            return ResponseEntity.ok(Response.failed(400, "该组织机构代码证书已经被注册，不得重复！"));
         }
-		/** 该用户已经审核通过和一个企业绑定*/
-		if(user.getOrganizationId()!=null){
-			return ResponseEntity.ok(Response.failed(400,"该账号已经和企业绑定，不得重复申请！"));
-		}
+        /** 该用户已经审核通过和一个企业绑定*/
+        if (user.getOrganizationId() != null) {
+            return ResponseEntity.ok(Response.failed(400, "该账号已经和企业绑定，不得重复申请！"));
+        }
 
-		/** 当前提交的公司名称是否已经审核成功*/
-		Organization org2 = organizationService.findAuthenOrgByName(organizationStream.getName());
-		if(org2!=null){
-			return ResponseEntity.ok(Response.failed(400,"该公司名已经被注册，不得重复！"));
-		}
-		/** 当前组织机构代码证是否在审核*/
-		List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(),OrganizationStream.CHECKING_STATE);
-		if(stream!=null&&stream.size()!=0){
-			return ResponseEntity.ok(Response.failed(400,"该组织机构代码证正在审核中，不得重复！"));
-		}
+        /** 当前提交的公司名称是否已经审核成功*/
+        Organization org2 = organizationService.findAuthenOrgByName(organizationStream.getName());
+        if (org2 != null) {
+            return ResponseEntity.ok(Response.failed(400, "该公司名已经被注册，不得重复！"));
+        }
+        /** 当前组织机构代码证是否在审核*/
+        List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(), OrganizationStream.CHECKING_STATE);
+        if (stream != null && stream.size() != 0) {
+            return ResponseEntity.ok(Response.failed(400, "该组织机构代码证正在审核中，不得重复！"));
+        }
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());
         organizationService.saveOrgStream(organizationStream);
 
         logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
-		return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
-	}
+        return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
+    }
 
-	/**
-	 * 企业扫码单据 产生扫码流水(在跳转输入授权码之前)
-	 *
-	 * @param hash 单据hash
-	 *            用户身份证号
-	 * @return
-	 */
-	@Override
-	public ResponseEntity<Response<Long>> scanQR( String hash,HttpServletRequest request) {
+    /**
+     * 企业扫码单据 产生扫码流水(在跳转输入授权码之前)
+     *
+     * @param hash 单据hash
+     *             用户身份证号
+     * @return
+     */
+    @Override
+    public ResponseEntity<Response<Long>> scanQR(String hash, HttpServletRequest request) {
 
-		/** 未审核通过的企业不允许扫描单据 */
-		OrganizationUser currUser = getCurrUser(request);
-		if(currUser==null){
-			throw new NotLoginException();
-		}
-
-
-		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-
-		String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
-
-		Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
-
-		return ResponseEntity.ok(Response.succeed(streamId));
+        /** 未审核通过的企业不允许扫描单据 */
+        OrganizationUser currUser = getCurrUser(request);
+        if (currUser == null) {
+            throw new NotLoginException();
+        }
 
 
-	}
+        Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+
+        String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
+
+        Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
+
+        return ResponseEntity.ok(Response.succeed(streamId));
 
 
-	/**
-	 * 企业扫码验单历史查询
-	 * @param pageRequest 分页请求参数
-	 * @param request
-	 * @return
-	 */
-	@Override
-	 public ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
+    }
 
 
-		OrganizationUser orgUser = getCurrUser(request);
-		if(orgUser==null){
-			throw new NotLoginException();
-		}
+    /**
+     * 企业扫码验单历史查询
+     *
+     * @param pageRequest 分页请求参数
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
 
-		/** 根据企业id查询 已经验证成功的流水idlist*/
-		List<AuthorizationStream>  streams = organizationService.querySucceedAuthStreamByOrgId(orgUser.getOrganizationId());
-		List<String> chainHashs = new ArrayList<>();
 
-		for(AuthorizationStream stream:streams){
-				chainHashs.add(stream.getChainHash());
-		}
+        OrganizationUser orgUser = getCurrUser(request);
+        if (orgUser == null) {
+            throw new NotLoginException();
+        }
 
-		PageResult page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+        /** 根据企业id查询 已经验证成功的流水idlist*/
+        List<AuthorizationStream> streams = organizationService.querySucceedAuthStreamByOrgId(orgUser.getOrganizationId());
+        List<String> chainHashs = new ArrayList<>();
 
-		return  ResponseEntity.ok(Response.succeed(page));
-	
-	 }
+        for (AuthorizationStream stream : streams) {
+            chainHashs.add(stream.getChainHash());
+        }
 
-	/**
-	 * 企业开单历史单据查询
-	 * @param pageRequest 分页请求参数
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest,HttpServletRequest request) {
-		/** 查询企业开单历史 */
-		//TODO
-		OrganizationUser currUser = getCurrUser(request);
-		if(currUser==null){
-			throw new NotLoginException();
-		}
+        PageResult page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+
+        return ResponseEntity.ok(Response.succeed(page));
+
+    }
+
+    /**
+     * 企业开单历史单据查询
+     *
+     * @param pageRequest 分页请求参数
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request) {
+        /** 查询企业开单历史 */
+        //TODO
+        OrganizationUser currUser = getCurrUser(request);
+        if (currUser == null) {
+            throw new NotLoginException();
+        }
 
         Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
         PageResult document = proofDocumentService.getDocuments(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
@@ -355,6 +352,7 @@ public class OrganizationController implements OrganizationApi{
 
     /**
      * 根据chainhash查询单据详情信息
+     *
      * @param chainHash 证明单据的chainhash
      * @return 证明文档pdf路径
      */
@@ -364,89 +362,88 @@ public class OrganizationController implements OrganizationApi{
         return ResponseEntity.ok(Response.succeed(filePath));
     }
 
-	
-	/**
-	 * 企业反馈信息录入
-	 * 
-	 * @param advice
-	 *            企业反馈信息
-	 * @return 保存结果
-	 */
-	@Override
-	public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice,
-			HttpServletRequest request) {
 
-		OrganizationUser currUser = getCurrUser(request);
-		if(currUser==null){
-			throw new NotLoginException();
-		}
-		
-		advice.setOrgId(currUser.getId());
-		organizationService.saveAdviceInfo(advice);
-		return ResponseEntity.ok(Response.succeed("意见反馈成功！"));
+    /**
+     * 企业反馈信息录入
+     *
+     * @param advice 企业反馈信息
+     * @return 保存结果
+     */
+    @Override
+    public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice,
+                                                       HttpServletRequest request) {
 
-	}
+        OrganizationUser currUser = getCurrUser(request);
+        if (currUser == null) {
+            throw new NotLoginException();
+        }
 
-	
-	private  OrganizationUser getCurrUser(HttpServletRequest request) {
-		 return(OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-	}
-	
-	/**
-	 * 退出登录
-	 */
-	@Override
-	public ResponseEntity<Response<String>> loginOut(HttpServletRequest request){
-		
-		request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
+        advice.setOrgId(currUser.getId());
+        organizationService.saveAdviceInfo(advice);
+        return ResponseEntity.ok(Response.succeed("意见反馈成功！"));
 
-		return ResponseEntity.ok(Response.succeed("退出登录成功"));
-	}
+    }
 
-	@Override
-	public ResponseEntity<Response<String>> setDefaultTemplate(String  templateId,boolean state,HttpServletRequest request) {
 
-		OrganizationUser currUser = getCurrUser(request);
-		if(currUser==null){
-			throw new NotLoginException();
-		}
-		Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
-		if(state==false){
-			org.setDefaultTemId(null);
-		}else {
-			org.setDefaultTemId(Long.parseLong(templateId));
-		}
-		organizationService.updateOrg(org);
-		return ResponseEntity.ok(Response.succeed("设置默认模板成功"));
-	}
+    private OrganizationUser getCurrUser(HttpServletRequest request) {
+        return (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+    }
 
-	@Override
-	public ResponseEntity<Response<String>> qualifyQRCode(VerifyRequest verifyRequest, HttpServletRequest request) {
+    /**
+     * 退出登录
+     */
+    @Override
+    public ResponseEntity<Response<String>> loginOut(HttpServletRequest request) {
 
-		AuthorizationStream authStream = personalUserService.findAuthorizationStreamById(verifyRequest.getStreamId());
+        request.getSession().setAttribute(Constant.getSessionCurrUser(), null);
+
+        return ResponseEntity.ok(Response.succeed("退出登录成功"));
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> setDefaultTemplate(String templateId, boolean state, HttpServletRequest request) {
+
+        OrganizationUser currUser = getCurrUser(request);
+        if (currUser == null) {
+            throw new NotLoginException();
+        }
+        Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+        if (state == false) {
+            org.setDefaultTemId(null);
+        } else {
+            org.setDefaultTemId(Long.parseLong(templateId));
+        }
+        organizationService.updateOrg(org);
+        return ResponseEntity.ok(Response.succeed("设置默认模板成功"));
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> qualifyQRCode(VerifyRequest verifyRequest, HttpServletRequest request) {
+
+        AuthorizationStream authStream = personalUserService.findAuthorizationStreamById(verifyRequest.getStreamId());
         String authCode = authStream.getAuthCode();
         authStream.setChainHash(verifyRequest.getHash());
 
-		if(verifyRequest.getAuthCode().equals(authCode)){
-			ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());
-			if(document!=null){
-				/** 表示验证成功，添加验证历史*/
-				authStream.setState(AuthorizationStream.VERIFY_STATE_PASS);
-				personalUserService.update(authStream);
-				String filePath = document.getFilePath();
+        if (verifyRequest.getAuthCode().equals(authCode)) {
+            ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());
+            if (document != null) {
+                /** 表示验证成功，添加验证历史*/
+                authStream.setState(AuthorizationStream.VERIFY_STATE_PASS);
+                personalUserService.update(authStream);
+                String filePath = document.getFilePath();
                 return ResponseEntity.ok(Response.succeed(filePath));
 
-            }else{
-				authStream.setState(AuthorizationStream.VERIFY_STATE_FAIL);
-				personalUserService.update(authStream);
-                return ResponseEntity.ok(Response.failed(400,"输入的身份证号和单据不匹配"));
+            } else {
+                authStream.setState(AuthorizationStream.VERIFY_STATE_FAIL);
+                personalUserService.update(authStream);
+                return ResponseEntity.ok(Response.failed(400, "输入的身份证号和单据不匹配"));
             }
 
-        }else{
-			return ResponseEntity.ok(Response.failed(400,"授权码错误"));
-		}
+        } else {
+            return ResponseEntity.ok(Response.failed(400, "授权码错误"));
+        }
 
-	}
+    }
 
 
 }
