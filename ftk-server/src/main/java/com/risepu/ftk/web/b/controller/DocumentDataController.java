@@ -9,6 +9,7 @@ import com.risepu.ftk.web.m.dto.EmailRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,8 +57,8 @@ public class DocumentDataController implements DocumentDataApi {
     @Autowired
     private ChainService chainService;
 
-//    @Value("${ftk.qrcode.urlPrefix}")
-//    private String urlPrefix;
+    @Value("${ftk.qrcode.urlPrefix}")
+    private String urlPrefix;
 
     private Integer t = 0;
 
@@ -101,8 +102,7 @@ public class DocumentDataController implements DocumentDataApi {
             ProofDocument proofDocument1 = proofDocumentService.getDocumentById(proDocumentId);
             String hash = chainService.sign(proDocumentId);
             //生成二维码图片
-//            String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t++ + ").jpg", urlPrefix + hash);
-            String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t++ + ").jpg", "http://ip:port/ftk-server/api/chain/${" + hash + "}");
+            String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t++ + ").jpg", urlPrefix + hash);
             // 文档保存路径
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
             proofDocument1.setChainHash(hash);
