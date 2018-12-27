@@ -69,7 +69,7 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         if (organizationUser == null) {
             throw new NotLoginException();
         }
-        OrganizationUser user = organizationService.findOrgUserById(organizationUser.getOrganizationId());
+        OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
         if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }

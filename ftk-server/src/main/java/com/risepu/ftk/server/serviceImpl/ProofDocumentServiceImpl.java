@@ -48,7 +48,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
 
     @Override
     public List<ProofDocument> getByOrganization(String organization) {
-        List<ProofDocument> list = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1", organization);
+        List<ProofDocument> list = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null", organization);
         return list;
     }
 
@@ -60,7 +60,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
         if (StringUtils.isEmpty(name)) {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1", organization);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null", organization);
         } else {
             proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
