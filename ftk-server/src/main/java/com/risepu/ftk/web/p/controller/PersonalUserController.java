@@ -1,32 +1,30 @@
 package com.risepu.ftk.web.p.controller;
 
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
-import com.risepu.ftk.server.domain.ProofDocument;
-import com.risepu.ftk.server.service.ChainService;
-import com.risepu.ftk.server.service.ProofDocumentService;
-import com.risepu.ftk.web.b.dto.PageRequest;
-import com.risepu.ftk.web.exception.NotLoginException;
-import org.apache.commons.fileupload.servlet.ServletRequestContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.PersonalUser;
+import com.risepu.ftk.server.domain.ProofDocument;
+import com.risepu.ftk.server.service.ChainService;
 import com.risepu.ftk.server.service.PersonalUserService;
+import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.b.dto.PageRequest;
+import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 
 @RestController
@@ -42,16 +40,14 @@ public class PersonalUserController implements PersonzalUserApi  {
 	private SmsService smsService;
 
 	@Autowired
-	private ProofDocumentService proofDocumentService;
-
-	@Autowired
 	private ChainService chainService;
 
-
 	@Override
-	public ResponseEntity<Response<String>> personalScanDoc(String hash, HttpServletRequest request) {
-		request.getSession().setAttribute(Constant.getSessionChainHash(),hash);
-		return ResponseEntity.ok(Response.succeed("扫描单据成功"));
+	public String personalScanDoc(String hash, HttpSession session, HttpServletResponse response)  {
+
+        session.setAttribute(Constant.getSessionChainHash(),hash);
+//        response.sendRedirect("/");
+        return "rediect:/";
 	}
 
 	/**
