@@ -42,7 +42,11 @@ public class AuthorizationStream extends AuditableObject<Long>{
 	private Integer state;
 	/** 验证成功后的 当前单据 hash */
 	private String chainHash;
-	
+	/** 存放发送用户的授权码*/
+	private String authCode;
+
+
+
 	@Id
 	@Column(name = "ID", precision = 19)
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -65,9 +69,8 @@ public class AuthorizationStream extends AuditableObject<Long>{
 		this.personId = personId;
 	}
 	
-	
-	
-	@Column(name="ORG_ID",length=11)
+
+	@Column(name="ORG_ID",length=18)
 	public String getOrgId() {
 		return orgId;
 	}
@@ -94,13 +97,12 @@ public class AuthorizationStream extends AuditableObject<Long>{
 		this.chainHash = chainHash;
 	}
 
+	@Column(name = "AUTH_CODE", length = 128)
+	public String getAuthCode() {
+		return authCode;
+	}
 
-
-
-
-
-
-
-
-
+	public void setAuthCode(String authCode) {
+		this.authCode = authCode;
+	}
 }

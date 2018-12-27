@@ -192,14 +192,16 @@ public class OrganizationServiceImpl implements OrganizationService {
 	}
 
 	@Override
-	public void InsertAuthorStream(String orgId, String cardNo) {
+	public Long InsertAuthorStream(String orgId, String cardNo) {
 		
 		AuthorizationStream stream = new AuthorizationStream();
 		
 		stream.setOrgId(orgId);
 		stream.setPersonId(cardNo);
 		stream.setState(AuthorizationStream.AUTH_STATE_NEW);
-		crudService.save(stream);
+		Long streamId = crudService.save(stream);
+		return streamId;
+
 	}
 
 	@Override
