@@ -72,16 +72,17 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         for (int i = 0; i < proofDocuments.size(); i++) {
             Map map = new HashMap();
             ProofDocument proofDocument = (ProofDocument) proofDocuments.get(i);
-            documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
-            map.put("chainHash", proofDocument.getChainHash());
-            map.put("number", proofDocument.getId());
-            for (int j = 0; j < documentDataList.size(); j++) {
-                DocumentData documentData = documentDataList.get(j);
-                Domain domain = domainService.selectById(documentData.getId().getDomainId());
-                map.put(domain.getCode(), documentData.getValue());
-
+            if (proofDocument.getFilePath() != null) {
+                documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
+                map.put("chainHash", proofDocument.getChainHash());
+                map.put("number", proofDocument.getId());
+                for (int j = 0; j < documentDataList.size(); j++) {
+                    DocumentData documentData = documentDataList.get(j);
+                    Domain domain = domainService.selectById(documentData.getId().getDomainId());
+                    map.put(domain.getCode(), documentData.getValue());
+                }
+                list.add(map);
             }
-            list.add(map);
         }
         pageResult.setTotalElements(proofDocuments1.size());
         pageResult.setContent(list);
