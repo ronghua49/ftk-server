@@ -197,7 +197,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         stream.setOrgId(orgId);
         stream.setPersonId(cardNo);
-        stream.setState(AuthorizationStream.AUTH_STATE_NEW);
+        stream.setAuthState(AuthorizationStream.AUTH_STATE_NEW);
         Long streamId = crudService.save(stream);
         return streamId;
 
@@ -333,7 +333,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public List<AuthorizationStream> querySucceedAuthStreamByOrgId(String organizationId) {
-        return crudService.hql(AuthorizationStream.class, "from AuthorizationStream where orgId =?1 and state= ?2", organizationId, AuthorizationStream.VERIFY_STATE_PASS);
+        return crudService.hql(AuthorizationStream.class, "from AuthorizationStream where orgId =?1 and verifyState= ?2", organizationId, AuthorizationStream.VERIFY_STATE_PASS);
     }
 
     /**
