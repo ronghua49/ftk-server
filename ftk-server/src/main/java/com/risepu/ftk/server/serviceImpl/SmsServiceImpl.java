@@ -16,7 +16,12 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    public String sendCode(String phone) {
+    public String registerSendSms(String phone) {
         return "123456";
+    }
+
+    @Override
+    public String authSendSms(String phone) {
+        return  "123456";
     }
 }
