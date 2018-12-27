@@ -86,6 +86,14 @@ public class OrganizationController implements OrganizationApi {
 
     @Override
     public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
+        OrganizationUser user = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+
+        if(user!=null){
+            LoginResult loginResult = new LoginResult();
+            loginResult.setCode(400);
+            loginResult.setMessage("该账号已经登录");
+            return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
+        }
 
         LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
@@ -428,13 +436,13 @@ public class OrganizationController implements OrganizationApi {
             ProofDocument document = chainService.verify(verifyRequest.getHash(), verifyRequest.getCardNo());
             if (document != null) {
                 /** 表示验证成功，添加验证历史*/
-                authStream.setState(AuthorizationStream.VERIFY_STATE_PASS);
+                authStream.setVerifyState(AuthorizationStream.VERIFY_STATE_PASS);
                 personalUserService.update(authStream);
                 String filePath = document.getFilePath();
                 return ResponseEntity.ok(Response.succeed(filePath));
 
             } else {
-                authStream.setState(AuthorizationStream.VERIFY_STATE_FAIL);
+                authStream.setVerifyState(AuthorizationStream.VERIFY_STATE_FAIL);
                 personalUserService.update(authStream);
                 return ResponseEntity.ok(Response.failed(400, "输入的身份证号和单据不匹配"));
             }
