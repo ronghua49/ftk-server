@@ -41,7 +41,8 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Override
     public ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-        if (organizationUser.getOrganizationId() == null) {
+        OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+        if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }
         Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
