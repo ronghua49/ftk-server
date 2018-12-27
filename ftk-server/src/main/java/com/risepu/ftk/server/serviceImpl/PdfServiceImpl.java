@@ -236,6 +236,9 @@ public class PdfServiceImpl implements PdfService {
             ph1.add(c22);
             number = index + pdf1.getKey().length();
         }
+        content = _template.substring(number);
+        Chunk c2 = new Chunk(content, contentFont);
+        ph1.add(c2);
 
         p1.add(ph1);
         doc.add(p1);
