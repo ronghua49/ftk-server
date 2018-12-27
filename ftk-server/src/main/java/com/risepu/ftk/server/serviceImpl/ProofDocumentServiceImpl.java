@@ -62,8 +62,8 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId=?2 and value = ?3)", organization, domain1.getId(), name);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId=?2 and value = ?3)", organization, domain1.getId(), name);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
         }
 
         List list = new ArrayList();
@@ -114,8 +114,8 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId=?1 and value = ?2)", domain1.getId(), name);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId=?1 and value = ?2)", domain1.getId(), name);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2)", domain1.getId(), name);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2)", domain1.getId(), name);
         }
 
         List list = new ArrayList();
@@ -148,12 +148,12 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
      */
     @Override
     public String getDocumentPersonCardNo(String chainHash) {
-        return crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where chainHash=?1", chainHash).getPersonalUser();
+        return crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where chainHash = ?1", chainHash).getPersonalUser();
     }
 
     @Override
     public ProofDocument getDocumentById(Long documentId) {
-        return crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where id=?1", documentId);
+        return crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where id = ?1", documentId);
     }
 
     @Override
