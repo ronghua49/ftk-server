@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -43,11 +44,10 @@ public class PersonalUserController implements PersonzalUserApi  {
 	private ChainService chainService;
 
 	@Override
-	public String personalScanDoc(String hash, HttpSession session, HttpServletResponse response)  {
+	public void personalScanDoc(String hash, HttpSession session, HttpServletResponse response) throws IOException {
 
         session.setAttribute(Constant.getSessionChainHash(),hash);
-//        response.sendRedirect("/");
-        return "rediect:/";
+        response.sendRedirect("/");
 	}
 
 	/**

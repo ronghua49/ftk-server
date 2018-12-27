@@ -45,7 +45,7 @@ public class PersonalUserServiceImpl implements PersonalUserService {
     public PageResult<AuthHistoryInfo> queryHistoryByParam(String key, Integer pageNo, Integer pageSize, String personId) {
 
         List<AuthHistoryInfo> historyList = new ArrayList<>();
-        String sql = "select a.STATE,a.MODIFY_TIMESTAMP,o.ADDRESS,o.`NAME`,o.TEL from ftk_authorization_stream a, ftk_organization o where a.ORG_ID=o.ORGANIZATION and a.PERSON_ID = ? and o.`NAME` like ? ORDER BY a.MODIFY_TIMESTAMP DESC";
+        String sql = "select a.STATE,a.MODIFY_TIMESTAMP,o.ADDRESS,o.`NAME`,o.TEL from FTK_AUTHORIZATION_STREAM a, FTK_ORGANIZATION o where a.ORG_ID=o.ORGANIZATION and a.PERSON_ID = ? and o.`NAME` like ? ORDER BY a.MODIFY_TIMESTAMP DESC";
         List<?> objects = crudService.sql(pageNo * pageSize, pageSize, sql, personId, "%" + key + "%");
         for (int i = 0; i < objects.size(); i++) {
             AuthHistoryInfo info = new AuthHistoryInfo();

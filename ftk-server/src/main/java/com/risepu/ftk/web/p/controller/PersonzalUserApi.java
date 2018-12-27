@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Api("personal")
 @RequestMapping("/api/personal")
@@ -26,7 +27,7 @@ public interface PersonzalUserApi {
 
     @ApiOperation(value = "个人扫码", nickname = "scanDoc")
     @RequestMapping(path = "/h/{hash:\\w+}")
-    String personalScanDoc(@PathVariable String hash, HttpSession session, HttpServletResponse response);
+    void personalScanDoc(@PathVariable String hash, HttpSession session, HttpServletResponse response) throws IOException;
 
     @ApiOperation(value = "个人扫码登录", nickname = "login")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = LoginResult.class) })

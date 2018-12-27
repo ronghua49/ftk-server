@@ -564,7 +564,7 @@ public class GenericDaoHibernate implements GenericDao {
 		logger.trace("SQL query with page, sql:[{}], args count:{}, firstResult:{}, maxResults:{}", sql, args == null ? 0 : args.length, firstResult, maxResults);
 		NativeQuery<?> query = getSession().createSQLQuery(sql);
 		for (int i = 0; args != null && i < args.length; i++) {
-			query.setParameter(i, args[i]);
+			query.setParameter(i+1, args[i]);
 		}
 		query.setFirstResult((int) firstResult);
 		query.setMaxResults((int) maxResults);

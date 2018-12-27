@@ -34,7 +34,7 @@ public class ChainServiceImpl implements ChainService {
 	public String sign(Long documentId) {
 		ProofDocument document = crudService.get(ProofDocument.class, documentId);
 		Template template = crudService.get(Template.class, document.getTemplate());
-		List<DocumentData> datas = crudService.hql(DocumentData.class, "from DocumentData where id.documentId = ? order by id.domainId", documentId);
+		List<DocumentData> datas = crudService.hql(DocumentData.class, "from DocumentData where id.documentId = ?1 order by id.domainId", documentId);
 		String dataJson = new Gson().toJson(datas) + "##";
 		dataJson += new Gson().toJson(template);
 		String hash = Sha512DigestUtils.shaHex(dataJson + "##{documentId=" + documentId + ", organization=\"" + document.getOrganization() + "\", personal=\"" + document.getPersonalUser() + "\"}");

@@ -8,6 +8,7 @@ public interface SmsService {
 
     String sendCode(String phone);
 
+
     boolean identify(String inCode, String createCode);
 
 }
