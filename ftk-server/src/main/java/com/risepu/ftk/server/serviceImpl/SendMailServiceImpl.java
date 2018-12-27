@@ -7,10 +7,7 @@ import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.*;
 
 import org.springframework.stereotype.Service;
 
@@ -56,7 +53,7 @@ public class SendMailServiceImpl implements SendMailService {
 //			DataHandler dh = new DataHandler(new FileDataSource("src\\2.jpg"));
         DataHandler dh = new DataHandler(new FileDataSource(filePath));
         attach.setDataHandler(dh);
-        attach.setFileName(dh.getName());
+        attach.setFileName(MimeUtility.encodeText(dh.getName()));
         // 创建容器描述数据关系
         MimeMultipart mp = new MimeMultipart();
         mp.addBodyPart(text);
