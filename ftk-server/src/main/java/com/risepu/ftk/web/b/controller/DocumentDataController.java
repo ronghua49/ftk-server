@@ -122,11 +122,15 @@ public class DocumentDataController implements DocumentDataApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest) {
+    public ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest, HttpServletRequest request) {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
         try {
-            sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath());
+            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+            OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+            Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
+            Template template = templateService.getTemplate(org.getDefaultTemId());
+            sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath(), template.getName());
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {
             return ResponseEntity.ok(Response.failed(400, "邮件发送失败"));
