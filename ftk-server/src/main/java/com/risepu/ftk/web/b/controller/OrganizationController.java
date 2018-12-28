@@ -422,7 +422,8 @@ public class OrganizationController implements OrganizationApi {
         if (currUser == null) {
             throw new NotLoginException();
         }
-        Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+        OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
         if (state == false) {
             org.setDefaultTemId(null);
         } else {
