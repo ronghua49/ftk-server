@@ -1,10 +1,9 @@
-package com.risepu.ftk.web.b;    /*
+package com.risepu.ftk.web;    /*
  * @author  Administrator
  * @date 2018/12/28
  */
 
 import com.risepu.ftk.server.domain.OrganizationUser;
-import com.risepu.ftk.web.Constant;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
