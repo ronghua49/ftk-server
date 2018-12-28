@@ -1,3 +1,4 @@
+
 package com.risepu.ftk.web.p.controller;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -157,7 +159,9 @@ public class PersonalUserController implements PersonzalUserApi  {
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
-			String code = smsService.authSendSms(personalUser.getMobile(),org.getName());
+			Map<String, String> params = new HashMap<>();
+			params.put("company", org.getName());
+			String code = smsService.sendCode(personalUser.getMobile(), SmsService.authTemplateCode,params);
 			stream.setAuthCode(code);
 			stream.setAuthState(AuthorizationStream.AUTH_STATE_PASS);
 			message="授权码下发成功";
