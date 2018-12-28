@@ -164,8 +164,10 @@ public class ManageTemplateController implements ManageTemplateApi {
                     return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
                 }
             }
+            ChartGraphics cg = new ChartGraphics();
+            String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
             String pdfFilePath = filePath + date + "/" + template.getId() + "（" + t++ + ").pdf";
-            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), filePath + date + "/示例二维码.jpg", filePath + date + "/示例盖章.jpg", pdfFilePath);
+            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), filePath + date + "/示例二维码.jpg", GrFilePath, pdfFilePath);
             template1.set_template(template.get_template());
             template1.setDescription(template.getDescription());
             template1.setName(template.getName());
