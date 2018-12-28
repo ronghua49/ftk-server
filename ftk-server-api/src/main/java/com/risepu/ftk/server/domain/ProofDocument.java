@@ -54,7 +54,7 @@ public class ProofDocument extends AuditableObject<Long> {
      */
     private String number;
 
-    @Column(name = "NUMBER")
+    @Column(name = "NUMBER", length = 255)
     public String getNumber() {
         return number;
     }
