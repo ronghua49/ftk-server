@@ -294,8 +294,9 @@ public class OrganizationController implements OrganizationApi {
             throw new NotLoginException();
         }
 
+        OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
 
-        Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
 
         String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
 
