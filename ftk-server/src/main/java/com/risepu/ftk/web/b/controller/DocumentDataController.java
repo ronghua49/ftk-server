@@ -122,11 +122,12 @@ public class DocumentDataController implements DocumentDataApi {
             }
             String n = "";
             if (stringList.contains(date1)) {
-                n = String.format("%03", t);
+
+                n = String.format("%03d", t);
                 t++;
             } else {
                 this.t = 1;
-                n = String.format("%03", t);
+                n = String.format("%03d", t);
             }
             String number = "ZKTXZ-" + convert.toUpperCase() + "-" + date1 + n;
             ProofDocument proofDocument = new ProofDocument();
