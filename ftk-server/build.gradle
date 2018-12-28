@@ -6,6 +6,9 @@ dependencies {
 	compile project(':commons-api')
 	compile project(':ftk-server-api')
 	compile project(':ftk-chain-api')
+	compile "com.aliyun:aliyun-java-sdk-core:$aliyunSdkCoreVersion"
+  	compile "com.aliyun:aliyun-java-sdk-dysmsapi:$aliyunSdkDysmsApiVersion"
+	
 }
 
 eclipse {

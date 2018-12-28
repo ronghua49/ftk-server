@@ -1,5 +1,7 @@
 package com.risepu.ftk.web;
 
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class SmsController implements SmsControllerApi {
 		boolean identify = smsService.identify(mesRequest.getImgCode(), sessionCode);
 
 		if (identify) {
-			String sendCode = smsService.registerSendSms(mesRequest.getPhone());
+			String sendCode = smsService.sendCode(mesRequest.getPhone(), SmsService.regTemplateCode, new HashMap<>());
 
 			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(), sendCode);
 			return ResponseEntity.ok(Response.succeed("验证码已下发"));
