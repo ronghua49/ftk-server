@@ -9,6 +9,7 @@ import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.m.dto.IdRequest;
+import net.lc4ever.framework.service.GenericCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,13 +39,17 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Autowired
     private OrganizationService organizationService;
 
+    @Autowired
+    private GenericCrudService crudService;
+
     @Override
     public ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-        if (organizationUser.getOrganizationId() == null) {
+        OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+        if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }
-        Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
         List<Template> templates = new ArrayList<>();
         if (defaultState.equals("0")) {
             Long flag = org.getDefaultTemId();
@@ -66,14 +71,16 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Override
     public ResponseEntity<Response<String>> getTemplateState(HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-        if(organizationUser==null){
-            throw  new NotLoginException();
+        if (organizationUser == null) {
+            throw new NotLoginException();
         }
-        if (organizationUser.getOrganizationId() == null) {
+        OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+        if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }
-        Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
-        if (org.getDefaultTemId() != null) {
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
+        Integer state = crudService.uniqueResultHql(Integer.class, "select state from Template where id = ?1", org.getDefaultTemId());
+        if (org.getDefaultTemId() != null && state == 0) {
             return ResponseEntity.ok(Response.succeed("0"));
         }
         return ResponseEntity.ok(Response.succeed("1"));

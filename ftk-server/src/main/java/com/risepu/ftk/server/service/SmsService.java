@@ -6,8 +6,9 @@ import net.lc4ever.framework.remote.annotation.Remote;
 public interface SmsService {
 
 
-    String sendCode(String phone);
+    String registerSendSms(String phone);
 
+    String authSendSms(String phone,String orgName);
 
     boolean identify(String inCode, String createCode);
 

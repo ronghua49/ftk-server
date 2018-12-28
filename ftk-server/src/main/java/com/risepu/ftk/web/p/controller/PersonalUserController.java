@@ -1,20 +1,24 @@
 package com.risepu.ftk.web.p.controller;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
+import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.service.ChainService;
+import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.PersonalUserService;
-import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.BasicAction;
 import com.risepu.ftk.web.Constant;
+import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.PageRequest;
 import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
+import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Map;
 
 
@@ -42,12 +47,14 @@ public class PersonalUserController implements PersonzalUserApi  {
 
 	@Autowired
 	private ChainService chainService;
+	@Autowired
+	private OrganizationService organizationService;
 
 	@Override
 	public void personalScanDoc(String hash, HttpSession session, HttpServletResponse response) throws IOException {
 
         session.setAttribute(Constant.getSessionChainHash(),hash);
-        response.sendRedirect("/");
+        response.sendRedirect("/ftk/p");
 	}
 
 	/**
@@ -62,15 +69,25 @@ public class PersonalUserController implements PersonzalUserApi  {
 		String smsCode =getSmsCode(request);
 		boolean identify = smsService.identify(loginRequest.getInCode(), smsCode);
 		LoginResult loginResult = new LoginResult();
-		
+
 		if(identify) {
 			String no = loginRequest.getCardNo();
 			/** 解析单据信息 */
 			String chainHash = (String) request.getSession().getAttribute(Constant.getSessionChainHash());
 			/** 校验用户输入的身份证号是否和单据信息一致 */
+
 			ProofDocument document = chainService.verify(chainHash, no);
 
 			if(document!=null) {
+
+				/** 实现单一登录，剔除效果*/
+				if(SessionListener.sessionMap.get(no)!=null){
+					BasicAction.forceLogoutUser(no);
+					SessionListener.sessionMap.put(no, request.getSession());
+				}else{
+					SessionListener.sessionMap.put(no, request.getSession());
+				}
+
 				PersonalUser personalUser = personalService.findUserByNo(no);
 				if(personalUser!=null) {
 					loginResult.setMessage("登录成功");
@@ -104,6 +121,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 		
 	}
 
+
 	private String getSmsCode(HttpServletRequest request) {
 		return (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
 	}
@@ -119,28 +137,33 @@ public class PersonalUserController implements PersonzalUserApi  {
 	@Override
 	public ResponseEntity<Response<String>> personAuth( String streamId, String state, HttpServletRequest request) {
 
-		
 		String message ="";
 		PersonalUser personalUser = getCurrUser(request);
 		if(personalUser==null){
-			throw new NotLoginException();
+			return ResponseEntity.ok(Response.failed(400,"请重新扫码登录"));
 		}
 		AuthorizationStream stream =   personalService.findAuthorizationStreamById(Long.parseLong(streamId));
 		
 		if(stream==null) {
 			return ResponseEntity.ok(Response.failed(11,"错误的流水id"));
 		}
-		
+
+		Organization org = organizationService.findAuthenOrgById(stream.getOrgId());
+
+		if(!stream.getAuthState().equals(AuthorizationStream.AUTH_STATE_NEW)){
+			return ResponseEntity.ok(Response.failed(400,"该企业已经被授权（拒绝），请不要重复操作"));
+		}
+
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
-			String code = smsService.sendCode(personalUser.getMobile());
+			String code = smsService.authSendSms(personalUser.getMobile(),org.getName());
 			stream.setAuthCode(code);
-			stream.setState(AuthorizationStream.AUTH_STATE_PASS);
+			stream.setAuthState(AuthorizationStream.AUTH_STATE_PASS);
 			message="授权码下发成功";
 			
 		}else {
-			stream.setState(AuthorizationStream.AUTH_STATE_REFUSE);
+			stream.setAuthState(AuthorizationStream.AUTH_STATE_REFUSE);
 			message="授权已拒绝";
 		}
 		
@@ -148,8 +171,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 		
 		return ResponseEntity.ok(Response.succeed(message));
 	}
-
-
 
 
 	/**
@@ -163,7 +184,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 																				 HttpServletRequest request){
 		PersonalUser user = getCurrUser(request);
 		if(user==null){
-			throw new NotLoginException();
+			return ResponseEntity.ok(Response.failed(400,"请重新扫码登录"));
 		}
 		
 		PageResult<AuthHistoryInfo> pageResult =  personalService.queryHistoryByParam(pageRequest.getKey(),pageRequest.getPageNo(),pageRequest.getPageSize(),user.getId());
@@ -171,9 +192,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 		return ResponseEntity.ok(Response.succeed(pageResult));
 		
 	}
-
-
-
 
 	private PersonalUser getCurrUser(HttpServletRequest request) {
 		return (PersonalUser) request.getSession().getAttribute(Constant.getSessionCurrUser());

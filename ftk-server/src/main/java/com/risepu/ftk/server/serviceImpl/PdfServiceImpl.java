@@ -47,7 +47,7 @@ public class PdfServiceImpl implements PdfService {
         //设置字体样式
         Font textFont = new Font(bfChinese, 15, Font.BOLD); //加粗
         Font boldFont = new Font(bfChinese, 15, Font.UNDEFINED); //正常
-        Font secondTitleFont = new Font(bfChinese, 20, Font.UNDEFINED); //标题
+        Font secondTitleFont = new Font(bfChinese, 20, Font.BOLD); //标题
 
         //创建输出流
         PdfWriter pdfWriter = PdfWriter.getInstance(doc, new FileOutputStream(new File(pdfFilePath)));
@@ -99,13 +99,13 @@ public class PdfServiceImpl implements PdfService {
 
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(30, 300);//坐标
-        image.scaleAbsolute(90, 90);//自定义大小
+        image.setAbsolutePosition(40, 300);//坐标
+        image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(400, 330);//坐标
+        image1.setAbsolutePosition(370, 330);//坐标
         image1.scaleAbsolute(175, 50);//自定义大小
         doc.add(image1);
 
@@ -117,7 +117,7 @@ public class PdfServiceImpl implements PdfService {
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
         cd.setFontAndSize(bfChinese, 20);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 430, 310, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 310, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
@@ -193,7 +193,6 @@ public class PdfServiceImpl implements PdfService {
         ph1 = new Phrase();
         p1.setLeading(30);
 
-
         Map<String, Pdf> map1 = new HashMap<>();
         List<String> list1 = new ArrayList<>();
         int index = 0;
@@ -214,7 +213,6 @@ public class PdfServiceImpl implements PdfService {
             }
         }
 
-
         String content = "";
         //得到页面输入的值
         while ((index = _template.indexOf("${", number)) != -1) {
@@ -231,7 +229,8 @@ public class PdfServiceImpl implements PdfService {
                 content = _template.substring(number, index);
             }
             Chunk c2 = new Chunk(content, contentFont);
-            Chunk c22 = new Chunk(value, textFont);
+            Chunk c22 = new Chunk(" " + value + " ", textFont);
+            c22.setUnderline(0.1f, -1f);
             ph1.add(c2);
             ph1.add(c22);
             number = index + pdf1.getKey().length();
@@ -244,22 +243,31 @@ public class PdfServiceImpl implements PdfService {
         doc.add(p1);
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(30, 300);//坐标
-        image.scaleAbsolute(90, 90);//自定义大小
+        image.setAbsolutePosition(40, 300);//坐标
+        image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(400, 330);//坐标
+        image1.setAbsolutePosition(370, 330);//坐标
         image1.scaleAbsolute(175, 50);//自定义大小
         doc.add(image1);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 20);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 430, 310, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 310, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
     }
+
+  /*  public static void main(String[] args) {
+        PdfServiceImpl a = new PdfServiceImpl();
+        try {
+            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFS", "但是发射点发生", "/file-path/642222199712231044(8).jpg", "/file-path/91110105MA0188BF6R(0).jpg", "/file-path/test.pdf");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 }

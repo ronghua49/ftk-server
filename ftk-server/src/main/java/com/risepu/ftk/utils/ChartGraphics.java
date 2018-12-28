@@ -61,17 +61,17 @@ public class ChartGraphics {
         //设置字体
         Font tipFont = new Font("/simsun.ttf", Font.BOLD, 24);
         tip.setFont(tipFont);
-        tip.drawString(name, 60, imageHeight / 2 - 10);
-        tip.drawString("声明有效", 120, imageHeight / 2 + 15);
+        tip.drawString(name, (imageWidth - (name.length() * 24)) / 2 + 0, (imageHeight - 24) / 2 + 10);
+        tip.drawString("声明有效", (imageWidth - (4 * 24)) / 2 + 0, (imageHeight - 24) / 2 + 40);
 
         tip.setColor(Color.RED);
         tip.setStroke(new BasicStroke(8));
         tip.drawRoundRect(0, 0, imageWidth - 1, imageHeight - 1, 40, 40);
         return createImage(imgurl);
     }
-
+/*
     public static void main(String[] args) {
-        ChartGraphics g=new ChartGraphics();
-        g.graphicsGeneration("电风扇犯得上发","/file-path/112.jpg");
-    }
+        ChartGraphics g = new ChartGraphics();
+        g.graphicsGeneration("电风扇", "/file-path/112.jpg");
+    }*/
 }
