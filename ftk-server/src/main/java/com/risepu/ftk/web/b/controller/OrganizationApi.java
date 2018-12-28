@@ -2,6 +2,7 @@ package com.risepu.ftk.web.b.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationStream;
@@ -27,7 +28,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/regist")
     @ResponseBody
-    ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo, HttpServletRequest request);
+    ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo, HttpSession session);
 
 
     @ApiOperation(value = "企业登录", nickname = "Orglogin")
@@ -40,13 +41,13 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/forgetPwd")
     @ResponseBody
-    ResponseEntity<Response<String>> orgForgetPwd(@RequestBody ForgetRequest forgetRequest, HttpServletRequest request);
+    ResponseEntity<Response<String>> orgForgetPwd(@RequestBody ForgetRequest forgetRequest, HttpSession session);
 
     @ApiOperation(value = "修改密码", nickname = "changePwd")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/changePwd")
     @ResponseBody
-    ResponseEntity<Response<String>> orgChangePwd(@RequestParam String password, @RequestParam String newpwd, HttpServletRequest request);
+    ResponseEntity<Response<String>> orgChangePwd(@RequestParam String password, @RequestParam String newpwd, HttpSession session);
 
 
     @ApiOperation(value = "图片上传", nickname = "imgupload")
@@ -68,34 +69,34 @@ public interface OrganizationApi {
     @RequestMapping(path = "/authen/info")
     @ResponseBody
     ResponseEntity<Response<String>> orgAuthen(@RequestBody OrganizationStream organizationStream,
-                                               HttpServletRequest request);
+                                               HttpSession session);
 
     @ApiOperation(value = "校验企业认证状态", nickname = "checkState")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = OrganizationStream.class)})
     @RequestMapping(path = "/auth/check")
     @ResponseBody
-    ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request);
+    ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpSession session);
 
 
     @ApiOperation(value = "企业扫码", nickname = "scanQR")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = Long.class)})
     @RequestMapping(path = "/scanQR")
     @ResponseBody
-    ResponseEntity<Response<Long>> scanQR(@RequestParam String hash, HttpServletRequest request);
+    ResponseEntity<Response<Long>> scanQR(@RequestParam String hash, HttpSession session);
 
 
     @ApiOperation(value = "企业扫码历史单据查询", nickname = "QRHistory")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/history/verify")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request);
+    ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session);
 
 
     @ApiOperation(value = "企业开单历史", nickname = "documentHistory")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/history/document")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest, HttpServletRequest request);
+    ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest, HttpSession session);
 
 
     @ApiOperation(value = "开单历史详情", nickname = "documentInfo")
@@ -110,28 +111,28 @@ public interface OrganizationApi {
     @RequestMapping(path = "/advice")
     @ResponseBody
     ResponseEntity<Response<String>> adviceInfo(@RequestBody OrganizationAdvice advice,
-                                                HttpServletRequest request);
+                                                HttpSession session);
 
 
     @ApiOperation(value = "退出登录", nickname = "loginout")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/logout")
     @ResponseBody
-    ResponseEntity<Response<String>> loginOut(HttpServletRequest request);
+    ResponseEntity<Response<String>> loginOut(HttpSession session);
 
 
     @ApiOperation(value = "设置默认模板", nickname = "defaultTemplate")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/defaultTem")
     @ResponseBody
-    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String templateId, @RequestParam boolean state, HttpServletRequest request);
+    ResponseEntity<Response<String>> setDefaultTemplate(@RequestParam String templateId, @RequestParam boolean state, HttpSession session);
 
 
     @ApiOperation(value = "企业单据验证", nickname = "verifyDocument")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/verify")
     @ResponseBody
-    ResponseEntity<Response<String>> qualifyQRCode(@RequestBody VerifyRequest verifyRequest, HttpServletRequest request);
+    ResponseEntity<Response<String>> qualifyQRCode(@RequestBody VerifyRequest verifyRequest);
 
 
 }

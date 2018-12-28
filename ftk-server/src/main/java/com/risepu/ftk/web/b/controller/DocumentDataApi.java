@@ -47,5 +47,5 @@ public interface DocumentDataApi {
     @PostMapping(path = "/sendEmail")
     @ResponseBody
     @CrossOrigin
-    ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest);
+    ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest, HttpServletRequest request);
 }

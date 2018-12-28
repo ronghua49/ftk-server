@@ -1,5 +1,6 @@
 package com.risepu.ftk.server.serviceImpl;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import org.joda.time.DateTime;
@@ -45,7 +46,11 @@ public class PersonalUserServiceImpl implements PersonalUserService {
     public PageResult<AuthHistoryInfo> queryHistoryByParam(String key, Integer pageNo, Integer pageSize, String personId) {
 
         List<AuthHistoryInfo> historyList = new ArrayList<>();
-        String sql = "select a.STATE,a.MODIFY_TIMESTAMP,o.ADDRESS,o.`NAME`,o.TEL from ftk_authorization_stream a, ftk_organization o where a.ORG_ID=o.ORGANIZATION and a.PERSON_ID = ? and o.`NAME` like ? ORDER BY a.MODIFY_TIMESTAMP DESC";
+        String sql = "select a.AUTH_STATE,a.MODIFY_TIMESTAMP,o.ADDRESS,o.`NAME`,o.TEL from FTK_AUTHORIZATION_STREAM a, FTK_ORGANIZATION o where a.ORG_ID=o.ORGANIZATION and a.AUTH_STATE in (1,2) and a.PERSON_ID = ? and o.`NAME` like ? ORDER BY a.MODIFY_TIMESTAMP DESC";
+        String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a, FTK_ORGANIZATION o where a.ORG_ID=o.ORGANIZATION and a.AUTH_STATE in (1,2) and a.PERSON_ID = ? and o.`NAME` like ?";
+        BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, personId, "%" + key + "%");
+
+        int total = bigInteger.intValue();
         List<?> objects = crudService.sql(pageNo * pageSize, pageSize, sql, personId, "%" + key + "%");
         for (int i = 0; i < objects.size(); i++) {
             AuthHistoryInfo info = new AuthHistoryInfo();
@@ -58,7 +63,7 @@ public class PersonalUserServiceImpl implements PersonalUserService {
             historyList.add(info);
         }
         PageResult<AuthHistoryInfo> page = new PageResult<>();
-        page.setTotalElements(historyList.size());
+        page.setTotalElements(total);
         page.setContent(historyList);
 
         return page;
@@ -72,7 +77,7 @@ public class PersonalUserServiceImpl implements PersonalUserService {
         DateTime minusTime = dateTime.minusMinutes(10);
 
         Date time = minusTime.toDate();
-        List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo, time);
+        List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and authState=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo, time);
 
         if (streams != null && !streams.isEmpty()) {
 

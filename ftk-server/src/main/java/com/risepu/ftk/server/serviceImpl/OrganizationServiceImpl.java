@@ -137,14 +137,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void download(String imgName, HttpServletResponse response) throws IOException {
-
-
         File file = new File(ConfigUtil.getValue("file.upload.path"));
         if (!file.exists()) {
             file.mkdirs();
         }
         String filePath = file.getPath();
-
         InputStream in = new FileInputStream(new File(filePath, imgName));
         OutputStream out = response.getOutputStream();
 
@@ -159,7 +156,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     public void save(Organization organization) {
         crudService.save(organization);
     }
-
 
     @Override
     public String checkOrgName(String mobileOrName) {
@@ -197,7 +193,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         stream.setOrgId(orgId);
         stream.setPersonId(cardNo);
-        stream.setState(AuthorizationStream.AUTH_STATE_NEW);
+        stream.setAuthState(AuthorizationStream.AUTH_STATE_NEW);
         Long streamId = crudService.save(stream);
         return streamId;
 
@@ -222,7 +218,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Date endDate = null;
         Date nextDate = null;
 
-        if (startTime != "" && startTime != null) {
+        if (StringUtils.isNotEmpty(startTime)) {
             try {
                 startDate = format.parse(startTime);
                 endDate = format.parse(endTime);
@@ -239,41 +235,41 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         Integer state = (Integer) map.get("state");
 
-        if (key != "" && key != null && state == null && startDate == null) {
+        if (StringUtils.isNotEmpty(key) && state == null && startDate == null) {
 
             hql = "from OrganizationStream where name like ?1 order by createTimestamp desc";
 
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%").intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%");
 
-        } else if (key != "" && key != null && state != null && startDate == null) {
+        } else if (StringUtils.isNotEmpty(key) && state != null && startDate == null) {
             hql = "from OrganizationStream where name like ?1 and state=?2 order by createTimestamp desc";
 
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%", state).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%", state);
 
-        } else if (key != "" && key != null && state != null && startDate != null) {
+        } else if (StringUtils.isNotEmpty(key) && state != null && startDate != null) {
 
             hql = "from OrganizationStream where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
 
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%", state, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%", state, startDate, nextDate);
 
-        } else if ((key == "" || key == null) && state == null && startDate != null) {
+        } else if (StringUtils.isEmpty(key) && state == null && startDate != null) {
 
             hql = "from OrganizationStream where createTimestamp between ?1 and ?2 order by createTimestamp desc";
 
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, startDate, nextDate);
 
-        } else if ((key == "" || key == null) && state != null && startDate != null) {
+        } else if (StringUtils.isEmpty(key)&& state != null && startDate != null) {
 
             hql = "from OrganizationStream where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
 
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, state, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, state, startDate, nextDate);
 
-        } else if ((key == "" || key == null) && state != null && startDate == null) {
+        } else if (StringUtils.isEmpty(key) && state != null && startDate == null) {
             hql = "from OrganizationStream where state=?1 order by createTimestamp desc";
 
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, state).intValue();
@@ -333,7 +329,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public List<AuthorizationStream> querySucceedAuthStreamByOrgId(String organizationId) {
-        return crudService.hql(AuthorizationStream.class, "from AuthorizationStream where orgId =?1 and state= ?2", organizationId, AuthorizationStream.VERIFY_STATE_PASS);
+        return crudService.hql(AuthorizationStream.class, "from AuthorizationStream where orgId =?1 and verifyState= ?2", organizationId, AuthorizationStream.VERIFY_STATE_PASS);
     }
 
     /**

@@ -6,7 +6,6 @@ package com.risepu.ftk.web.p.controller;    /*
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.PageRequest;
-import com.risepu.ftk.web.b.dto.RegistRequest;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
@@ -18,16 +17,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Api("personal")
 @RequestMapping("/api/personal")
 public interface PersonzalUserApi {
 
     @ApiOperation(value = "个人扫码", nickname = "scanDoc")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = LoginResult.class) })
-    @RequestMapping(path = "/{hash:\\w+}")
-    @ResponseBody
-    ResponseEntity<Response<String>> personalScanDoc(@PathVariable String hash, HttpServletRequest request);
+    @RequestMapping(path = "/h/{hash:\\w+}")
+    void personalScanDoc(@PathVariable String hash, HttpSession session, HttpServletResponse response) throws IOException;
 
     @ApiOperation(value = "个人扫码登录", nickname = "login")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = LoginResult.class) })
@@ -36,17 +36,11 @@ public interface PersonzalUserApi {
     ResponseEntity<Response<LoginResult>> personalLogin(@RequestBody LoginRequest loginRequest, HttpServletRequest request);
 
 
-
-
     @ApiOperation(value = "个人点击授权或拒绝", nickname = "authentic orgScanRequest")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
     @RequestMapping(path = "/authen")
     @ResponseBody
     ResponseEntity<Response<String>> personAuth(@RequestParam String streamId,@RequestParam String state, HttpServletRequest request);
-
-
-
-
 
     @ApiOperation(value = "个人授权历史查询", nickname = "authorization history")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = AuthHistoryInfo.class) })
@@ -54,8 +48,6 @@ public interface PersonzalUserApi {
     @ResponseBody
     ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
                                                                                  HttpServletRequest request);
-
-
 
 
 

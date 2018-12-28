@@ -60,13 +60,21 @@ public class DocumentDataController implements DocumentDataApi {
     @Value("${ftk.qrcode.urlPrefix}")
     private String urlPrefix;
 
+    @Value("${ftk.root.filePath}")
+    private String filePath;
+
     private Integer t = 0;
 
     @Override
     public ResponseEntity<Response<String>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Request Uri: /documentData/add");
         try {
-            File file = new File("/file-path");
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmssSS");
+            SimpleDateFormat ft1 = new SimpleDateFormat("yyyyMMdd");
+            String date = ft.format(new Date());
+            String date1 = ft1.format(new Date());
+
+            File file = new File(filePath + date);
             file.mkdirs();
             Long templateId = Long.parseLong(map.get("templateId"));
             // 根据模板id得到模板
@@ -76,16 +84,17 @@ public class DocumentDataController implements DocumentDataApi {
             List<Domain> list = domainService.selectByTemplate(templateId);
 
             OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-            Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
+            OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+
+            Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
 
             //生成盖章图片
             ChartGraphics cg = new ChartGraphics();
-            String GrFilePath = cg.graphicsGeneration(org.getName(), "/file-path/" + org.getId() + "(" + t++ + ").jpg");
+            String GrFilePath = cg.graphicsGeneration(org.getName(), filePath + date1 + "/" + org.getId() + date + ".jpg");
 
-            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
-            String date = ft.format(new Date());
+
             //pdf流输出路径
-            String pdfFilePath = "/file-path/职场通行证-" + template.getName() + "-" + date + "(" + t++ + ").pdf";
+            String pdfFilePath = filePath + date1 + "/职场通行证-" + template.getName() + "-" + date + ".pdf";
 
             ProofDocument proofDocument = new ProofDocument();
             proofDocument.setPersonalUser(map.get("idCard"));
@@ -95,7 +104,8 @@ public class DocumentDataController implements DocumentDataApi {
             ProofDocument proofDocument1 = proofDocumentService.getDocumentById(proDocumentId);
             String hash = chainService.sign(proDocumentId);
             //生成二维码图片
-            String qrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/" + map.get("idCard") + "(" + t++ + ").jpg", urlPrefix + hash);
+            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1 + "/" + map.get("idCard") + date + ".jpg", urlPrefix + hash);
+
             // 文档保存路径
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
             proofDocument1.setChainHash(hash);
@@ -114,11 +124,15 @@ public class DocumentDataController implements DocumentDataApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest) {
+    public ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest, HttpServletRequest request) {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
         try {
-            sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath());
+            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+            OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+            Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
+            Template template = templateService.getTemplate(org.getDefaultTemId());
+            sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath(), template.getName());
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {
             return ResponseEntity.ok(Response.failed(400, "邮件发送失败"));

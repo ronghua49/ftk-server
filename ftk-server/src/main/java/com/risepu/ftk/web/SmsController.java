@@ -30,7 +30,7 @@ public class SmsController implements SmsControllerApi {
 		boolean identify = smsService.identify(mesRequest.getImgCode(), sessionCode);
 
 		if (identify) {
-			String sendCode = smsService.sendCode(mesRequest.getPhone(), "SMS_153991308", new HashMap<>());
+			String sendCode = smsService.sendCode(mesRequest.getPhone(), SmsService.regTemplateCode, new HashMap<>());
 
 			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(), sendCode);
 			return ResponseEntity.ok(Response.succeed("验证码已下发"));
