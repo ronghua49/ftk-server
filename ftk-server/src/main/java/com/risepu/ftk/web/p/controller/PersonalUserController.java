@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.service.ChainService;
+import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.web.b.dto.PageRequest;
 import com.risepu.ftk.web.exception.NotLoginException;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
+import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.service.PersonalUserService;
 import com.risepu.ftk.server.service.SmsService;
@@ -44,6 +46,9 @@ public class PersonalUserController implements PersonzalUserApi {
 
     @Autowired
     private ChainService chainService;
+    
+    @Autowired
+    private OrganizationService organizationService;
 
 
     @Override
@@ -135,11 +140,12 @@ public class PersonalUserController implements PersonzalUserApi {
         if (stream == null) {
             return ResponseEntity.ok(Response.failed(11, "错误的流水id"));
         }
-
+        
         /** 判断授权 */
         if (Integer.parseInt(state) == (AuthorizationStream.AUTH_STATE_PASS)) {
             /** 发送验证码 */
-            String code = smsService.sendCode(personalUser.getMobile());
+        	Organization organization = organizationService.findAuthenOrgById(stream.getOrgId());
+            String code = smsService.sendCode(personalUser.getMobile(), "SMS_", params);
             stream.setAuthCode(code);
             stream.setState(AuthorizationStream.AUTH_STATE_PASS);
             message = "授权码下发成功";
