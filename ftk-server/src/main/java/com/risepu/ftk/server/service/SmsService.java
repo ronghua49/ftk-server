@@ -8,7 +8,7 @@ public interface SmsService {
 
     String registerSendSms(String phone);
 
-    String authSendSms(String phone);
+    String authSendSms(String phone,String orgName);
 
     boolean identify(String inCode, String createCode);
 

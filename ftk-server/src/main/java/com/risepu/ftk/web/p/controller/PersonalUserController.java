@@ -1,9 +1,11 @@
 package com.risepu.ftk.web.p.controller;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
+import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.service.ChainService;
+import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.PersonalUserService;
 import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.utils.PageResult;
@@ -14,6 +16,7 @@ import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
+import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ public class PersonalUserController implements PersonzalUserApi  {
 
 	@Autowired
 	private ChainService chainService;
+	@Autowired
+	private OrganizationService organizationService;
 
 	@Override
 	public void personalScanDoc(String hash, HttpSession session, HttpServletResponse response) throws IOException {
@@ -129,11 +134,13 @@ public class PersonalUserController implements PersonzalUserApi  {
 		if(stream==null) {
 			return ResponseEntity.ok(Response.failed(11,"错误的流水id"));
 		}
-		
+
+		Organization org = organizationService.findAuthenOrgById(stream.getOrgId());
+
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
-			String code = smsService.authSendSms(personalUser.getMobile());
+			String code = smsService.authSendSms(personalUser.getMobile(),org.getName());
 			stream.setAuthCode(code);
 			stream.setAuthState(AuthorizationStream.AUTH_STATE_PASS);
 			message="授权码下发成功";
