@@ -8,12 +8,17 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.risepu.ftk.server.domain.*;
+import net.lc4ever.framework.remote.annotation.Remote;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
 
-//@Remote(path="/org")
+
+/**
+ * @author ronghaohua
+ */
+@Remote(path="/org")
 public interface OrganizationService {
 
     /**

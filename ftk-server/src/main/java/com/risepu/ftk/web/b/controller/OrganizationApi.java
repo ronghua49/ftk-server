@@ -20,6 +20,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 
+/**
+ * @author ronghaohua
+ */
 @Api(value = "org")
 @RequestMapping("/api/org")
 public interface OrganizationApi {
@@ -85,7 +88,7 @@ public interface OrganizationApi {
     ResponseEntity<Response<Long>> scanQR(@RequestParam String hash, HttpSession session);
 
 
-    @ApiOperation(value = "企业扫码历史单据查询", nickname = "QRHistory")
+    @ApiOperation(value = "企业验证历史", nickname = "QRHistory")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/history/verify")
     @ResponseBody

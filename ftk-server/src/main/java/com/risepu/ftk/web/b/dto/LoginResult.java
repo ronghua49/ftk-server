@@ -3,6 +3,9 @@ package com.risepu.ftk.web.b.dto;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationUser;
 
+/**
+ * @author ronghaohua
+ */
 public class LoginResult {
 	
 	private int code; 

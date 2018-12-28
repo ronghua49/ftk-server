@@ -2,6 +2,9 @@ package com.risepu.ftk.web.p.dto;
 
 import java.util.Date;
 
+/**
+ * @author ronghaohua
+ */
 public class AuthHistoryInfo {
 
 	private String name;

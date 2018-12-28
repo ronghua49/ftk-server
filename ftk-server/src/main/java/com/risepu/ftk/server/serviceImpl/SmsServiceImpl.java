@@ -18,6 +18,9 @@ import com.google.gson.Gson;
 import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.utils.VerifyCode;
 
+/**
+ * @author ronghaohua
+ */
 @Service
 public class SmsServiceImpl implements SmsService {
 

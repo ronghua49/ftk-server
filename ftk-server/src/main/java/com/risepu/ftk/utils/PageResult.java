@@ -3,6 +3,9 @@ package com.risepu.ftk.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author ronghaohua
+ */
 public class PageResult<T> {
     private String resultCode;
 

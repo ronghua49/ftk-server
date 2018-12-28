@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.risepu.ftk.web.api.Response;
 
+/**
+ * @author ronghaohua
+ */
 @Controller
 @RequestMapping("/api/captcha/v1")
 public class CaptchaController implements InitializingBean, CaptchaApi {
@@ -55,7 +58,7 @@ public class CaptchaController implements InitializingBean, CaptchaApi {
         request.getSession().setAttribute(Constant.getSessionVerificationCodeImg(), code);
 
         try {
-            captchaEnabled = true;
+            captchaEnabled = false;
             return ResponseEntity.ok(Response.succeed(imgBase64(request, code)));
 
         } catch (Exception e) {

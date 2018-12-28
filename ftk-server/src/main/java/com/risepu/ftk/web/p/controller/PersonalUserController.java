@@ -1,4 +1,3 @@
-
 package com.risepu.ftk.web.p.controller;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
@@ -15,11 +14,9 @@ import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.PageRequest;
-import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
-import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +27,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * @author ronghaohua
+ */
 @RestController
 
 public class PersonalUserController implements PersonzalUserApi  {
@@ -159,9 +157,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
-			Map<String, String> params = new HashMap<>();
-			params.put("company", org.getName());
-			String code = smsService.sendCode(personalUser.getMobile(), SmsService.authTemplateCode,params);
+			String code = smsService.authSendSms(personalUser.getMobile(),org.getName());
 			stream.setAuthCode(code);
 			stream.setAuthState(AuthorizationStream.AUTH_STATE_PASS);
 			message="授权码下发成功";

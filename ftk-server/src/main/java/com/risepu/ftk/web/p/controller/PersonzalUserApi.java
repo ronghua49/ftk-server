@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * @author ronghaohua
+ */
 @Api("personal")
 @RequestMapping("/api/personal")
 public interface PersonzalUserApi {

@@ -13,6 +13,9 @@ import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.dto.MesRequest;
 
+/**
+ * @author ronghaohua
+ */
 @Controller
 @RequestMapping("/api/sms")
 public class SmsController implements SmsControllerApi {
