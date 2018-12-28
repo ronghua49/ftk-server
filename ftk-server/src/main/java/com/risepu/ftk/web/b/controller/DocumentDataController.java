@@ -170,6 +170,7 @@ public class DocumentDataController implements DocumentDataApi {
             sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath(), template.getName());
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {
+            logger.error(e.getMessage(),e);
             return ResponseEntity.ok(Response.failed(400, "邮件发送失败"));
         }
     }
