@@ -324,8 +324,10 @@ public class OrganizationController implements OrganizationApi {
             throw new NotLoginException();
         }
 
+        OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
+
         /** 根据企业id查询 已经验证成功的流水idlist*/
-        List<AuthorizationStream> streams = organizationService.querySucceedAuthStreamByOrgId(orgUser.getOrganizationId());
+        List<AuthorizationStream> streams = organizationService.querySucceedAuthStreamByOrgId(user.getOrganizationId());
         List<String> chainHashs = new ArrayList<>();
 
         for (AuthorizationStream stream : streams) {
@@ -354,7 +356,8 @@ public class OrganizationController implements OrganizationApi {
             throw new NotLoginException();
         }
 
-        Organization org = organizationService.findAuthenOrgById(currUser.getOrganizationId());
+        OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
         PageResult document = proofDocumentService.getDocuments(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
         return ResponseEntity.ok(Response.succeed(document));
     }
