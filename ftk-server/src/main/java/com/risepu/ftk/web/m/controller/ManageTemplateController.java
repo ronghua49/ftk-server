@@ -11,6 +11,7 @@ import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,9 @@ public class ManageTemplateController implements ManageTemplateApi {
 
     @Autowired
     private GenericCrudService crudService;
+
+    @Value("${ftk.root.filePath}")
+    private String filePath;
 
     private Integer t = 0;
 
@@ -146,6 +150,12 @@ public class ManageTemplateController implements ManageTemplateApi {
                     templateDomainService.add(template.getId(), domain.getId());
                 }
             }
+
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
+            String date = ft.format(new Date());
+
+            File file = new File(filePath + date);
+            file.mkdirs();
             StringUtil stringUtil = new StringUtil();
             List<String> list2 = stringUtil.getStrContainData(template.get_template(), "{", "}", true);
             for (String key : list2) {
@@ -154,8 +164,8 @@ public class ManageTemplateController implements ManageTemplateApi {
                     return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
                 }
             }
-            String pdfFilePath = "/file-path/" + template.getId() + "（" + t++ + ").pdf";
-            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), "/file-path/示例二维码.jpg", "/file-path/示例盖章.jpg", pdfFilePath);
+            String pdfFilePath = filePath + date + "/" + template.getId() + "（" + t++ + ").pdf";
+            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), filePath + date + "/示例二维码.jpg", filePath + date + "/示例盖章.jpg", pdfFilePath);
             template1.set_template(template.get_template());
             template1.setDescription(template.getDescription());
             template1.setName(template.getName());
@@ -178,6 +188,7 @@ public class ManageTemplateController implements ManageTemplateApi {
         if (StringUtils.isEmpty(template.get_template())) {
             return ResponseEntity.ok(Response.failed(400, "二次模板不能为空"));
         }
+
         Long templateId = templateService.add(template);
         List<String> list = new ArrayList();
         if (templateId != null) {
@@ -200,14 +211,17 @@ public class ManageTemplateController implements ManageTemplateApi {
                     return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
                 }
             }
-            File file = new File("/file-path");
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
+            String date = ft.format(new Date());
+
+            File file = new File(filePath + date);
             file.mkdirs();
             //生成二维码图片
-            String QrFilePath = qrCodeUtilSerevice.createQrCode("/file-path/示例二维码.jpg", "china is good");
+            String QrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
 
             ChartGraphics cg = new ChartGraphics();
-            String GrFilePath = cg.graphicsGeneration("******有限公司", "/file-path/示例盖章.jpg");
-            String pdfFilePath = "/file-path/" + templateId + ".pdf";
+            String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
+            String pdfFilePath = filePath + date + "/" + templateId + ".pdf";
             String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), QrFilePath, GrFilePath, pdfFilePath);
             Template template1 = templateService.getTemplate(templateId);
             template1.setFilePath(filePath1);

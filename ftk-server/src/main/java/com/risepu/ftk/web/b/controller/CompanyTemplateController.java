@@ -9,6 +9,7 @@ import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.m.dto.IdRequest;
+import net.lc4ever.framework.service.GenericCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,9 @@ public class CompanyTemplateController implements CompanyTemplateApi {
 
     @Autowired
     private OrganizationService organizationService;
+
+    @Autowired
+    private GenericCrudService crudService;
 
     @Override
     public ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request) {
@@ -75,7 +79,8 @@ public class CompanyTemplateController implements CompanyTemplateApi {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
-        if (org.getDefaultTemId() != null) {
+        Integer state = crudService.uniqueResultHql(Integer.class, "select state from Template where id = ?1", org.getDefaultTemId());
+        if (org.getDefaultTemId() != null && state == 0) {
             return ResponseEntity.ok(Response.succeed("0"));
         }
         return ResponseEntity.ok(Response.succeed("1"));
