@@ -74,7 +74,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             ProofDocument proofDocument = (ProofDocument) proofDocuments.get(i);
             documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
             map.put("chainHash", proofDocument.getChainHash());
-            map.put("number", proofDocument.getId());
+            map.put("number", proofDocument.getNumber());
             map.put("createTimestamp", proofDocument.getCreateTimestamp());
             for (int j = 0; j < documentDataList.size(); j++) {
                 DocumentData documentData = documentDataList.get(j);
@@ -125,7 +125,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             ProofDocument proofDocument = (ProofDocument) proofDocuments.get(i);
             documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
             map.put("chainHash", proofDocument.getChainHash());
-            map.put("number", proofDocument.getId());
+            map.put("number", proofDocument.getNumber());
             map.put("createTimestamp", proofDocument.getCreateTimestamp());
             for (int j = 0; j < documentDataList.size(); j++) {
                 DocumentData documentData = documentDataList.get(j);

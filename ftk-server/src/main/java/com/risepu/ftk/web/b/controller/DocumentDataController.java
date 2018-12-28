@@ -6,6 +6,8 @@ import com.risepu.ftk.utils.ChartGraphics;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.m.dto.EmailRequest;
+import net.lc4ever.framework.service.GenericCrudService;
+import net.sourceforge.pinyin4j.PinyinHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -57,13 +60,16 @@ public class DocumentDataController implements DocumentDataApi {
     @Autowired
     private ChainService chainService;
 
+    @Autowired
+    private GenericCrudService crudService;
+
     @Value("${ftk.qrcode.urlPrefix}")
     private String urlPrefix;
 
     @Value("${ftk.root.filePath}")
     private String filePath;
 
-    private Integer t = 0;
+    private Integer t = 1;
 
     @Override
     public ResponseEntity<Response<String>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
@@ -96,9 +102,37 @@ public class DocumentDataController implements DocumentDataApi {
             //pdf流输出路径
             String pdfFilePath = filePath + date1 + "/职场通行证-" + template.getName() + "-" + date + ".pdf";
 
+            String title = template.getName();
+
+
+            String convert = "";
+            for (int j = 0; j < title.length(); j++) {
+                char word = title.charAt(j);
+                String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(word);
+                if (pinyinArray != null) {
+                    convert += pinyinArray[0].charAt(0);
+                } else {
+                    convert += word;
+                }
+            }
+            List<Date> dateList = crudService.hql(Date.class, "select createTimestamp from ProofDocument");
+            List<String> stringList = new ArrayList<>();
+            for (int i = 0; i < dateList.size(); i++) {
+                stringList.add(ft1.format(dateList.get(i)));
+            }
+            String n = "";
+            if (stringList.contains(date1)) {
+                n = String.format("%03", t);
+                t++;
+            } else {
+                this.t = 1;
+                n = String.format("%03", t);
+            }
+            String number = "ZKTXZ-" + convert.toUpperCase() + "-" + date1 + n;
             ProofDocument proofDocument = new ProofDocument();
             proofDocument.setPersonalUser(map.get("idCard"));
             proofDocument.setOrganization(org.getId());
+            proofDocument.setNumber(number);
             proofDocument.setTemplate(templateId);
             Long proDocumentId = proofDocumentService.add(proofDocument);
             ProofDocument proofDocument1 = proofDocumentService.getDocumentById(proDocumentId);
