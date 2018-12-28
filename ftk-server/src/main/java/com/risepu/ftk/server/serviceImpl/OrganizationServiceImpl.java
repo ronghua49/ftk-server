@@ -137,14 +137,11 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void download(String imgName, HttpServletResponse response) throws IOException {
-
-
         File file = new File(ConfigUtil.getValue("file.upload.path"));
         if (!file.exists()) {
             file.mkdirs();
         }
         String filePath = file.getPath();
-
         InputStream in = new FileInputStream(new File(filePath, imgName));
         OutputStream out = response.getOutputStream();
 
@@ -159,7 +156,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     public void save(Organization organization) {
         crudService.save(organization);
     }
-
 
     @Override
     public String checkOrgName(String mobileOrName) {

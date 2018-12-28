@@ -9,6 +9,7 @@ import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.PersonalUserService;
 import com.risepu.ftk.server.service.SmsService;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.BasicAction;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.api.Response;
@@ -80,7 +81,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 				/** 单账号登录*/
 				/** 实现单一登录，剔除效果*/
 				if(SessionListener.sessionMap.get(no)!=null){
-					forceLogoutUser(no);
+					BasicAction.forceLogoutUser(no);
 					SessionListener.sessionMap.put(no, request.getSession());
 				}else{
 					SessionListener.sessionMap.put(no, request.getSession());
@@ -119,18 +120,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 		
 	}
 
-	private void forceLogoutUser(String no) {
-		HttpSession hs = (HttpSession) SessionListener.sessionMap.get(no);
-		SessionListener.sessionMap.remove(no);
-		Enumeration e = hs.getAttributeNames();
-		while (e.hasMoreElements()) {
-			String sessionName = (String) e.nextElement();
-			// 清空session
-			hs.removeAttribute(sessionName);
-		}
-		hs.setAttribute(Constant.getSessionCurrUser(),null);
-
-	}
 
 	private String getSmsCode(HttpServletRequest request) {
 		return (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
@@ -161,6 +150,10 @@ public class PersonalUserController implements PersonzalUserApi  {
 
 		Organization org = organizationService.findAuthenOrgById(stream.getOrgId());
 
+		if(!stream.getAuthState().equals(AuthorizationStream.AUTH_STATE_NEW)){
+			return ResponseEntity.ok(Response.failed(400,"该企业已经被授权（拒绝），请不要重复操作"));
+		}
+
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
@@ -178,8 +171,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 		
 		return ResponseEntity.ok(Response.succeed(message));
 	}
-
-
 
 
 	/**
@@ -201,9 +192,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 		return ResponseEntity.ok(Response.succeed(pageResult));
 		
 	}
-
-
-
 
 	private PersonalUser getCurrUser(HttpServletRequest request) {
 		return (PersonalUser) request.getSession().getAttribute(Constant.getSessionCurrUser());

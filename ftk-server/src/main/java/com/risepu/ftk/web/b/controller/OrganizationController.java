@@ -7,6 +7,7 @@ import com.risepu.ftk.server.service.PersonalUserService;
 import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.BasicAction;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.SessionListener;
@@ -98,7 +99,7 @@ public class OrganizationController implements OrganizationApi {
             String userId = loginResult.getOrganizationUser().getId();
             /** 实现单一登录，剔除效果*/
             if(SessionListener.sessionMap.get(userId)!=null){
-                forceLogoutUser(userId);
+                BasicAction.forceLogoutUser(userId);
                 SessionListener.sessionMap.put(userId, request.getSession());
             }else{
                 SessionListener.sessionMap.put(userId, request.getSession());
@@ -111,20 +112,6 @@ public class OrganizationController implements OrganizationApi {
 
         return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
     }
-
-    private void forceLogoutUser(String userId) {
-        HttpSession hs = (HttpSession) SessionListener.sessionMap.get(userId);
-        SessionListener.sessionMap.remove(userId);
-        Enumeration e = hs.getAttributeNames();
-        while (e.hasMoreElements()) {
-            String sessionName = (String) e.nextElement();
-            // 清空session
-            hs.removeAttribute(sessionName);
-        }
-        hs.setAttribute(Constant.getSessionCurrUser(),null);
-        //hs.invalidate();
-    }
-
 
     private void setCurrUserToSession(HttpSession session, OrganizationUser organizationUser) {
         session.setAttribute(Constant.getSessionCurrUser(), organizationUser);
@@ -170,16 +157,11 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd,
                                                          HttpSession session) {
-
-
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
             throw new NotLoginException();
         }
-
-
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
-
         String salt = ConfigUtil.getValue("salt");
         password = DigestUtils.md5Hex(password + salt);
         newpwd = DigestUtils.md5Hex(newpwd + salt);
