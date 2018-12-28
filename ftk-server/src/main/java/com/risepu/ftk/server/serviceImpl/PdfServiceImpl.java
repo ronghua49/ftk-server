@@ -230,6 +230,7 @@ public class PdfServiceImpl implements PdfService {
             }
             Chunk c2 = new Chunk(content, contentFont);
             Chunk c22 = new Chunk(value, textFont);
+            c22.setUnderline(0.1f, -1f);
             ph1.add(c2);
             ph1.add(c22);
             number = index + pdf1.getKey().length();
@@ -260,8 +261,8 @@ public class PdfServiceImpl implements PdfService {
         doc.close();
         return pdfFilePath;
     }
-/*
-    public static void main(String[] args) {
+
+  /*  public static void main(String[] args) {
         PdfServiceImpl a = new PdfServiceImpl();
         try {
             a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFS", "但是发射点发生", "/file-path/642222199712231044(8).jpg", "/file-path/91110105MA0188BF6R(0).jpg", "/file-path/test.pdf");
