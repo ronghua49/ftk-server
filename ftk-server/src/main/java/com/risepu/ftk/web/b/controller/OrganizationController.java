@@ -9,6 +9,7 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.b.dto.*;
 import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 @Controller
@@ -88,22 +90,39 @@ public class OrganizationController implements OrganizationApi {
 
     @Override
     public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
-        OrganizationUser user = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-
-        if(user!=null){
-            request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
-        }
 
         LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
+
         if (loginResult.getCode() == 0) {
-            /** 设置session对象为 企业用户对象 */
+            String userId = loginResult.getOrganizationUser().getId();
+            /** 实现单一登录，剔除效果*/
+            if(SessionListener.sessionMap.get(userId)!=null){
+                forceLogoutUser(userId);
+                SessionListener.sessionMap.put(userId, request.getSession());
+            }else{
+                SessionListener.sessionMap.put(userId, request.getSession());
+            }
             setCurrUserToSession(request.getSession(), loginResult.getOrganizationUser());
+
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
             return ResponseEntity.ok(Response.succeed(loginResult));
         }
 
         return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
+    }
+
+    private void forceLogoutUser(String userId) {
+        HttpSession hs = (HttpSession) SessionListener.sessionMap.get(userId);
+        SessionListener.sessionMap.remove(userId);
+        Enumeration e = hs.getAttributeNames();
+        while (e.hasMoreElements()) {
+            String sessionName = (String) e.nextElement();
+            // 清空session
+            hs.removeAttribute(sessionName);
+        }
+        hs.setAttribute(Constant.getSessionCurrUser(),null);
+        //hs.invalidate();
     }
 
 

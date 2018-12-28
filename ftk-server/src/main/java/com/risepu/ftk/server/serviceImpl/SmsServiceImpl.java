@@ -21,7 +21,7 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    public String authSendSms(String phone) {
+    public String authSendSms(String phone,String orgName) {
         return  "123456";
     }
 }
