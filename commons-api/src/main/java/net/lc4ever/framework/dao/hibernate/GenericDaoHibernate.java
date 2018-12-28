@@ -600,7 +600,7 @@ public class GenericDaoHibernate implements GenericDao {
 		logger.debug("SQL unique query, sql:[{}], args count:{}.", sql, args.length);
 		NativeQuery<?> query = getSession().createSQLQuery(sql);
 		for (int i = 0; i < args.length; i++) {
-			query.setParameter(i, args[i]);
+			query.setParameter(i+1, args[i]);
 		}
 		if (resultTransformer != null) {
 			query.setResultTransformer(resultTransformer);

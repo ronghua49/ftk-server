@@ -69,16 +69,17 @@ public class PersonalUserController implements PersonzalUserApi  {
 		String smsCode =getSmsCode(request);
 		boolean identify = smsService.identify(loginRequest.getInCode(), smsCode);
 		LoginResult loginResult = new LoginResult();
-		
+
 		if(identify) {
 			String no = loginRequest.getCardNo();
 			/** 解析单据信息 */
 			String chainHash = (String) request.getSession().getAttribute(Constant.getSessionChainHash());
 			/** 校验用户输入的身份证号是否和单据信息一致 */
+
 			ProofDocument document = chainService.verify(chainHash, no);
 
 			if(document!=null) {
-				/** 单账号登录*/
+
 				/** 实现单一登录，剔除效果*/
 				if(SessionListener.sessionMap.get(no)!=null){
 					BasicAction.forceLogoutUser(no);
@@ -136,7 +137,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 	@Override
 	public ResponseEntity<Response<String>> personAuth( String streamId, String state, HttpServletRequest request) {
 
-		
 		String message ="";
 		PersonalUser personalUser = getCurrUser(request);
 		if(personalUser==null){
