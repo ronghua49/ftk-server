@@ -167,7 +167,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
             String pdfFilePath = filePath + date + "/" + template.getId() + "（" + t++ + ").pdf";
-            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), filePath + date + "/示例二维码.jpg", GrFilePath, pdfFilePath);
+            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", template.getName(), filePath + date + "/示例二维码.jpg", GrFilePath, pdfFilePath);
             template1.set_template(template.get_template());
             template1.setDescription(template.getDescription());
             template1.setName(template.getName());

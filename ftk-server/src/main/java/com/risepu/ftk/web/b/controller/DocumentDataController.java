@@ -82,7 +82,9 @@ public class DocumentDataController implements DocumentDataApi {
             List<Domain> list = domainService.selectByTemplate(templateId);
 
             OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-            Organization org = organizationService.findAuthenOrgById(organizationUser.getOrganizationId());
+            OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+
+            Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
 
             //生成盖章图片
             ChartGraphics cg = new ChartGraphics();
