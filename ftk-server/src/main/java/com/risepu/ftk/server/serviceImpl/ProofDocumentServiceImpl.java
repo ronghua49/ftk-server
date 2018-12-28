@@ -75,6 +75,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
             map.put("chainHash", proofDocument.getChainHash());
             map.put("number", proofDocument.getId());
+            map.put("createTimestamp", proofDocument.getCreateTimestamp());
             for (int j = 0; j < documentDataList.size(); j++) {
                 DocumentData documentData = documentDataList.get(j);
                 Domain domain = domainService.selectById(documentData.getId().getDomainId());
@@ -125,6 +126,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
             map.put("chainHash", proofDocument.getChainHash());
             map.put("number", proofDocument.getId());
+            map.put("createTimestamp", proofDocument.getCreateTimestamp());
             for (int j = 0; j < documentDataList.size(); j++) {
                 DocumentData documentData = documentDataList.get(j);
                 Domain domain = domainService.selectById(documentData.getId().getDomainId());
