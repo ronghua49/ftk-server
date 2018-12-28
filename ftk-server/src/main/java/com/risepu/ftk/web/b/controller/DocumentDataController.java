@@ -115,7 +115,7 @@ public class DocumentDataController implements DocumentDataApi {
                     convert += word;
                 }
             }
-            List<Date> dateList = crudService.hql(Date.class, "select createTimestamp from ProofDocument");
+            List<Date> dateList = crudService.hql(Date.class, "select createTimestamp from ProofDocument where organization =?1", user.getOrganizationId());
             List<String> stringList = new ArrayList<>();
             for (int i = 0; i < dateList.size(); i++) {
                 stringList.add(ft1.format(dateList.get(i)));
