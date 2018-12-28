@@ -1,6 +1,9 @@
 package com.risepu.ftk.web.b.dto;
 
 
+/**
+ * @author ronghaohua
+ */
 public class RegistRequest {
 	
 	private String mobile;

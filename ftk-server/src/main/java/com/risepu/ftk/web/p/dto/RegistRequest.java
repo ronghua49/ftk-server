@@ -1,6 +1,9 @@
 package com.risepu.ftk.web.p.dto;
 
 
+/**
+ * @author ronghaohua
+ */
 public class RegistRequest {
 	/** 企业id*/
 	private String orgId;

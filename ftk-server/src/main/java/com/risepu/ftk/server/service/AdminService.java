@@ -1,8 +1,13 @@
 package com.risepu.ftk.server.service;
 
 import com.risepu.ftk.server.domain.AdminUser;
+import net.lc4ever.framework.remote.annotation.Remote;
 
-//@Remote(path = "/admin")
+
+/**
+ * @author ronghaohua
+ */
+@Remote(path = "/admin")
 public interface AdminService {
 
     /**
@@ -20,6 +25,6 @@ public interface AdminService {
      */
     void updateAdminUser(AdminUser adminUser);
 
-    //
+
 
 }

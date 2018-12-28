@@ -1,5 +1,8 @@
 package com.risepu.ftk.web;
 
+/**
+ * @author ronghaohua
+ */
 public class Constant {
 
 	private static final String SESSION_VERIFICATION_CODE_IMG = "SESSION_VERIFICATION_CODE_IMG";

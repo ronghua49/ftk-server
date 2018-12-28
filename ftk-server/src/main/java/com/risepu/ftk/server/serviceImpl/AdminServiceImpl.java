@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
+/**
+ * @author ronghaohua
+ */
 @Service
 public class AdminServiceImpl implements AdminService {
 	

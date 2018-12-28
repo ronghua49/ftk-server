@@ -32,6 +32,9 @@ import com.risepu.ftk.web.b.dto.LoginResult;
 import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 
+/**
+ * @author ronghaohua
+ */
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
 

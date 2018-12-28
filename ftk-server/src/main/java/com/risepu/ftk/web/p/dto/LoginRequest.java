@@ -1,5 +1,8 @@
 package com.risepu.ftk.web.p.dto;
 
+/**
+ * @author ronghaohua
+ */
 public class LoginRequest {
 
 	private String phone;
