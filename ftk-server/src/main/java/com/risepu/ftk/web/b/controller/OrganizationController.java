@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -86,18 +87,18 @@ public class OrganizationController implements OrganizationApi {
      */
 
     @Override
-    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpSession session) {
-        OrganizationUser user = (OrganizationUser) session.getAttribute(Constant.getSessionCurrUser());
+    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
+        OrganizationUser user = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 
         if(user!=null){
-            session.setAttribute(Constant.getSessionCurrUser(),null);
+            request.getSession().setAttribute(Constant.getSessionCurrUser(),null);
         }
 
         LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
         if (loginResult.getCode() == 0) {
             /** 设置session对象为 企业用户对象 */
-            setCurrUserToSession(session, loginResult.getOrganizationUser());
+            setCurrUserToSession(request.getSession(), loginResult.getOrganizationUser());
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
             return ResponseEntity.ok(Response.succeed(loginResult));
         }

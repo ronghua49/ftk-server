@@ -72,7 +72,7 @@ public class PersonalUserServiceImpl implements PersonalUserService {
         DateTime minusTime = dateTime.minusMinutes(10);
 
         Date time = minusTime.toDate();
-        List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and state=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo, time);
+        List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and authState=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo, time);
 
         if (streams != null && !streams.isEmpty()) {
 

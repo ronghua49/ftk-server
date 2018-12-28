@@ -35,7 +35,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = LoginResult.class)})
     @RequestMapping(path = "/login")
     @ResponseBody
-    ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpSession session);
+    ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request);
 
     @ApiOperation(value = "忘记密码", nickname = "forgetPwd")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
