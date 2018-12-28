@@ -1,7 +1,9 @@
 package com.risepu.ftk.web.b.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -87,7 +89,11 @@ public class SampleController implements SampleApi {
     @GetMapping("/test1")
     @ResponseBody
     public String get() {
-        return "success get";
+
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS");
+        String format1 = format.format(date);
+        return format1;
     }
 
     @PostMapping("/test2")

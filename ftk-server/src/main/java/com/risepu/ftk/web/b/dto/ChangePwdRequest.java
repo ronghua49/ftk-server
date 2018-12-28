@@ -1,5 +1,8 @@
 package com.risepu.ftk.web.b.dto;
 
+/**
+ * @author ronghaohua
+ */
 public class ChangePwdRequest {
 	
 	private String originalPwd;

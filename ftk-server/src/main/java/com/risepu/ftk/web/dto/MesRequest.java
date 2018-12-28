@@ -1,5 +1,8 @@
 package com.risepu.ftk.web.dto;
 
+/**
+ * @author ronghaohua
+ */
 public class MesRequest {
 	
 	private String phone;

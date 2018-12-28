@@ -60,10 +60,10 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
         if (StringUtils.isEmpty(name)) {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null", organization);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3)", organization, domain1.getId(), name);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3) order by createTimestamp desc", organization, domain1.getId(), name);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3) order by createTimestamp desc", organization, domain1.getId(), name);
         }
 
         List list = new ArrayList();
@@ -110,11 +110,11 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         List proofDocuments = new ArrayList();
         Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
         if (StringUtils.isEmpty(name)) {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " order by createTimestamp desc");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " order by createTimestamp desc");
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2)", domain1.getId(), name);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2)", domain1.getId(), name);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2) order by createTimestamp desc", domain1.getId(), name);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2) order by createTimestamp desc", domain1.getId(), name);
         }
 
         List list = new ArrayList();

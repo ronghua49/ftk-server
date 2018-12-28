@@ -3,6 +3,9 @@ package com.risepu.ftk.utils;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * @author ronghaohua
+ */
 public class ConfigUtil {
     private static Properties prop = new Properties();
 

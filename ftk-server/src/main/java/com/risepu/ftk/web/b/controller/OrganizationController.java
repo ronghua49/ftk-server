@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+/**
+ * @author ronghaohua
+ */
 @Controller
 public class OrganizationController implements OrganizationApi {
 

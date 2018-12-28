@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import com.risepu.ftk.server.service.SmsService;
 
+/**
+ * @author ronghaohua
+ */
 @Service
 public class SmsServiceImpl implements SmsService {
 

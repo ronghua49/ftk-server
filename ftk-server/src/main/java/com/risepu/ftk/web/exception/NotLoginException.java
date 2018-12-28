@@ -1,11 +1,8 @@
 package com.risepu.ftk.web.exception;    /*
- * @author  Administrator
+ * @author  ronghaohua
  * @date 2018/12/25
  */
 
-/**
- * 未登录异常
- */
 public class NotLoginException  extends RuntimeException{
 
     private static final long serialVersionUID = 1L;

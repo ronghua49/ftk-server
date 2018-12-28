@@ -7,12 +7,11 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DomainService;
+import com.risepu.ftk.server.service.PdfService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.m.dto.Pdf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.risepu.ftk.server.service.PdfService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +46,10 @@ public class PdfServiceImpl implements PdfService {
         //设置字体样式
         Font textFont = new Font(bfChinese, 15, Font.BOLD); //加粗
         Font boldFont = new Font(bfChinese, 15, Font.UNDEFINED); //正常
+        Font boldFont1 = new Font(bfChinese, 15, Font.UNDEFINED); //正常
+        boldFont1.setColor(BaseColor.RED);
         Font secondTitleFont = new Font(bfChinese, 20, Font.BOLD); //标题
+
 
         //创建输出流
         PdfWriter pdfWriter = PdfWriter.getInstance(doc, new FileOutputStream(new File(pdfFilePath)));
@@ -57,27 +59,30 @@ public class PdfServiceImpl implements PdfService {
         doc.newPage();
 
         //段落
-        Paragraph p1 = new Paragraph();
+        Paragraph p1 = new Paragraph("【职场通行证】", textFont);
+        p1.setAlignment(Element.ALIGN_CENTER);
+        doc.add(p1);
+
+        p1 = new Paragraph();
+        p1.setLeading(30);
         //短语
         Phrase ph1 = new Phrase();
         //块
-        Chunk c2 = new Chunk("区块链哈希", boldFont);
-        Chunk c22 = new Chunk(hash, boldFont);
+        Chunk c2 = new Chunk("区块链存证编码：", boldFont1);
+        Chunk c22 = new Chunk(hash, boldFont1);
         //将块添加到短语
         ph1.add(c2);
         ph1.add(c22);
         //将短语添加到段落
         p1.add(ph1);
         //将段落添加到短语
+//        p1.setAlignment(Element.ALIGN_CENTER);
+
         doc.add(p1);
 
-        p1 = new Paragraph();
-        //设置行间距
-        p1.setLeading(20);
-        p1.setAlignment(Element.ALIGN_CENTER);
         p1 = new Paragraph(title, secondTitleFont);
         //设置行间距
-        p1.setLeading(50);
+        p1.setLeading(80);
         p1.setAlignment(Element.ALIGN_CENTER);
         doc.add(p1);
 
@@ -99,14 +104,20 @@ public class PdfServiceImpl implements PdfService {
 
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(40, 300);//坐标
+        image.setAbsolutePosition(40, 140);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
+        cd.beginText();
+
+        cd.setFontAndSize(bfChinese, 20);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 50, 110, 0);
+        cd.endText();
+
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(370, 330);//坐标
-        image1.scaleAbsolute(175, 50);//自定义大小
+        image1.setAbsolutePosition(370, 170);//坐标
+        image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
         cd.beginText();
@@ -117,7 +128,7 @@ public class PdfServiceImpl implements PdfService {
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
         cd.setFontAndSize(bfChinese, 20);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 310, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 150, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
@@ -149,6 +160,7 @@ public class PdfServiceImpl implements PdfService {
         //设置字体样式
         Font textFont = new Font(bfChinese, template.getContentSize(), Font.BOLD); //加粗
         Font hashFont = new Font(bfChinese, template.getHashSize(), Font.UNDEFINED); //哈希
+        hashFont.setColor(BaseColor.RED);
         Font contentFont = new Font(bfChinese, template.getContentSize(), Font.UNDEFINED); //正文
         Font titleFont = new Font(bfChinese, template.getTitleSize(), Font.BOLD); //标题
 
@@ -160,11 +172,17 @@ public class PdfServiceImpl implements PdfService {
         doc.newPage();
 
         //段落
-        Paragraph p1 = new Paragraph();
+        Paragraph p1 = new Paragraph("【职场通行证】", textFont);
+        p1.setAlignment(Element.ALIGN_CENTER);
+        doc.add(p1);
+
+        p1 = new Paragraph();
+        p1.setLeading(30);
+//        p1.setAlignment(Element.ALIGN_CENTER);
         //短语
         Phrase ph1 = new Phrase();
         //块
-        Chunk c1 = new Chunk("区块链哈希：", hashFont);
+        Chunk c1 = new Chunk("区块链存证编码：", hashFont);
         Chunk c11 = new Chunk(hash, hashFont);
         //将块添加到短语
         ph1.add(c1);
@@ -174,13 +192,9 @@ public class PdfServiceImpl implements PdfService {
         //将段落添加到短语
         doc.add(p1);
 
-        p1 = new Paragraph();
-        //设置行间距
-        p1.setLeading(20);
-        p1.setAlignment(Element.ALIGN_CENTER);
         p1 = new Paragraph(title, titleFont);
         //设置行间距
-        p1.setLeading(50);
+        p1.setLeading(80);
         p1.setAlignment(Element.ALIGN_CENTER);
         doc.add(p1);
 
@@ -243,29 +257,36 @@ public class PdfServiceImpl implements PdfService {
         doc.add(p1);
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(40, 300);//坐标
+        image.setAbsolutePosition(40, 140);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
+        cd.beginText();
+
+        cd.setFontAndSize(bfChinese, 20);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 50, 110, 0);
+        cd.endText();
+
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(370, 330);//坐标
+        image1.setAbsolutePosition(370, 170);//坐标
         image1.scaleAbsolute(175, 50);//自定义大小
         doc.add(image1);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 20);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 310, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 150, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
     }
 
-  /*  public static void main(String[] args) {
+/*
+    public static void main(String[] args) {
         PdfServiceImpl a = new PdfServiceImpl();
         try {
-            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFS", "但是发射点发生", "/file-path/642222199712231044(8).jpg", "/file-path/91110105MA0188BF6R(0).jpg", "/file-path/test.pdf");
+            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/642222199712231044(8).jpg", "/file-path/91110105MA0188BF6R(0).jpg", "/file-path/test.pdf");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -20,6 +20,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 
+/**
+ * @author ronghaohua
+ */
 @Api(value = "org")
 @RequestMapping("/api/org")
 public interface OrganizationApi {

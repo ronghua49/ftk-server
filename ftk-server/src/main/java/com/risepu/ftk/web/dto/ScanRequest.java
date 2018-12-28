@@ -1,5 +1,8 @@
 package com.risepu.ftk.web.dto;
 
+/**
+ * @author ronghaohua
+ */
 public class ScanRequest {
 	/** 用户身份证*/
 	private String idCard;

@@ -16,6 +16,9 @@ import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
+/**
+ * @author ronghaohua
+ */
 @Service
 public class PersonalUserServiceImpl implements PersonalUserService {
 

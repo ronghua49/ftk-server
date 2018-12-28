@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * @author ronghaohua
+ */
 @RestController
 
 public class ManagerController implements ManagerControllerApi {
