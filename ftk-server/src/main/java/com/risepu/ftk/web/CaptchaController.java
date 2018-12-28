@@ -58,7 +58,7 @@ public class CaptchaController implements InitializingBean, CaptchaApi {
         request.getSession().setAttribute(Constant.getSessionVerificationCodeImg(), code);
 
         try {
-            captchaEnabled = false;
+            captchaEnabled = true;
             return ResponseEntity.ok(Response.succeed(imgBase64(request, code)));
 
         } catch (Exception e) {
