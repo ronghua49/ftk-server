@@ -1,3 +1,4 @@
+
 package com.risepu.ftk.web.p.controller;
 
 import com.risepu.ftk.server.domain.AuthorizationStream;
@@ -14,9 +15,11 @@ import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.PageRequest;
+import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
+import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +30,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * @author ronghaohua
- */
 @RestController
 
 public class PersonalUserController implements PersonzalUserApi  {
@@ -41,7 +43,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 
 	@Autowired
 	private PersonalUserService personalService;
-	
+
 	@Autowired
 	private SmsService smsService;
 
@@ -53,19 +55,19 @@ public class PersonalUserController implements PersonzalUserApi  {
 	@Override
 	public void personalScanDoc(String hash, HttpSession session, HttpServletResponse response) throws IOException {
 
-        session.setAttribute(Constant.getSessionChainHash(),hash);
-        response.sendRedirect("/ftk/p");
+		session.setAttribute(Constant.getSessionChainHash(),hash);
+		response.sendRedirect("/ftk/p");
 	}
 
 	/**
 	 * 用户登录　通过扫描二维码跳转登录页面
-	 * @param loginRequest 
+	 * @param loginRequest
 	 * @param request
 	 * @return 需要
 	 */
 	@Override
 	public ResponseEntity<Response<LoginResult>> personalLogin(LoginRequest loginRequest,HttpServletRequest request){
-		
+
 		String smsCode =getSmsCode(request);
 		boolean identify = smsService.identify(loginRequest.getInCode(), smsCode);
 		LoginResult loginResult = new LoginResult();
@@ -100,10 +102,10 @@ public class PersonalUserController implements PersonzalUserApi  {
 					personalUser= user;
 				}
 				request.getSession().setAttribute(Constant.getSessionCurrUser(), personalUser);
-				
+
 				/** 根据身份证 查询新的请求授权的企业名和 当前授权流水的id*/
 				Map<String, Object> map  = personalService.findNewRequestByCardNo(no);
-				
+
 				if(map!=null) {
 					loginResult.setOrgName((String)map.get("orgName"));
 					loginResult.setStreamId((Long)map.get("streamId"));;
@@ -118,7 +120,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 			loginResult.setMessage("验证码输入错误");
 			return ResponseEntity.ok(Response.failed(2,loginResult.getMessage()));
 		}
-		
+
 	}
 
 
@@ -143,7 +145,7 @@ public class PersonalUserController implements PersonzalUserApi  {
 			return ResponseEntity.ok(Response.failed(400,"请重新扫码登录"));
 		}
 		AuthorizationStream stream =   personalService.findAuthorizationStreamById(Long.parseLong(streamId));
-		
+
 		if(stream==null) {
 			return ResponseEntity.ok(Response.failed(11,"错误的流水id"));
 		}
@@ -157,18 +159,20 @@ public class PersonalUserController implements PersonzalUserApi  {
 		/** 判断授权 */
 		if(Integer.parseInt(state)==(AuthorizationStream.AUTH_STATE_PASS)) {
 			/** 发送验证码 */
-			String code = smsService.authSendSms(personalUser.getMobile(),org.getName());
+			Map<String, String> params = new HashMap<>();
+			params.put("company", org.getName());
+			String code = smsService.sendCode(personalUser.getMobile(), SmsService.authTemplateCode,params);
 			stream.setAuthCode(code);
 			stream.setAuthState(AuthorizationStream.AUTH_STATE_PASS);
 			message="授权码下发成功";
-			
+
 		}else {
 			stream.setAuthState(AuthorizationStream.AUTH_STATE_REFUSE);
 			message="授权已拒绝";
 		}
-		
+
 		personalService.update(stream);
-		
+
 		return ResponseEntity.ok(Response.succeed(message));
 	}
 
@@ -186,11 +190,11 @@ public class PersonalUserController implements PersonzalUserApi  {
 		if(user==null){
 			return ResponseEntity.ok(Response.failed(400,"请重新扫码登录"));
 		}
-		
+
 		PageResult<AuthHistoryInfo> pageResult =  personalService.queryHistoryByParam(pageRequest.getKey(),pageRequest.getPageNo(),pageRequest.getPageSize(),user.getId());
-		
+
 		return ResponseEntity.ok(Response.succeed(pageResult));
-		
+
 	}
 
 	private PersonalUser getCurrUser(HttpServletRequest request) {
