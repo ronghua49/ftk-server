@@ -260,7 +260,7 @@ public class PdfServiceImpl implements PdfService {
         doc.close();
         return pdfFilePath;
     }
-
+/*
     public static void main(String[] args) {
         PdfServiceImpl a = new PdfServiceImpl();
         try {
@@ -268,5 +268,5 @@ public class PdfServiceImpl implements PdfService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
