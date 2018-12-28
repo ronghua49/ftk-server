@@ -86,14 +86,14 @@ public class OrganizationController implements OrganizationApi {
 
     @Override
     public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
-        OrganizationUser user = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-
-        if(user!=null){
-            LoginResult loginResult = new LoginResult();
-            loginResult.setCode(400);
-            loginResult.setMessage("该账号已经登录");
-            return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
-        }
+//        OrganizationUser user = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+//
+//        if(user!=null){
+//            LoginResult loginResult = new LoginResult();
+//            loginResult.setCode(400);
+//            loginResult.setMessage("该账号已经登录");
+//            return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
+//        }
 
         LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
