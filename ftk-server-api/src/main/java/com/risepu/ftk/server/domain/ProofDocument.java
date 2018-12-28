@@ -53,6 +53,7 @@ public class ProofDocument extends AuditableObject<Long> {
      * 单号
      */
     private String number;
+
     @Column(name = "NUMBER")
     public String getNumber() {
         return number;
