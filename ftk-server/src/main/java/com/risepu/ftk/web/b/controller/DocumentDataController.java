@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,7 +75,7 @@ public class DocumentDataController implements DocumentDataApi {
         logger.debug("Request Uri: /documentData/add");
         try {
             SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmssSS");
-            SimpleDateFormat ft1 = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat ft1 = new SimpleDateFormat("yyyy-MM/dd");
             String date = ft.format(new Date());
             String date1 = ft1.format(new Date());
 
@@ -117,14 +116,15 @@ public class DocumentDataController implements DocumentDataApi {
                     convert += word;
                 }
             }
-            List<Date> dateList = crudService.hql(Date.class, "select createTimestamp from ProofDocument where organization =?1", user.getOrganizationId());
-            List<String> stringList = new ArrayList<>();
-            for (int i = 0; i < dateList.size(); i++) {
-                stringList.add(ft1.format(dateList.get(i)));
+            List<ProofDocument> list1 = crudService.hql(ProofDocument.class, "from ProofDocument");
+            List<String> dateList = new ArrayList<>();
+            List<String> organizationList=new ArrayList<>();
+            for (int i = 0; i < list1.size(); i++) {
+                dateList.add(ft1.format(list1.get(i).getCreateTimestamp()));
+                organizationList.add(list1.get(i).getOrganization());
             }
             String n = "";
-            if (stringList.contains(date1)) {
-
+            if (dateList.contains(date1) && organizationList.contains(user.getOrganizationId())) {
                 n = String.format("%03d", t);
                 t++;
             } else {
