@@ -155,7 +155,9 @@ public class ManageTemplateController implements ManageTemplateApi {
             String date = ft.format(new Date());
 
             File file = new File(filePath + date);
-            file.mkdirs();
+            if(!file.exists()){
+                file.mkdirs();
+            }
             StringUtil stringUtil = new StringUtil();
             List<String> list2 = stringUtil.getStrContainData(template.get_template(), "{", "}", true);
             for (String key : list2) {
@@ -167,7 +169,8 @@ public class ManageTemplateController implements ManageTemplateApi {
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
             String pdfFilePath = filePath + date + "/" + template.getId() + "（" + t++ + ").pdf";
-            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", template.getName(), filePath + date + "/示例二维码.jpg", GrFilePath, pdfFilePath);
+            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date+"/示例二维码.jpg","china is good");
+            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", template.getName(), qrFilePath, GrFilePath, pdfFilePath);
             template1.set_template(template.get_template());
             template1.setDescription(template.getDescription());
             template1.setName(template.getName());
