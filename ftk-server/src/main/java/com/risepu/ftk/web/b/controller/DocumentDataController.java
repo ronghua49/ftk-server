@@ -80,8 +80,10 @@ public class DocumentDataController implements DocumentDataApi {
             String date = ft.format(new Date());
             String date1 = ft1.format(new Date());
 
-            File file = new File(filePath + date);
-            file.mkdirs();
+            File file = new File(filePath + date1);
+            if(!file.exists()){
+                file.mkdirs();
+            }
             Long templateId = Long.parseLong(map.get("templateId"));
             // 根据模板id得到模板
             Template template = templateService.getTemplate(templateId);
@@ -138,8 +140,10 @@ public class DocumentDataController implements DocumentDataApi {
             Long proDocumentId = proofDocumentService.add(proofDocument);
             ProofDocument proofDocument1 = proofDocumentService.getDocumentById(proDocumentId);
             String hash = chainService.sign(proDocumentId);
+
             //生成二维码图片
-            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1 + "/" + map.get("idCard") + date + ".jpg", urlPrefix + hash);
+
+            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1+"/"+map.get("idCard") + date + ".jpg",urlPrefix + hash);
 
             // 文档保存路径
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
@@ -159,14 +163,11 @@ public class DocumentDataController implements DocumentDataApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest, HttpServletRequest request) {
+    public ResponseEntity<Response<String>> sendEmail( EmailRequest emailRequest) {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
         try {
-            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-            OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
-            Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
-            Template template = templateService.getTemplate(org.getDefaultTemId());
+            Template template=templateService.getTemplate(emailRequest.getTemplateId());
             sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath(), template.getName());
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {

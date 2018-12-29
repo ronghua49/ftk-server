@@ -219,7 +219,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             File file = new File(filePath + date);
             file.mkdirs();
             //生成二维码图片
-            String QrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
+            String QrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date +"/示例二维码.jpg", "china is good");
 
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");

@@ -3,6 +3,7 @@ package com.risepu.ftk.web.b.controller;
 import java.util.Map;
 
 import com.risepu.ftk.web.m.dto.EmailRequest;
+import com.risepu.ftk.web.m.dto.IdRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,5 +48,5 @@ public interface DocumentDataApi {
     @PostMapping(path = "/sendEmail")
     @ResponseBody
     @CrossOrigin
-    ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest, HttpServletRequest request);
+    ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest);
 }
