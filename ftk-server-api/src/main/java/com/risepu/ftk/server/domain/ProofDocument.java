@@ -81,10 +81,29 @@ public class ProofDocument extends AuditableObject<Long> {
      * 企业信息id
      */
     private String organization;
+
+    @Column(name = "ORGANIZATION")
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
     /**
      * 个人信息id
      */
     private String personalUser;
+
+    @Column(name = "PERSONAL_USER", length = 50)
+    public String getPersonalUser() {
+        return personalUser;
+    }
+
+    public void setPersonalUser(String personalUser) {
+        this.personalUser = personalUser;
+    }
 
     private Integer index;
 
@@ -97,23 +116,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.index = index;
     }
 
-    @Column(name = "ORGANIZATION", precision = 19)
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    @Column(name = "PERSONAL_USER",length = 50)
-    public String getPersonalUser() {
-        return personalUser;
-    }
-
-    public void setPersonalUser(String personalUser) {
-        this.personalUser = personalUser;
-    }
 
     /**
      * 文档路径
