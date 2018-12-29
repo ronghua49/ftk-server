@@ -67,7 +67,7 @@ public class DocumentDataController implements DocumentDataApi {
 
     @Value("${ftk.root.filePath}")
     private String filePath;
-//FIXME:线程安全 企业单号每天从1开始递增
+    //FIXME:线程安全 企业单号每天从1开始递增
     private Integer t = 1;
 
     @Override
@@ -80,7 +80,7 @@ public class DocumentDataController implements DocumentDataApi {
             String date1 = ft1.format(new Date());
 
             File file = new File(filePath + date1);
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.mkdirs();
             }
             Long templateId = Long.parseLong(map.get("templateId"));
@@ -118,7 +118,7 @@ public class DocumentDataController implements DocumentDataApi {
             }
             List<ProofDocument> list1 = crudService.hql(ProofDocument.class, "from ProofDocument");
             List<String> dateList = new ArrayList<>();
-            List<String> organizationList=new ArrayList<>();
+            List<String> organizationList = new ArrayList<>();
             for (int i = 0; i < list1.size(); i++) {
                 dateList.add(ft1.format(list1.get(i).getCreateTimestamp()));
                 organizationList.add(list1.get(i).getOrganization());
@@ -143,7 +143,7 @@ public class DocumentDataController implements DocumentDataApi {
 
             //生成二维码图片
 
-            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1+"/"+map.get("idCard") + date + ".jpg",urlPrefix + hash);
+            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1 + "/" + map.get("idCard") + date + ".jpg", urlPrefix + hash);
 
             // 文档保存路径
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
@@ -163,15 +163,15 @@ public class DocumentDataController implements DocumentDataApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> sendEmail( EmailRequest emailRequest) {
+    public ResponseEntity<Response<String>> sendEmail(EmailRequest emailRequest) {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
         try {
-            Template template=templateService.getTemplate(emailRequest.getTemplateId());
+            Template template = templateService.getTemplate(emailRequest.getTemplateId());
             sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath(), template.getName());
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
             return ResponseEntity.ok(Response.failed(400, "邮件发送失败"));
         }
     }
