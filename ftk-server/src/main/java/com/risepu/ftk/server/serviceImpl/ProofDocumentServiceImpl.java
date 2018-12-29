@@ -98,14 +98,14 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         List<?> objects = new ArrayList<>();
         List<VerifyHistory> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(name)) {
-            String sql="select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN and d.`value` like ? ORDER BY a.CREATE_TIMESTAMP DESC";
-            String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN and d.`value` like ?";
+            String sql="select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.ID = d.DOMAIN and d.`value` like ? ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT  and dom.ID = d.DOMAIN and d.`value` like ?";
             objects = crudService.sql(firstIndex, pageSize, sql, "%" + name + "%");
             BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, "%" + name + "%");
             total= bigInteger.intValue();
         } else {
-            String sql="select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN  ORDER BY a.CREATE_TIMESTAMP DESC";
-            String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN";
+            String sql="select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.ID = d.DOMAIN  ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.ID = d.DOMAIN";
             objects = crudService.sql(firstIndex, pageSize, sql);
             BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2);
             total= bigInteger.intValue();
