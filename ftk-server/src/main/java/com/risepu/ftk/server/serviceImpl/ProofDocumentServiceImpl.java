@@ -62,8 +62,8 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3) order by createTimestamp desc", organization, domain1.getId(), name);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value = ?3) order by createTimestamp desc", organization, domain1.getId(), name);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
         }
 
         List list = new ArrayList();
@@ -97,6 +97,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     @Override
     public PageResult getDocuments(List<String> chainHashs, Integer pageNo, Integer pageSize, String name) {
         String chainHash = "";
+
         for (int i = 0; i < chainHashs.size(); i++) {
             if (i == chainHashs.size() - 1) {
                 chainHash = chainHash + "'" + chainHashs.get(i) + "'";
@@ -113,8 +114,8 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " order by createTimestamp desc");
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " order by createTimestamp desc");
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2) order by createTimestamp desc", domain1.getId(), name);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value = ?2) order by createTimestamp desc", domain1.getId(), name);
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value like ?2) order by createTimestamp desc", domain1.getId(), "%"+name+"%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value like ?2) order by createTimestamp desc", domain1.getId(), "%"+name+"%");
         }
 
         List list = new ArrayList();

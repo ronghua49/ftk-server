@@ -329,6 +329,12 @@ public class OrganizationController implements OrganizationApi {
 
         OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
 
+        PageResult page=new PageResult();
+        List content = new ArrayList();
+        if(user.getOrganizationId()==null){
+            page.setContent(content);
+            return ResponseEntity.ok(Response.succeed(page));
+        }
         /** 根据企业id查询 已经验证成功的流水idlist*/
         List<AuthorizationStream> streams = organizationService.querySucceedAuthStreamByOrgId(user.getOrganizationId());
         List<String> chainHashs = new ArrayList<>();
@@ -337,7 +343,13 @@ public class OrganizationController implements OrganizationApi {
             chainHashs.add(stream.getChainHash());
         }
 
-        PageResult page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+        if(chainHashs.size()==0){
+            page.setContent(content);
+            return ResponseEntity.ok(Response.succeed(page));
+        }
+
+
+        page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
 
         return ResponseEntity.ok(Response.succeed(page));
 
@@ -360,8 +372,16 @@ public class OrganizationController implements OrganizationApi {
         }
 
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
+        PageResult document = new PageResult();
+
+
+        if(user.getOrganizationId()==null){
+            document.setContent( new ArrayList());
+            return ResponseEntity.ok(Response.succeed(document));
+        }
+
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
-        PageResult document = proofDocumentService.getDocuments(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+        document = proofDocumentService.getDocuments(org.getId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
         return ResponseEntity.ok(Response.succeed(document));
     }
 
