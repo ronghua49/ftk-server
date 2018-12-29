@@ -132,12 +132,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     public String upload(MultipartFile file) throws IllegalStateException, IOException {
         String name = UUID.randomUUID().toString().replaceAll("-", "");
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        name =  name + "." + ext;
+        name =  new SimpleDateFormat("yyyy-MM/dd/").format(new Date())+name + "." + ext;
         /** 上传图片到指定地址路径 */
-        uploadPath = uploadPath+"/"+new SimpleDateFormat("yyyy-MM/dd/").format(new Date());
-        File filePath = new File(uploadPath);
-        filePath.mkdirs();
-        file.transferTo(new File(filePath, name));
+        File dir = new File(uploadPath);
+        File target = new File(dir, name);
+        target.getParentFile().mkdirs();
+        
+        file.transferTo(target);
         return name;
     }
 
