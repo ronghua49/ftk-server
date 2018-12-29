@@ -11,7 +11,7 @@ public class VerifyHistory {
 
     private String number;
 
-    private String name;
+
 
     private Date createTimestamp;
 
@@ -27,13 +27,7 @@ public class VerifyHistory {
         this.chainHash = chainHash;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Date getCreateTimestamp() {
         return createTimestamp;
