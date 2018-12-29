@@ -177,7 +177,6 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(7, "原始密码输入错误，请重新输入"));
         }
     }
-
     /**
      * 图片上传
      *
@@ -187,7 +186,6 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<String>> upload(MultipartFile file) {
 
-
         try {
             String fileName = organizationService.upload(file);
             return ResponseEntity.ok(Response.succeed(fileName));
@@ -196,7 +194,6 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(500, "上传失败"));
         }
     }
-
     /**
      * 图片下载
      *
