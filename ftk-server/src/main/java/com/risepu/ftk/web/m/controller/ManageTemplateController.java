@@ -246,6 +246,8 @@ public class ManageTemplateController implements ManageTemplateApi {
         } else if (StringUtils.isEmpty(domain.getKegex())) {
             return ResponseEntity.ok(Response.failed(400, "校验规则不能为空"));
         }
+        String code = domain.getCode().trim();
+        domain.setCode(code);
         Long domainId = domainService.add(domain);
         if (domainId != null) {
             return ResponseEntity.ok(Response.succeed("添加成功"));
