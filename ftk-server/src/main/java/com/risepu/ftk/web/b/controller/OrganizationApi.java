@@ -61,11 +61,10 @@ public interface OrganizationApi {
 
 
     @ApiOperation(value = "图片下载", nickname = "imgdownload")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class),
-            @ApiResponse(code = 500, message = "failed", response = String.class)})
-    @RequestMapping(path = "/img/download/{imgName:\\w+}")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class), @ApiResponse(code = 500, message = "failed", response = String.class)})
+    @RequestMapping(path = "/img/download/{ym:[0-9][0-9][0-9][0-9]-[0-9][0-9]}/{date:[0-9][0-9]}/{imgName:[a-zA-Z0-9.]+}")
     @ResponseBody
-    ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response);
+    ResponseEntity<Response<String>> imgDownload(@PathVariable String ym, @PathVariable String date,@PathVariable String imgName, HttpServletResponse response);
 
     @ApiOperation(value = "企业发起的认证信息", nickname = "orgInfo")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
