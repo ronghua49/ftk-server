@@ -67,7 +67,7 @@ public class DocumentDataController implements DocumentDataApi {
 
     @Value("${ftk.root.filePath}")
     private String filePath;
-
+//FIXME:线程安全 企业单号每天从1开始递增
     private Integer t = 1;
 
     @Override
