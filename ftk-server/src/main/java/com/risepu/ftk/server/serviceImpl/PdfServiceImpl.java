@@ -271,7 +271,7 @@ public class PdfServiceImpl implements PdfService {
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
         image1.setAbsolutePosition(300, 170);//坐标
-        image1.scaleAbsolute(175, 50);//自定义大小
+        image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
         cd.beginText();
@@ -283,13 +283,13 @@ public class PdfServiceImpl implements PdfService {
         return pdfFilePath;
     }
 
-/*
-    public static void main(String[] args) {
-        PdfServiceImpl a = new PdfServiceImpl();
-        try {
-            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/11.jpg", "/file-path/112.jpg", "/file-path/test.pdf");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
+
+//    public static void main(String[] args) {
+//        PdfServiceImpl a = new PdfServiceImpl();
+//        try {
+//            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/11.jpg", "/file-path/112.jpg", "/file-path/test.pdf");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
