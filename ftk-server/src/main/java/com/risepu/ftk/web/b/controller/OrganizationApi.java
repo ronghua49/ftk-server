@@ -63,7 +63,7 @@ public interface OrganizationApi {
     @ApiOperation(value = "图片下载", nickname = "imgdownload")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class),
             @ApiResponse(code = 500, message = "failed", response = String.class)})
-    @RequestMapping(path = "/img/download/{imgName:\\w+.[a-z]{0,4}}")
+    @RequestMapping(path = "/img/download/{imgName:\\w+}")
     @ResponseBody
     ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response);
 

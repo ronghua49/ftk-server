@@ -137,6 +137,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         File dir = new File(uploadPath);
         File target = new File(dir, name);
         target.getParentFile().mkdirs();
+        
         file.transferTo(target);
         return name;
     }
