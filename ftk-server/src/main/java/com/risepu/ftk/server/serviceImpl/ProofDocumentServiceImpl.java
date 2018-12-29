@@ -6,6 +6,8 @@ import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DocumentDateService;
 import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.b.dto.VerifyHistory;
+import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,11 @@ import com.risepu.ftk.server.service.ProofDocumentService;
 
 import net.lc4ever.framework.service.GenericCrudService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
+
+import static java.awt.SystemColor.info;
+import static sun.security.krb5.Confounder.intValue;
 
 /**
  * @author L-heng
@@ -95,48 +98,37 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     }
 
     @Override
-    public PageResult getDocuments(List<String> chainHashs, Integer pageNo, Integer pageSize, String name) {
-        String chainHash = "";
+    public PageResult<VerifyHistory> getVerfifyHistoryData(String orgId, Integer pageNo, Integer pageSize, String name) {
 
-        for (int i = 0; i < chainHashs.size(); i++) {
-            if (i == chainHashs.size() - 1) {
-                chainHash = chainHash + "'" + chainHashs.get(i) + "'";
-            } else {
-                chainHash = chainHash + "'" + chainHashs.get(i) + "'" + ",";
-            }
-        }
-        chainHash = "(" + chainHash + ")";
         Integer firstIndex = pageNo * pageSize;
-        List<ProofDocument> proofDocuments1 = new ArrayList<>();
-        List proofDocuments = new ArrayList();
-        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
-        if (StringUtils.isEmpty(name)) {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " order by createTimestamp desc");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " order by createTimestamp desc");
+        int total=0;
+        List<?> objects = new ArrayList<>();
+        List<VerifyHistory> list = new ArrayList<>();
+        if (StringUtils.isNotEmpty(name)) {
+            String sql="select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN and d.`value` like ? ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN and d.`value` like ?";
+            objects = crudService.sql(firstIndex, pageSize, sql, "%" + name + "%");
+            BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, "%" + name + "%");
+            total= bigInteger.intValue();
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value like ?2) order by createTimestamp desc", domain1.getId(), "%"+name+"%");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where chainHash in " + chainHash + " and id in (select id.documentId from DocumentData where  id.domainId = ?1 and value like ?2) order by createTimestamp desc", domain1.getId(), "%"+name+"%");
+            String sql="select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN  ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN";
+            objects = crudService.sql(firstIndex, pageSize, sql);
+            BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2);
+            total= bigInteger.intValue();
         }
-
-        List list = new ArrayList();
-        List<DocumentData> documentDataList = new ArrayList<>();
-        PageResult<Template> pageResult = new PageResult<>();
-        for (int i = 0; i < proofDocuments.size(); i++) {
-            Map map = new HashMap();
-            ProofDocument proofDocument = (ProofDocument) proofDocuments.get(i);
-            documentDataList = documentDateService.getByDocumentId(proofDocument.getId());
-            map.put("chainHash", proofDocument.getChainHash());
-            map.put("number", proofDocument.getNumber());
-            map.put("createTimestamp", proofDocument.getCreateTimestamp());
-            for (int j = 0; j < documentDataList.size(); j++) {
-                DocumentData documentData = documentDataList.get(j);
-                Domain domain = domainService.selectById(documentData.getId().getDomainId());
-                map.put(domain.getCode(), documentData.getValue());
-
-            }
-            list.add(map);
+        for (int i = 0; i < objects.size(); i++) {
+            VerifyHistory history = new VerifyHistory();
+            Object[] object = (Object[]) objects.get(i);
+            history.setChainHash((String) object[0]);
+            history.setNumber((String) object[1]);
+            history.setName((String) object[2]);
+            history.setCreateTimestamp((Date) object[3]);
+            history.setIdCard((String) object[4]);
+            list.add(history);
         }
-        pageResult.setTotalElements(proofDocuments1.size());
+        PageResult<VerifyHistory> pageResult = new PageResult<>();
+        pageResult.setTotalElements(total);
         pageResult.setContent(list);
         return pageResult;
     }

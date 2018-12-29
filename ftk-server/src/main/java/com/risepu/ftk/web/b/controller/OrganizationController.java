@@ -316,7 +316,7 @@ public class OrganizationController implements OrganizationApi {
      * @return
      */
     @Override
-    public ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
+    public ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
 
 
         OrganizationUser orgUser = getCurrUser(session);
@@ -326,27 +326,14 @@ public class OrganizationController implements OrganizationApi {
 
         OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
 
-        PageResult page=new PageResult();
+        PageResult<VerifyHistory> page=new PageResult();
         List content = new ArrayList();
         if(user.getOrganizationId()==null){
             page.setContent(content);
             return ResponseEntity.ok(Response.succeed(page));
         }
-        /** 根据企业id查询 已经验证成功的流水idlist*/
-        List<AuthorizationStream> streams = organizationService.querySucceedAuthStreamByOrgId(user.getOrganizationId());
-        List<String> chainHashs = new ArrayList<>();
 
-        for (AuthorizationStream stream : streams) {
-            chainHashs.add(stream.getChainHash());
-        }
-
-        if(chainHashs.size()==0){
-            page.setContent(content);
-            return ResponseEntity.ok(Response.succeed(page));
-        }
-
-
-        page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+        page = proofDocumentService.getVerfifyHistoryData(user.getOrganizationId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
 
         return ResponseEntity.ok(Response.succeed(page));
 
