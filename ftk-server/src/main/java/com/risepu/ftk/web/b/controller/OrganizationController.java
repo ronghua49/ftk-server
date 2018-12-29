@@ -9,8 +9,8 @@ import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.BasicAction;
 import com.risepu.ftk.web.Constant;
-import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.SessionListener;
+import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.*;
 import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -299,6 +298,9 @@ public class OrganizationController implements OrganizationApi {
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
 
         String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
+        if(cardNo==null){
+            return ResponseEntity.ok(Response.failed(400,"失效的二维码"));
+        }
 
         Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
 
@@ -316,7 +318,7 @@ public class OrganizationController implements OrganizationApi {
      * @return
      */
     @Override
-    public ResponseEntity<Response<PageResult>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
+    public ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
 
 
         OrganizationUser orgUser = getCurrUser(session);
@@ -326,27 +328,14 @@ public class OrganizationController implements OrganizationApi {
 
         OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
 
-        PageResult page=new PageResult();
+        PageResult<VerifyHistory> page=new PageResult();
         List content = new ArrayList();
         if(user.getOrganizationId()==null){
             page.setContent(content);
             return ResponseEntity.ok(Response.succeed(page));
         }
-        /** 根据企业id查询 已经验证成功的流水idlist*/
-        List<AuthorizationStream> streams = organizationService.querySucceedAuthStreamByOrgId(user.getOrganizationId());
-        List<String> chainHashs = new ArrayList<>();
 
-        for (AuthorizationStream stream : streams) {
-            chainHashs.add(stream.getChainHash());
-        }
-
-        if(chainHashs.size()==0){
-            page.setContent(content);
-            return ResponseEntity.ok(Response.succeed(page));
-        }
-
-
-        page = proofDocumentService.getDocuments(chainHashs, pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
+        page = proofDocumentService.getVerfifyHistoryData(user.getOrganizationId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
 
         return ResponseEntity.ok(Response.succeed(page));
 

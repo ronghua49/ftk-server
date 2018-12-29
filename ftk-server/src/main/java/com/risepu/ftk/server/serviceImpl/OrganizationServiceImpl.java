@@ -21,6 +21,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -124,17 +125,20 @@ public class OrganizationServiceImpl implements OrganizationService {
         crudService.update(orgUser);
     }
 
+    @Value("${file.upload.path}")
+    private String uploadPath;
+
     @Override
     public String upload(MultipartFile file) throws IllegalStateException, IOException {
         String name = UUID.randomUUID().toString().replaceAll("-", "");
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        name = name + "." + ext;
+        name =  new SimpleDateFormat("yyyy-MM/dd/").format(new Date())+name + "." + ext;
         /** 上传图片到指定地址路径 */
-        File filePath = new File(ConfigUtil.getValue("file.upload.path"));
-        if (!filePath.exists()) {
-            filePath.mkdirs();
-        }
-        file.transferTo(new File(filePath, name));
+        File dir = new File(uploadPath);
+        File target = new File(dir, name);
+        target.getParentFile().mkdirs();
+        
+        file.transferTo(target);
         return name;
     }
 
