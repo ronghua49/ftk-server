@@ -138,7 +138,7 @@ public class ManageTemplateController implements ManageTemplateApi {
                 Domain domain = list.get(j);
                 templateDomainService.delete(template.getId(), domain.getId());
             }
-            String _template = template1.get_template();
+            String _template = template.get_template();
             List<Domain> domains = domainService.selectAll();
             List<String> list1 = new ArrayList();
             for (int i = 0; i < domains.size(); i++) {
