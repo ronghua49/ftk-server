@@ -94,7 +94,7 @@ public class CaptchaController implements InitializingBean, CaptchaApi {
     public String imgBase64(HttpServletRequest request, String code) {
 
 
-        int width = 70, height = 40;
+        int width = 85, height = 50;
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g = image.createGraphics();
         // 设定背景色
