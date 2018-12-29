@@ -28,7 +28,7 @@ public class ProofDocument extends AuditableObject<Long> {
     /**
      * 单号
      */
-    private String documentNumber;
+    private String number;
     /**
      * 区块hash
      */
@@ -45,6 +45,8 @@ public class ProofDocument extends AuditableObject<Long> {
      * 文档路径
      */
     private String filePath;
+
+    private Integer index;
 
     @Id
     @Column(name = "ID", precision = 19)
@@ -69,13 +71,13 @@ public class ProofDocument extends AuditableObject<Long> {
         this.template = template;
     }
 
-    @Column(name = "DOCUMENT_NUMBER", length = 150)
-    public String getDocumentNumber() {
-        return documentNumber;
+    @Column(name = "NUMBER")
+    public String getNumber() {
+        return number;
     }
 
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     @Column(name = "CHAIN_HASH")
@@ -87,7 +89,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.chainHash = chainHash;
     }
 
-
     @Column(name = "ORGANIZATION")
     public String getOrganization() {
         return organization;
@@ -96,7 +97,6 @@ public class ProofDocument extends AuditableObject<Long> {
     public void setOrganization(String organization) {
         this.organization = organization;
     }
-
 
     @Column(name = "PERSONAL_USER", length = 50)
     public String getPersonalUser() {
@@ -107,18 +107,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.personalUser = personalUser;
     }
 
-    private Integer index;
-
-    @Column(name = "INDEX")
-    public Integer getIndex() {
-        return index;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
-
     @Column(name = "FILE_PATH")
     public String getFilePath() {
         return filePath;
@@ -128,4 +116,12 @@ public class ProofDocument extends AuditableObject<Long> {
         this.filePath = filePath;
     }
 
+    @Column(name = "_INDEX")
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
 }

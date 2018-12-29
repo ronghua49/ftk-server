@@ -114,6 +114,7 @@ public class DocumentDataController implements DocumentDataApi {
             proofDocument.setPersonalUser(map.get("idCard"));
             proofDocument.setOrganization(org.getId());
             proofDocument.setTemplate(templateId);
+            proofDocument.setIndex(0);
             Long proDocumentId = proofDocumentService.add(proofDocument);
 
             ProofDocument proofDocument1 = proofDocumentService.getDocumentById(proDocumentId);
@@ -147,7 +148,7 @@ public class DocumentDataController implements DocumentDataApi {
                 Date date2 = DateFormatter.startOfDay(DateFormatter.nextDay(new Date()));
                 String time = ft2.format(date2);
                 String time1 = ft2.format(new Date());
-                Integer index = crudService.uniqueResultHql(Integer.class, "select max(index) from ProofDocument where organization = ?1 and createTimestamp >= ?2 and createTimestamp <? 3 order by createTimestamp desc", user.getOrganizationId(), time1, time);
+                Integer index = (Integer) crudService.uniqueResultHql("select max(index) from ProofDocument where organization = ?1 and createTimestamp >= '" + time1 + "' and createTimestamp < '" + time + "'", user.getOrganizationId());
                 proofDocument1.setIndex(index + 1);
                 n = String.format("%03d", index + 1);
             } else {

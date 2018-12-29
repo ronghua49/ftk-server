@@ -59,8 +59,8 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
         }
 
         List list = new ArrayList();
@@ -95,21 +95,21 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     public PageResult<VerifyHistory> getVerfifyHistoryData(String orgId, Integer pageNo, Integer pageSize, String name) {
 
         Integer firstIndex = pageNo * pageSize;
-        int total=0;
+        int total = 0;
         List<?> objects = new ArrayList<>();
         List<VerifyHistory> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(name)) {
-            String sql="select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN and d.`value` like ? ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql = "select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN and d.`value` like ? ORDER BY a.CREATE_TIMESTAMP DESC";
             String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN and d.`value` like ?";
             objects = crudService.sql(firstIndex, pageSize, sql, "%" + name + "%");
             BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, "%" + name + "%");
-            total= bigInteger.intValue();
+            total = bigInteger.intValue();
         } else {
-            String sql="select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN  ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql = "select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN  ORDER BY a.CREATE_TIMESTAMP DESC";
             String sql2 = "select count(*) from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='name' and dom.ID = d.DOMAIN";
             objects = crudService.sql(firstIndex, pageSize, sql);
             BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2);
-            total= bigInteger.intValue();
+            total = bigInteger.intValue();
         }
         for (int i = 0; i < objects.size(); i++) {
             VerifyHistory history = new VerifyHistory();
