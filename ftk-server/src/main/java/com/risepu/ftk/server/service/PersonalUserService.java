@@ -1,13 +1,12 @@
 package com.risepu.ftk.server.service;
 
-import java.util.Map;
-
 import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
-
 import net.lc4ever.framework.remote.annotation.Remote;
+
+import java.util.Map;
 
 @Remote(path = "/person")
 public interface PersonalUserService {

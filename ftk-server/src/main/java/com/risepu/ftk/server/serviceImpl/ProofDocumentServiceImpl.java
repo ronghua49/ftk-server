@@ -2,26 +2,20 @@ package com.risepu.ftk.server.serviceImpl;
 
 import com.risepu.ftk.server.domain.DocumentData;
 import com.risepu.ftk.server.domain.Domain;
+import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.DocumentDateService;
 import com.risepu.ftk.server.service.DomainService;
+import com.risepu.ftk.server.service.ProofDocumentService;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.VerifyHistory;
-import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
+import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.risepu.ftk.server.domain.ProofDocument;
-import com.risepu.ftk.server.service.ProofDocumentService;
-
-import net.lc4ever.framework.service.GenericCrudService;
-
 import java.math.BigInteger;
 import java.util.*;
-
-import static java.awt.SystemColor.info;
-import static sun.security.krb5.Confounder.intValue;
 
 /**
  * @author L-heng
