@@ -245,7 +245,7 @@ public class PdfServiceImpl implements PdfService {
             }
             Chunk c2 = new Chunk(content, contentFont);
             Chunk c22 = new Chunk(" " + value + " ", textFont);
-            c22.setUnderline(0.1f, -1f);
+            c22.setUnderline(0.1f, -2f);
             ph1.add(c2);
             ph1.add(c22);
             number = index + pdf1.getKey().length();
