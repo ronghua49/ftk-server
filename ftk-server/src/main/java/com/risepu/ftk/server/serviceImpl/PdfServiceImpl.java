@@ -159,6 +159,7 @@ public class PdfServiceImpl implements PdfService {
         BaseFont bfChinese = BaseFont.createFont("/simsun.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         //设置字体样式
         Font textFont = new Font(bfChinese, template.getContentSize(), Font.BOLD); //加粗
+        Font textFont1 = new Font(bfChinese,14, Font.BOLD); //加粗
         Font hashFont = new Font(bfChinese, template.getHashSize(), Font.UNDEFINED); //哈希
         hashFont.setColor(BaseColor.RED);
         Font contentFont = new Font(bfChinese, template.getContentSize(), Font.UNDEFINED); //正文
@@ -172,7 +173,7 @@ public class PdfServiceImpl implements PdfService {
         doc.newPage();
 
         //段落
-        Paragraph p1 = new Paragraph("【职场通行证】", textFont);
+        Paragraph p1 = new Paragraph("【职场通行证】", textFont1);
         p1.setAlignment(Element.ALIGN_CENTER);
         doc.add(p1);
 
@@ -263,7 +264,7 @@ public class PdfServiceImpl implements PdfService {
 
         cd.beginText();
 
-        cd.setFontAndSize(bfChinese, 20);
+        cd.setFontAndSize(bfChinese, 12);
         cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 50, 110, 0);
         cd.endText();
 
@@ -275,7 +276,7 @@ public class PdfServiceImpl implements PdfService {
 
         cd.beginText();
 
-        cd.setFontAndSize(bfChinese, 20);
+        cd.setFontAndSize(bfChinese, 12);
         cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 150, 0);
         cd.endText();
         doc.close();
