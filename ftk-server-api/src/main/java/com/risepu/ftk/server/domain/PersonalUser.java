@@ -14,57 +14,57 @@ import net.lc4ever.framework.domain.TimestampObject;
 @Table(name = "FTK_PERSONAL_USER")
 public class PersonalUser extends TimestampObject<String> {
 
-	/**
-	 * 个人用户唯一标识: 当前存储数据为身份证号码
-	 */
-	private String id;
+    /**
+     * 个人用户唯一标识: 当前存储数据为身份证号码
+     */
+    private String id;
 
-	@Id
-	@Column(name = "ID", length = 128)
-	@Override
-	public String getId() {
-		return id;
-	}
+    @Id
+    @Column(name = "ID", length = 128)
+    @Override
+    public String getId() {
+        return id;
+    }
 
-	@Override
-	public void setId(String id) {
-		this.id = id;
-	}
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * 手机号码
-	 */
-	private String mobile;
+    /**
+     * 手机号码
+     */
+    private String mobile;
 
-	@Column(name = "MOBILE", length = 32)
-	public String getMobile() {
-		return mobile;
-	}
+    @Column(name = "MOBILE", length = 32)
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-	private String password;
+    private String password;
 
-	@Column(name = "PASSWORD", length = 32)
-	public String getPassword() {
-		return password;
-	}
+    @Column(name = "PASSWORD", length = 32)
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	private String userName;
+    private String userName;
 
-	@Column(name = "USERNAME", length = 10)
-	public String getUserName() {
-		return userName;
-	}
+    @Column(name = "USERNAME", length = 10)
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
 }

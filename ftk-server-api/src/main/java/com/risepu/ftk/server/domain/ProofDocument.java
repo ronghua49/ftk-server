@@ -111,7 +111,7 @@ public class ProofDocument extends AuditableObject<Long> {
 
     private Integer index;
 
-    @Column(name = "INDEX", length = 10)
+    @Column(name = "INDEX")
     public Integer getIndex() {
         return index;
     }

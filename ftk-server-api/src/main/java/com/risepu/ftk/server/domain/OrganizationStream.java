@@ -12,17 +12,27 @@ import javax.persistence.*;
 @Table(name = "FTK_ORGANIZATION_STREAM")
 public class OrganizationStream extends AuditableObject<Long> {
 
-    /** 未审核 */
+    /**
+     * 未审核
+     */
     public static final Integer UNCHECK_STATE = 0;
-    /** 审核中 */
+    /**
+     * 审核中
+     */
     public static final Integer CHECKING_STATE = 1;
-    /** 审核通过 */
+    /**
+     * 审核通过
+     */
     public static final Integer CHECK_PASS_STATE = 2;
-    /** 审核未通过 */
+    /**
+     * 审核未通过
+     */
     public static final Integer CHECK_FAIL_STATE = 3;
 
 
-    /** 自增id */
+    /**
+     * 自增id
+     */
     private Long id;
 
     @Id
@@ -35,12 +45,14 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     @Override
     public void setId(Long id) {
-        this.id=id;
+        this.id = id;
 
     }
 
-    /** 企业的组织机构代码证号 */
-   private String organization;
+    /**
+     * 企业的组织机构代码证号
+     */
+    private String organization;
 
     @Column(name = "ORGANIZATION", length = 18, nullable = false)
     public String getOrganization() {
@@ -51,7 +63,9 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.organization = organization;
     }
 
-    /** 企业名 */
+    /**
+     * 企业名
+     */
     private String name;
 
     @Column(name = "NAME", length = 255, nullable = false)
@@ -64,7 +78,9 @@ public class OrganizationStream extends AuditableObject<Long> {
     }
 
 
-    /** 审核状态   默认未审核 */
+    /**
+     * 审核状态   默认未审核
+     */
     private Integer state = UNCHECK_STATE;
 
     @Column(name = "STATE", length = 1)
@@ -123,7 +139,6 @@ public class OrganizationStream extends AuditableObject<Long> {
     }
 
 
-
     private String tel;
 
     @Column(name = "TEL", length = 15)
@@ -134,10 +149,6 @@ public class OrganizationStream extends AuditableObject<Long> {
     public void setTel(String tel) {
         this.tel = tel;
     }
-
-
-
-
 
 
     private String applicationPhone;
@@ -160,7 +171,7 @@ public class OrganizationStream extends AuditableObject<Long> {
     private String registedDate;
     private String insuranceNum;
     private String staffSize;
-    private String website ;
+    private String website;
 
 
     @Column(name = "ORG_TYPE", length = 20)
@@ -236,7 +247,6 @@ public class OrganizationStream extends AuditableObject<Long> {
     public void setWebsite(String website) {
         this.website = website;
     }
-
 
 
 }
