@@ -14,12 +14,16 @@ public class Response<T> implements Serializable {
     public static class Header implements Serializable {
 
         private static final long serialVersionUID = 1L;
+
         @ApiModelProperty(value = "ResultCode")
         private int code;
+
         @ApiModelProperty(value = "ResultMessage", example = "SUCCEED")
         private String message;
+
         @ApiModelProperty(value = "ResultDesc")
         private String desc;
+
         @ApiModelProperty(value = "ResultTimestamp")
         private long timestamp;
 
@@ -104,5 +108,4 @@ public class Response<T> implements Serializable {
         result.setHeader(header);
         return result;
     }
-
 }

@@ -21,6 +21,13 @@ public class OrganizationUser extends TimestampObject<String> {
      */
     private String id;
 
+    private String password;
+
+    /**
+     * 根据企业的组织机构代码证查询 对应的企业
+     */
+    private String organizationId;
+
     @Override
     @Id
     @Column(name = "ID", length = 11)
@@ -33,9 +40,6 @@ public class OrganizationUser extends TimestampObject<String> {
         this.id = id;
     }
 
-
-    private String password;
-
     @Column(name = "PASSWORD", length = 32)
     public String getPassword() {
         return password;
@@ -45,12 +49,7 @@ public class OrganizationUser extends TimestampObject<String> {
         this.password = password;
     }
 
-    /**
-     * 根据企业的组织机构代码证查询 对应的企业
-     */
     @Column(name = "ORGANIZATION_ID")
-    private String organizationId;
-
     public String getOrganizationId() {
         return organizationId;
     }
@@ -58,6 +57,4 @@ public class OrganizationUser extends TimestampObject<String> {
     public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
     }
-
-
 }

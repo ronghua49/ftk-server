@@ -21,26 +21,32 @@ public class ProofDocument extends AuditableObject<Long> {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+
     /**
      * 模板id
      */
     private Long template;
+
     /**
      * 单号
      */
     private String number;
+
     /**
      * 区块hash
      */
     private String chainHash;
+
     /**
      * 企业信息id
      */
     private String organization;
+
     /**
      * 个人信息id
      */
     private String personalUser;
+
     /**
      * 文档路径
      */
@@ -60,7 +66,6 @@ public class ProofDocument extends AuditableObject<Long> {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     @Column(name = "TEMPLATE", precision = 19)
     public Long getTemplate() {

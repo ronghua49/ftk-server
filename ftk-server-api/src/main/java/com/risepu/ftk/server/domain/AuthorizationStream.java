@@ -41,36 +41,40 @@ public class AuthorizationStream extends AuditableObject<Long> {
      */
     public static final int VERIFY_STATE_FAIL = 4;
 
-
     /**
      * 主键
      */
     private Long id;
+
     /**
      * 单据上的用户身份证号
      */
     private String personId;
+
     /**
      * 当前企业id
      */
     private String orgId;
+
     /**
      * 授权状态
      */
     private Integer authState;
+
     /**
      * 验证状态
      */
     private Integer verifyState;
+
     /**
      * 验证成功后的 当前单据 hash
      */
     private String chainHash;
+
     /**
      * 存放发送用户的授权码
      */
     private String authCode;
-
 
     @Id
     @Column(name = "ID", precision = 19)
@@ -94,7 +98,6 @@ public class AuthorizationStream extends AuditableObject<Long> {
         this.personId = personId;
     }
 
-
     @Column(name = "ORG_ID", length = 18)
     public String getOrgId() {
         return orgId;
@@ -103,7 +106,6 @@ public class AuthorizationStream extends AuditableObject<Long> {
     public void setOrgId(String orgId) {
         this.orgId = orgId;
     }
-
 
     @Column(name = "CHAIN_HASH", length = 128)
     public String getChainHash() {

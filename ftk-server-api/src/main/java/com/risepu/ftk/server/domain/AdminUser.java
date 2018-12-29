@@ -22,6 +22,11 @@ public class AdminUser extends AuditableObject<String> {
      */
     private String id;
 
+    /**
+     * 密码
+     */
+    private String password;
+
     @Id
     @Column(name = "ID", length = 32)
     @Override
@@ -34,18 +39,13 @@ public class AdminUser extends AuditableObject<String> {
         this.id = id;
     }
 
-    /*密码*/
-    private String password;
-
     @Column(name = "PASSWORD", length = 32)
     public String getPassword() {
         return password;
     }
 
-
     public void setPassword(String password) {
         this.password = password;
     }
-
 
 }

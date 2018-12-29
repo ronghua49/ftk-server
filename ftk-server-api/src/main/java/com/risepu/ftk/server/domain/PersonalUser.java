@@ -19,6 +19,15 @@ public class PersonalUser extends TimestampObject<String> {
      */
     private String id;
 
+    /**
+     * 手机号码
+     */
+    private String mobile;
+
+    private String password;
+
+    private String userName;
+
     @Id
     @Column(name = "ID", length = 128)
     @Override
@@ -31,11 +40,6 @@ public class PersonalUser extends TimestampObject<String> {
         this.id = id;
     }
 
-    /**
-     * 手机号码
-     */
-    private String mobile;
-
     @Column(name = "MOBILE", length = 32)
     public String getMobile() {
         return mobile;
@@ -45,8 +49,6 @@ public class PersonalUser extends TimestampObject<String> {
         this.mobile = mobile;
     }
 
-    private String password;
-
     @Column(name = "PASSWORD", length = 32)
     public String getPassword() {
         return password;
@@ -55,8 +57,6 @@ public class PersonalUser extends TimestampObject<String> {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    private String userName;
 
     @Column(name = "USERNAME", length = 10)
     public String getUserName() {

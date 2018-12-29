@@ -24,6 +24,39 @@ public class Organization extends AuditableObject<String> {
      */
     private String id;
 
+    /**
+     * 企业名
+     */
+    private String name;
+
+    private String address;
+
+    private String legalPerson;
+
+    private Long defaultTemId;
+
+    private String licenseImgName;
+
+    private String remark;
+
+    private String tel;
+
+    private String orgType;
+
+    private String signSts;
+
+    private String registedCapital;
+
+    private String scope;
+
+    private String registedDate;
+
+    private String insuranceNum;
+
+    private String staffSize;
+
+    private String website;
+
     @Override
     @Id
     @Column(name = "ORGANIZATION", length = 18)
@@ -36,11 +69,6 @@ public class Organization extends AuditableObject<String> {
         this.id = id;
     }
 
-    /**
-     * 企业名
-     */
-    private String name;
-
     @Column(name = "NAME", length = 255, nullable = false)
     public String getName() {
         return name;
@@ -49,9 +77,6 @@ public class Organization extends AuditableObject<String> {
     public void setName(String name) {
         this.name = name;
     }
-
-
-    private String address;
 
     @Column(name = "ADDRESS", length = 31)
     public String getAddress() {
@@ -62,8 +87,6 @@ public class Organization extends AuditableObject<String> {
         this.address = address;
     }
 
-    private String legalPerson;
-
     @Column(name = "LEGAL_PERSON", length = 10)
     public String getLegalPerson() {
         return legalPerson;
@@ -72,8 +95,6 @@ public class Organization extends AuditableObject<String> {
     public void setLegalPerson(String legalPerson) {
         this.legalPerson = legalPerson;
     }
-
-    private Long defaultTemId;
 
     @Column(name = "DEFAULT_TEP_ID", length = 19)
     public Long getDefaultTemId() {
@@ -84,8 +105,6 @@ public class Organization extends AuditableObject<String> {
         this.defaultTemId = defaultTemId;
     }
 
-    private String licenseImgName;
-
     @Column(name = "LICENCE_IMG_NAME")
     public String getLicenseImgName() {
         return licenseImgName;
@@ -94,8 +113,6 @@ public class Organization extends AuditableObject<String> {
     public void setLicenseImgName(String licenseImgName) {
         this.licenseImgName = licenseImgName;
     }
-
-    private String remark;
 
     @Column(name = "REMARK", length = 225)
     public String getRemark() {
@@ -106,9 +123,6 @@ public class Organization extends AuditableObject<String> {
         this.remark = remark;
     }
 
-
-    private String tel;
-
     @Column(name = "TEL", length = 15)
     public String getTel() {
         return tel;
@@ -117,18 +131,6 @@ public class Organization extends AuditableObject<String> {
     public void setTel(String tel) {
         this.tel = tel;
     }
-
-
-    private String orgType;
-
-    private String signSts;
-    private String registedCapital;
-    private String scope;
-    private String registedDate;
-    private String insuranceNum;
-    private String staffSize;
-    private String website;
-
 
     @Column(name = "ORG_TYPE", length = 20)
     public String getOrgType() {
@@ -148,12 +150,10 @@ public class Organization extends AuditableObject<String> {
         this.signSts = signSts;
     }
 
-
     @Column(name = "REG_CAPITAL", length = 20)
     public String getRegistedCapital() {
         return registedCapital;
     }
-
 
     public void setRegistedCapital(String registedCapital) {
         this.registedCapital = registedCapital;
@@ -203,6 +203,4 @@ public class Organization extends AuditableObject<String> {
     public void setWebsite(String website) {
         this.website = website;
     }
-
-
 }
