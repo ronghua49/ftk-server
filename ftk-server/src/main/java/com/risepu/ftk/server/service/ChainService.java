@@ -10,10 +10,9 @@ import com.risepu.ftk.server.domain.ProofDocument;
  */
 public interface ChainService {
 
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public String sign(Long documentId);
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    String sign(Long documentId);
 
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public ProofDocument verify(String hash, String id);
-
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    ProofDocument verify(String hash, String id);
 }

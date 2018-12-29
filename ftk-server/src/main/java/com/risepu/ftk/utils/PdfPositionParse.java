@@ -15,7 +15,9 @@ import java.util.Map;
  */
 public class PdfPositionParse {
     private PdfReader reader;
+
     private List<String> findText = new ArrayList<>();    //需要查找的文本
+
     private PdfReaderContentParser parser;
 
     public PdfPositionParse(String fileName) throws IOException {

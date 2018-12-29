@@ -14,5 +14,4 @@ public interface TemplateDomainService {
      * 删除模板与数据间的关联
      */
     void delete(Long templateId, Long domainId);
-
 }

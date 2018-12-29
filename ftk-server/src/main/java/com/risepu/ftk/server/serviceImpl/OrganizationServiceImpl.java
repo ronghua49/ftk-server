@@ -44,9 +44,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private GenericCrudService crudService;
 
-    public void setCrudService(GenericCrudService crudService) {
-        this.crudService = crudService;
-    }
+    @Value("${file.upload.path}")
+    private String uploadPath;
 
     @Override
     public String orgReg(String phone, String password) {
@@ -62,17 +61,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     public LoginResult orgLogin(String phoneOrName, String password) {
         String secutityPwd = DigestUtils.md5Hex(password + SALT);
         LoginResult loginResult = new LoginResult();
-
         if (StringUtils.isNumeric(phoneOrName)) {
             /** 使用手机号登录 */
-
             OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
-
             if (org == null) {
                 loginResult.setCode(4);
                 loginResult.setMessage("此手机号还未注册，请注册！");
             }
-
             if (org != null && org.getPassword().equals(secutityPwd)) {
                 loginResult.setCode(0);
                 loginResult.setMessage("登录成功！");
@@ -83,21 +78,14 @@ public class OrganizationServiceImpl implements OrganizationService {
                 if (org.getOrganizationId() != null) {
                     organization = crudService.uniqueResultByProperty(Organization.class, "id", org.getOrganizationId());
                 }
-
                 loginResult.setOrganization(organization);
-
-
             } else {
                 loginResult.setCode(5);
                 loginResult.setMessage("密码错误！");
             }
-
-
         } else {
             /** 使用企业名登录 */
             Organization org = crudService.uniqueResultByProperty(Organization.class, "name", phoneOrName);
-
-
             if (org != null) {
                 OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",
                         org.getId());
@@ -125,19 +113,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         crudService.update(orgUser);
     }
 
-    @Value("${file.upload.path}")
-    private String uploadPath;
-
     @Override
     public String upload(MultipartFile file) throws IllegalStateException, IOException {
         String name = UUID.randomUUID().toString().replaceAll("-", "");
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        name =  new SimpleDateFormat("yyyy-MM/dd/").format(new Date())+name + "." + ext;
+        name = new SimpleDateFormat("yyyy-MM/dd/").format(new Date()) + name + "." + ext;
         /** 上传图片到指定地址路径 */
         File dir = new File(uploadPath);
         File target = new File(dir, name);
         target.getParentFile().mkdirs();
-        
         file.transferTo(target);
         return name;
     }
@@ -151,12 +135,10 @@ public class OrganizationServiceImpl implements OrganizationService {
         String filePath = file.getPath();
         InputStream in = new FileInputStream(new File(filePath, imgName));
         OutputStream out = response.getOutputStream();
-
         IOUtils.copy(in, out);
         out.flush();
         out.close();
         in.close();
-
     }
 
     @Override
@@ -166,7 +148,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public String checkOrgName(String mobileOrName) {
-
         if (StringUtils.isNumeric(mobileOrName)) {
             OrganizationUser user = crudService.uniqueResultByProperty(OrganizationUser.class, "id", mobileOrName);
             if (user != null) {
@@ -178,7 +159,6 @@ public class OrganizationServiceImpl implements OrganizationService {
                 return user.getId();
             }
         }
-
         return null;
     }
 
@@ -189,57 +169,44 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization findAuthenOrgById(String id) {
-
         return crudService.get(Organization.class, id);
     }
 
     @Override
     public Long InsertAuthorStream(String orgId, String cardNo) {
-
         AuthorizationStream stream = new AuthorizationStream();
-
         stream.setOrgId(orgId);
         stream.setPersonId(cardNo);
         stream.setAuthState(AuthorizationStream.AUTH_STATE_NEW);
         Long streamId = crudService.save(stream);
         return streamId;
-
     }
 
     @Override
     public PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
         Integer firstIndex = (pageNo) * pageSize;
-
         String hql = "";
         String hql2 = "select count(*) ";
         int total = 0;
         List<OrganizationStream> orgs = new ArrayList<OrganizationStream>();
-
         String key = (String) map.get("key");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
-
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
         Date endDate = null;
         Date nextDate = null;
-
         if (StringUtils.isNotEmpty(startTime)) {
             try {
                 startDate = format.parse(startTime);
                 endDate = format.parse(endTime);
-
                 nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
-
                 System.out.println("开始时间：" + startDate);
                 System.out.println("结束时间" + nextDate);
-
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
         Integer state = (Integer) map.get("state");
 
         if (StringUtils.isNotEmpty(key) && state == null && startDate == null) {
@@ -269,7 +236,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, startDate, nextDate);
 
-        } else if (StringUtils.isEmpty(key)&& state != null && startDate != null) {
+        } else if (StringUtils.isEmpty(key) && state != null && startDate != null) {
 
             hql = "from OrganizationStream where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
 
@@ -417,6 +384,5 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization findAuthenOrgByName(String name) {
         return crudService.uniqueResultHql(Organization.class, "from Organization where name =?1", name);
     }
-
 
 }

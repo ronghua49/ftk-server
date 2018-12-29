@@ -13,20 +13,24 @@ public class PageResult<T> {
      * 总页数
      */
     private Integer totalPages;
+
     /**
      * 总条数
      */
     private Integer totalElements;
+
     /**
      * 当前页数
      */
     private Integer number;
+
     /**
      * 每页显示条数
      */
     private Integer size;
 
     private List<T> content;
+
     /**
      * 总页码数组
      */

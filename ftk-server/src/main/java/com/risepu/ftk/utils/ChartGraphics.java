@@ -70,9 +70,4 @@ public class ChartGraphics {
         tip.drawRoundRect(0, 0, imageWidth - 1, imageHeight - 1, 40, 40);
         return createImage(imgurl);
     }
-
-    /*public static void main(String[] args) {
-        ChartGraphics g = new ChartGraphics();
-        g.graphicsGeneration("电风扇", "/file-path/112.jpg");
-    }*/
 }

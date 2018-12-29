@@ -15,31 +15,32 @@ import net.lc4ever.framework.service.GenericCrudService;
 @Service
 public class TemplateDomainServiceImpl implements TemplateDomainService {
 
-	private GenericCrudService crudService;
-	@Autowired
-	public void setCrudService(GenericCrudService crudService) {
-		this.crudService = crudService;
-	}
+    private GenericCrudService crudService;
 
-	@Override
-	public void add(Long templateId, Long domainId) {
-		// TODO Auto-generated method stub
-		TemplateDomain templateDomain = new TemplateDomain();
-		ID id = new ID();
-		id.setDomainId(domainId);
-		id.setTemplateId(templateId);
-		templateDomain.setId(id);
-		crudService.saveOrUpdate(templateDomain);
-	}
+    @Autowired
+    public void setCrudService(GenericCrudService crudService) {
+        this.crudService = crudService;
+    }
 
-	@Override
-	public void delete(Long templateId, Long domainId) {
-		// TODO Auto-generated method stub
-		TemplateDomain templateDomain = new TemplateDomain();
-		ID id = new ID();
-		id.setDomainId(domainId);
-		id.setTemplateId(templateId);
-		templateDomain.setId(id);
-		crudService.delete(templateDomain);
-	}
+    @Override
+    public void add(Long templateId, Long domainId) {
+        // TODO Auto-generated method stub
+        TemplateDomain templateDomain = new TemplateDomain();
+        ID id = new ID();
+        id.setDomainId(domainId);
+        id.setTemplateId(templateId);
+        templateDomain.setId(id);
+        crudService.saveOrUpdate(templateDomain);
+    }
+
+    @Override
+    public void delete(Long templateId, Long domainId) {
+        // TODO Auto-generated method stub
+        TemplateDomain templateDomain = new TemplateDomain();
+        ID id = new ID();
+        id.setDomainId(domainId);
+        id.setTemplateId(templateId);
+        templateDomain.setId(id);
+        crudService.delete(templateDomain);
+    }
 }

@@ -23,7 +23,6 @@ public interface ProofDocumentService {
      */
     List<ProofDocument> getByOrganization(String organization);
 
-
     /**
      * 单据历史（固定）
      *

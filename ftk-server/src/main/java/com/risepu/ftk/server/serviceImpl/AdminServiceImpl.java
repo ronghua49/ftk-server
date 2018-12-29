@@ -13,29 +13,17 @@ import net.lc4ever.framework.service.GenericCrudService;
  */
 @Service
 public class AdminServiceImpl implements AdminService {
-	
-	@Autowired
-	private GenericCrudService crudService;
 
-	@Override
-	public AdminUser findAdminByName(String userName) {
-		return crudService.uniqueResultByProperty(AdminUser.class, "id", userName);
-	}
+    @Autowired
+    private GenericCrudService crudService;
 
-	@Override
-	public void updateAdminUser(AdminUser adminUser) {
-		crudService.update(adminUser);
-	}
+    @Override
+    public AdminUser findAdminByName(String userName) {
+        return crudService.uniqueResultByProperty(AdminUser.class, "id", userName);
+    }
 
-	
-
-
-
-
-
-	
-	
-	
-	
-
+    @Override
+    public void updateAdminUser(AdminUser adminUser) {
+        crudService.update(adminUser);
+    }
 }

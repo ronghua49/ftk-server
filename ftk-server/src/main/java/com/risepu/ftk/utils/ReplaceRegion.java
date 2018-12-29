@@ -5,9 +5,13 @@ package com.risepu.ftk.utils;
  */
 public class ReplaceRegion {
     private String aliasName;
+
     private Float x;
+
     private Float y;
+
     private Float w;
+
     private Float h;
 
     public ReplaceRegion(String aliasName) {
