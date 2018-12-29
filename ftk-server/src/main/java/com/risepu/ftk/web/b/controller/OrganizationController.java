@@ -298,6 +298,9 @@ public class OrganizationController implements OrganizationApi {
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
 
         String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
+        if(cardNo==null){
+            return ResponseEntity.ok(Response.failed(400,"失效的二维码"));
+        }
 
         Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
 
