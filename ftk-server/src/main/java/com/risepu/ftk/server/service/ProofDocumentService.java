@@ -2,6 +2,7 @@ package com.risepu.ftk.server.service;
 
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.b.dto.VerifyHistory;
 
 import java.util.List;
 
@@ -45,10 +46,10 @@ public interface ProofDocumentService {
     /**
      * 验证历史
      *
-     * @param chainHash 哈希串
+     * @param orgId 哈希串
      * @return
      */
-    PageResult getDocuments(List<String> chainHash, Integer pageNo, Integer pageSize, String name);
+    PageResult<VerifyHistory> getVerfifyHistoryData(String orgId, Integer pageNo, Integer pageSize, String name);
 
     /**
      * 根据chainHash 查询文档用户身份证号
