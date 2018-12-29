@@ -86,6 +86,17 @@ public class ProofDocument extends AuditableObject<Long> {
      */
     private String personalUser;
 
+    private Integer index;
+
+    @Column(name = "INDEX", length = 10)
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
     @Column(name = "ORGANIZATION", precision = 19)
     public String getOrganization() {
         return organization;
