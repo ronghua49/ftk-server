@@ -74,7 +74,6 @@ public class PersonalUserController implements PersonzalUserApi  {
 			/** 解析单据信息 */
 			String chainHash = (String) request.getSession().getAttribute(Constant.getSessionChainHash());
 			/** 校验用户输入的身份证号是否和单据信息一致 */
-
 			ProofDocument document = chainService.verify(chainHash, no);
 
 			if(document!=null) {
