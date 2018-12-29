@@ -21,6 +21,30 @@ public class ProofDocument extends AuditableObject<Long> {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    /**
+     * 模板id
+     */
+    private Long template;
+    /**
+     * 单号
+     */
+    private String number;
+    /**
+     * 区块hash
+     */
+    private String chainHash;
+    /**
+     * 企业信息id
+     */
+    private String organization;
+    /**
+     * 个人信息id
+     */
+    private String personalUser;
+    /**
+     * 文档路径
+     */
+    private String filePath;
 
     @Id
     @Column(name = "ID", precision = 19)
@@ -35,10 +59,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.id = id;
     }
 
-    /**
-     * 模板id
-     */
-    private Long template;
 
     @Column(name = "TEMPLATE", precision = 19)
     public Long getTemplate() {
@@ -49,10 +69,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.template = template;
     }
 
-    /**
-     * 单号
-     */
-    private String number;
 
     @Column(name = "NUMBER", length = 100)
     public String getNumber() {
@@ -63,10 +79,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.number = number;
     }
 
-    /**
-     * 区块hash
-     */
-    private String chainHash;
 
     @Column(name = "CHAIN_HASH", length = 128)
     public String getChainHash() {
@@ -77,10 +89,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.chainHash = chainHash;
     }
 
-    /**
-     * 企业信息id
-     */
-    private String organization;
 
     @Column(name = "ORGANIZATION")
     public String getOrganization() {
@@ -91,10 +99,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.organization = organization;
     }
 
-    /**
-     * 个人信息id
-     */
-    private String personalUser;
 
     @Column(name = "PERSONAL_USER", length = 50)
     public String getPersonalUser() {
@@ -116,11 +120,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.index = index;
     }
 
-
-    /**
-     * 文档路径
-     */
-    private String filePath;
 
     @Column(name = "FILE_PATH")
     public String getFilePath() {

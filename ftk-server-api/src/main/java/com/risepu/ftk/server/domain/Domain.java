@@ -105,7 +105,7 @@ public class Domain extends AuditableObject<Long> {
         this.type = type;
     }
 
-    @Column(name = "MIN",length = 50)
+    @Column(name = "MIN")
     public Integer getMin() {
         return min;
     }
@@ -114,7 +114,7 @@ public class Domain extends AuditableObject<Long> {
         this.min = min;
     }
 
-    @Column(name = "MAX",length = 150)
+    @Column(name = "MAX")
     public Integer getMax() {
         return max;
     }
