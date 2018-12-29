@@ -155,7 +155,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             String date = ft.format(new Date());
 
             File file = new File(filePath + date);
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.mkdirs();
             }
             StringUtil stringUtil = new StringUtil();
@@ -169,7 +169,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
             String pdfFilePath = filePath + date + "/" + template.getId() + "（" + t++ + ").pdf";
-            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date+"/示例二维码.jpg","china is good");
+            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
             String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", template.getName(), qrFilePath, GrFilePath, pdfFilePath);
             template1.set_template(template.get_template());
             template1.setDescription(template.getDescription());
@@ -222,7 +222,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             File file = new File(filePath + date);
             file.mkdirs();
             //生成二维码图片
-            String QrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date +"/示例二维码.jpg", "china is good");
+            String QrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
 
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
@@ -262,12 +262,8 @@ public class ManageTemplateController implements ManageTemplateApi {
 
     @Override
     public ResponseEntity<Response<String>> updateTemplateData(Domain domain) {
-        Domain domain1 = domainService.selectById(domain.getId());
-        domain1.setCode(domain.getCode());
-        domain1.setKegex(domain.getKegex());
-        domain1.setDescription(domain.getDescription());
-        domain1.setLabel(domain.getLabel());
-        domain1.setType(domain.getType());
+        String code = domain.getCode().trim();
+        domain.setCode(code);
         domainService.update(domain);
         return ResponseEntity.ok(Response.succeed("修改成功"));
     }

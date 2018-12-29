@@ -39,8 +39,7 @@ public class PdfServiceImpl implements PdfService {
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
         //创建文档实例
-        Document doc = new Document(rect);
-
+        Document doc = new Document(rect, 80, 80, 50, 50);
         //添加中文字体
         BaseFont bfChinese = BaseFont.createFont("/simsun.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         //设置字体样式
@@ -104,19 +103,19 @@ public class PdfServiceImpl implements PdfService {
 
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(40, 140);//坐标
+        image.setAbsolutePosition(80, 140);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
 
-        cd.setFontAndSize(bfChinese, 20);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 50, 110, 0);
+        cd.setFontAndSize(bfChinese, 12);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 120, 110, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(370, 170);//坐标
+        image1.setAbsolutePosition(300, 170);//坐标
         image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
@@ -127,9 +126,10 @@ public class PdfServiceImpl implements PdfService {
         //设置文本为描边模式
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
-        cd.setFontAndSize(bfChinese, 20);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 150, 0);
+        cd.setFontAndSize(bfChinese, 12);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 150, 0);
         cd.endText();
+
         doc.close();
         return pdfFilePath;
     }
@@ -153,13 +153,13 @@ public class PdfServiceImpl implements PdfService {
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
         //创建文档实例
-        Document doc = new Document(rect);
+        Document doc = new Document(rect, 80, 80, 50, 50);
 
         //添加中文字体
         BaseFont bfChinese = BaseFont.createFont("/simsun.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         //设置字体样式
         Font textFont = new Font(bfChinese, template.getContentSize(), Font.BOLD); //加粗
-        Font textFont1 = new Font(bfChinese,14, Font.BOLD); //加粗
+        Font textFont1 = new Font(bfChinese, 14, Font.BOLD); //加粗
         Font hashFont = new Font(bfChinese, template.getHashSize(), Font.UNDEFINED); //哈希
         hashFont.setColor(BaseColor.RED);
         Font contentFont = new Font(bfChinese, template.getContentSize(), Font.UNDEFINED); //正文
@@ -258,26 +258,26 @@ public class PdfServiceImpl implements PdfService {
         doc.add(p1);
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(40, 140);//坐标
+        image.setAbsolutePosition(80, 140);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 50, 110, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 120, 110, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(370, 170);//坐标
+        image1.setAbsolutePosition(300, 170);//坐标
         image1.scaleAbsolute(175, 50);//自定义大小
         doc.add(image1);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 400, 150, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 150, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
@@ -287,7 +287,7 @@ public class PdfServiceImpl implements PdfService {
     public static void main(String[] args) {
         PdfServiceImpl a = new PdfServiceImpl();
         try {
-            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/642222199712231044(8).jpg", "/file-path/91110105MA0188BF6R(0).jpg", "/file-path/test.pdf");
+            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/11.jpg", "/file-path/112.jpg", "/file-path/test.pdf");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -52,6 +52,7 @@ public class ChartGraphics {
         main.fillRect(0, 0, imageWidth, imageHeight);
 
         Graphics2D tip = image.createGraphics();
+
         //设置区域颜色
         tip.setColor(Color.WHITE);
         //填充区域并确定区域大小位置
@@ -69,8 +70,8 @@ public class ChartGraphics {
         tip.drawRoundRect(0, 0, imageWidth - 1, imageHeight - 1, 40, 40);
         return createImage(imgurl);
     }
-/*
-    public static void main(String[] args) {
+
+    /*public static void main(String[] args) {
         ChartGraphics g = new ChartGraphics();
         g.graphicsGeneration("电风扇", "/file-path/112.jpg");
     }*/
