@@ -70,7 +70,7 @@ public class ProofDocument extends AuditableObject<Long> {
     }
 
 
-    @Column(name = "NUMBER", length = 100)
+    @Column(name = "NUMBER")
     public String getNumber() {
         return number;
     }
@@ -80,7 +80,7 @@ public class ProofDocument extends AuditableObject<Long> {
     }
 
 
-    @Column(name = "CHAIN_HASH", length = 128)
+    @Column(name = "CHAIN_HASH")
     public String getChainHash() {
         return chainHash;
     }
