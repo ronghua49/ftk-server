@@ -28,7 +28,7 @@ public class ProofDocument extends AuditableObject<Long> {
     /**
      * 单号
      */
-    private String number;
+    private String documentNumber;
     /**
      * 区块hash
      */
@@ -69,16 +69,14 @@ public class ProofDocument extends AuditableObject<Long> {
         this.template = template;
     }
 
-
-    @Column(name = "NUMBER")
-    public String getNumber() {
-        return number;
+    @Column(name = "DOCUMENT_NUMBER", length = 150)
+    public String getDocumentNumber() {
+        return documentNumber;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
     }
-
 
     @Column(name = "CHAIN_HASH")
     public String getChainHash() {
