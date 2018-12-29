@@ -151,7 +151,7 @@ public class ManageTemplateController implements ManageTemplateApi {
                 }
             }
 
-            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM/dd");
             String date = ft.format(new Date());
 
             File file = new File(filePath + date);
@@ -216,7 +216,7 @@ public class ManageTemplateController implements ManageTemplateApi {
                     return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
                 }
             }
-            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM/dd");
             String date = ft.format(new Date());
 
             File file = new File(filePath + date);
