@@ -149,7 +149,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         InputStream in = new FileInputStream(target);
         OutputStream out = response.getOutputStream();
-
         IOUtils.copy(in, out);
         out.flush();
         out.close();
