@@ -86,7 +86,6 @@ public class ProofDocument extends AuditableObject<Long> {
      */
     private String personalUser;
 
-    @Column(name = "ORGANIZATION",length = 50)
     private Integer index;
 
     @Column(name = "INDEX", length = 10)
