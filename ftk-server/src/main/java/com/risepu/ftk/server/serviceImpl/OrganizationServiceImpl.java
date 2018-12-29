@@ -144,12 +144,10 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void download(String imgName, HttpServletResponse response) throws IOException {
-        File file = new File(ConfigUtil.getValue("file.upload.path"));
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        String filePath = file.getPath();
-        InputStream in = new FileInputStream(new File(filePath, imgName));
+        File dir = new File(ConfigUtil.getValue("file.upload.path"));
+        File target = new File(dir,imgName);
+
+        InputStream in = new FileInputStream(target);
         OutputStream out = response.getOutputStream();
 
         IOUtils.copy(in, out);

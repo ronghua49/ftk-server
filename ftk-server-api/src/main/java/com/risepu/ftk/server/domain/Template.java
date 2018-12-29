@@ -78,7 +78,7 @@ public class Template extends AuditableObject<Long> {
         this.name = name;
     }
 
-    @Column(name = "TITLE_SIZE")
+    @Column(name = "TITLE_SIZE",length = 10)
     public Integer getTitleSize() {
         return titleSize;
     }
@@ -87,7 +87,7 @@ public class Template extends AuditableObject<Long> {
         this.titleSize = titleSize;
     }
 
-    @Column(name = "HASH_SIZE")
+    @Column(name = "HASH_SIZE",length = 10)
     public Integer getHashSize() {
         return hashSize;
     }
@@ -96,7 +96,7 @@ public class Template extends AuditableObject<Long> {
         this.hashSize = hashSize;
     }
 
-    @Column(name = "CONTENT_SIZE")
+    @Column(name = "CONTENT_SIZE",length = 10)
     public Integer getContentSize() {
         return contentSize;
     }

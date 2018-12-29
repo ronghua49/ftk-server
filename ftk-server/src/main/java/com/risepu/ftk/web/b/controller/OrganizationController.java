@@ -193,18 +193,21 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(500, "上传失败"));
         }
     }
+
     /**
      * 图片下载
-     *
-     * @param imgName  图片名称
+     * @param ym 年 月
+     * @param date 日期
+     * @param imgName 图片名
      * @param response
      * @return
      */
     @Override
-    public ResponseEntity<Response<String>> imgDownload(@PathVariable String imgName, HttpServletResponse response) {
+    public ResponseEntity<Response<String>> imgDownload(String ym,String date,String imgName,HttpServletResponse response) {
 
         try {
-            organizationService.download(imgName, response);
+            String finalName = ym+"/"+date+"/"+imgName;
+            organizationService.download(finalName, response);
             return ResponseEntity.ok(Response.succeed("图片下载成功"));
 
         } catch (IOException e) {

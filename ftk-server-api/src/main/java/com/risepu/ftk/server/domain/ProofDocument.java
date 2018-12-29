@@ -54,7 +54,7 @@ public class ProofDocument extends AuditableObject<Long> {
      */
     private String number;
 
-    @Column(name = "NUMBER", length = 255)
+    @Column(name = "NUMBER", length = 100)
     public String getNumber() {
         return number;
     }
@@ -86,7 +86,7 @@ public class ProofDocument extends AuditableObject<Long> {
      */
     private String personalUser;
 
-    @Column(name = "ORGANIZATION", precision = 19)
+    @Column(name = "ORGANIZATION",length = 50)
     public String getOrganization() {
         return organization;
     }
@@ -95,7 +95,7 @@ public class ProofDocument extends AuditableObject<Long> {
         this.organization = organization;
     }
 
-    @Column(name = "PERSONAL_USER", precision = 19)
+    @Column(name = "PERSONAL_USER",length = 50)
     public String getPersonalUser() {
         return personalUser;
     }
@@ -109,7 +109,7 @@ public class ProofDocument extends AuditableObject<Long> {
      */
     private String filePath;
 
-    @Column(name = "FILE_PATH", precision = 19)
+    @Column(name = "FILE_PATH")
     public String getFilePath() {
         return filePath;
     }
