@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
  */
 public class ChartGraphics {
     private BufferedImage image;
-    private int imageWidth = 350; //图片的宽度
+    private int imageWidth = 500; //图片的宽度
     private int imageHeight = 100; //图片的高度
 
     //生成图片文件
