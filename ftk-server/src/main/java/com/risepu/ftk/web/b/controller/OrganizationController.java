@@ -14,9 +14,14 @@ import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.*;
 import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +42,9 @@ import java.util.List;
 public class OrganizationController implements OrganizationApi {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Value("${salt}")
+    private  String SALT;
 
     @Autowired
     private OrganizationService organizationService;
@@ -62,7 +70,7 @@ public class OrganizationController implements OrganizationApi {
 
         // 判断smsCode
 
-        String code = (String)  session.getAttribute(Constant.getSessionVerificationCodeSms());
+        String code = (String) session.getAttribute(Constant.getSessionVerificationCodeSms());
 
         if (registVo.getSmsCode().equals(code)) {
 
@@ -94,22 +102,46 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
 
-        LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
+       // LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
+        Subject subject = SecurityUtils.getSubject();
+        System.out.println(SALT);
+        String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
 
-        if (loginResult.getCode() == 0) {
-            String userId = loginResult.getOrganizationUser().getId();
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(),password,true);
+        LoginResult loginResult = new LoginResult();
+        try {
+            subject.login(usernamePasswordToken);
+            OrganizationUser  orgUser = (OrganizationUser) subject.getPrincipal();
+            String userId = orgUser.getId();
+
             /** 实现单一登录，剔除效果*/
-            if(SessionListener.sessionMap.get(userId)!=null){
+            if (SessionListener.sessionMap.get(userId) != null) {
                 BasicAction.forceLogoutUser(userId);
                 SessionListener.sessionMap.put(userId, request.getSession());
-            }else{
+            } else {
                 SessionListener.sessionMap.put(userId, request.getSession());
             }
-            setCurrUserToSession(request.getSession(), loginResult.getOrganizationUser());
+            setCurrUserToSession(request.getSession(), orgUser);
 
+            loginResult.setOrganizationUser(orgUser);
+            loginResult.setMessage("登录成功！");
+            if(!StringUtils.isNumeric(loginRequest.getName())){
+                Organization org = organizationService.findAuthenOrgByName(loginRequest.getName());
+                loginResult.setOrganization(org);
+            }
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
             return ResponseEntity.ok(Response.succeed(loginResult));
+
+        } catch (UnknownAccountException e) {
+            loginResult.setCode(4);
+            loginResult.setMessage(e.getMessage());
+        } catch (IncorrectCredentialsException e) {
+            loginResult.setCode(5);
+            loginResult.setMessage("密码错误");
+        } catch (AuthenticationException e) {
+            loginResult.setCode(400);
+            loginResult.setMessage("服务器忙，稍后重试");
         }
 
         return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
@@ -176,6 +208,7 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(7, "原始密码输入错误，请重新输入"));
         }
     }
+
     /**
      * 图片上传
      *
@@ -196,17 +229,18 @@ public class OrganizationController implements OrganizationApi {
 
     /**
      * 图片下载
-     * @param ym 年 月
-     * @param date 日期
-     * @param imgName 图片名
+     *
+     * @param ym       年 月
+     * @param date     日期
+     * @param imgName  图片名
      * @param response
      * @return
      */
     @Override
-    public ResponseEntity<Response<String>> imgDownload(String ym,String date,String imgName,HttpServletResponse response) {
+    public ResponseEntity<Response<String>> imgDownload(String ym, String date, String imgName, HttpServletResponse response) {
 
         try {
-            String finalName = ym+"/"+date+"/"+imgName;
+            String finalName = ym + "/" + date + "/" + imgName;
             organizationService.download(finalName, response);
             return ResponseEntity.ok(Response.succeed("图片下载成功"));
 
@@ -301,8 +335,8 @@ public class OrganizationController implements OrganizationApi {
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
 
         String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
-        if(cardNo==null){
-            return ResponseEntity.ok(Response.failed(400,"失效的二维码"));
+        if (cardNo == null) {
+            return ResponseEntity.ok(Response.failed(400, "失效的二维码"));
         }
 
         Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
@@ -331,9 +365,9 @@ public class OrganizationController implements OrganizationApi {
 
         OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
 
-        PageResult<VerifyHistory> page=new PageResult();
+        PageResult<VerifyHistory> page = new PageResult();
         List content = new ArrayList();
-        if(user.getOrganizationId()==null){
+        if (user.getOrganizationId() == null) {
             page.setContent(content);
             return ResponseEntity.ok(Response.succeed(page));
         }
@@ -364,8 +398,8 @@ public class OrganizationController implements OrganizationApi {
         PageResult document = new PageResult();
 
 
-        if(user.getOrganizationId()==null){
-            document.setContent( new ArrayList());
+        if (user.getOrganizationId() == null) {
+            document.setContent(new ArrayList());
             return ResponseEntity.ok(Response.succeed(document));
         }
 
