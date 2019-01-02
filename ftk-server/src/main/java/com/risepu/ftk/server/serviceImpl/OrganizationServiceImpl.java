@@ -41,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
     @Value("${salt}")
-    private static String SALT;
+    private  String SALT;
 
     @Autowired
     private GenericCrudService crudService;
