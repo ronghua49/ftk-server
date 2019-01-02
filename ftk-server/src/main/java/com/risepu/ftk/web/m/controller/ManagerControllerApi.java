@@ -57,7 +57,7 @@ public interface ManagerControllerApi {
 	@ResponseBody
 	ResponseEntity<Response<OrganizationStream>> queryOrgById(@PathVariable Long streamId);
 
-	@ApiOperation(value = "保存修改后的企业信息", nickname = "editOrgInfo")
+	@ApiOperation(value = "保存审核后的企业信息", nickname = "editOrgInfo")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
 	@RequestMapping(path = "/editOrg")
 	@ResponseBody

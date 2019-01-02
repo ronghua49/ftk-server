@@ -95,7 +95,7 @@ public class Organization extends AuditableObject<String> {
 
 	private String remark;
 
-	@Column(name = "REMARK", length = 225)
+	@Column(name = "REMARK")
 	public String getRemark() {
 		return remark;
 	}
@@ -104,8 +104,6 @@ public class Organization extends AuditableObject<String> {
 		this.remark = remark;
 	}
 
-	
-	
 	private String tel;
 
 	@Column(name = "TEL", length = 15)
@@ -119,7 +117,6 @@ public class Organization extends AuditableObject<String> {
 
 	
 	private String orgType;
-	
 	private String signSts;
 	private String registedCapital;
 	private String scope;
@@ -158,7 +155,7 @@ public class Organization extends AuditableObject<String> {
 		this.registedCapital = registedCapital;
 	}
 
-	@Column(name = "SCOPE", length = 20)
+	@Column(name = "SCOPE")
 	public String getScope() {
 		return scope;
 	}
@@ -194,7 +191,7 @@ public class Organization extends AuditableObject<String> {
 		this.staffSize = staffSize;
 	}
 
-	@Column(name = "WEBSITE", length = 20)
+	@Column(name = "WEBSITE")
 	public String getWebsite() {
 		return website;
 	}

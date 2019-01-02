@@ -39,7 +39,9 @@ import net.lc4ever.framework.service.GenericCrudService;
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
 
-    private static final String SALT = ConfigUtil.getValue("salt");
+
+    @Value("${salt}")
+    private static String SALT;
 
     @Autowired
     private GenericCrudService crudService;
@@ -78,6 +80,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 loginResult.setMessage("登录成功！");
                 loginResult.setOrganizationUser(org);
 
+
                 /** 判断是否为审核通过的企业用户 */
                 Organization organization = null;
                 if (org.getOrganizationId() != null) {
@@ -96,7 +99,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         } else {
             /** 使用企业名登录 */
             Organization org = crudService.uniqueResultByProperty(Organization.class, "name", phoneOrName);
-
 
             if (org != null) {
                 OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",

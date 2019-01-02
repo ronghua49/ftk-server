@@ -113,7 +113,7 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     private String remark;
 
-    @Column(name = "REMARK", length = 225)
+    @Column(name = "REMARK")
     public String getRemark() {
         return remark;
     }
@@ -192,7 +192,7 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.registedCapital = registedCapital;
     }
 
-    @Column(name = "SCOPE", length = 20)
+    @Column(name = "SCOPE")
     public String getScope() {
         return scope;
     }
@@ -228,7 +228,7 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.staffSize = staffSize;
     }
 
-    @Column(name = "WEBSITE", length = 20)
+    @Column(name = "WEBSITE")
     public String getWebsite() {
         return website;
     }
