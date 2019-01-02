@@ -143,7 +143,7 @@ public class PdfServiceImpl implements PdfService {
         Template template = templateService.getTemplate(templateId);
         // 获取一次模板
         String _template = template.get_template();
-        _template = _template.replaceAll("/t", " ");
+//        _template = _template.replaceAll("/t", " ");
         //获取pdf标题
         String title = template.getName();
         int number = 0;

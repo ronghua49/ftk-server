@@ -83,6 +83,9 @@ public class DocumentDataController implements DocumentDataApi {
             SimpleDateFormat ft1 = new SimpleDateFormat("yyyy-MM/dd");
             String date1 = ft1.format(new Date());
 
+            SimpleDateFormat ft3 = new SimpleDateFormat("yyyyMMdd");
+            String date3 = ft3.format(new Date());
+
             //检测文件夹是否存在，若不存在，创建
             File file = new File(filePath + date1);
             if (!file.exists()) {
@@ -138,12 +141,12 @@ public class DocumentDataController implements DocumentDataApi {
             //用于保存创建文档的企业id
             List<String> organizationList = new ArrayList<>();
             for (int i = 0; i < list1.size(); i++) {
-                dateList.add(ft1.format(list1.get(i).getCreateTimestamp()));
+                dateList.add(ft3.format(list1.get(i).getCreateTimestamp()));
                 organizationList.add(list1.get(i).getOrganization());
             }
 
             String n = "";
-            if (dateList.contains(date1) && organizationList.contains(user.getOrganizationId())) {
+            if (dateList.contains(date3) && organizationList.contains(user.getOrganizationId())) {
                 SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd");
                 Date date2 = DateFormatter.startOfDay(DateFormatter.nextDay(new Date()));
                 String time = ft2.format(date2);
@@ -155,7 +158,7 @@ public class DocumentDataController implements DocumentDataApi {
                 proofDocument1.setIndex(1);
                 n = String.format("%03d", proofDocument1.getIndex());
             }
-            String number = "ZKTXZ-" + convert.toUpperCase() + "-" + date1 + n;
+            String number = "ZKTXZ-" + convert.toUpperCase() + "-" + date3 + n;
 
             String hash = chainService.sign(proDocumentId);
 
