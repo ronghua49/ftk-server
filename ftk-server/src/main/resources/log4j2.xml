@@ -3,7 +3,7 @@
 
 	<Properties>
 		<Property name="file.name" value="core" />
-		<Property name="file.location" value="${bundle:config:log.main.location:-/tmp/log/ftk-server}" />
+		<Property name="file.location" value="${bundle:config:log.main.location:-/home/risepu/var/log/ftk-server}" />
 	</Properties>
 
 	<Appenders>
