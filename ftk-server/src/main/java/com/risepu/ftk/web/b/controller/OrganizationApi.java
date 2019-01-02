@@ -20,6 +20,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.io.IOException;
+
 
 /**
  * @author ronghaohua
@@ -40,6 +42,11 @@ public interface OrganizationApi {
     @RequestMapping(path = "/login")
     @ResponseBody
     ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request);
+
+
+    @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")
+    @RequestMapping(path = "/mine")
+    void loginSuccess(HttpServletResponse response) throws IOException;
 
     @ApiOperation(value = "忘记密码", nickname = "forgetPwd")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})

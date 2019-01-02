@@ -45,7 +45,7 @@ public interface ManagerControllerApi {
 	@ResponseBody
 	ResponseEntity<Response<String>> changePwd(@RequestParam String password, @RequestParam String newPwd, HttpServletRequest request);
 
-	@ApiOperation(value = "查询发起认证的企业信息流水", nickname = "queryOrgList")
+	@ApiOperation(value = "查询发起认证的企业信息", nickname = "queryOrgList")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = PageResult.class) })
 	@RequestMapping(path = "/queryList/{pageNo:\\d+}")
 	@ResponseBody

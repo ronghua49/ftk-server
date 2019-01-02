@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +133,7 @@ public class OrganizationController implements OrganizationApi {
                 loginResult.setOrganization(org);
             }
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
+
             return ResponseEntity.ok(Response.succeed(loginResult));
 
         } catch (UnknownAccountException e) {
@@ -145,6 +148,11 @@ public class OrganizationController implements OrganizationApi {
         }
 
         return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
+    }
+
+    @Override
+    public void loginSuccess(HttpServletResponse response)throws IOException {
+        response.sendRedirect("/ftk/b");
     }
 
     private void setCurrUserToSession(HttpSession session, OrganizationUser organizationUser) {
@@ -308,7 +316,7 @@ public class OrganizationController implements OrganizationApi {
         }
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());
-        organizationService.saveOrgStream(organizationStream);
+        organizationService.saveOrUpdateOrgStream(organizationStream);
 
         logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
         return ResponseEntity.ok(Response.succeed("资料上传成功，等待审核"));
