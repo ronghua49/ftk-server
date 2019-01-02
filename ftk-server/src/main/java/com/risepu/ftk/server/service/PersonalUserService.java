@@ -28,7 +28,6 @@ public interface PersonalUserService {
      */
     String savePersonUser(PersonalUser user);
 
-
     /**
      * 根据身份证号查询用户
      *
@@ -70,5 +69,4 @@ public interface PersonalUserService {
      * @return
      */
     AuthorizationStream findAuthorizationStreamById(long streamId);
-
 }

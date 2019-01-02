@@ -12,196 +12,195 @@ import net.lc4ever.framework.domain.AuditableObject;
 
 /**
  * 企业表
+ *
  * @author q-wang
  */
 @Entity
 @Table(name = "FTK_ORGANIZATION")
 public class Organization extends AuditableObject<String> {
 
-	
-	/** 企业组织机构代码证 */
-	private String id;
-	
-	@Override
-	@Id
-	@Column(name = "ORGANIZATION", length = 18)
-	public String getId() {
-		return this.id;
-	}
+    /**
+     * 企业组织机构代码证
+     */
+    private String id;
 
-	@Override
-	public void setId(String id) {
-		this.id=id;
-	}
+    /**
+     * 企业名
+     */
+    private String name;
 
-	/** 企业名 */
-	private String name;
+    private String address;
 
-	@Column(name = "NAME", length = 255, nullable = false)
-	public String getName() {
-		return name;
-	}
+    private String legalPerson;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private Long defaultTemId;
 
+    private String licenseImgName;
 
+    private String remark;
 
+    private String tel;
 
-	private String address;
+    private String orgType;
 
-	@Column(name = "ADDRESS", length = 31)
-	public String getAddress() {
-		return address;
-	}
+    private String signSts;
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    private String registedCapital;
 
-	private String legalPerson;
+    private String scope;
 
-	@Column(name = "LEGAL_PERSON", length = 10)
-	public String getLegalPerson() {
-		return legalPerson;
-	}
+    private String registedDate;
 
-	public void setLegalPerson(String legalPerson) {
-		this.legalPerson = legalPerson;
-	}
+    private String insuranceNum;
 
-	private Long defaultTemId;
+    private String staffSize;
 
-	@Column(name = "DEFAULT_TEP_ID", length = 19)
-	public Long getDefaultTemId() {
-		return defaultTemId;
-	}
+    private String website;
 
-	public void setDefaultTemId(Long defaultTemId) {
-		this.defaultTemId = defaultTemId;
-	}
+    @Override
+    @Id
+    @Column(name = "ORGANIZATION", length = 18)
+    public String getId() {
+        return this.id;
+    }
 
-	private String licenseImgName;
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	@Column(name = "LICENCE_IMG_NAME")
-	public String getLicenseImgName() {
-		return licenseImgName;
-	}
+    @Column(name = "NAME", length = 255, nullable = false)
+    public String getName() {
+        return name;
+    }
 
-	public void setLicenseImgName(String licenseImgName) {
-		this.licenseImgName = licenseImgName;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	private String remark;
+    @Column(name = "ADDRESS", length = 31)
+    public String getAddress() {
+        return address;
+    }
 
-	@Column(name = "REMARK", length = 225)
-	public String getRemark() {
-		return remark;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    @Column(name = "LEGAL_PERSON", length = 10)
+    public String getLegalPerson() {
+        return legalPerson;
+    }
 
-	
-	
-	private String tel;
+    public void setLegalPerson(String legalPerson) {
+        this.legalPerson = legalPerson;
+    }
 
-	@Column(name = "TEL", length = 15)
-	public String getTel() {
-		return tel;
-	}
+    @Column(name = "DEFAULT_TEP_ID", length = 19)
+    public Long getDefaultTemId() {
+        return defaultTemId;
+    }
 
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
+    public void setDefaultTemId(Long defaultTemId) {
+        this.defaultTemId = defaultTemId;
+    }
 
-	
-	private String orgType;
-	
-	private String signSts;
-	private String registedCapital;
-	private String scope;
-	private String registedDate;
-	private String insuranceNum;
-	private String staffSize;
-	private String website ;
-	
-	
-	@Column(name = "ORG_TYPE", length = 20)
-	public String getOrgType() {
-		return orgType;
-	}
+    @Column(name = "LICENCE_IMG_NAME")
+    public String getLicenseImgName() {
+        return licenseImgName;
+    }
 
-	public void setOrgType(String orgType) {
-		this.orgType = orgType;
-	}
+    public void setLicenseImgName(String licenseImgName) {
+        this.licenseImgName = licenseImgName;
+    }
 
-	@Column(name = "SIGN_STS", length = 10)
-	public String getSignSts() {
-		return signSts;
-	}
-	
-	public void setSignSts(String signSts) {
-		this.signSts = signSts;
-	}
-	
+    @Column(name = "REMARK", length = 225)
+    public String getRemark() {
+        return remark;
+    }
 
-	@Column(name = "REG_CAPITAL", length = 20)
-	public String getRegistedCapital() {
-		return registedCapital;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
+    @Column(name = "TEL", length = 15)
+    public String getTel() {
+        return tel;
+    }
 
-	public void setRegistedCapital(String registedCapital) {
-		this.registedCapital = registedCapital;
-	}
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
 
-	@Column(name = "SCOPE", length = 20)
-	public String getScope() {
-		return scope;
-	}
+    @Column(name = "ORG_TYPE", length = 20)
+    public String getOrgType() {
+        return orgType;
+    }
 
-	public void setScope(String scope) {
-		this.scope = scope;
-	}
+    public void setOrgType(String orgType) {
+        this.orgType = orgType;
+    }
 
-	@Column(name = "REG_DATE", length = 10)
-	public String getRegistedDate() {
-		return registedDate;
-	}
+    @Column(name = "SIGN_STS", length = 10)
+    public String getSignSts() {
+        return signSts;
+    }
 
-	public void setRegistedDate(String registedDate) {
-		this.registedDate = registedDate;
-	}
+    public void setSignSts(String signSts) {
+        this.signSts = signSts;
+    }
 
-	@Column(name = "INSURANCE_NUM", length = 20)
-	public String getInsuranceNum() {
-		return insuranceNum;
-	}
+    @Column(name = "REG_CAPITAL", length = 20)
+    public String getRegistedCapital() {
+        return registedCapital;
+    }
 
-	public void setInsuranceNum(String insuranceNum) {
-		this.insuranceNum = insuranceNum;
-	}
+    public void setRegistedCapital(String registedCapital) {
+        this.registedCapital = registedCapital;
+    }
 
-	@Column(name = "STAFF_SIZE", length = 20)
-	public String getStaffSize() {
-		return staffSize;
-	}
+    @Column(name = "SCOPE", length = 20)
+    public String getScope() {
+        return scope;
+    }
 
-	public void setStaffSize(String staffSize) {
-		this.staffSize = staffSize;
-	}
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
-	@Column(name = "WEBSITE", length = 20)
-	public String getWebsite() {
-		return website;
-	}
+    @Column(name = "REG_DATE", length = 10)
+    public String getRegistedDate() {
+        return registedDate;
+    }
 
-	public void setWebsite(String website) {
-		this.website = website;
-	}
-	
+    public void setRegistedDate(String registedDate) {
+        this.registedDate = registedDate;
+    }
 
+    @Column(name = "INSURANCE_NUM", length = 20)
+    public String getInsuranceNum() {
+        return insuranceNum;
+    }
+
+    public void setInsuranceNum(String insuranceNum) {
+        this.insuranceNum = insuranceNum;
+    }
+
+    @Column(name = "STAFF_SIZE", length = 20)
+    public String getStaffSize() {
+        return staffSize;
+    }
+
+    public void setStaffSize(String staffSize) {
+        this.staffSize = staffSize;
+    }
+
+    @Column(name = "WEBSITE", length = 20)
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 }

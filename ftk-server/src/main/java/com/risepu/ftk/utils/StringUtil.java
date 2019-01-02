@@ -22,7 +22,6 @@ public class StringUtil {
             }
         }
         return result;
-
     }
 
     /**
@@ -41,5 +40,4 @@ public class StringUtil {
         }
         return count;
     }
-
 }

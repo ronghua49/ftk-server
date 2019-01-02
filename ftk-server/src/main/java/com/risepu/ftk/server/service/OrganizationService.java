@@ -18,7 +18,7 @@ import com.risepu.ftk.web.b.dto.LoginResult;
 /**
  * @author ronghaohua
  */
-@Remote(path="/org")
+@Remote(path = "/org")
 public interface OrganizationService {
 
     /**
@@ -40,7 +40,6 @@ public interface OrganizationService {
      * @param newPwd 新密码
      */
     void changePwd(String id, String newPwd);
-
 
     /**
      * 上传图片
@@ -100,7 +99,6 @@ public interface OrganizationService {
      * @param cardNo 单据上用户身份证号
      */
     Long InsertAuthorStream(String orgId, String cardNo);
-
 
     /**
      * 根据条件查询 企业信息
@@ -196,12 +194,10 @@ public interface OrganizationService {
      */
     Organization findAuthenOrgByName(String name);
 
-
     /**
      * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败
      *
      *
      */
-
 
 }

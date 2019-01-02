@@ -78,7 +78,7 @@ public class Domain extends AuditableObject<Long> {
         this.id = id;
     }
 
-    @Column(name = "CODE",length = 50)
+    @Column(name = "CODE", length = 50)
     public String getCode() {
         return code;
     }
@@ -87,7 +87,7 @@ public class Domain extends AuditableObject<Long> {
         this.code = code;
     }
 
-    @Column(name = "LABEL",length = 50)
+    @Column(name = "LABEL", length = 50)
     public String getLabel() {
         return label;
     }
@@ -96,7 +96,7 @@ public class Domain extends AuditableObject<Long> {
         this.label = label;
     }
 
-    @Column(name = "TYPE",length = 50)
+    @Column(name = "TYPE", length = 50)
     public String getType() {
         return type;
     }
@@ -105,7 +105,7 @@ public class Domain extends AuditableObject<Long> {
         this.type = type;
     }
 
-    @Column(name = "MIN",length = 50)
+    @Column(name = "MIN")
     public Integer getMin() {
         return min;
     }
@@ -114,7 +114,7 @@ public class Domain extends AuditableObject<Long> {
         this.min = min;
     }
 
-    @Column(name = "MAX",length = 150)
+    @Column(name = "MAX")
     public Integer getMax() {
         return max;
     }
@@ -123,7 +123,7 @@ public class Domain extends AuditableObject<Long> {
         this.max = max;
     }
 
-    @Column(name = "KEGEX",length = 50)
+    @Column(name = "KEGEX", length = 50)
     public String getKegex() {
         return kegex;
     }
@@ -149,5 +149,4 @@ public class Domain extends AuditableObject<Long> {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }

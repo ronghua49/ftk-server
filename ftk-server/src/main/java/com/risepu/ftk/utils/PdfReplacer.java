@@ -26,12 +26,19 @@ public class PdfReplacer {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private int fontSize;
+
     private Map<String, ReplaceRegion> replaceRegionMap = new HashMap<String, ReplaceRegion>();
+
     private Map<String, Object> replaceTextMap = new HashMap<String, Object>();
+
     private ByteArrayOutputStream output;
+
     private PdfReader reader;
+
     private PdfStamper stamper;
+
     private PdfContentByte canvas;
+
     private Font font;
 
     public PdfReplacer(byte[] pdfBytes) throws DocumentException, IOException {

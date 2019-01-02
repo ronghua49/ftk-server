@@ -91,7 +91,6 @@ public class TemplateDomain implements BaseEntity<TemplateDomain.ID> {
             }
             return true;
         }
-
     }
 
     private ID id;

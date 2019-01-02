@@ -57,5 +57,4 @@ public class TemplateServiceImpl implements TemplateService {
         List list = crudService.hql(firstIndex, pageSize, hql);
         return list;
     }
-
 }

@@ -25,6 +25,4 @@ public interface AdminService {
      */
     void updateAdminUser(AdminUser adminUser);
 
-
-
 }

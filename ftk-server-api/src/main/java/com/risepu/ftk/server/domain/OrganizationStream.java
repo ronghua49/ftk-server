@@ -12,18 +12,71 @@ import javax.persistence.*;
 @Table(name = "FTK_ORGANIZATION_STREAM")
 public class OrganizationStream extends AuditableObject<Long> {
 
-    /** 未审核 */
+    /**
+     * 未审核
+     */
     public static final Integer UNCHECK_STATE = 0;
-    /** 审核中 */
+    /**
+     * 审核中
+     */
     public static final Integer CHECKING_STATE = 1;
-    /** 审核通过 */
+    /**
+     * 审核通过
+     */
     public static final Integer CHECK_PASS_STATE = 2;
-    /** 审核未通过 */
+    /**
+     * 审核未通过
+     */
     public static final Integer CHECK_FAIL_STATE = 3;
 
 
-    /** 自增id */
+    /**
+     * 自增id
+     */
     private Long id;
+
+    /**
+     * 企业的组织机构代码证号
+     */
+    private String organization;
+
+    /**
+     * 企业名
+     */
+    private String name;
+
+    /**
+     * 审核状态   默认未审核
+     */
+    private Integer state = UNCHECK_STATE;
+
+    private String address;
+
+    private String legalPerson;
+
+    private String licenseImgName;
+
+    private String remark;
+
+    private String tel;
+
+    private String applicationPhone;
+
+    private String orgType;
+
+    private String signSts;
+
+    private String registedCapital;
+
+    private String scope;
+
+    private String registedDate;
+
+    private String insuranceNum;
+
+    private String staffSize;
+
+    private String website;
 
     @Id
     @Column(name = "ID", precision = 19)
@@ -35,12 +88,8 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     @Override
     public void setId(Long id) {
-        this.id=id;
-
+        this.id = id;
     }
-
-    /** 企业的组织机构代码证号 */
-   private String organization;
 
     @Column(name = "ORGANIZATION", length = 18, nullable = false)
     public String getOrganization() {
@@ -51,9 +100,6 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.organization = organization;
     }
 
-    /** 企业名 */
-    private String name;
-
     @Column(name = "NAME", length = 255, nullable = false)
     public String getName() {
         return name;
@@ -63,22 +109,14 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.name = name;
     }
 
-
-    /** 审核状态   默认未审核 */
-    private Integer state = UNCHECK_STATE;
-
     @Column(name = "STATE", length = 1)
-
     public Integer getState() {
-
         return state;
     }
 
     public void setState(Integer state) {
         this.state = state;
     }
-
-    private String address;
 
     @Column(name = "ADDRESS", length = 31)
     public String getAddress() {
@@ -89,8 +127,6 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.address = address;
     }
 
-    private String legalPerson;
-
     @Column(name = "LEGAL_PERSON", length = 10)
     public String getLegalPerson() {
         return legalPerson;
@@ -99,8 +135,6 @@ public class OrganizationStream extends AuditableObject<Long> {
     public void setLegalPerson(String legalPerson) {
         this.legalPerson = legalPerson;
     }
-
-    private String licenseImgName;
 
     @Column(name = "LICENCE_IMG_NAME")
     public String getLicenseImgName() {
@@ -111,8 +145,6 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.licenseImgName = licenseImgName;
     }
 
-    private String remark;
-
     @Column(name = "REMARK", length = 225)
     public String getRemark() {
         return remark;
@@ -121,10 +153,6 @@ public class OrganizationStream extends AuditableObject<Long> {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-
-
-    private String tel;
 
     @Column(name = "TEL", length = 15)
     public String getTel() {
@@ -135,13 +163,6 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.tel = tel;
     }
 
-
-
-
-
-
-    private String applicationPhone;
-
     @Column(name = "APPLICATION_PHONE", length = 11)
     public String getApplicationPhone() {
         return applicationPhone;
@@ -150,18 +171,6 @@ public class OrganizationStream extends AuditableObject<Long> {
     public void setApplicationPhone(String applicationPhone) {
         this.applicationPhone = applicationPhone;
     }
-
-
-    private String orgType;
-
-    private String signSts;
-    private String registedCapital;
-    private String scope;
-    private String registedDate;
-    private String insuranceNum;
-    private String staffSize;
-    private String website ;
-
 
     @Column(name = "ORG_TYPE", length = 20)
     public String getOrgType() {
@@ -181,12 +190,10 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.signSts = signSts;
     }
 
-
     @Column(name = "REG_CAPITAL", length = 20)
     public String getRegistedCapital() {
         return registedCapital;
     }
-
 
     public void setRegistedCapital(String registedCapital) {
         this.registedCapital = registedCapital;
@@ -236,7 +243,4 @@ public class OrganizationStream extends AuditableObject<Long> {
     public void setWebsite(String website) {
         this.website = website;
     }
-
-
-
 }

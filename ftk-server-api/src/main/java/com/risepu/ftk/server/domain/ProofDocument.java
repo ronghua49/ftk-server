@@ -22,6 +22,38 @@ public class ProofDocument extends AuditableObject<Long> {
 
     private Long id;
 
+    /**
+     * 模板id
+     */
+    private Long template;
+
+    /**
+     * 单号
+     */
+    private String number;
+
+    /**
+     * 区块hash
+     */
+    private String chainHash;
+
+    /**
+     * 企业信息id
+     */
+    private String organization;
+
+    /**
+     * 个人信息id
+     */
+    private String personalUser;
+
+    /**
+     * 文档路径
+     */
+    private String filePath;
+
+    private Integer index;
+
     @Id
     @Column(name = "ID", precision = 19)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,11 +67,6 @@ public class ProofDocument extends AuditableObject<Long> {
         this.id = id;
     }
 
-    /**
-     * 模板id
-     */
-    private Long template;
-
     @Column(name = "TEMPLATE", precision = 19)
     public Long getTemplate() {
         return template;
@@ -49,12 +76,7 @@ public class ProofDocument extends AuditableObject<Long> {
         this.template = template;
     }
 
-    /**
-     * 单号
-     */
-    private String number;
-
-    @Column(name = "NUMBER", length = 100)
+    @Column(name = "NUMBER")
     public String getNumber() {
         return number;
     }
@@ -63,12 +85,7 @@ public class ProofDocument extends AuditableObject<Long> {
         this.number = number;
     }
 
-    /**
-     * 区块hash
-     */
-    private String chainHash;
-
-    @Column(name = "CHAIN_HASH", length = 128)
+    @Column(name = "CHAIN_HASH")
     public String getChainHash() {
         return chainHash;
     }
@@ -77,16 +94,7 @@ public class ProofDocument extends AuditableObject<Long> {
         this.chainHash = chainHash;
     }
 
-    /**
-     * 企业信息id
-     */
-    private String organization;
-    /**
-     * 个人信息id
-     */
-    private String personalUser;
-
-    @Column(name = "ORGANIZATION",length = 50)
+    @Column(name = "ORGANIZATION")
     public String getOrganization() {
         return organization;
     }
@@ -95,7 +103,7 @@ public class ProofDocument extends AuditableObject<Long> {
         this.organization = organization;
     }
 
-    @Column(name = "PERSONAL_USER",length = 50)
+    @Column(name = "PERSONAL_USER", length = 50)
     public String getPersonalUser() {
         return personalUser;
     }
@@ -103,11 +111,6 @@ public class ProofDocument extends AuditableObject<Long> {
     public void setPersonalUser(String personalUser) {
         this.personalUser = personalUser;
     }
-
-    /**
-     * 文档路径
-     */
-    private String filePath;
 
     @Column(name = "FILE_PATH")
     public String getFilePath() {
@@ -118,4 +121,12 @@ public class ProofDocument extends AuditableObject<Long> {
         this.filePath = filePath;
     }
 
+    @Column(name = "_INDEX")
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
 }
