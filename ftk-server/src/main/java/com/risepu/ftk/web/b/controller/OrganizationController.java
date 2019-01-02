@@ -127,9 +127,13 @@ public class OrganizationController implements OrganizationApi {
             setCurrUserToSession(request.getSession(), orgUser);
 
             loginResult.setOrganizationUser(orgUser);
+
             loginResult.setMessage("登录成功！");
             if(!StringUtils.isNumeric(loginRequest.getName())){
                 Organization org = organizationService.findAuthenOrgByName(loginRequest.getName());
+                loginResult.setOrganization(org);
+            }else if(orgUser.getOrganizationId()!=null){
+                Organization org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
                 loginResult.setOrganization(org);
             }
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
