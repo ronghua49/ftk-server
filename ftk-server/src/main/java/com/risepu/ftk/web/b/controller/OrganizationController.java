@@ -265,7 +265,6 @@ public class OrganizationController implements OrganizationApi {
             throw new NotLoginException();
         }
 
-
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
     }
