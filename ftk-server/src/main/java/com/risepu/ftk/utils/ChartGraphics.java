@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
  */
 public class ChartGraphics {
     private BufferedImage image;
-    private int imageWidth = 350; //图片的宽度
+    private int imageWidth = 500; //图片的宽度
     private int imageHeight = 100; //图片的高度
 
     //生成图片文件
@@ -70,4 +70,10 @@ public class ChartGraphics {
         tip.drawRoundRect(0, 0, imageWidth - 1, imageHeight - 1, 40, 40);
         return createImage(imgurl);
     }
+
+
+    /*public static void main(String[] args) {
+        ChartGraphics g = new ChartGraphics();
+        g.graphicsGeneration("中科白城科技（北京）股份有限公司", "/file-path/112.jpg");
+    }*/
 }
