@@ -89,7 +89,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
                 loginResult.setOrganization(organization);
 
-
             } else {
                 loginResult.setCode(5);
                 loginResult.setMessage("密码错误！");
@@ -228,12 +227,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             try {
                 startDate = format.parse(startTime);
                 endDate = format.parse(endTime);
-
                 nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
-
-                System.out.println("开始时间：" + startDate);
-                System.out.println("结束时间" + nextDate);
-
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -415,6 +409,16 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Organization findAuthenOrgByName(String name) {
         return crudService.uniqueResultHql(Organization.class, "from Organization where name =?1", name);
+    }
+
+    /**
+     * 新增或者修改企业发起认证的流水
+     *
+     * @param organizationStream
+     */
+    @Override
+    public void saveOrUpdateOrgStream(OrganizationStream organizationStream) {
+        crudService.saveOrUpdate(organizationStream);
     }
 
 

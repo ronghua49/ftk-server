@@ -41,7 +41,16 @@
         <property name="securityManager" ref="securityManager"/>
         <!--配置登录的URL-->
         <property name="loginUrl" value="/api/org/login"/>
+        <!--配置登录成功的URL-->
+        <property name="successUrl" value="/api/org/mine"/>
+
+        <property name="filterChainDefinitions">
+            <value>
+                /favicon.ico = anon
+                /** = authc
+                /** = user
+            </value>
+        </property>
 
     </bean>
-
 </beans>

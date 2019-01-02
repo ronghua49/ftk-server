@@ -195,9 +195,11 @@ public interface OrganizationService {
     Organization findAuthenOrgByName(String name);
 
     /**
-     * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败
-     *
-     *
+     *新增或者修改企业发起认证的流水
+     * @param organizationStream
      */
+    void saveOrUpdateOrgStream(OrganizationStream organizationStream);
+
+
 
 }
