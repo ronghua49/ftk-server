@@ -271,7 +271,11 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Override
     public ResponseEntity<Response<String>> deleteTemplateData(Long domainId) {
         if (domainId == null) {
-            return ResponseEntity.ok(Response.succeed("要素id不能为空"));
+            return ResponseEntity.ok(Response.failed(400, "要素id不能为空"));
+        }
+        Domain domain = domainService.selectById(domainId);
+        if (domain.getCode().equals("idCard")) {
+            return ResponseEntity.ok(Response.failed(400, "核心字段不能删除"));
         }
         domainService.deleteById(domainId);
         return ResponseEntity.ok(Response.succeed("删除成功"));

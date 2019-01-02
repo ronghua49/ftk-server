@@ -65,7 +65,7 @@ public class QrCodeUtilServiceImpl implements QrCodeUtilSerevice {
     }
 
 
-    /*public static void main(String[] args) throws Exception {
+ /*   public static void main(String[] args) throws Exception {
         QrCodeUtilServiceImpl q = new QrCodeUtilServiceImpl();
         q.createQrCode("/file-path/11.jpg", "http://ip:port/ftk-server/api/chain/${b25b294cb4deb69ea00a4c3cf3113904801b6015e5956bd019a8570b1fe1d6040e9 44ef3cdee16d0a46503ca6e659a25f21cf9ceddc13f352a3c98138c15d6af}");
     }*/

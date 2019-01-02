@@ -57,10 +57,10 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
         if (StringUtils.isEmpty(name)) {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null order by createTimestamp desc", organization);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
         }
 
         List list = new ArrayList();
