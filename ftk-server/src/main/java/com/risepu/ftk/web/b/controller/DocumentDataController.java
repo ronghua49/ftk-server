@@ -72,7 +72,7 @@ public class DocumentDataController implements DocumentDataApi {
     private Integer t = 1;
 
     @Override
-    public ResponseEntity<Response<String>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Response<ProofDocument>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Request Uri: /documentData/add");
         try {
             //格式化时间，精确到毫秒，用于防止生成pdf文件名相同
@@ -169,6 +169,7 @@ public class DocumentDataController implements DocumentDataApi {
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
             proofDocument1.setChainHash(hash);
             proofDocument1.setNumber(number);
+            proofDocument1.setState(1);
             proofDocument1.setFilePath(filePath);
             proofDocumentService.updateDocument(proofDocument1);
             if (proDocumentId != null) {
@@ -176,11 +177,19 @@ public class DocumentDataController implements DocumentDataApi {
                     documentDateService.add(list.get(i).getId(), proDocumentId, map.get(list.get(i).getCode()));
                 }
             }
-            return ResponseEntity.ok(Response.succeed(filePath));
+            return ResponseEntity.ok(Response.succeed(proofDocument1));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.ok(Response.failed(400, ""));
         }
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> addState(Long id) {
+        ProofDocument proofDocument = proofDocumentService.getDocumentById(id);
+        proofDocument.setState(0);
+        proofDocumentService.updateDocument(proofDocument);
+        return ResponseEntity.ok(Response.succeed("ok"));
     }
 
     @Override

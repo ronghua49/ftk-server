@@ -43,6 +43,11 @@ public class ProofDocument extends AuditableObject<Long> {
     private String organization;
 
     /**
+     * 状态 0，生成 1，未生成
+     */
+    private Integer state;
+
+    /**
      * 个人信息id
      */
     private String personalUser;
@@ -92,6 +97,14 @@ public class ProofDocument extends AuditableObject<Long> {
 
     public void setChainHash(String chainHash) {
         this.chainHash = chainHash;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     @Column(name = "ORGANIZATION")

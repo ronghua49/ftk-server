@@ -103,19 +103,19 @@ public class PdfServiceImpl implements PdfService {
 
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(80, 140);//坐标
+        image.setAbsolutePosition(210, 80);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 120, 110, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 240, 60, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(300, 170);//坐标
+        image1.setAbsolutePosition(300, 300);//坐标
         image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
@@ -127,7 +127,7 @@ public class PdfServiceImpl implements PdfService {
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 150, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 280, 0);
         cd.endText();
 
         doc.close();
@@ -257,26 +257,26 @@ public class PdfServiceImpl implements PdfService {
         doc.add(p1);
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(80, 140);//坐标
+        image.setAbsolutePosition(210, 80);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 120, 110, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 240, 60, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(300, 170);//坐标
+        image1.setAbsolutePosition(300, 300);//坐标
         image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 150, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 280, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
