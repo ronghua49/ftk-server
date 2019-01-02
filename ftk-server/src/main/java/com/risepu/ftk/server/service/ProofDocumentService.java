@@ -40,7 +40,7 @@ public interface ProofDocumentService {
      * @param chainHash 区块链哈希
      * @return
      */
-    String getDocument(String chainHash);
+    ProofDocument getDocument(String chainHash);
 
     /**
      * 验证历史

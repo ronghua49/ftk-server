@@ -86,9 +86,9 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     }
 
     @Override
-    public String getDocument(String chainHash) {
+    public ProofDocument getDocument(String chainHash) {
         ProofDocument proofDocument = crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where chainHash = ?1", chainHash);
-        return proofDocument.getFilePath();
+        return proofDocument;
     }
 
     @Override

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationStream;
+import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.*;
 import org.springframework.http.ResponseEntity;
@@ -105,7 +106,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/history/documentInfo")
     @ResponseBody
-    ResponseEntity<Response<String>> documentInfo(@RequestParam String chainHash);
+    ResponseEntity<Response<ProofDocument>> documentInfo(@RequestParam String chainHash);
 
 
     @ApiOperation(value = "企业反馈意见", nickname = "advice")

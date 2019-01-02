@@ -381,9 +381,9 @@ public class OrganizationController implements OrganizationApi {
      * @return 证明文档pdf路径
      */
     @Override
-    public ResponseEntity<Response<String>> documentInfo(String chainHash) {
-        String filePath = proofDocumentService.getDocument(chainHash);
-        return ResponseEntity.ok(Response.succeed(filePath));
+    public ResponseEntity<Response<ProofDocument>> documentInfo(String chainHash) {
+        ProofDocument proofDocument = proofDocumentService.getDocument(chainHash);
+        return ResponseEntity.ok(Response.succeed(proofDocument));
     }
 
 
