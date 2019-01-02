@@ -59,9 +59,10 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
         }
+
         List list = new ArrayList();
         List<DocumentData> documentDataList = new ArrayList<>();
         PageResult<Template> pageResult = new PageResult<>();
@@ -92,22 +93,23 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
 
     @Override
     public PageResult<VerifyHistory> getVerfifyHistoryData(String orgId, Integer pageNo, Integer pageSize, String name) {
+
         Integer firstIndex = pageNo * pageSize;
-        int total=0;
+        int total = 0;
         List<?> objects = new ArrayList<>();
         List<VerifyHistory> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(name)) {
-            String sql=" SH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql = "select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
             String sql2 = "select count(*) from  FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?";
             objects = crudService.sql(firstIndex, pageSize, sql, orgId);
             BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, orgId);
-            total= bigInteger.intValue();
+            total = bigInteger.intValue();
         } else {
-            String sql="select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql = "select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
             String sql2 = "select count(*) from  FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?";
-            objects = crudService.sql(firstIndex, pageSize, sql,orgId);
-            BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2,orgId);
-            total= bigInteger.intValue();
+            objects = crudService.sql(firstIndex, pageSize, sql, orgId);
+            BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, orgId);
+            total = bigInteger.intValue();
         }
         for (int i = 0; i < objects.size(); i++) {
             VerifyHistory history = new VerifyHistory();
