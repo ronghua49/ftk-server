@@ -174,7 +174,7 @@ public class DocumentDataController implements DocumentDataApi {
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
             proofDocument1.setChainHash(hash);
             proofDocument1.setNumber(number);
-            proofDocument1.setState(1);
+            proofDocument1.setState(0);
             proofDocument1.setFilePath(filePath);
             proofDocumentService.updateDocument(proofDocument1);
             if (proofDocumentId != null) {
@@ -219,11 +219,12 @@ public class DocumentDataController implements DocumentDataApi {
             String hash = "97481fb743487be151082fde934762eb9e3366a3";
 
             //生成二维码图片
-            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1 + "/" + map.get("idCard") + date + ".jpg", urlPrefix + hash);
+            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePaths + date1 + "/" + map.get("idCard") + date + ".jpg", urlPrefix + hash);
 
             // 文档保存路径
             String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
             ProofDocument proofDocument = new ProofDocument();
+            proofDocument.setState(1);
             proofDocument.setFilePath(filePath);
             proofDocumentService.add(proofDocument);
             return ResponseEntity.ok(Response.succeed(proofDocument));
