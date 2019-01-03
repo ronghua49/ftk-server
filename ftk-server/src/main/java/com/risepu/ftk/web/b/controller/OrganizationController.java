@@ -107,10 +107,10 @@ public class OrganizationController implements OrganizationApi {
        // LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
 
         Subject subject = SecurityUtils.getSubject();
-        System.out.println(SALT);
+        String userName = loginRequest.getName().trim();
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
 
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(),password,true);
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userName,password,true);
         LoginResult loginResult = new LoginResult();
         try {
             subject.login(usernamePasswordToken);
@@ -127,9 +127,9 @@ public class OrganizationController implements OrganizationApi {
             setCurrUserToSession(request.getSession(), orgUser);
 
             loginResult.setOrganizationUser(orgUser);
-
             loginResult.setMessage("登录成功！");
-            if(!StringUtils.isNumeric(loginRequest.getName())){
+
+            if(!StringUtils.isNumeric(userName)){
                 Organization org = organizationService.findAuthenOrgByName(loginRequest.getName());
                 loginResult.setOrganization(org);
             }else if(orgUser.getOrganizationId()!=null){
@@ -316,6 +316,10 @@ public class OrganizationController implements OrganizationApi {
         List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(), OrganizationStream.CHECKING_STATE);
         if (stream != null && stream.size() != 0) {
             return ResponseEntity.ok(Response.failed(400, "该组织机构代码证正在审核中，不得重复！"));
+        }
+        OrganizationStream orgStream = organizationService.findAuthStreamByPhone(organizationStream.getApplicationPhone());
+        if(orgStream!=null){
+            organizationStream.setId(orgStream.getId());
         }
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());

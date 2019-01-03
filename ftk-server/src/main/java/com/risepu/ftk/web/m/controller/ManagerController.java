@@ -54,7 +54,7 @@ public class ManagerController implements ManagerControllerApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> orgLogin(String adminName, @RequestParam String password, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> orgLogin(String adminName,String password, HttpServletRequest request) {
 
 		password = DigestUtils.md5Hex(password + SALT);
 
