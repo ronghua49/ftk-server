@@ -4,6 +4,7 @@ import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.m.dto.DomainRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -50,7 +51,7 @@ public interface ManageTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @GetMapping(path = "/getAnyDomain/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> getAnyDomain(@PathVariable Integer pageNo, Integer pageSize, String code, String label);
+    ResponseEntity<Response<PageResult>> getAnyDomain(@PathVariable Integer pageNo, Integer pageSize, String code, String label, Long templateId);
 
     /**
      * 查找所有模板数据(无分页）
@@ -76,6 +77,18 @@ public interface ManageTemplateApi {
     ResponseEntity<Response<String>> updateTemplate(@RequestBody Template template);
 
     /**
+     * 修改模板名称
+     *
+     * @param template
+     * @return
+     */
+    @ApiOperation(value = "修改模板", nickname = "updateTemplateName")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @PostMapping(path = "/updateTemplateName", consumes = {"application/json"})
+    @ResponseBody
+    ResponseEntity<Response<String>> updateTemplateName(@RequestBody Template template);
+
+    /**
      * 添加模板
      *
      * @param template 模板JavaBean
@@ -90,14 +103,13 @@ public interface ManageTemplateApi {
     /**
      * 添加模板数据
      *
-     * @param domain 模板数据JavaBean
      * @return 添加是否成功
      */
     @ApiOperation(value = "添加模板数据", nickname = "addTemplateData")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @PostMapping(path = "/addTemplateData", consumes = {"application/json"})
     @ResponseBody
-    ResponseEntity<Response<String>> addTemplateData(@RequestBody Domain domain);
+    ResponseEntity<Response<String>> addTemplateData(@RequestBody DomainRequest domainRequest);
 
     /**
      * 回显模板数据
@@ -124,6 +136,17 @@ public interface ManageTemplateApi {
     ResponseEntity<Response<String>> updateTemplateData(Domain domain);
 
     /**
+     * 模板名称下拉框
+     *
+     * @return
+     */
+    @ApiOperation(value = "模板名称下拉框", nickname = "TemplateList")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
+    @PostMapping(path = "/TemplateList")
+    @ResponseBody
+    ResponseEntity<Response<List>> TemplateList();
+
+    /**
      * 删除模板数据
      *
      * @param domainId
@@ -133,7 +156,7 @@ public interface ManageTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @GetMapping(path = "/deleteTemplateData")
     @ResponseBody
-    ResponseEntity<Response<String>> deleteTemplateData(Long domainId);
+    ResponseEntity<Response<String>> deleteTemplateData(Long domainId,Long templateId);
 
     /**
      * 更新模板状态

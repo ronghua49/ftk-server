@@ -7,6 +7,7 @@ import com.risepu.ftk.utils.ChartGraphics;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.utils.StringUtil;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.m.dto.DomainRequest;
 import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.lang3.StringUtils;
@@ -19,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author L-heng
@@ -95,14 +94,15 @@ public class ManageTemplateController implements ManageTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<PageResult>> getAnyDomain(Integer pageNo, Integer pageSize, String code, String label) {
+    public ResponseEntity<Response<PageResult>> getAnyDomain(Integer pageNo, Integer pageSize, String code, String label, Long templateId) {
         Integer firstIndex = pageNo * pageSize;
-        String hql = "from Domain where 1 = 1";
+        domainService.selectByTemplate(templateId);
+        String hql = "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = " + templateId + ")";
         if (StringUtils.isNotEmpty(code)) {
-            hql += " and code = '" + code + "'";
+            hql += " and d.code = '" + code + "'";
         }
         if (StringUtils.isNotEmpty(label)) {
-            hql += " and label = '" + label + "'";
+            hql += " and d.label = '" + label + "'";
         }
         List<Domain> domains = domainService.getDomains(hql);
         List list = domainService.getAnyDomain(firstIndex, pageSize, hql);
@@ -133,11 +133,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             Template template1 = templateService.getTemplate(template.getId());
             //根据模板获取模板数据
             List<Domain> list = domainService.selectByTemplate(template.getId());
-            //
-            for (int j = 0; j < list.size(); j++) {
-                Domain domain = list.get(j);
-                templateDomainService.delete(template.getId(), domain.getId());
-            }
+
             String _template = template.get_template();
             List<Domain> domains = domainService.selectAll();
             List<String> list1 = new ArrayList();
@@ -188,68 +184,56 @@ public class ManageTemplateController implements ManageTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) throws Exception {
-        // TODO Auto-generated method stub
-        if (StringUtils.isEmpty(template.get_template())) {
-            return ResponseEntity.ok(Response.failed(400, "二次模板不能为空"));
+    public ResponseEntity<Response<String>> updateTemplateName(Template template) {
+        if (template.getId() == null) {
+            return ResponseEntity.ok(Response.failed(400, "模板id不能为空"));
         }
+        if (StringUtils.isEmpty(template.getName())) {
+            return ResponseEntity.ok(Response.failed(400, "模板名称不能为空"));
+        }
+        if (StringUtils.isEmpty(template.getCode())) {
+            return ResponseEntity.ok(Response.failed(400, "模板code不能为空"));
+        }
+        //根据id获取模板
+        Template template1 = templateService.getTemplate(template.getId());
+        template1.setName(template.getName());
+        template1.setCode(template.getCode());
+        templateService.update(template1);
+        return ResponseEntity.ok(Response.succeed("更新成功"));
+    }
 
+    @Override
+    public ResponseEntity<Response<String>> addTemplate(@RequestBody Template template) {
+        // TODO Auto-generated method stub
+        if (StringUtils.isEmpty(template.getName())) {
+            return ResponseEntity.ok(Response.failed(400, "模板名称不能为空"));
+        }
         Long templateId = templateService.add(template);
-        List<String> list = new ArrayList();
         if (templateId != null) {
-            String _template = template.get_template();
-            List<Domain> domains = domainService.selectAll();
-            for (int i = 0; i < domains.size(); i++) {
-                Domain domain = domains.get(i);
-                list.add(domain.getCode());
-                String code = "${" + domain.getCode() + "}";
-                if (_template.contains(code)) {
-                    _template = _template.replace(code, "___");
-                    templateDomainService.add(templateId, domain.getId());
-                }
-            }
-            StringUtil stringUtil = new StringUtil();
-            List<String> list1 = stringUtil.getStrContainData(template.get_template(), "{", "}", true);
-            for (String key : list1) {
-                if (!list.contains(key)) {
-                    crudService.delete(templateService.getTemplate(templateId));
-                    return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
-                }
-            }
-            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM/dd");
-            String date = ft.format(new Date());
-
-            File file = new File(filePath + date);
-            file.mkdirs();
-            //生成二维码图片
-            String QrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
-
-            ChartGraphics cg = new ChartGraphics();
-            String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
-            String pdfFilePath = filePath + date + "/" + templateId + ".pdf";
-            String filePath1 = pdfService.pdf(_template, "DSFSDFSADADWDSFSDF", template.getName(), QrFilePath, GrFilePath, pdfFilePath);
-            Template template1 = templateService.getTemplate(templateId);
-            template1.setFilePath(filePath1);
-            templateService.update(template1);
             return ResponseEntity.ok(Response.succeed("添加成功"));
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
 
     @Override
-    public ResponseEntity<Response<String>> addTemplateData(Domain domain) {
+    public ResponseEntity<Response<String>> addTemplateData(DomainRequest domainRequest) {
         // TODO Auto-generated method stub
-        if (StringUtils.isEmpty(domain.getCode())) {
+        if (StringUtils.isEmpty(domainRequest.getCode())) {
             return ResponseEntity.ok(Response.failed(400, "模板要素code不能为空"));
-        } else if (StringUtils.isEmpty(domain.getLabel())) {
+        } else if (StringUtils.isEmpty(domainRequest.getLabel())) {
             return ResponseEntity.ok(Response.failed(400, "模板要素名称不能为空"));
-        } else if (StringUtils.isEmpty(domain.getKegex())) {
+        } else if (StringUtils.isEmpty(domainRequest.getKegex())) {
             return ResponseEntity.ok(Response.failed(400, "校验规则不能为空"));
         }
-        String code = domain.getCode().trim();
+        String code = domainRequest.getCode().trim();
+        Domain domain = new Domain();
         domain.setCode(code);
+        domain.setKegex(domainRequest.getKegex());
+        domain.setType(domainRequest.getType());
+        domain.setLabel(domainRequest.getLabel());
         Long domainId = domainService.add(domain);
         if (domainId != null) {
+            templateDomainService.add(domainRequest.getTemplateId(), domainId);
             return ResponseEntity.ok(Response.succeed("添加成功"));
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
@@ -269,7 +253,20 @@ public class ManageTemplateController implements ManageTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> deleteTemplateData(Long domainId) {
+    public ResponseEntity<Response<List>> TemplateList() {
+        List<Template> templates = templateService.getAllTemplate("from Template");
+        List list = new ArrayList();
+        for (Template template : templates) {
+            Map map = new HashMap();
+            map.put("code", template.getId());
+            map.put("name", template.getName());
+            list.add(map);
+        }
+        return ResponseEntity.ok(Response.succeed(list));
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> deleteTemplateData(Long domainId, Long templateId) {
         if (domainId == null) {
             return ResponseEntity.ok(Response.failed(400, "要素id不能为空"));
         }
@@ -278,6 +275,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             return ResponseEntity.ok(Response.failed(400, "核心字段不能删除"));
         }
         domainService.deleteById(domainId);
+        templateDomainService.delete(templateId, domainId);
         return ResponseEntity.ok(Response.succeed("删除成功"));
     }
 
