@@ -159,7 +159,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             for (String key : list2) {
                 if (!list1.contains(key)) {
                     crudService.delete(templateService.getTemplate(template.getId()));
-                    return ResponseEntity.ok(Response.failed(400, "参数错误，请仔细检查！"));
+                    return ResponseEntity.ok(Response.failed(400, key + "错误，请仔细检查！"));
                 }
             }
             ChartGraphics cg = new ChartGraphics();
