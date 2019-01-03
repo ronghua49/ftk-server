@@ -162,6 +162,8 @@ public class OrganizationStream extends AuditableObject<Long> {
     private String staffSize;
     private String website ;
 
+    private Long dictdataId;
+
 
     @Column(name = "ORG_TYPE", length = 20)
     public String getOrgType() {
@@ -237,6 +239,12 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.website = website;
     }
 
+    @Column(name = "DICT_DATA_ID")
+    public Long getDictdataId() {
+        return dictdataId;
+    }
 
-
+    public void setDictdataId(Long dictdataId) {
+        this.dictdataId = dictdataId;
+    }
 }

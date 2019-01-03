@@ -216,13 +216,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         String key = (String) map.get("key");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
-
-
+        Integer state = (Integer) map.get("state");
+        String legalPerson = (String) map.get("legalPerson");
+        String industry = (String) map.get("industry");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
-        Date endDate = null;
+        Date endDate;
         Date nextDate = null;
-
         if (StringUtils.isNotEmpty(startTime)) {
             try {
                 startDate = format.parse(startTime);
@@ -233,7 +233,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             }
         }
 
-        Integer state = (Integer) map.get("state");
+
 
         if (StringUtils.isNotEmpty(key) && state == null && startDate == null) {
 
@@ -280,6 +280,8 @@ public class OrganizationServiceImpl implements OrganizationService {
             total = crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql);
         }
+
+
         PageResult<OrganizationStream> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);

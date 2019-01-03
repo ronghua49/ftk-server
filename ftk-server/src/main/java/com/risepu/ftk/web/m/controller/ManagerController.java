@@ -10,6 +10,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,8 @@ public class ManagerController implements ManagerControllerApi {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static final String SALT = ConfigUtil.getValue("salt");
+	@Value("${salt}")
+	private   String SALT;
 
 	@Autowired
 	private OrganizationService organizationService;
@@ -99,23 +101,28 @@ public class ManagerController implements ManagerControllerApi {
 
 	}
 
+
+
 	/**
 	 * 根据参数查询认证的企业信息
 	 *
-	 * @param key       关键字
+	 * @param orgName    企业名
+	 * @param legalPerson 法人
+	 * @Param industry 行业分类
 	 * @param pageNo
 	 * @param pageSize
 	 * @param startTime 开始时间
 	 * @param endTime   结束时间
 	 * @param state     审核状态
-	 * @param request
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryOrganization(@RequestParam(required = false) String key, @PathVariable Integer pageNo, @RequestParam Integer pageSize, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer state, HttpServletRequest request) {
+	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String orgName, String legalPerson, String industry, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) {
 		Map<String, Object> map = new HashMap<>();
 
-		map.put("key", key);
+		map.put("key", orgName);
+		map.put("legalPerson",legalPerson);
+		map.put("industry",industry);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("state", state);
