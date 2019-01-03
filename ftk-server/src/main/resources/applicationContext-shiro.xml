@@ -47,10 +47,8 @@
         <property name="filterChainDefinitions">
             <value>
                 /favicon.ico = anon
-                /** = authc
-                /** = user
+                /** = anon
             </value>
         </property>
-
     </bean>
 </beans>

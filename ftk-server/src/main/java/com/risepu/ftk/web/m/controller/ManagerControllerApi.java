@@ -1,7 +1,4 @@
-package com.risepu.ftk.web.m.controller; /*
-											* @author  ronghaohua
-											* @date 2018/12/21
-											*/
+package com.risepu.ftk.web.m.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,6 +20,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+
+/**
+ * @author ronghaohua
+ */
 @Api("admin")
 @RequestMapping("/api/admin")
 public interface ManagerControllerApi {
