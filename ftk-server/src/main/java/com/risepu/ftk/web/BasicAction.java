@@ -15,12 +15,6 @@ public class BasicAction {
 
         HttpSession hs = (HttpSession) SessionListener.sessionMap.get(userId);
         SessionListener.sessionMap.remove(userId);
-        Enumeration e = hs.getAttributeNames();
-        while (e.hasMoreElements()) {
-            String sessionName = (String) e.nextElement();
-            // 清空session
-            hs.removeAttribute(sessionName);
-        }
         hs.setAttribute(Constant.getSessionCurrUser(),null);
     }
 }

@@ -1,7 +1,4 @@
-package com.risepu.ftk.web.m.controller; /*
-											* @author  ronghaohua
-											* @date 2018/12/21
-											*/
+package com.risepu.ftk.web.m.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,6 +20,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+
+/**
+ * @author ronghaohua
+ */
 @Api("admin")
 @RequestMapping("/api/admin")
 public interface ManagerControllerApi {
@@ -49,8 +50,14 @@ public interface ManagerControllerApi {
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = PageResult.class) })
 	@RequestMapping(path = "/queryList/{pageNo:\\d+}")
 	@ResponseBody
-	ResponseEntity<Response<PageResult<OrganizationStream>>> queryOrganization(@RequestParam(required = false) String key, @PathVariable Integer pageNo, @RequestParam Integer pageSize, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer state, HttpServletRequest request);
-
+	ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(@RequestParam(required = false) String orgName,
+																				  @RequestParam(required = false) String legalPerson,
+																				  @RequestParam(required = false) String industry,
+																				  @PathVariable Integer pageNo,
+																				  @RequestParam Integer pageSize,
+																				  @RequestParam(required = false) String startTime,
+																				  @RequestParam(required = false) String endTime,
+																				  @RequestParam(required = false) Integer state);
 	@ApiOperation(value = "查询单个企业流水的详情信息", nickname = "queryOne")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Organization.class) })
 	@RequestMapping(path = "/queryOne/{streamId:\\d+}")

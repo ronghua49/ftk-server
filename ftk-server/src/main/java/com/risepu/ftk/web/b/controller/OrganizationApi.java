@@ -36,12 +36,15 @@ public interface OrganizationApi {
     @ResponseBody
     ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo, HttpSession session);
 
+    @ApiOperation(value = "登录的跳转", nickname = "loginJump")
+    @RequestMapping(path = "/")
+    void login(HttpServletResponse response) throws IOException;
 
     @ApiOperation(value = "企业登录", nickname = "Orglogin")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = LoginResult.class)})
     @RequestMapping(path = "/login")
     @ResponseBody
-    ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request);
+    ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) throws IOException;
 
 
     @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")

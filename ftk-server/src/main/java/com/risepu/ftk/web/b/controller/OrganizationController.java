@@ -93,6 +93,16 @@ public class OrganizationController implements OrganizationApi {
         }
     }
 
+    @Override
+    public void login(HttpServletResponse response) throws IOException {
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isRemembered()||subject.isAuthenticated()){
+            response.sendRedirect("/ftk/b");
+        }
+        response.sendRedirect("/ftk/b/#/login");
+
+    }
+
     /**
      * 企业登录
      *
@@ -102,15 +112,12 @@ public class OrganizationController implements OrganizationApi {
      */
 
     @Override
-    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
-
-       // LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
+    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) throws IOException {
 
         Subject subject = SecurityUtils.getSubject();
-        String userName = loginRequest.getName().trim();
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
 
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userName,password,true);
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(),password,true);
         LoginResult loginResult = new LoginResult();
         try {
             subject.login(usernamePasswordToken);
@@ -128,14 +135,13 @@ public class OrganizationController implements OrganizationApi {
 
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
-
-            if(!StringUtils.isNumeric(userName)){
-                Organization org = organizationService.findAuthenOrgByName(loginRequest.getName());
-                loginResult.setOrganization(org);
-            }else if(orgUser.getOrganizationId()!=null){
-                Organization org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
-                loginResult.setOrganization(org);
+            Organization org=null;
+            if(!StringUtils.isNumeric(loginRequest.getName())){
+                 org = organizationService.findAuthenOrgByName(loginRequest.getName());
             }
+            org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
+            loginResult.setOrganization(org);
+
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
 
             return ResponseEntity.ok(Response.succeed(loginResult));
@@ -277,6 +283,7 @@ public class OrganizationController implements OrganizationApi {
             throw new NotLoginException();
         }
 
+
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
     }
@@ -316,10 +323,6 @@ public class OrganizationController implements OrganizationApi {
         List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(), OrganizationStream.CHECKING_STATE);
         if (stream != null && stream.size() != 0) {
             return ResponseEntity.ok(Response.failed(400, "该组织机构代码证正在审核中，不得重复！"));
-        }
-        OrganizationStream orgStream = organizationService.findAuthStreamByPhone(organizationStream.getApplicationPhone());
-        if(orgStream!=null){
-            organizationStream.setId(orgStream.getId());
         }
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());

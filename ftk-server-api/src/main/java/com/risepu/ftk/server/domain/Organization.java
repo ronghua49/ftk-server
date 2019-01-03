@@ -124,7 +124,7 @@ public class Organization extends AuditableObject<String> {
 	private String insuranceNum;
 	private String staffSize;
 	private String website ;
-	
+	private Long dictdataId;
 	
 	@Column(name = "ORG_TYPE", length = 20)
 	public String getOrgType() {
@@ -199,6 +199,13 @@ public class Organization extends AuditableObject<String> {
 	public void setWebsite(String website) {
 		this.website = website;
 	}
-	
 
+	@Column(name = "DICT_DATA_ID")
+	public Long getDictdataId() {
+		return dictdataId;
+	}
+
+	public void setDictdataId(Long dictdataId) {
+		this.dictdataId = dictdataId;
+	}
 }
