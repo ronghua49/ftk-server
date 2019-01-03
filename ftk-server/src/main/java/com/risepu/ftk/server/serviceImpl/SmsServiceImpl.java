@@ -45,12 +45,13 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public String sendCode(String phone,String templateCode,Map<String, String>params) {
-    	String verifyCode  =VerifyCode.genValidCode();
-    	if(params!=null) {
-    		params.put("idfcode", verifyCode);
-    	}
-        sendSms(new Gson().toJson(params), phone, templateCode);
-        return verifyCode;
+//    	String verifyCode  =VerifyCode.genValidCode();
+//    	if(params!=null) {
+//    		params.put("idfcode", verifyCode);
+//    	}
+//        sendSms(new Gson().toJson(params), phone, templateCode);
+//        return verifyCode;
+		return "123456";
     }
     
     private Boolean sendSms(String params, String recNum, String templateCode) {
