@@ -68,11 +68,15 @@ public class DocumentDataController implements DocumentDataApi {
 
     @Value("${ftk.root.filePath}")
     private String filePath;
+
+    @Value("${ftk.root.filePaths}")
+    private String filePaths;
+
     //FIXME:线程安全 企业单号每天从1开始递增
     private Integer t = 1;
 
     @Override
-    public ResponseEntity<Response<ProofDocument>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Response<ProofDocument>> addProofDocument(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Request Uri: /documentData/add");
         try {
             //格式化时间，精确到毫秒，用于防止生成pdf文件名相同
@@ -113,14 +117,15 @@ public class DocumentDataController implements DocumentDataApi {
             //pdf流输出路径
             String pdfFilePath = filePath + date1 + "/职场通行证-" + template.getName() + "-" + date + ".pdf";
 
-            ProofDocument proofDocument = new ProofDocument();
+            Long proofDocumentId = Long.parseLong(map.get("proofDocumentId"));
+            ProofDocument proofDocument = proofDocumentService.getDocumentById(proofDocumentId);
             proofDocument.setPersonalUser(map.get("idCard"));
             proofDocument.setOrganization(org.getId());
             proofDocument.setTemplate(templateId);
             proofDocument.setIndex(0);
-            Long proDocumentId = proofDocumentService.add(proofDocument);
+            proofDocumentService.updateDocument(proofDocument);
 
-            ProofDocument proofDocument1 = proofDocumentService.getDocumentById(proDocumentId);
+            ProofDocument proofDocument1 = proofDocumentService.getDocumentById(proofDocumentId);
 
             //得到模板名称的拼音首字母
             String title = template.getName();
@@ -160,7 +165,7 @@ public class DocumentDataController implements DocumentDataApi {
             }
             String number = "ZKTXZ-" + convert.toUpperCase() + "-" + date3 + n;
 
-            String hash = chainService.sign(proDocumentId);
+            String hash = chainService.sign(proofDocumentId);
 
             //生成二维码图片
             String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1 + "/" + map.get("idCard") + date + ".jpg", urlPrefix + hash);
@@ -172,9 +177,9 @@ public class DocumentDataController implements DocumentDataApi {
             proofDocument1.setState(1);
             proofDocument1.setFilePath(filePath);
             proofDocumentService.updateDocument(proofDocument1);
-            if (proDocumentId != null) {
+            if (proofDocumentId != null) {
                 for (int i = 0; i < list.size(); i++) {
-                    documentDateService.add(list.get(i).getId(), proDocumentId, map.get(list.get(i).getCode()));
+                    documentDateService.add(list.get(i).getId(), proofDocumentId, map.get(list.get(i).getCode()));
                 }
             }
             return ResponseEntity.ok(Response.succeed(proofDocument1));
@@ -185,11 +190,47 @@ public class DocumentDataController implements DocumentDataApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> addState(Long id) {
-        ProofDocument proofDocument = proofDocumentService.getDocumentById(id);
-        proofDocument.setState(0);
-        proofDocumentService.updateDocument(proofDocument);
-        return ResponseEntity.ok(Response.succeed("ok"));
+    public ResponseEntity<Response<ProofDocument>> add(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmssSS");
+            SimpleDateFormat ft1 = new SimpleDateFormat("yyyy-MM-dd");
+            String date = ft.format(new Date());
+            String date1 = ft1.format(new Date());
+
+            File file = new File(filePaths + date1);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            Long templateId = Long.parseLong(map.get("templateId"));
+            // 根据模板id得到模板
+            Template template = templateService.getTemplate(templateId);
+
+            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+            OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+            Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
+
+            //生成盖章图片
+            ChartGraphics cg = new ChartGraphics();
+            String GrFilePath = cg.graphicsGeneration(org.getName(), filePaths + date1 + "/" + org.getId() + date + ".jpg");
+
+            //pdf流输出路径
+            String pdfFilePath = filePaths + date1 + "/职场通行证-" + template.getName() + "-" + date + ".pdf";
+
+            String hash = "97481fb743487be151082fde934762eb9e3366a3";
+
+            //生成二维码图片
+            String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date1 + "/" + map.get("idCard") + date + ".jpg", urlPrefix + hash);
+
+            // 文档保存路径
+            String filePath = pdfService.pdf(map, hash, qrFilePath, GrFilePath, pdfFilePath);
+            ProofDocument proofDocument = new ProofDocument();
+            proofDocument.setFilePath(filePath);
+            proofDocumentService.add(proofDocument);
+            return ResponseEntity.ok(Response.succeed(proofDocument));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(Response.failed(400, ""));
+        }
     }
 
     @Override
