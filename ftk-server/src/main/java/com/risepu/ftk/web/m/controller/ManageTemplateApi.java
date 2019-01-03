@@ -142,7 +142,7 @@ public interface ManageTemplateApi {
      */
     @ApiOperation(value = "模板名称下拉框", nickname = "TemplateList")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
-    @PostMapping(path = "/TemplateList")
+    @GetMapping(path = "/TemplateList")
     @ResponseBody
     ResponseEntity<Response<List>> TemplateList();
 
