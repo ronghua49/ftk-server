@@ -93,6 +93,16 @@ public class OrganizationController implements OrganizationApi {
         }
     }
 
+    @Override
+    public void login(HttpServletResponse response) throws IOException {
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isRemembered()||subject.isAuthenticated()){
+            response.sendRedirect("/ftk/b");
+        }
+        response.sendRedirect("/ftk/b/#/login");
+
+    }
+
     /**
      * 企业登录
      *
@@ -102,12 +112,9 @@ public class OrganizationController implements OrganizationApi {
      */
 
     @Override
-    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request) {
-
-       // LoginResult loginResult = organizationService.orgLogin(loginRequest.getName(), loginRequest.getPassword());
+    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) throws IOException {
 
         Subject subject = SecurityUtils.getSubject();
-        System.out.println(SALT);
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
 
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(),password,true);
@@ -128,10 +135,13 @@ public class OrganizationController implements OrganizationApi {
 
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
+            Organization org=null;
             if(!StringUtils.isNumeric(loginRequest.getName())){
-                Organization org = organizationService.findAuthenOrgByName(loginRequest.getName());
-                loginResult.setOrganization(org);
+                 org = organizationService.findAuthenOrgByName(loginRequest.getName());
             }
+            org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
+            loginResult.setOrganization(org);
+
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
 
             return ResponseEntity.ok(Response.succeed(loginResult));
