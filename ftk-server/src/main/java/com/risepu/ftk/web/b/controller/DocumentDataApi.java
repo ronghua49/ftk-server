@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.web.m.dto.EmailRequest;
+import com.risepu.ftk.web.m.dto.IdRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,26 +25,32 @@ import javax.servlet.http.HttpServletResponse;
 public interface DocumentDataApi {
 
     /**
-     * 生成文档
+     * 生成文档(真)
      *
      * @param map
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "生成文档", nickname = "add")
+    @ApiOperation(value = "生成文档(真)", nickname = "addProofDocument")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @PostMapping(path = "/addProofDocument")
+    @ResponseBody
+    @CrossOrigin
+    ResponseEntity<Response<ProofDocument>> addProofDocument(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+    /**
+     * 生成文档（假）
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "生成文档（假）", nickname = "add")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = ProofDocument.class)})
     @PostMapping(path = "/add")
     @ResponseBody
     @CrossOrigin
     ResponseEntity<Response<ProofDocument>> add(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-
-    @ApiOperation(value = "改变文档状态", nickname = "addState")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
-    @GetMapping(path = "/addState")
-    @ResponseBody
-    @CrossOrigin
-    ResponseEntity<Response<String>> addState(Long id);
 
     /**
      * 发送邮件
