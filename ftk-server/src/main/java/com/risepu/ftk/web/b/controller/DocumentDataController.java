@@ -101,7 +101,9 @@ public class DocumentDataController implements DocumentDataApi {
             Template template = templateService.getTemplate(templateId);
 
             // 根据模板id得到模板数据
-            List<Domain> list = domainService.selectByTemplate(templateId);
+            List<Domain> list = crudService.hql(Domain.class,
+                    "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )",
+                    templateId);
 
             //从session得到目前登陆的用户信息
             OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
