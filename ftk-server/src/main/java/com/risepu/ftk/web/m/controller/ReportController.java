@@ -72,7 +72,7 @@ public class ReportController implements ReportApi {
         }
         String hql = "(" + hql1 + ") as e" + " left join " + "(" + hql2 + ") as f on e.b.id=f.d.id";
         List list = crudService.hql(firstIndex, pageSize, hql);
-        List list1 = crudService.hql(hql);
+        List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
         PageResult<Template> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);
