@@ -10,6 +10,7 @@ import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.PdfService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.m.dto.Pdf;
+import net.lc4ever.framework.service.GenericCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ import java.util.List;
 @Service
 public class PdfServiceImpl implements PdfService {
     @Autowired
-    private DomainService domainService;
+    private GenericCrudService crudService;
     @Autowired
     private TemplateService templateService;
 
@@ -138,7 +139,9 @@ public class PdfServiceImpl implements PdfService {
     public String pdf(Map<String, String> map, String hash, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
         Long templateId = Long.parseLong(map.get("templateId"));
         // 根据模板id得到模板数据
-        java.util.List<Domain> list = domainService.selectByTemplate(templateId);
+        java.util.List<Domain> list = crudService.hql(Domain.class,
+                "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )",
+                templateId);
         // 根据模板id得到模板
         Template template = templateService.getTemplate(templateId);
         // 获取一次模板

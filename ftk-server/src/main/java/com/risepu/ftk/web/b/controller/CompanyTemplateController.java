@@ -34,9 +34,6 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     private TemplateService templateService;
 
     @Autowired
-    private DomainService domainService;
-
-    @Autowired
     private OrganizationService organizationService;
 
     @Autowired
@@ -91,7 +88,9 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         if (templateId.getTemplateId() == null) {
             return ResponseEntity.ok(Response.failed(400, "模板id不能为空"));
         }
-        List<Domain> domains = domainService.selectByTemplate(templateId.getTemplateId());
-        return ResponseEntity.ok(Response.succeed(domains));
+        List<Domain> list = crudService.hql(Domain.class,
+                "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )",
+                templateId.getTemplateId());
+        return ResponseEntity.ok(Response.succeed(list));
     }
 }
