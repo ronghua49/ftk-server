@@ -139,7 +139,7 @@ public class PdfServiceImpl implements PdfService {
     public String pdf(Map<String, String> map, String hash, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
         Long templateId = Long.parseLong(map.get("templateId"));
         // 根据模板id得到模板数据
-        java.util.List<Domain> list = crudService.hql(Domain.class,
+        List<Domain> list = crudService.hql(Domain.class,
                 "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )",
                 templateId);
         // 根据模板id得到模板
@@ -235,10 +235,11 @@ public class PdfServiceImpl implements PdfService {
         while ((index = _template.indexOf("${", number)) != -1) {
             int index2 = _template.indexOf("}", index);
             String key = _template.substring(index + 2, index2);
+            Pdf pdf1 = map1.get(key);
             if (!list1.contains(key)) {
+                number = index + pdf1.getKey().length();
                 continue;
             }
-            Pdf pdf1 = map1.get(key);
             String value = map.get(pdf1.getCode());
             if (number > index) {
                 content = _template.substring(number);
