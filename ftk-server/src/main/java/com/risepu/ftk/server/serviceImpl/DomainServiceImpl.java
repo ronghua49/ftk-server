@@ -59,7 +59,7 @@ public class DomainServiceImpl implements DomainService {
     public List<Domain> selectByTemplate(Long templateId) {
         // TODO Auto-generated method stub
         List<Domain> list = crudService.hql(Domain.class,
-                "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )",
+                "from Domain d where d.id in (select t.id.domainId from SimpleTemplateDomain t where t.id.templateId = ?1 )",
                 templateId);
         return list;
     }
