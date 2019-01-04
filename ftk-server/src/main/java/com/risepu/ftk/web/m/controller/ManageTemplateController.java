@@ -203,7 +203,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
             String pdfFilePath = filePath + date + "/" + template.getId() + "（" + t++ + ").pdf";
             String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
-            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", template.getName(), qrFilePath, GrFilePath, pdfFilePath);
+            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", simpleTemplate.getName(), qrFilePath, GrFilePath, pdfFilePath);
             Template template2 = templateService.getTemplate(templateId);
             template2.setHashSize(template.getHashSize());
             template2.set_template(template.get_template());
