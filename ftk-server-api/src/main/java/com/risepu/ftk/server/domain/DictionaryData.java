@@ -48,7 +48,7 @@ public class DictionaryData extends AuditableObject<Long> {
     /**
      * 是否删除
      */
-    private boolean idDelete;
+    private boolean isDelete=false;
 
 
     @Id
@@ -102,11 +102,11 @@ public class DictionaryData extends AuditableObject<Long> {
     }
 
     @Column(name = "IS_DELETE")
-    public boolean isIdDelete() {
-        return idDelete;
+    public boolean isDelete() {
+        return isDelete;
     }
 
-    public void setIdDelete(boolean idDelete) {
-        this.idDelete = idDelete;
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 }

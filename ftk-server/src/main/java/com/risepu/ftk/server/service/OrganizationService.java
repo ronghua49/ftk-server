@@ -1,18 +1,16 @@
 package com.risepu.ftk.server.service;
 
+import com.risepu.ftk.server.domain.*;
+import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.b.dto.LoginResult;
+import net.lc4ever.framework.remote.annotation.Remote;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.risepu.ftk.server.domain.*;
-import net.lc4ever.framework.remote.annotation.Remote;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.web.b.dto.LoginResult;
 
 
 /**
@@ -201,5 +199,28 @@ public interface OrganizationService {
     void saveOrUpdateOrgStream(OrganizationStream organizationStream);
 
 
+    /**
+     * 根据参数查询企业注册信息
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    PageResult<OrganizationStream> findOrgRegStreamByMap(Map<String,Object> map, Integer pageNo, Integer pageSize);
 
+    /**
+     * 根据参数查询企业和个人注册用户
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    PageResult<RegisterUserReport> findRegUserByMap(Map<String,Object> map, Integer pageNo, Integer pageSize);
+
+
+    /**
+     * 保存企业注册信息到报表
+     * @param report
+     */
+    void saveRegisterReport(RegisterUserReport report);
 }

@@ -1,10 +1,7 @@
 
 package com.risepu.ftk.web.p.controller;
 
-import com.risepu.ftk.server.domain.AuthorizationStream;
-import com.risepu.ftk.server.domain.Organization;
-import com.risepu.ftk.server.domain.PersonalUser;
-import com.risepu.ftk.server.domain.ProofDocument;
+import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.ChainService;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.PersonalUserService;
@@ -95,6 +92,11 @@ public class PersonalUserController implements PersonzalUserApi  {
 					user.setId(no);
 					user.setMobile(loginRequest.getPhone());
 					personalService.savePersonUser(user);
+
+					RegisterUserReport report = new RegisterUserReport();
+					report.setUserName(loginRequest.getPhone());
+					report.setUserType(PersonalUser.PERSONAL_USER_TYPE);
+					organizationService.saveRegisterReport(report);
 					personalUser= user;
 				}
 				request.getSession().setAttribute(Constant.getSessionCurrUser(), personalUser);

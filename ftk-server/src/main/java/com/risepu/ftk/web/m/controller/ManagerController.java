@@ -106,9 +106,7 @@ public class ManagerController implements ManagerControllerApi {
 	/**
 	 * 根据参数查询认证的企业信息
 	 *
-	 * @param orgName    企业名
-	 * @param legalPerson 法人
-	 * @Param industry 行业分类
+	 * @param key    企业名
 	 * @param pageNo
 	 * @param pageSize
 	 * @param startTime 开始时间
@@ -117,12 +115,10 @@ public class ManagerController implements ManagerControllerApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String orgName, String legalPerson, String industry, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) {
+	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String key, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) {
 		Map<String, Object> map = new HashMap<>();
 
-		map.put("key", orgName);
-		map.put("legalPerson",legalPerson);
-		map.put("industry",industry);
+		map.put("key", key);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("state", state);

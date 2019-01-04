@@ -50,9 +50,7 @@ public interface ManagerControllerApi {
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = PageResult.class) })
 	@RequestMapping(path = "/queryList/{pageNo:\\d+}")
 	@ResponseBody
-	ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(@RequestParam(required = false) String orgName,
-																				  @RequestParam(required = false) String legalPerson,
-																				  @RequestParam(required = false) String industry,
+	ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(@RequestParam(required = false) String key,
 																				  @PathVariable Integer pageNo,
 																				  @RequestParam Integer pageSize,
 																				  @RequestParam(required = false) String startTime,

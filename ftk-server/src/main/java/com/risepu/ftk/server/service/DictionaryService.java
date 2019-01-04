@@ -3,23 +3,26 @@ package com.risepu.ftk.server.service;
 import com.risepu.ftk.server.domain.Dictionary;
 import com.risepu.ftk.server.domain.DictionaryData;
 import com.risepu.ftk.utils.PageResult;
+import net.lc4ever.framework.remote.annotation.Remote;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ronghaohua
  */
+@Remote(path = "/dict")
 public interface DictionaryService {
 
 
     /**
      * 根据参数查询行业分类列表
-     * @param key
+     * @param map
      * @param pageNo
      * @param pageSize
      * @return
      */
-    PageResult<Dictionary> queryIndustryClassByParam(String key, Integer pageNo, Integer pageSize);
+    PageResult<Dictionary> queryIndustryClassByParam(Map<String,Object> map, Integer pageNo, Integer pageSize);
 
     /**
      * 添加行业分类
@@ -87,4 +90,29 @@ public interface DictionaryService {
      * @param l
      */
     void delIndustryById(long l);
+
+    /**
+     * 查询所有行业分类
+     * @return
+     */
+    List<Dictionary> findAllIndustry();
+
+    /**
+     * 查询所有二行业分类
+     * @return
+     */
+    List<DictionaryData> queryAllDataList();
+
+    /**
+     * 根据父行业分类code 查询子类集合
+     * @param dictCode
+     * @return
+     */
+    List<DictionaryData> findIndustrysByDictCode(String dictCode);
+
+    /**
+     * 删除一级菜单
+     * @param dictCode
+     */
+    void delClass(String dictCode);
 }

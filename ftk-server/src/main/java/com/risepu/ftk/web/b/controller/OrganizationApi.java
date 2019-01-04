@@ -36,9 +36,9 @@ public interface OrganizationApi {
     @ResponseBody
     ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo, HttpSession session);
 
-    @ApiOperation(value = "登录的跳转", nickname = "loginJump")
-    @RequestMapping(path = "/")
-    void login(HttpServletResponse response) throws IOException;
+//    @ApiOperation(value = "登录的跳转", nickname = "loginJump")
+//    @RequestMapping(path = "/")
+//    void login(HttpServletResponse response) throws IOException;
 
     @ApiOperation(value = "企业登录", nickname = "Orglogin")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = LoginResult.class)})
@@ -47,9 +47,9 @@ public interface OrganizationApi {
     ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) throws IOException;
 
 
-    @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")
-    @RequestMapping(path = "/mine")
-    void loginSuccess(HttpServletResponse response) throws IOException;
+//    @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")
+//    @RequestMapping(path = "/mine")
+//    void loginSuccess(HttpServletResponse response) throws IOException;
 
     @ApiOperation(value = "忘记密码", nickname = "forgetPwd")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})

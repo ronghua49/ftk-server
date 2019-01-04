@@ -16,6 +16,8 @@ import net.lc4ever.framework.domain.TimestampObject;
 @Table(name = "FTK_ORGANIZATION_USER")
 public class OrganizationUser extends TimestampObject<String> {
 
+    public static  Integer ORG_USER_TYPE=0;
+
     /**
      * 手机号
      */
@@ -27,6 +29,11 @@ public class OrganizationUser extends TimestampObject<String> {
      * 根据企业的组织机构代码证查询 对应的企业
      */
     private String organizationId;
+
+    /**
+     * 企业用户类型
+     */
+    private Integer userType=ORG_USER_TYPE;
 
     @Override
     @Id
@@ -56,5 +63,13 @@ public class OrganizationUser extends TimestampObject<String> {
 
     public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
+    }
+    @Column(name = "USER_TYPE",length = 1)
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 }
