@@ -316,6 +316,13 @@ public class ManageTemplateController implements ManageTemplateApi {
         }
         Long simpleTemplateId = crudService.save(simpleTemplate);
         if (simpleTemplateId != null) {
+            Domain domain = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "idCard");
+            SimpleTemplateDomain simpleTemplateDomain = new SimpleTemplateDomain();
+            SimpleTemplateDomain.ID id1 = new SimpleTemplateDomain.ID();
+            id1.setDomainId(domain.getId());
+            id1.setTemplateId(simpleTemplateId);
+            simpleTemplateDomain.setId(id1);
+            crudService.save(simpleTemplateDomain);
             return ResponseEntity.ok(Response.succeed("添加成功"));
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));

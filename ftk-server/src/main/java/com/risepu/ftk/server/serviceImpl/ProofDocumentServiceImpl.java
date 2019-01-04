@@ -76,7 +76,9 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             for (int j = 0; j < documentDataList.size(); j++) {
                 DocumentData documentData = documentDataList.get(j);
                 Domain domain = domainService.selectById(documentData.getId().getDomainId());
-                map.put(domain.getCode(), documentData.getValue());
+                if (domain != null) {
+                    map.put(domain.getCode(), documentData.getValue());
+                }
             }
             list.add(map);
         }

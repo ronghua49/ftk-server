@@ -1,16 +1,26 @@
 package com.risepu.ftk.web.m.dto;
 
 public class DocumentNumber {
-    private String time;
+    private Integer year;
+
+    private Integer month;
 
     private Integer number;
 
-    public String getTime() {
-        return time;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
     }
 
     public Integer getNumber() {
