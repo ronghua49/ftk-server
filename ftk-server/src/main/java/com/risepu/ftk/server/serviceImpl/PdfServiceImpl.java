@@ -236,10 +236,6 @@ public class PdfServiceImpl implements PdfService {
             int index2 = _template.indexOf("}", index);
             String key = _template.substring(index + 2, index2);
             Pdf pdf1 = map1.get(key);
-            if (!list1.contains(key)) {
-                number = index + pdf1.getKey().length();
-                continue;
-            }
             String value = map.get(pdf1.getCode());
             if (number > index) {
                 content = _template.substring(number);

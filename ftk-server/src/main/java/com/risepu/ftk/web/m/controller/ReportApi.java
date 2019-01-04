@@ -26,5 +26,5 @@ public interface ReportApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
     @GetMapping(path = "/getCount")
     @ResponseBody
-    ResponseEntity<Response<List>> getCount(String year);
+    ResponseEntity<Response<List>> getCount(Integer year);
 }

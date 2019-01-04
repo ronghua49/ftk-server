@@ -226,8 +226,12 @@ public class DocumentDataController implements DocumentDataApi {
             ProofDocument proofDocument = new ProofDocument();
             proofDocument.setState(1);
             proofDocument.setFilePath(filePath);
-            proofDocumentService.add(proofDocument);
-            return ResponseEntity.ok(Response.succeed(proofDocument));
+            Long id = proofDocumentService.add(proofDocument);
+            if (id != null) {
+                return ResponseEntity.ok(Response.succeed(proofDocumentService.getDocumentById(id)));
+            } else {
+                return ResponseEntity.ok(Response.failed(400, ""));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.ok(Response.failed(400, ""));
