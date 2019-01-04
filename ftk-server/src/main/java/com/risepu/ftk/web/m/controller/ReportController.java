@@ -63,7 +63,7 @@ public class ReportController implements ReportApi {
     @Override
     public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) {
         Integer firstIndex = pageNo * pageSize;
-        String hql1 = "select a.name,a.id,a.code,b.createTimestamp,b.chainHash,b.personalUser,b.number from Organization a,ProofDocument b where a.id=b.organization";
+        String hql1 = "select a.name,a.id,b.createTimestamp,b.chainHash,b.personalUser,b.number from Organization a,ProofDocument b where a.id=b.organization";
         String hql2 = "select c.name from Template c,ProofDocument d where c.id=d.template";
         if (StringUtils.isNotEmpty(organization)) {
             hql1 += " and a.name like '%" + organization + "%'";
@@ -77,7 +77,8 @@ public class ReportController implements ReportApi {
         if (StringUtils.isNotEmpty(type)) {
             hql1 += " and a.code = '" + type + "'";
         }
-        String hql = "(" + hql1 + ") as e" + " left join " + "(" + hql2 + ") as f on e.b.id=f.d.id";
+//        String hql = "(" + hql1 + ") e" + " left join " + "(" + hql2 + ") f on e.b.id=f.d.id";
+        String hql = "select a.name,a.id,b.createTimestamp,b.chainHash,b.personalUser,b.number.c.name from Organization a,ProofDocument b,Template c where a.id=b.organization and c.id=b.template";
         List list = crudService.hql(firstIndex, pageSize, hql);
         List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
         PageResult<DocumentRequest> pageResult = new PageResult<>();
@@ -102,8 +103,8 @@ public class ReportController implements ReportApi {
             e.printStackTrace();
         }
         map.put("orgName", orgName);
-        map.put("legalPerson",legalPerson);
-        map.put("industry",industry);
+        map.put("legalPerson", legalPerson);
+        map.put("industry", industry);
         map.put("startTime", startTime);
         map.put("endTime", endTime);
         map.put("state", state);

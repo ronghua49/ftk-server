@@ -41,9 +41,8 @@ public interface ReportApi {
     ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type);
 
 
-
     @ApiOperation(value = "企业认证统计", nickname = "orgRegisterReport")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/orgReg/{pageNo:\\d+}")
     @ResponseBody
     ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(@RequestParam(required = false) String orgName,
@@ -57,7 +56,7 @@ public interface ReportApi {
 
 
     @ApiOperation(value = "用户注册统计", nickname = "UserRegisterReport")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/userReg/{pageNo:\\d+}")
     @ResponseBody
     ResponseEntity<Response<PageResult<RegisterUserReport>>> queryRegUser(@RequestParam(required = false) String userType,

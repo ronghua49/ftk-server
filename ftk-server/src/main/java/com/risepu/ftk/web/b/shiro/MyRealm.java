@@ -35,25 +35,25 @@ public class MyRealm extends AuthorizingRealm {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
         String username = usernamePasswordToken.getUsername();
 
-        if(StringUtils.isNumeric(username)){
+        if (StringUtils.isNumeric(username)) {
             OrganizationUser orgUser = organizationService.findOrgUserById(username);
-            if(orgUser==null){
+            if (orgUser == null) {
                 throw new UnknownAccountException("此手机号还未注册，请注册！");
-            }else{
+            } else {
                 logger.info("{}--登录系统", orgUser.getId());
                 //返回简单的 认证信息对象， 当前对象，认证证书，当前类的详情对象名(和传过来的token进行对比)
-                return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(),getName());
+                return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(), getName());
             }
 
-        }else{
+        } else {
             Organization org = organizationService.findAuthenOrgByName(username);
-            if(org==null){
+            if (org == null) {
                 throw new UnknownAccountException("企业不存在，或未认证！");
-            }else{
+            } else {
                 OrganizationUser orgUser = organizationService.findOrgUserByOrgId(org.getId());
                 logger.info("{}--登录系统", org.getName());
                 //返回简单的 认证信息对象， 当前对象，认证证书，当前类的详情对象名(和传过来的token进行对比)
-                return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(),getName());
+                return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(), getName());
             }
 
 
