@@ -230,11 +230,11 @@ public class DocumentDataController implements DocumentDataApi {
             if (id != null) {
                 return ResponseEntity.ok(Response.succeed(proofDocumentService.getDocumentById(id)));
             } else {
-                return ResponseEntity.ok(Response.failed(400, ""));
+                return ResponseEntity.ok(Response.failed(400, "生成失败咯！"));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.ok(Response.failed(400, ""));
+            return ResponseEntity.ok(Response.failed(400, "生成失败"));
         }
     }
 
