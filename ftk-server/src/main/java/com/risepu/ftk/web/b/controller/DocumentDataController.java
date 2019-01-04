@@ -185,7 +185,7 @@ public class DocumentDataController implements DocumentDataApi {
             return ResponseEntity.ok(Response.succeed(proofDocument1));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.ok(Response.failed(400, ""));
+            return ResponseEntity.ok(Response.failed(400, "生成失败"));
         }
     }
 
