@@ -54,7 +54,7 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         Integer firstIndex = pageNo * pageSize;
         List<ProofDocument> proofDocuments1 = new ArrayList<>();
         List proofDocuments = new ArrayList();
-        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from DomainRequest where code = ?1", "name");
+        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
         if (StringUtils.isEmpty(name)) {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 order by createTimestamp desc", organization);
