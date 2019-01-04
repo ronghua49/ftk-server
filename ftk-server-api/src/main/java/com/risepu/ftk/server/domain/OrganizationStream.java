@@ -152,8 +152,8 @@ public class OrganizationStream extends AuditableObject<Long> {
     }
 
 
-    private String orgType;
 
+    private String orgType;
     private String signSts;
     private String registedCapital;
     private String scope;
@@ -162,7 +162,8 @@ public class OrganizationStream extends AuditableObject<Long> {
     private String staffSize;
     private String website ;
 
-    private Long dictdataId;
+    /**  行业编号*/
+    private String code;
 
 
     @Column(name = "ORG_TYPE", length = 20)
@@ -239,12 +240,12 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.website = website;
     }
 
-    @Column(name = "DICT_DATA_ID")
-    public Long getDictdataId() {
-        return dictdataId;
+    @Column(name = "CODE")
+    public String getCode() {
+        return code;
     }
 
-    public void setDictdataId(Long dictdataId) {
-        this.dictdataId = dictdataId;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

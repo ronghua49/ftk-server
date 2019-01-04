@@ -1,21 +1,13 @@
 package com.risepu.ftk.server.serviceImpl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.risepu.ftk.server.domain.*;
+import com.risepu.ftk.server.domain.Dictionary;
+import com.risepu.ftk.server.service.OrganizationService;
+import com.risepu.ftk.utils.ConfigUtil;
+import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.b.dto.LoginResult;
+import net.lc4ever.framework.format.DateFormatter;
+import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -25,13 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.risepu.ftk.server.service.OrganizationService;
-import com.risepu.ftk.utils.ConfigUtil;
-import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.web.b.dto.LoginResult;
-
-import net.lc4ever.framework.format.DateFormatter;
-import net.lc4ever.framework.service.GenericCrudService;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author ronghaohua
@@ -217,8 +207,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         Integer state = (Integer) map.get("state");
-        String legalPerson = (String) map.get("legalPerson");
-        String industry = (String) map.get("industry");
+
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
         Date endDate;
@@ -423,5 +412,131 @@ public class OrganizationServiceImpl implements OrganizationService {
         crudService.saveOrUpdate(organizationStream);
     }
 
+    /**
+     * 根据参数查询企业注册信息
+     *
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageResult<OrganizationStream> findOrgRegStreamByMap(Map<String, Object> map, Integer pageNo, Integer pageSize) {
+        Integer firstIndex = (pageNo) * pageSize;
+        String  hql = "from OrganizationStream where 1=1 ";
+        String hql1 = " order by createTimestamp desc";
+        String hql2 = "select count(*) ";
+
+
+        String orgName = (String) map.get("orgName");
+        String legalPerson = (String) map.get("legalPerson");
+        String industry = (String) map.get("industry");
+        String startTime = (String) map.get("startTime");
+        String endTime = (String) map.get("endTime");
+        Integer state = (Integer) map.get("state");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String nextDate=null;
+        if (StringUtils.isNotEmpty(startTime)) {
+            try {
+                Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
+                nextDate =  format.format(next);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        if(StringUtils.isNotEmpty(orgName)){
+            hql+="and name like '%"+orgName+"%'";
+        }
+
+        if(StringUtils.isNotEmpty(legalPerson)){
+            hql+=" and legalPerson like '%"+legalPerson+"%'";
+        }
+        if(StringUtils.isNotEmpty(industry)){
+            hql+=" and code in (select code from DictionaryData where dictId =(select id from Dictionary where dictCode = '"+industry+"'))";
+        }
+        if(StringUtils.isNotEmpty(startTime)){
+            hql+=" and createTimestamp  between '"+startTime+"' and '"+nextDate+"'";
+        }
+
+        if(state!=null){
+            hql+=" and state= "+state;
+        }
+        List<OrganizationStream> organizationStreams = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql+hql1);
+        int total= crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
+        PageResult<OrganizationStream> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(total, pageSize);
+        pageResult.setTotalElements(total);
+        pageResult.setContent(organizationStreams);
+        return pageResult;
+    }
+
+    /**
+     * 根据参数查询 注册用户
+     *
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageResult<RegisterUserReport> findRegUserByMap(Map<String, Object> map, Integer pageNo, Integer pageSize) {
+
+        Integer firstIndex = (pageNo) * pageSize;
+
+        String userType = (String) map.get("userType");
+        String startTime = (String) map.get("startTime");
+        String endTime = (String) map.get("endTime");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String nextDate=null;
+        if (StringUtils.isNotEmpty(startTime)) {
+            try {
+                Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
+                nextDate =  format.format(next);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String hql = "from RegisterUserReport where 1=1 ";
+        String prefixSql = "select count(*) ";
+
+        if(StringUtils.isNotEmpty(userType)){
+            hql+="and userType = "+Integer.parseInt(userType);
+        }
+        if(StringUtils.isNotEmpty(startTime)){
+            hql+="and createTimestamp between '"+startTime+"' and '"+nextDate+"'";
+        }
+
+        hql+=" order by createTimestamp desc";
+
+        List<RegisterUserReport> reportList = crudService.hql(RegisterUserReport.class, firstIndex, pageSize, hql);
+        int total= crudService.uniqueResultHql(Long.class, prefixSql + hql).intValue();
+
+        PageResult<RegisterUserReport> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(total, pageSize);
+        pageResult.setTotalElements(total);
+        pageResult.setContent(reportList);
+        return pageResult;
+    }
+
+    /**
+     * 保存企业注册信息到报表
+     *
+     * @param report
+     */
+    @Override
+    public void saveRegisterReport(RegisterUserReport report) {
+        crudService.save(report);
+    }
 
 }

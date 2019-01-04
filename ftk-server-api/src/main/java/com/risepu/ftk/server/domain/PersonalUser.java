@@ -14,6 +14,8 @@ import net.lc4ever.framework.domain.TimestampObject;
 @Table(name = "FTK_PERSONAL_USER")
 public class PersonalUser extends TimestampObject<String> {
 
+    public static  Integer PERSONAL_USER_TYPE=1;
+
     /**
      * 个人用户唯一标识: 当前存储数据为身份证号码
      */
@@ -27,6 +29,11 @@ public class PersonalUser extends TimestampObject<String> {
     private String password;
 
     private String userName;
+
+    /**
+     * 企业用户类型
+     */
+    private Integer userType=PERSONAL_USER_TYPE;
 
     @Id
     @Column(name = "ID", length = 128)
@@ -65,6 +72,15 @@ public class PersonalUser extends TimestampObject<String> {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @Column(name = "USER_TYPE",length = 1)
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 
 }

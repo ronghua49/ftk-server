@@ -34,8 +34,6 @@ public class Dictionary extends AuditableObject<Long> {
      */
     private String  description;
 
-
-
     @Id
     @Column(name = "ID", precision = 19)
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -16,20 +16,19 @@ import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.util.SavedRequest;
-import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -81,6 +80,10 @@ public class OrganizationController implements OrganizationApi {
 
             if (orgId == null) {
                 organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
+                RegisterUserReport report = new RegisterUserReport();
+                report.setUserName(registVo.getMobile());
+                report.setUserType(OrganizationUser.ORG_USER_TYPE);
+                organizationService.saveRegisterReport(report);
                 logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
 
                 return ResponseEntity.ok(Response.succeed("注册成功！"));
@@ -93,15 +96,15 @@ public class OrganizationController implements OrganizationApi {
         }
     }
 
-    @Override
-    public void login(HttpServletResponse response) throws IOException {
-        Subject subject = SecurityUtils.getSubject();
-        if(subject.isRemembered()||subject.isAuthenticated()){
-            response.sendRedirect("/ftk/b");
-        }
-        response.sendRedirect("/ftk/b/#/login");
-
-    }
+//    @Override
+//    public void login(HttpServletResponse response) throws IOException {
+//        Subject subject = SecurityUtils.getSubject();
+//        if(subject.isRemembered()||subject.isAuthenticated()){
+//            response.sendRedirect("/ftk/b");
+//        }
+//        response.sendRedirect("/ftk/b/#/login");
+//
+//    }
 
     /**
      * 企业登录
@@ -139,7 +142,10 @@ public class OrganizationController implements OrganizationApi {
             if(!StringUtils.isNumeric(loginRequest.getName())){
                  org = organizationService.findAuthenOrgByName(loginRequest.getName());
             }
-            org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
+
+            if(orgUser.getOrganizationId()!=null){
+                org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
+            }
             loginResult.setOrganization(org);
 
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
@@ -160,10 +166,10 @@ public class OrganizationController implements OrganizationApi {
         return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
     }
 
-    @Override
-    public void loginSuccess(HttpServletResponse response)throws IOException {
-        response.sendRedirect("/ftk/b");
-    }
+//    @Override
+//    public void loginSuccess(HttpServletResponse response)throws IOException {
+//        response.sendRedirect("/ftk/b");
+//    }
 
     private void setCurrUserToSession(HttpSession session, OrganizationUser organizationUser) {
         session.setAttribute(Constant.getSessionCurrUser(), organizationUser);

@@ -37,10 +37,7 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <!--配置安全管理器-->
         <property name="securityManager" ref="securityManager"/>
-        <!--配置登录的URL-->
-        <property name="loginUrl" value="/api/org"/>
-        <!--配置登录成功的URL-->
-        <property name="successUrl" value="/api/org/mine"/>
+        <property name="loginUrl" value="/org/api/login"/>
 
         <property name="filterChainDefinitions">
             <value>
@@ -49,4 +46,6 @@
             </value>
         </property>
     </bean>
+
+    <!--<bean id="myAuthenticationFilter" class="com.risepu.ftk.web.b.shiro.MyAuthenticationFilter"/>-->
 </beans>

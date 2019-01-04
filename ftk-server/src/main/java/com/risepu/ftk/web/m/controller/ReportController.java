@@ -1,5 +1,9 @@
+
 package com.risepu.ftk.web.m.controller;
 
+import com.risepu.ftk.server.domain.OrganizationStream;
+import com.risepu.ftk.server.domain.RegisterUserReport;
+import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.m.dto.DocumentNumber;
@@ -11,9 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * @author L-heng
@@ -21,8 +24,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/report")
 public class ReportController implements ReportApi {
+
+
     @Autowired
     private GenericCrudService crudService;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     @Override
     public ResponseEntity<Response<List>> getCount(Integer startYear, Integer endYear) {
@@ -79,6 +87,39 @@ public class ReportController implements ReportApi {
         pageResult.setTotalPages(list1.size(), pageSize);
         pageResult.setTotalElements(list1.size());
         pageResult.setContent(list);
+        return ResponseEntity.ok(Response.succeed(pageResult));
+    }
+
+
+    @Override
+    public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String orgName, String legalPerson, String industry, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) {
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+            orgName = new String(orgName.getBytes("ISO-8859-1"), "utf-8");
+            legalPerson = new String(legalPerson.getBytes("ISO-8859-1"), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        map.put("orgName", orgName);
+        map.put("legalPerson",legalPerson);
+        map.put("industry",industry);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        map.put("state", state);
+        PageResult<OrganizationStream> pageResult = organizationService.findOrgRegStreamByMap(map, pageNo, pageSize);
+
+        return ResponseEntity.ok(Response.succeed(pageResult));
+    }
+
+    @Override
+    public ResponseEntity<Response<PageResult<RegisterUserReport>>> queryRegUser(String userType, Integer pageNo, Integer pageSize, String startTime, String endTime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userType", userType);
+        map.put("startTime", startTime);
+        map.put("endTime", endTime);
+        PageResult<RegisterUserReport> pageResult = organizationService.findRegUserByMap(map, pageNo, pageSize);
+
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
 }

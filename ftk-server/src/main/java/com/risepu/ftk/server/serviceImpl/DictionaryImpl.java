@@ -8,13 +8,17 @@ import com.risepu.ftk.server.domain.DictionaryData;
 import com.risepu.ftk.server.service.DictionaryService;
 import com.risepu.ftk.utils.PageResult;
 import net.lc4ever.framework.service.GenericCrudService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ronghaohua
  */
+@Service
 public class DictionaryImpl implements DictionaryService {
 
 
@@ -28,17 +32,29 @@ public class DictionaryImpl implements DictionaryService {
     /**
      * 根据参数查询行业分类列表
      *
-     * @param key
+     * @param map
      * @param pageNo
      * @param pageSize
      * @return
      */
     @Override
-    public PageResult<Dictionary> queryIndustryClassByParam(String key, Integer pageNo, Integer pageSize) {
+    public PageResult<Dictionary> queryIndustryClassByParam(Map<String,Object> map, Integer pageNo, Integer pageSize) {
+
+        String dictCode = (String) map.get("dictCode");
+        String name = (String) map.get("name");
 
         int firstIndex = pageNo*pageSize;
-        int total = crudService.uniqueResultHql(Long.class, "select count(*) from Dictionary where name like ?1","%" + key + "%").intValue();
-        List<Dictionary> dictionaryList = crudService.hql(Dictionary.class, firstIndex, pageSize, "from Dictionary where name like ?1 order by dictCode acs", "%" + key + "%");
+        String hql="from Dictionary where 1=1 ";
+        String prefix = "select count(*) ";
+        if(StringUtils.isNotEmpty(dictCode)){
+            hql+="and dictCode like '%"+dictCode+"%'";
+        }
+        if(StringUtils.isNotEmpty(name)){
+            hql+=" and name like '%"+name+"%'";
+        }
+
+        int total = crudService.uniqueResultHql(Long.class, prefix+hql).intValue();
+        List<Dictionary> dictionaryList = crudService.hql(Dictionary.class, firstIndex, pageSize, hql);
         PageResult<Dictionary> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);
@@ -46,7 +62,7 @@ public class DictionaryImpl implements DictionaryService {
         pageResult.setTotalPages(total, pageSize);
         pageResult.setTotalElements(total);
         pageResult.setContent(dictionaryList);
-        return null;
+        return pageResult;
     }
 
     /**
@@ -77,7 +93,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public Dictionary findIndustryClassByCode(String dictCode) {
-        return crudService.uniqueResultSql(Dictionary.class,"from Dictionary where dictCode =?1",dictCode);
+        return crudService.uniqueResultHql(Dictionary.class,"from Dictionary where dictCode =?1",dictCode);
     }
 
     /**
@@ -153,7 +169,49 @@ public class DictionaryImpl implements DictionaryService {
     @Override
     public void delIndustryById(long l) {
         DictionaryData data = crudService.get(DictionaryData.class, l);
-        data.setIdDelete(true);
+        data.setDelete(true);
         crudService.update(data);
+    }
+
+    /**
+     * 查询所有行业分类
+     *
+     * @return
+     */
+    @Override
+    public List<Dictionary> findAllIndustry() {
+        return crudService.hql(Dictionary.class,"from Dictionary");
+    }
+
+    /**
+     * 查询所有二行业分类
+     *
+     * @return
+     */
+    @Override
+    public List<DictionaryData> queryAllDataList() {
+        return crudService.hql(DictionaryData.class,"from DictionaryData");
+    }
+
+    /**
+     * 根据父行业分类code 查询子类集合
+     *
+     * @param dictCode
+     * @return
+     */
+    @Override
+    public List<DictionaryData> findIndustrysByDictCode(String dictCode) {
+        return crudService.hql(DictionaryData.class,"from DictionaryData where dictId in (select id from Dictionary where dictCode = ?1) ",dictCode);
+    }
+
+    /**
+     * 删除一级菜单
+     *
+     * @param dictCode
+     */
+    @Override
+    public void delClass(String dictCode) {
+        Dictionary dictionary = crudService.uniqueResultHql(Dictionary.class, "from Dictionary where dictCode =?1", dictCode);
+        crudService.delete(dictionary);
     }
 }
