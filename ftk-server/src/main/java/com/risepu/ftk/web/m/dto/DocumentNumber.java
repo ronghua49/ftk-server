@@ -5,7 +5,16 @@ public class DocumentNumber {
 
     private Integer month;
 
-    private Integer number;
+    private Long number;
+
+    public DocumentNumber() {
+    }
+
+    public DocumentNumber(Integer year, Integer month, Long number) {
+        this.year = year;
+        this.month = month;
+        this.number = number;
+    }
 
     public Integer getYear() {
         return year;
@@ -23,11 +32,11 @@ public class DocumentNumber {
         this.month = month;
     }
 
-    public Integer getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 }

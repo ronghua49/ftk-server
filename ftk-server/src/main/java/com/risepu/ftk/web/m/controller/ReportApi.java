@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -24,10 +26,10 @@ public interface ReportApi {
      * @return 模板JavaBean
      */
     @ApiOperation(value = "证明统计汇总表", nickname = "getCount")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
-    @GetMapping(path = "/getCount")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
+    @GetMapping(path = "/getCount/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<List>> getCount(Integer startYear, Integer endYear);
+    ResponseEntity<Response<PageResult>> getCount(@PathVariable Integer pageNo, Integer pageSize, Integer startYear, Integer endYear);
 
     /**
      * 企业单据统计明细表
@@ -35,10 +37,10 @@ public interface ReportApi {
      * @return 模板JavaBean
      */
     @ApiOperation(value = "企业单据统计明细表", nickname = "getDocument")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
-    @GetMapping(path = "/getDocument")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
+    @GetMapping(path = "/getDocument/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type);
+    ResponseEntity<Response<PageResult>> getDocument(@PathVariable Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) throws UnsupportedEncodingException, ParseException;
 
 
     @ApiOperation(value = "企业认证统计", nickname = "orgRegisterReport")
