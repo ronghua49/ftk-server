@@ -128,6 +128,7 @@ public class OrganizationController implements OrganizationApi {
             String userId = orgUser.getId();
 
             /** 实现单一登录，剔除效果*/
+
             if (SessionListener.sessionMap.get(userId) != null) {
                 BasicAction.forceLogoutUser(userId);
                 SessionListener.sessionMap.put(userId, request.getSession());
@@ -320,18 +321,17 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(400, "该账号已经和企业绑定，不得重复申请！"));
         }
 
-        /** 当前提交的公司名称是否已经审核成功*/
-        Organization org2 = organizationService.findAuthenOrgByName(organizationStream.getName());
-        if (org2 != null) {
+        /** 公司名称在审核中和审核成功的不可重复*/
+        OrganizationStream stream = organizationService.findAuthStreamByNameAndState(organizationStream.getName(),OrganizationStream.CHECKING_STATE,OrganizationStream.CHECK_FAIL_STATE);
+
+        if (stream != null&&!stream.getId().equals(organizationStream.getId())) {
             return ResponseEntity.ok(Response.failed(400, "该公司名已经被注册，不得重复！"));
         }
-        /** 当前组织机构代码证是否在审核*/
-        List<OrganizationStream> stream = organizationService.findAuthStreamByOrgnization(organizationStream.getOrganization(), OrganizationStream.CHECKING_STATE);
-        if (stream != null && stream.size() != 0) {
-            return ResponseEntity.ok(Response.failed(400, "该组织机构代码证正在审核中，不得重复！"));
-        }
+
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());
+
+
         organizationService.saveOrUpdateOrgStream(organizationStream);
 
         logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
