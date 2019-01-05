@@ -165,7 +165,7 @@ public class DocumentDataController implements DocumentDataApi {
                 proofDocument1.setIndex(1);
                 n = String.format("%03d", proofDocument1.getIndex());
             }
-            String number = "ZKTXZ-" + convert.toUpperCase() + "-" + date3 + n;
+            String number = "ZCTXZ-" + convert.toUpperCase() + "-" + date3 + n;
 
             String hash = chainService.sign(proofDocumentId);
 
