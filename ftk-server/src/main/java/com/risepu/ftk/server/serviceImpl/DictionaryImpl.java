@@ -148,7 +148,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public DictionaryData findIndustryByCode(String code) {
-        return crudService.uniqueResultSql(DictionaryData.class,"from DictionaryData where code =?1",code);
+        return crudService.uniqueResultHql(DictionaryData.class,"from DictionaryData where code =?1",code);
     }
 
     /**
@@ -169,8 +169,8 @@ public class DictionaryImpl implements DictionaryService {
     @Override
     public void delIndustryById(long l) {
         DictionaryData data = crudService.get(DictionaryData.class, l);
-        data.setDelete(true);
-        crudService.update(data);
+
+        crudService.delete(data);
     }
 
     /**
@@ -213,5 +213,16 @@ public class DictionaryImpl implements DictionaryService {
     public void delClass(String dictCode) {
         Dictionary dictionary = crudService.uniqueResultHql(Dictionary.class, "from Dictionary where dictCode =?1", dictCode);
         crudService.delete(dictionary);
+    }
+
+    /**
+     * 根据id查询 data
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public DictionaryData findIndustryById(Integer id) {
+        return crudService.get(DictionaryData.class,id.longValue());
     }
 }

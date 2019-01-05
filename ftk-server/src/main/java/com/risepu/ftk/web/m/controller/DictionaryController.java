@@ -42,12 +42,9 @@ public class DictionaryController implements DictionaryApi {
         Map<String, Object> map = new HashMap<>();
         map.put("dictCode", dictCode);
         map.put("name", name);
-
         PageResult<Dictionary> pageResult = dictionaryService.queryIndustryClassByParam(map, pageNo, pageSize);
-
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
-
     @Override
     public ResponseEntity<Response<List<CodeAndName>>> findAll() {
         List<Dictionary> dictionaryList = dictionaryService.findAllIndustry();
@@ -58,7 +55,6 @@ public class DictionaryController implements DictionaryApi {
             codeAndName.setName(dict.getName());
             codeAndNames.add(codeAndName);
         }
-
         return ResponseEntity.ok(Response.succeed(codeAndNames));
     }
 
@@ -115,6 +111,12 @@ public class DictionaryController implements DictionaryApi {
     }
 
     @Override
+    public ResponseEntity<Response<DictionaryData>> queryOne(Integer id) {
+        DictionaryData data = dictionaryService.findIndustryById(id);
+        return ResponseEntity.ok(Response.succeed(data));
+    }
+
+    @Override
     public ResponseEntity<Response<String>> delClass(String dictCode) {
         List<DictionaryData> dataList = dictionaryService.findIndustrysByDictCode(dictCode);
         if (dataList != null && !dataList.isEmpty()) {
@@ -156,7 +158,6 @@ public class DictionaryController implements DictionaryApi {
 
     @Override
     public ResponseEntity<Response<String>> delIndustry(Integer id) {
-
         dictionaryService.delIndustryById(id.longValue());
         return ResponseEntity.ok(Response.succeed("删除成功"));
     }
