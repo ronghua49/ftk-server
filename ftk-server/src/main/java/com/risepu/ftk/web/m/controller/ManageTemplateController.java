@@ -320,15 +320,18 @@ public class ManageTemplateController implements ManageTemplateApi {
                 Domain domain1 = new Domain();
                 domain1.setCode("idCard");
                 domain1.setLabel("身份证号");
-                domainService.add(domain1);
+                Long add = domainService.add(domain1);
+                if (add != null) {
+                    Domain domain2 = domainService.selectById(add);
+                    SimpleTemplateDomain simpleTemplateDomain = new SimpleTemplateDomain();
+                    SimpleTemplateDomain.ID id1 = new SimpleTemplateDomain.ID();
+                    id1.setDomainId(domain2.getId());
+                    id1.setTemplateId(simpleTemplateId);
+                    simpleTemplateDomain.setId(id1);
+                    crudService.save(simpleTemplateDomain);
+                    return ResponseEntity.ok(Response.succeed("添加成功"));
+                }
             }
-            SimpleTemplateDomain simpleTemplateDomain = new SimpleTemplateDomain();
-            SimpleTemplateDomain.ID id1 = new SimpleTemplateDomain.ID();
-            id1.setDomainId(domain.getId());
-            id1.setTemplateId(simpleTemplateId);
-            simpleTemplateDomain.setId(id1);
-            crudService.save(simpleTemplateDomain);
-            return ResponseEntity.ok(Response.succeed("添加成功"));
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
