@@ -151,9 +151,10 @@ public class DocumentDataController implements DocumentDataApi {
                 dateList.add(ft3.format(list1.get(i).getCreateTimestamp()));
                 organizationList.add(list1.get(i).getOrganization());
             }
-
+            List list2 = crudService.hql("select name from Template where id in(select template from ProofDocument where organization = ?1)", user.getOrganizationId());
+            String templateName = (String) crudService.uniqueResultHql("select name from Template where id = ?1", proofDocument1.getTemplate());
             String n = "";
-            if (dateList.contains(date3) && organizationList.contains(user.getOrganizationId())) {
+            if (dateList.contains(date3) && organizationList.contains(user.getOrganizationId()) && list2.contains(templateName)) {
                 SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd");
                 Date date2 = DateFormatter.startOfDay(DateFormatter.nextDay(new Date()));
                 String time = ft2.format(date2);
