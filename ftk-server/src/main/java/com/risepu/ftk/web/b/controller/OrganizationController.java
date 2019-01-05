@@ -119,6 +119,7 @@ public class OrganizationController implements OrganizationApi {
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
 
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(),password,true);
+        usernamePasswordToken.setRememberMe(true);
         LoginResult loginResult = new LoginResult();
         try {
             subject.login(usernamePasswordToken);
@@ -167,7 +168,7 @@ public class OrganizationController implements OrganizationApi {
     }
 
     @Override
-    public ResponseEntity<Response<LoginResult>> loginSuccess() {
+    public ResponseEntity<Response<LoginResult>> loginSuccess(HttpSession session) {
         LoginResult loginResult = new LoginResult();
         Subject subject = SecurityUtils.getSubject();
         OrganizationUser user = (OrganizationUser) subject.getPrincipal();
@@ -177,6 +178,8 @@ public class OrganizationController implements OrganizationApi {
         }
         loginResult.setOrganization(org);
         loginResult.setOrganizationUser(user);
+
+        setCurrUserToSession(session,user);
 
         return  ResponseEntity.ok(Response.succeed(loginResult));
     }
@@ -294,11 +297,9 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpSession session) {
         Subject subject = SecurityUtils.getSubject();
-        boolean is  = subject.isRemembered();
-        if(subject.isRemembered()){
-            OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-            setCurrUserToSession(session,orgUser);
-        }
+
+        OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
+        setCurrUserToSession(session,orgUser);
 
 
 

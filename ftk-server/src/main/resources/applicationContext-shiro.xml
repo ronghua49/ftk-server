@@ -51,7 +51,8 @@
         <property name="filterChainDefinitions">
             <value>
                 /favicon.ico = anon
-                /api/org = authc
+                /api/org/auth/check = anon
+                /api/org = user
                 /** = anon
             </value>
         </property>

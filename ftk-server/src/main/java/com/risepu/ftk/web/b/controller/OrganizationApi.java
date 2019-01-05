@@ -50,7 +50,7 @@ public interface OrganizationApi {
 
     @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")
     @RequestMapping(path = "/loginSuccess")
-    ResponseEntity<Response<LoginResult>> loginSuccess();
+    ResponseEntity<Response<LoginResult>> loginSuccess(HttpSession session);
 
     @ApiOperation(value = "忘记密码", nickname = "forgetPwd")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
