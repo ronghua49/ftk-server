@@ -11,13 +11,19 @@ public class VerifyHistory {
 
     private String number;
 
-
-
     private Date createTimestamp;
 
     private String idCard;
 
+    public VerifyHistory() {
+    }
 
+    public VerifyHistory(String chainHash, String number, Date createTimestamp, String idCard) {
+        this.chainHash = chainHash;
+        this.number = number;
+        this.createTimestamp = createTimestamp;
+        this.idCard = idCard;
+    }
 
     public String getChainHash() {
         return chainHash;
@@ -26,8 +32,6 @@ public class VerifyHistory {
     public void setChainHash(String chainHash) {
         this.chainHash = chainHash;
     }
-
-
 
     public Date getCreateTimestamp() {
         return createTimestamp;
