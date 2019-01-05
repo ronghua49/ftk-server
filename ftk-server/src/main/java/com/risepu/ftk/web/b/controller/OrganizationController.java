@@ -285,7 +285,6 @@ public class OrganizationController implements OrganizationApi {
             e.printStackTrace();
             return ResponseEntity.ok(Response.failed(9, "图片下载失败"));
         }
-
     }
 
     /**
@@ -300,9 +299,6 @@ public class OrganizationController implements OrganizationApi {
 
         OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
         setCurrUserToSession(session,orgUser);
-
-
-
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
             throw new NotLoginException();

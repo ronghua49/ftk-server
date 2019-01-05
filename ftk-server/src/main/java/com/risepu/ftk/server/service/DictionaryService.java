@@ -115,4 +115,11 @@ public interface DictionaryService {
      * @param dictCode
      */
     void delClass(String dictCode);
+
+    /**
+     * 根据id查询 data
+     * @param id
+     * @return
+     */
+    DictionaryData findIndustryById(Integer id);
 }

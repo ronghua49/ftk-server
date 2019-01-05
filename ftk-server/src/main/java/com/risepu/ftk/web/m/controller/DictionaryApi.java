@@ -61,6 +61,18 @@ public interface DictionaryApi {
     @ResponseBody
     ResponseEntity<Response<String>>editClass(@RequestBody Dictionary dictionary);
 
+    @ApiOperation(value = "删除行业分类", nickname = "del")
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
+    @RequestMapping(path = "/delClass")
+    @ResponseBody
+    ResponseEntity<Response<String>>delClass(@RequestParam String dictCode);
+
+    @ApiOperation(value = "查询所有二级行业", nickname = "secondClass")
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = List.class) })
+    @RequestMapping(path = "/allSecondclass")
+    @ResponseBody
+    ResponseEntity<Response<List<CodeAndName>>>allSecondclass();
+
 
     @ApiOperation(value = "单个行业分类详情", nickname = "details")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
@@ -69,19 +81,13 @@ public interface DictionaryApi {
     ResponseEntity<Response<List<DictionaryData>>>detail(@RequestParam(required = false) String key, @PathVariable Integer dictId);
 
 
-    @ApiOperation(value = "删除行业分类", nickname = "del")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-    @RequestMapping(path = "/delClass")
+
+
+    @ApiOperation(value = "单个行业", nickname = "oneIndustry")
+    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = DictionaryData.class) })
+    @RequestMapping(path = "/one")
     @ResponseBody
-    ResponseEntity<Response<String>>delClass(@RequestParam String dictCode);
-
-
-    @ApiOperation(value = "查询所有二级行业", nickname = "secondClass")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = List.class) })
-    @RequestMapping(path = "/allSecondclass")
-    @ResponseBody
-    ResponseEntity<Response<List<CodeAndName>>>allSecondclass();
-
+    ResponseEntity<Response<DictionaryData>>queryOne(@RequestParam Integer id);
 
     @ApiOperation(value = "增加行业", nickname = "addIndustry")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
@@ -98,9 +104,9 @@ public interface DictionaryApi {
 
     @ApiOperation(value = "删除行业", nickname = "delIndustry")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-    @RequestMapping(path = "/delIndustry/{id:\\d+}")
+    @RequestMapping(path = "/delIndustry")
     @ResponseBody
-    ResponseEntity<Response<String>>delIndustry(@PathVariable Integer id);
+    ResponseEntity<Response<String>>delIndustry(@RequestParam Integer id);
 
 
 }

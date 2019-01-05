@@ -214,4 +214,15 @@ public class DictionaryImpl implements DictionaryService {
         Dictionary dictionary = crudService.uniqueResultHql(Dictionary.class, "from Dictionary where dictCode =?1", dictCode);
         crudService.delete(dictionary);
     }
+
+    /**
+     * 根据id查询 data
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public DictionaryData findIndustryById(Integer id) {
+        return crudService.get(DictionaryData.class,id.longValue());
+    }
 }

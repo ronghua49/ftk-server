@@ -95,6 +95,13 @@ public class DictionaryController implements DictionaryApi {
     }
 
     @Override
+    public ResponseEntity<Response<DictionaryData>> queryOne(Integer id) {
+        DictionaryData data = dictionaryService.findIndustryById(id);
+
+        return ResponseEntity.ok(Response.succeed(data));
+    }
+
+    @Override
     public ResponseEntity<Response<String>> delClass(String dictCode) {
         List<DictionaryData> dataList = dictionaryService.findIndustrysByDictCode(dictCode);
         if(dataList!=null&&!dataList.isEmpty()){
