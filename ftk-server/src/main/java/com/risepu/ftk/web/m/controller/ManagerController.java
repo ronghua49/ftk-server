@@ -154,6 +154,8 @@ public class ManagerController implements ManagerControllerApi {
 			organization.setLicenseImgName(stream.getLicenseImgName());
 			organization.setId(stream.getOrganization());
 
+            organization.setDictCode(organizationStream.getDictCode());
+			organization.setCode(organizationStream.getCode());
 			organization.setInsuranceNum(organizationStream.getInsuranceNum());
 			organization.setOrgType(organizationStream.getOrgType());
 			organization.setRegistedCapital(organizationStream.getRegistedCapital());
@@ -166,6 +168,8 @@ public class ManagerController implements ManagerControllerApi {
 			organizationService.save(organization);
 		}
 
+		stream.setDictCode(organizationStream.getDictCode());
+		stream.setCode(organizationStream.getCode());
 		stream.setState(organizationStream.getState());
 		stream.setInsuranceNum(organizationStream.getInsuranceNum());
 		stream.setOrgType(organizationStream.getOrgType());

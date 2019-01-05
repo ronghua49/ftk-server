@@ -35,6 +35,7 @@ public class MyRealm extends AuthorizingRealm {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
         String username = usernamePasswordToken.getUsername();
 
+
         if (StringUtils.isNumeric(username)) {
             OrganizationUser orgUser = organizationService.findOrgUserById(username);
             if (orgUser == null) {

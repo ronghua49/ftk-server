@@ -162,9 +162,11 @@ public class OrganizationStream extends AuditableObject<Long> {
     private String staffSize;
     private String website ;
 
-    /**  行业编号*/
+    /**  行业二级编号*/
     private String code;
 
+    /** 行业一级编号 */
+    private String dictCode;
 
     @Column(name = "ORG_TYPE", length = 20)
     public String getOrgType() {
@@ -247,5 +249,14 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @Column(name = "DICT_CODE")
+    public String getDictCode() {
+        return dictCode;
+    }
+
+    public void setDictCode(String dictCode) {
+        this.dictCode = dictCode;
     }
 }

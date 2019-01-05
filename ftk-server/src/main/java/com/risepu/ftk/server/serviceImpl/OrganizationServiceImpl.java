@@ -539,4 +539,18 @@ public class OrganizationServiceImpl implements OrganizationService {
         crudService.save(report);
     }
 
+    /**
+     * 根据状态和企业名查询 企业流水
+     *
+     * @param name
+     * @param checkingState
+     * @param checkFailState
+     * @return
+     */
+    @Override
+    public OrganizationStream findAuthStreamByNameAndState(String name, Integer checkingState, Integer checkFailState) {
+
+        return crudService.uniqueResultHql(OrganizationStream.class,"from OrganizationStream where name =?1 and state in (2,3)",name);
+    }
+
 }

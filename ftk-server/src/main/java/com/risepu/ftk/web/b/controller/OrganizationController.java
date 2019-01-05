@@ -29,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -96,15 +98,10 @@ public class OrganizationController implements OrganizationApi {
         }
     }
 
-//    @Override
-//    public void login(HttpServletResponse response) throws IOException {
-//        Subject subject = SecurityUtils.getSubject();
-//        if(subject.isRemembered()||subject.isAuthenticated()){
-//            response.sendRedirect("/ftk/b");
-//        }
-//        response.sendRedirect("/ftk/b/#/login");
-//
-//    }
+    @Override
+    public void login() throws NotLoginException {
+       throw new NotLoginException();
+    }
 
     /**
      * 企业登录
@@ -118,12 +115,14 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) throws IOException {
 
         Subject subject = SecurityUtils.getSubject();
+
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
 
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(),password,true);
         LoginResult loginResult = new LoginResult();
         try {
             subject.login(usernamePasswordToken);
+
             OrganizationUser  orgUser = (OrganizationUser) subject.getPrincipal();
             String userId = orgUser.getId();
 
@@ -167,10 +166,20 @@ public class OrganizationController implements OrganizationApi {
         return ResponseEntity.ok(Response.failed(loginResult.getCode(), loginResult.getMessage()));
     }
 
-//    @Override
-//    public void loginSuccess(HttpServletResponse response)throws IOException {
-//        response.sendRedirect("/ftk/b");
-//    }
+    @Override
+    public ResponseEntity<Response<LoginResult>> loginSuccess() {
+        LoginResult loginResult = new LoginResult();
+        Subject subject = SecurityUtils.getSubject();
+        OrganizationUser user = (OrganizationUser) subject.getPrincipal();
+        Organization org=null;
+        if(user.getOrganizationId()!=null){
+            org = organizationService.findAuthenOrgById(user.getOrganizationId());
+        }
+        loginResult.setOrganization(org);
+        loginResult.setOrganizationUser(user);
+
+        return  ResponseEntity.ok(Response.succeed(loginResult));
+    }
 
     private void setCurrUserToSession(HttpSession session, OrganizationUser organizationUser) {
         session.setAttribute(Constant.getSessionCurrUser(), organizationUser);
@@ -284,13 +293,21 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpSession session) {
+        Subject subject = SecurityUtils.getSubject();
+        boolean is  = subject.isRemembered();
+        if(subject.isRemembered()){
+            OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
+            setCurrUserToSession(session,orgUser);
+        }
+
+
 
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
             throw new NotLoginException();
         }
 
-
+    /**  根据申请人手机号 查询审核状态*/
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
     }
