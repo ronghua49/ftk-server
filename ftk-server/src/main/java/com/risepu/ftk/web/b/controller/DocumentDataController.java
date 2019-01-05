@@ -151,7 +151,7 @@ public class DocumentDataController implements DocumentDataApi {
                 dateList.add(ft3.format(list1.get(i).getCreateTimestamp()));
                 organizationList.add(list1.get(i).getOrganization());
             }
-            List list2 = crudService.hql("select name from Template where id in(select template from ProofDocument where organization = ?1)", user.getOrganizationId());
+            List<String> list2 = crudService.hql(String.class, "select a.name from Template a where a.id in(select b.template from ProofDocument b where b.organization = ?1)", user.getOrganizationId());
             String templateName = (String) crudService.uniqueResultHql("select name from Template where id = ?1", proofDocument1.getTemplate());
             String n = "";
             if (dateList.contains(date3) && organizationList.contains(user.getOrganizationId()) && list2.contains(templateName)) {
