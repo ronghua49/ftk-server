@@ -329,6 +329,7 @@ public class OrganizationController implements OrganizationApi {
         }
 
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
+
         organizationStream.setApplicationPhone(user.getId());
 
 
