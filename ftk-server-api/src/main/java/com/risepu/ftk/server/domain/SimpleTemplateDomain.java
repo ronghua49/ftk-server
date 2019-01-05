@@ -16,7 +16,7 @@ import net.lc4ever.framework.domain.BaseEntity;
  * @author q-wang
  */
 @Entity
-@Table(name = "FTK_Simple_TEMPLATE_DOMAIN")
+@Table(name = "FTK_SIMPLE_TEMPLATE_DOMAIN")
 public class SimpleTemplateDomain implements BaseEntity<SimpleTemplateDomain.ID> {
 
     private static final long serialVersionUID = 1L;
