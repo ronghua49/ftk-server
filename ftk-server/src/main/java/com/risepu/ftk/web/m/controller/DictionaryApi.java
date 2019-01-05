@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -59,16 +60,25 @@ public interface DictionaryApi {
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
     @RequestMapping(path = "/editClass")
     @ResponseBody
-    ResponseEntity<Response<String>>editClass(@RequestBody Dictionary dictionary);
+    ResponseEntity<Response<String>> editClass(@RequestBody Dictionary dictionary);
+
+
+    @ApiOperation(value = "单个行业分类详情", nickname = "details")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
+    @RequestMapping(path = "/detail/{pageNo:\\d+}")
+    @ResponseBody
+    ResponseEntity<Response<PageResult>> detail(@PathVariable Integer pageNo, Integer pageSize, @RequestParam String code, @RequestParam String name, Long dictId) throws UnsupportedEncodingException;
+
 
     @ApiOperation(value = "删除行业分类", nickname = "del")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/delClass")
     @ResponseBody
-    ResponseEntity<Response<String>>delClass(@RequestParam String dictCode);
+    ResponseEntity<Response<String>> delClass(@RequestParam String dictCode);
+
 
     @ApiOperation(value = "查询所有二级行业", nickname = "secondClass")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = List.class) })
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
     @RequestMapping(path = "/allSecondclass")
     @ResponseBody
     ResponseEntity<Response<List<CodeAndName>>>allSecondclass();

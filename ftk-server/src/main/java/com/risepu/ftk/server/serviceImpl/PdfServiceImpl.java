@@ -34,8 +34,6 @@ public class PdfServiceImpl implements PdfService {
     @Override
     public String pdf(String _template, String hash, String title, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
         // TODO Auto-generated method stub
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
-        String date = "" + ft.format(new Date());
 //        _template = _template.replaceAll("/t", " ");
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
@@ -128,7 +126,7 @@ public class PdfServiceImpl implements PdfService {
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 280, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "yyyy年MM月dd日", 370, 280, 0);
         cd.endText();
 
         doc.close();

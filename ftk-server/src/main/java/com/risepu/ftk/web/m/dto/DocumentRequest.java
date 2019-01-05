@@ -1,5 +1,7 @@
 package com.risepu.ftk.web.m.dto;
 
+import java.util.Date;
+
 public class DocumentRequest {
     /**
      * 企业名称
@@ -16,11 +18,11 @@ public class DocumentRequest {
     /**
      * 单据类型
      */
-    private String docunmentCode;
+    private String documentType;
     /**
      * 生成日期
      */
-    private String time;
+    private Date time;
     /**
      * 单据编码
      */
@@ -34,6 +36,20 @@ public class DocumentRequest {
      * 区块链编码
      */
     private String chainHash;
+
+    public DocumentRequest() {
+    }
+
+    public DocumentRequest(String organizationName, String organizationCode, String type, String documentType, Date time, String number, String idCard, String chainHash) {
+        this.organizationName = organizationName;
+        this.organizationCode = organizationCode;
+        this.type = type;
+        this.documentType = documentType;
+        this.time = time;
+        this.number = number;
+        this.idCard = idCard;
+        this.chainHash = chainHash;
+    }
 
     public String getOrganizationName() {
         return organizationName;
@@ -59,19 +75,19 @@ public class DocumentRequest {
         this.type = type;
     }
 
-    public String getDocunmentCode() {
-        return docunmentCode;
+    public String getDocumentType() {
+        return documentType;
     }
 
-    public void setDocunmentCode(String docunmentCode) {
-        this.docunmentCode = docunmentCode;
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

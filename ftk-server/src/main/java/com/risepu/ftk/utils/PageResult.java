@@ -29,6 +29,8 @@ public class PageResult<T> {
      */
     private Integer size;
 
+    private Long total;
+
     private List<T> content;
 
     /**
@@ -87,6 +89,14 @@ public class PageResult<T> {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
     }
 
     public List<T> getContent() {

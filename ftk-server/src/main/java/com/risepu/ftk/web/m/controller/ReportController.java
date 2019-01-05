@@ -8,6 +8,7 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.m.dto.DocumentNumber;
 import com.risepu.ftk.web.m.dto.DocumentRequest;
+import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -33,53 +36,69 @@ public class ReportController implements ReportApi {
     private OrganizationService organizationService;
 
     @Override
-    public ResponseEntity<Response<List>> getCount(Integer startYear, Integer endYear) {
-        List list = new ArrayList();
+    public ResponseEntity<Response<PageResult>> getCount(Integer pageNo, Integer pageSize, Integer startYear, Integer endYear) {
+        Integer firstIndex = pageNo * pageSize;
+        if (startYear != null && endYear != null && startYear > endYear) {
+            return ResponseEntity.ok(Response.failed(400, "开始年度不能大于结束年度！"));
+        }
+        List<DocumentNumber> list = new ArrayList();
+        List<DocumentNumber> list1 = new ArrayList();
+        Long total = Long.parseLong("0");
         if (startYear == null && endYear == null) {
             Calendar now = Calendar.getInstance();
             int year = now.get(Calendar.YEAR);
-            list = crudService.hql(DocumentNumber.class, "SELECT COUNT(1) AS number,year(createTimestamp) as year,MONTH(createTimestamp) as month FROM ProofDocument where number is not null and year(createTimestamp) = ?1 GROUP BY MONTH(createTimestamp) ORDER BY MONTH(createTimestamp)", year);
-            Long total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) = ?1", year);
-            list.add(total);
+            list = crudService.hql(DocumentNumber.class, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) = ?1 GROUP BY MONTH(createTimestamp) ORDER BY MONTH(createTimestamp)", year);
+            list1 = crudService.hql(DocumentNumber.class, firstIndex, pageSize, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) = ?1 GROUP BY MONTH(createTimestamp) ORDER BY MONTH(createTimestamp)", year);
+            total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) = ?1", year);
         }
         if (startYear == null && endYear != null) {
-            list = crudService.hql(DocumentNumber.class, "SELECT COUNT(1) AS number,year(createTimestamp) as year,MONTH(createTimestamp) as month FROM ProofDocument where number is not null and year(createTimestamp) <= ?1 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", endYear);
-            Long total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) <= ?1", endYear);
-            list.add(total);
+            list = crudService.hql(DocumentNumber.class, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) <= ?1 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", endYear);
+            list1 = crudService.hql(DocumentNumber.class, firstIndex, pageSize, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) <= ?1 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", endYear);
+            total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) <= ?1", endYear);
         }
         if (startYear != null && endYear == null) {
-            list = crudService.hql(DocumentNumber.class, "SELECT COUNT(1) AS number,year(createTimestamp) as year,MONTH(createTimestamp) as month FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", startYear);
-            Long total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1", startYear);
-            list.add(total);
+            list = crudService.hql(DocumentNumber.class, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", startYear);
+            list1 = crudService.hql(DocumentNumber.class, firstIndex, pageSize, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", startYear);
+            total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1", startYear);
         }
         if (startYear != null && endYear != null) {
-            list = crudService.hql(DocumentNumber.class, "SELECT COUNT(1) AS number,year(createTimestamp) as year,MONTH(createTimestamp) as month FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 and year(createTimestamp) <= ?2 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", startYear, endYear);
-            Long total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 and year(createTimestamp) <= ?2", startYear, endYear);
-            list.add(total);
+            list = crudService.hql(DocumentNumber.class, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 and year(createTimestamp) <= ?2 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", startYear, endYear);
+            list1 = crudService.hql(DocumentNumber.class, firstIndex, pageSize, "SELECT new com.risepu.ftk.web.m.dto.DocumentNumber (year(createTimestamp) as year,MONTH(createTimestamp) as month,COUNT(1) AS number) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 and year(createTimestamp) <= ?2 GROUP BY MONTH(createTimestamp) ORDER BY year(createTimestamp),MONTH(createTimestamp)", startYear, endYear);
+            total = (Long) crudService.uniqueResultHql("SELECT COUNT(1) FROM ProofDocument where number is not null and year(createTimestamp) >= ?1 and year(createTimestamp) <= ?2", startYear, endYear);
         }
-        return ResponseEntity.ok(Response.succeed(list));
+        PageResult<DocumentNumber> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(list.size(), pageSize);
+        pageResult.setTotalElements(list.size());
+        pageResult.setContent(list1);
+        pageResult.setTotal(total);
+        return ResponseEntity.ok(Response.succeed(pageResult));
     }
 
     @Override
-    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) {
+    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) throws UnsupportedEncodingException, ParseException {
         Integer firstIndex = pageNo * pageSize;
-        String hql1 = "select a.name,a.id,b.createTimestamp,b.chainHash,b.personalUser,b.number from Organization a,ProofDocument b where a.id=b.organization";
-        String hql2 = "select c.name from Template c,ProofDocument d where c.id=d.template";
+        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash) from Organization a,ProofDocument b,Template c where a.id=b.organization and c.id=b.template";
         if (StringUtils.isNotEmpty(organization)) {
-            hql1 += " and a.name like '%" + organization + "%'";
+            organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
+            hql += " and a.name like '%" + organization + "%'";
         }
         if (StringUtils.isNotEmpty(createTime)) {
-
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = formatter.parse(createTime);
+            date = DateFormatter.startOfDay(DateFormatter.nextDay(date));
+            String endDate = formatter.format(date);
+            hql += " and b.createTimestamp >= '" + createTime + "' and b.createTimestamp < '" + endDate + "'";
         }
         if (StringUtils.isNotEmpty(number)) {
-            hql1 += " and b.number like '%" + number + "%'";
+            hql += " and b.number like '%" + number + "%'";
         }
         if (StringUtils.isNotEmpty(type)) {
-            hql1 += " and a.code = '" + type + "'";
+            hql += " and c.code = '" + type + "'";
         }
-//        String hql = "(" + hql1 + ") e" + " left join " + "(" + hql2 + ") f on e.b.id=f.d.id";
-        String hql = "select a.name,a.id,b.createTimestamp,b.chainHash,b.personalUser,b.number.c.name from Organization a,ProofDocument b,Template c where a.id=b.organization and c.id=b.template";
-        List list = crudService.hql(firstIndex, pageSize, hql);
+        List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql);
         List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
         PageResult<DocumentRequest> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
