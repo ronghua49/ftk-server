@@ -316,6 +316,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         Long simpleTemplateId = crudService.save(simpleTemplate);
         if (simpleTemplateId != null) {
             Domain domain = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "idCard");
+            if (domain == null) {
+                Domain domain1 = new Domain();
+                domain1.setCode("idCard");
+                domain1.setLabel("身份证号");
+                domainService.add(domain1);
+            }
             SimpleTemplateDomain simpleTemplateDomain = new SimpleTemplateDomain();
             SimpleTemplateDomain.ID id1 = new SimpleTemplateDomain.ID();
             id1.setDomainId(domain.getId());
