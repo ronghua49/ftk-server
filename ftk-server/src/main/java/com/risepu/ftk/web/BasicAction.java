@@ -15,6 +15,6 @@ public class BasicAction {
 
         HttpSession hs = (HttpSession) SessionListener.sessionMap.get(userId);
         SessionListener.sessionMap.remove(userId);
-        hs.setAttribute(Constant.getSessionCurrUser(),null);
+       // hs.setAttribute(Constant.getSessionCurrUser(),null);
     }
 }
