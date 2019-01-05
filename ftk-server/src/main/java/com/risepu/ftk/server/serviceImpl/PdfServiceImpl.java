@@ -126,7 +126,7 @@ public class PdfServiceImpl implements PdfService {
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "yyyy年MM月dd日", 370, 280, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "xxxx年xx月xx日", 370, 280, 0);
         cd.endText();
 
         doc.close();
