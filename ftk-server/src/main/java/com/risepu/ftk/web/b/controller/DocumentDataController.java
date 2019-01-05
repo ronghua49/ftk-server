@@ -152,14 +152,13 @@ public class DocumentDataController implements DocumentDataApi {
                 organizationList.add(list1.get(i).getOrganization());
             }
             List<String> list2 = crudService.hql(String.class, "select a.name from Template a where a.id in(select b.template from ProofDocument b where b.organization = ?1)", user.getOrganizationId());
-            String templateName = (String) crudService.uniqueResultHql("select name from Template where id = ?1", proofDocument1.getTemplate());
             String n = "";
-            if (dateList.contains(date3) && organizationList.contains(user.getOrganizationId()) && list2.contains(templateName)) {
+            if (dateList.contains(date3) && organizationList.contains(user.getOrganizationId()) && list2.contains(title)) {
                 SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd");
                 Date date2 = DateFormatter.startOfDay(DateFormatter.nextDay(new Date()));
                 String time = ft2.format(date2);
                 String time1 = ft2.format(new Date());
-                Integer index = (Integer) crudService.uniqueResultHql("select max(index) from ProofDocument where organization = ?1 and createTimestamp >= '" + time1 + "' and createTimestamp < '" + time + "'", user.getOrganizationId());
+                Integer index = (Integer) crudService.uniqueResultHql("select max(index) from ProofDocument where organization = ?1 and template = ?2 and createTimestamp >= '" + time1 + "' and createTimestamp < '" + time + "'", user.getOrganizationId(), templateId);
                 proofDocument1.setIndex(index + 1);
                 n = String.format("%03d", index + 1);
             } else {

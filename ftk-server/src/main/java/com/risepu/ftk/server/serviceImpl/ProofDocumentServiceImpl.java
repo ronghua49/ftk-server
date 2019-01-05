@@ -101,13 +101,13 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         List<?> objects = new ArrayList<>();
         List<VerifyHistory> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(name)) {
-            String sql = "select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql = "select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d ,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH and p.ID = d.DOCUMENT and dom.`CODE`='idCard' and dom.ID = d.DOMAIN and a.ORG_ID = ? ORDER BY a.CREATE_TIMESTAMP DESC";
             String sql2 = "select count(*) from  FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?";
             objects = crudService.sql(firstIndex, pageSize, sql, orgId);
             BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, orgId);
             total = bigInteger.intValue();
         } else {
-            String sql = "select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
+            String sql = "select a.CHAIN_HASH,p.NUMBER,d.`value`,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p ,FTK_DOCUMENT_DATA d,FTK_DOMAIN dom where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and p.ID = d.DOCUMENT and dom.`CODE`='idCard' and dom.ID = d.DOMAIN and a.ORG_ID = ? ORDER BY a.CREATE_TIMESTAMP DESC";
             String sql2 = "select count(*) from  FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?";
             objects = crudService.sql(firstIndex, pageSize, sql, orgId);
             BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, orgId);

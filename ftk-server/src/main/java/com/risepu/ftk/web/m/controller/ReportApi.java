@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -38,7 +40,7 @@ public interface ReportApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @GetMapping(path = "/getDocument/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> getDocument(@PathVariable Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type);
+    ResponseEntity<Response<PageResult>> getDocument(@PathVariable Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) throws UnsupportedEncodingException, ParseException;
 
 
     @ApiOperation(value = "企业认证统计", nickname = "orgRegisterReport")

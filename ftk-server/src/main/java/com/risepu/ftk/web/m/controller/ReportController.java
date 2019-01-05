@@ -8,6 +8,7 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.m.dto.DocumentNumber;
 import com.risepu.ftk.web.m.dto.DocumentRequest;
+import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -75,20 +78,25 @@ public class ReportController implements ReportApi {
     }
 
     @Override
-    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) {
+    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) throws UnsupportedEncodingException, ParseException {
         Integer firstIndex = pageNo * pageSize;
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash) from Organization a,ProofDocument b,Template c where a.id=b.organization and c.id=b.template";
         if (StringUtils.isNotEmpty(organization)) {
+            organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
             hql += " and a.name like '%" + organization + "%'";
         }
         if (StringUtils.isNotEmpty(createTime)) {
-
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = formatter.parse(createTime);
+            date = DateFormatter.startOfDay(DateFormatter.nextDay(date));
+            String endDate = formatter.format(date);
+            hql += " and b.createTimestamp >= '" + createTime + "' and b.createTimestamp < '" + endDate + "'";
         }
         if (StringUtils.isNotEmpty(number)) {
             hql += " and b.number like '%" + number + "%'";
         }
         if (StringUtils.isNotEmpty(type)) {
-            hql += " and a.code = '" + type + "'";
+            hql += " and c.code = '" + type + "'";
         }
         List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql);
         List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
