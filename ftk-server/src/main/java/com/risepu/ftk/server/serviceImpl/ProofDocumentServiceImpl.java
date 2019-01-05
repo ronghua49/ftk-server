@@ -57,8 +57,8 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (number like ?3 or personalUser like ?4) order by createTimestamp desc", organization, "%" + name + "%", "%" + name + "%", "%" + name + "%");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (number like ?3 or personalUser like ?4) order by createTimestamp desc", organization, "%" + name + "%", "%" + name + "%", "%" + name + "%");
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (number like ?2 or personalUser like ?3) order by createTimestamp desc", organization, "%" + name + "%", "%" + name + "%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (number like ?2 or personalUser like ?3) order by createTimestamp desc", organization, "%" + name + "%", "%" + name + "%");
         }
 
         List list = new ArrayList();
