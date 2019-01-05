@@ -54,13 +54,13 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         Integer firstIndex = pageNo * pageSize;
         List<ProofDocument> proofDocuments1 = new ArrayList<>();
         List proofDocuments = new ArrayList();
-        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
+        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "idCard");
         if (StringUtils.isEmpty(name)) {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
             proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%");
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) or number like ?4 or personalUser like ?5) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%", "%" + name + "%", "%" + name + "%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) or number like ?4 or personalUser like ?5) order by createTimestamp desc", organization, domain1.getId(), "%" + name + "%", "%" + name + "%", "%" + name + "%");
         }
 
         List list = new ArrayList();
