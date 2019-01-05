@@ -125,7 +125,9 @@ public class Organization extends AuditableObject<String> {
 	private String staffSize;
 	private String website ;
 	private String code;
-	
+
+	/** 行业一级编号 */
+	private String dictCode;
 	@Column(name = "ORG_TYPE", length = 20)
 	public String getOrgType() {
 		return orgType;
@@ -207,5 +209,14 @@ public class Organization extends AuditableObject<String> {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	@Column(name = "DICT_CODE")
+	public String getDictCode() {
+		return dictCode;
+	}
+
+	public void setDictCode(String dictCode) {
+		this.dictCode = dictCode;
 	}
 }

@@ -9,6 +9,7 @@ import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.*;
+import com.risepu.ftk.web.exception.NotLoginException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,9 +37,9 @@ public interface OrganizationApi {
     @ResponseBody
     ResponseEntity<Response<String>> orgRegist(@RequestBody RegistRequest registVo, HttpSession session);
 
-//    @ApiOperation(value = "登录的跳转", nickname = "loginJump")
-//    @RequestMapping(path = "/")
-//    void login(HttpServletResponse response) throws IOException;
+    @ApiOperation(value = "登录的跳转", nickname = "loginJump")
+    @RequestMapping(path = "/")
+    void login() throws NotLoginException;
 
     @ApiOperation(value = "企业登录", nickname = "Orglogin")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = LoginResult.class)})
@@ -47,9 +48,9 @@ public interface OrganizationApi {
     ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) throws IOException;
 
 
-//    @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")
-//    @RequestMapping(path = "/mine")
-//    void loginSuccess(HttpServletResponse response) throws IOException;
+    @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")
+    @RequestMapping(path = "/loginSuccess")
+    ResponseEntity<Response<LoginResult>> loginSuccess();
 
     @ApiOperation(value = "忘记密码", nickname = "forgetPwd")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})

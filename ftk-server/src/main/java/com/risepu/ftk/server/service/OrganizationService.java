@@ -223,4 +223,13 @@ public interface OrganizationService {
      * @param report
      */
     void saveRegisterReport(RegisterUserReport report);
+
+    /**
+     * 根据状态和企业名查询 企业流水
+     * @param name
+     * @param checkingState
+     * @param checkFailState
+     * @return
+     */
+    OrganizationStream findAuthStreamByNameAndState(String name, Integer checkingState, Integer checkFailState);
 }
