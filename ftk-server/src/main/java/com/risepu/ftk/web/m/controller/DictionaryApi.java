@@ -84,14 +84,6 @@ public interface DictionaryApi {
     ResponseEntity<Response<List<CodeAndName>>>allSecondclass();
 
 
-    @ApiOperation(value = "单个行业分类详情", nickname = "details")
-    @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
-    @RequestMapping(path = "/detail/{dictId:\\d+}")
-    @ResponseBody
-    ResponseEntity<Response<List<DictionaryData>>>detail(@RequestParam(required = false) String key, @PathVariable Integer dictId);
-
-
-
 
     @ApiOperation(value = "单个行业", nickname = "oneIndustry")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = DictionaryData.class) })

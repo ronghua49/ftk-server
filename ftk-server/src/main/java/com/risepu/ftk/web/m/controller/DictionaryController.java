@@ -117,7 +117,6 @@ public class DictionaryController implements DictionaryApi {
     @Override
     public ResponseEntity<Response<DictionaryData>> queryOne(Integer id) {
         DictionaryData data = dictionaryService.findIndustryById(id);
-
         return ResponseEntity.ok(Response.succeed(data));
     }
 
