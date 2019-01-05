@@ -5,7 +5,7 @@ import net.lc4ever.framework.domain.AuditableObject;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "FTK_Simple_TEMPLATE")
+@Table(name = "FTK_SIMPLE_TEMPLATE")
 public class SimpleTemplate extends AuditableObject<Long> {
     /**
      * 模板主键
