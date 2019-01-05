@@ -357,11 +357,13 @@ public class OrganizationController implements OrganizationApi {
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
 
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
-
-        String cardNo = proofDocumentService.getDocumentPersonCardNo(hash);
-        if (cardNo == null) {
-            return ResponseEntity.ok(Response.failed(400, "失效的二维码"));
+        String cardNo;
+        try{
+            cardNo= proofDocumentService.getDocumentPersonCardNo(hash);
+        }catch (Exception e){
+            return ResponseEntity.ok(Response.failed(400, "失效的单据二维码"));
         }
+
 
         Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
 
