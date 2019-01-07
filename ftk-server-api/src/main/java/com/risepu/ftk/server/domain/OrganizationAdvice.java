@@ -60,7 +60,7 @@ public class OrganizationAdvice extends TimestampObject<Long> {
         this.organizationName = organizationName;
     }
 
-    @Column(name = "CONTACT_TEL", length = 15, nullable = false)
+    @Column(name = "CONTACT_TEL", nullable = false)
     public String getContactTel() {
         return contactTel;
     }
