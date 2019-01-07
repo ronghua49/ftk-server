@@ -6,7 +6,6 @@ package com.risepu.ftk.web.b.shiro;    /*
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;
-import com.risepu.ftk.web.SessionListener;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -14,6 +13,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
 public class MyRealm extends AuthorizingRealm {
@@ -32,6 +33,14 @@ public class MyRealm extends AuthorizingRealm {
 
     @Autowired
     private OrganizationService organizationService;
+
+
+    @Autowired
+    private HttpServletRequest request;
+
+
+    @Autowired
+    private MemorySessionDAO sessionDAO;
 
 
     @Override
@@ -45,13 +54,15 @@ public class MyRealm extends AuthorizingRealm {
 
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
 
+//        Subject subject = SecurityUtils.getSubject();
+//        Session session = subject.getSession();
         String username = usernamePasswordToken.getUsername();
         if (StringUtils.isNumeric(username)) {
             OrganizationUser orgUser = organizationService.findOrgUserById(username);
             if (orgUser == null) {
                 throw new UnknownAccountException("此手机号还未注册，请注册！");
             } else {
-                kickOutSession(orgUser.getId());
+              //  kickOutSession(orgUser.getId(),session);
                 logger.info("{}--登录系统", orgUser.getId());
                 //返回简单的 认证信息对象， 当前对象，认证证书，当前类的详情对象名(和传过来的token进行对比)
                 return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(), getName());
@@ -64,7 +75,7 @@ public class MyRealm extends AuthorizingRealm {
             } else {
                 OrganizationUser orgUser = organizationService.findOrgUserByOrgId(org.getId());
 
-                kickOutSession(orgUser.getId());
+                //kickOutSession(orgUser.getId(),session);
                 logger.info("{}--登录系统", org.getName());
                 //返回简单的 认证信息对象， 当前对象，认证证书，当前类的详情对象名(和传过来的token进行对比)
                 return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(), getName());
@@ -73,7 +84,9 @@ public class MyRealm extends AuthorizingRealm {
         }
     }
 
-    private void kickOutSession(String userId) {
+    private void kickOutSession(String userId,Session session1) {
+
+
         //踢出同一账号的其他session
         DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) SecurityUtils.getSecurityManager();
         DefaultWebSessionManager sessionManager = (DefaultWebSessionManager)securityManager.getSessionManager();
@@ -83,13 +96,19 @@ public class MyRealm extends AuthorizingRealm {
             if(collection!=null){
                 OrganizationUser user = (OrganizationUser) collection.getPrimaryPrincipal();
 
+              //所有的回话session对应的user,如果和当前回话userId相同，则删除回话sesion
                 if(user!=null&&userId.equals(user.getId())) {
 
                     sessionManager.getSessionDAO().delete(session);
-                    session.setTimeout(0);
+
+                    //session.setTimeout(0);
                 }
             }
 
         }
+
+        sessionManager.getSessionDAO().create(session1);
+
+
     }
 }
