@@ -117,6 +117,7 @@ public class OrganizationController implements OrganizationApi {
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
 
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(), password, true);
+
         usernamePasswordToken.setRememberMe(true);
         LoginResult loginResult = new LoginResult();
         try {
@@ -138,7 +139,6 @@ public class OrganizationController implements OrganizationApi {
             }
 
            setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(userId),orgUser);
-
 
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
@@ -191,7 +191,14 @@ public class OrganizationController implements OrganizationApi {
         loginResult.setOrganization(org);
         loginResult.setOrganizationUser(user);
 
-        setCurrUserToSession(session, user);
+        if (SessionListener.sessionMap.get(user.getId()) != null) {
+            BasicAction.forceLogoutUser(user.getId());
+            SessionListener.sessionMap.put(user.getId(), session);
+        } else {
+            SessionListener.sessionMap.put(user.getId(), session);
+        }
+
+       // setCurrUserToSession(session, user);
 
         return ResponseEntity.ok(Response.succeed(loginResult));
     }
@@ -309,10 +316,10 @@ public class OrganizationController implements OrganizationApi {
         HttpSession session = request.getSession();
         Subject subject = SecurityUtils.getSubject();
 
-
-
         OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-        setCurrUserToSession(session,orgUser);
+
+        setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(orgUser.getId()),orgUser);
+
         OrganizationUser  currUser = getCurrUser(session);
 
         if (currUser == null) {
