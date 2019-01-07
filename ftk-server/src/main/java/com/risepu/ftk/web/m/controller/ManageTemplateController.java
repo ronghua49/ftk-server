@@ -50,8 +50,6 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Value("${ftk.root.filePath}")
     private String filePath;
 
-    private Integer t = 0;
-
     @Override
     public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
         if (templateId == null) {
@@ -258,6 +256,8 @@ public class ManageTemplateController implements ManageTemplateApi {
             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM/dd");
             String date = ft.format(new Date());
 
+            SimpleDateFormat ft1 = new SimpleDateFormat("yyyyMMddHHmmssSS");
+            String date1 = ft1.format(new Date());
             File file = new File(filePath + date);
             if (!file.exists()) {
                 file.mkdirs();
@@ -273,7 +273,7 @@ public class ManageTemplateController implements ManageTemplateApi {
 
             ChartGraphics cg = new ChartGraphics();
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
-            String pdfFilePath = filePath + date + "/" + template.getId() + "（" + t++ + ").pdf";
+            String pdfFilePath = filePath + date + "/" + template.getId() + date1 + ".pdf";
             String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
             String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", simpleTemplate.getName(), qrFilePath, GrFilePath, pdfFilePath);
             template1.set_template(template.get_template());
