@@ -89,7 +89,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = OrganizationStream.class)})
     @RequestMapping(path = "/auth/check")
     @ResponseBody
-    ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpSession session);
+    ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request);
 
 
     @ApiOperation(value = "企业扫码", nickname = "scanQR")
