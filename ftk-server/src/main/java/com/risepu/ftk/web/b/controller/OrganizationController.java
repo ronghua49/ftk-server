@@ -125,18 +125,8 @@ public class OrganizationController implements OrganizationApi {
             subject.login(usernamePasswordToken);
 
             OrganizationUser  orgUser = (OrganizationUser) subject.getPrincipal();
-            String userId = orgUser.getId();
 
-            /** 实现单一登录，剔除效果*/
-
-            if (SessionListener.sessionMap.get(userId) != null) {
-                BasicAction.forceLogoutUser(userId);
-                SessionListener.sessionMap.put(userId, request.getSession());
-            } else {
-                SessionListener.sessionMap.put(userId, request.getSession());
-            }
             setCurrUserToSession(request.getSession(), orgUser);
-
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
             Organization org=null;
@@ -290,16 +280,23 @@ public class OrganizationController implements OrganizationApi {
     /**
      * 校验当前企业的审核状态
      *
-     * @param session
+     * @param request
      * @return Organization 企业的信息 (若为空则未审核)
      */
     @Override
-    public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpSession session) {
+    public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest  request) {
+        HttpSession session = request.getSession();
         Subject subject = SecurityUtils.getSubject();
+        OrganizationUser currUser=null;
 
-        OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-        setCurrUserToSession(session,orgUser);
-        OrganizationUser currUser = getCurrUser(session);
+        if(session!=null){
+            OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
+            setCurrUserToSession(session,orgUser);
+            currUser = getCurrUser(session);
+        }else{
+            throw new NotLoginException();
+        }
+
         if (currUser == null) {
             throw new NotLoginException();
         }
