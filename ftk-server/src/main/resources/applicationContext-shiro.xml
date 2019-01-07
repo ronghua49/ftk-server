@@ -7,8 +7,8 @@
     <context:component-scan base-package="com.risepu.ftk.web.b.shiro"/>
     <!--cookie配置-->
     <bean id="rememberCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <!--一个月有效期-->
-        <property name="maxAge" value="2592000"/>
+        <!--十年有效期-->
+        <property name="maxAge" value="311040000"/>
         <property name="httpOnly" value="true"/>
         <property name="name" value="rememberMe"/>
     </bean>
@@ -23,11 +23,27 @@
         <property name="cacheManager" ref="cacheManager"/>
         <property name="realm" ref="myRealm"/>
         <property name="rememberMeManager" ref="rememberManager"/>
+        <property name="sessionManager" ref="sessionManager"/>
     </bean>
     <!--2.配置缓存管理器-->
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
     </bean>
+
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO">
+    </bean>
+
+    <bean id="sessionManager"
+          class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="1800000" />
+        <property name="deleteInvalidSessions" value="true" />
+        <property name="sessionValidationSchedulerEnabled" value="true" />
+        <property name="sessionValidationInterval" value="1800000" />
+        <property name="sessionDAO" ref="sessionDAO"/>
+    </bean>
+
+
+
     <!--3.配置自定义的realm-->
     <bean id="myRealm" class="com.risepu.ftk.web.b.shiro.MyRealm"/>
 
