@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -123,7 +124,22 @@ public class OrganizationController implements OrganizationApi {
 
             OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
 
-            setCurrUserToSession(request.getSession(), orgUser);
+
+
+            String userId = orgUser.getId();
+            HashMap sessionMap = SessionListener.sessionMap;
+
+            /** 实现单一登录，剔除效果*/
+            if (SessionListener.sessionMap.get(userId) != null) {
+                BasicAction.forceLogoutUser(userId);
+                SessionListener.sessionMap.put(userId, request.getSession());
+            } else {
+                SessionListener.sessionMap.put(userId, request.getSession());
+            }
+
+           setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(userId),orgUser);
+
+
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
             Organization org = null;
@@ -134,6 +150,15 @@ public class OrganizationController implements OrganizationApi {
             if (orgUser.getOrganizationId() != null) {
                 org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
             }
+
+
+
+
+
+
+
+
+
             loginResult.setOrganization(org);
 
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
@@ -283,6 +308,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Subject subject = SecurityUtils.getSubject();
+
 
 
         OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();

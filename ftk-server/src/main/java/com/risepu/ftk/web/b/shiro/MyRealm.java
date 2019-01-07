@@ -46,15 +46,15 @@ public class MyRealm extends AuthorizingRealm {
 
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
 
-//        Subject subject = SecurityUtils.getSubject();
-//        Session session = subject.getSession();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
         String username = usernamePasswordToken.getUsername();
         if (StringUtils.isNumeric(username)) {
             OrganizationUser orgUser = organizationService.findOrgUserById(username);
             if (orgUser == null) {
                 throw new UnknownAccountException("此手机号还未注册，请注册！");
             } else {
-               // kickOutSession(orgUser.getId(),session);
+                //kickOutSession(orgUser.getId(),session);
                 logger.info("{}--登录系统", orgUser.getId());
                 //返回简单的 认证信息对象， 当前对象，认证证书，当前类的详情对象名(和传过来的token进行对比)
                 return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(), getName());
@@ -92,12 +92,11 @@ public class MyRealm extends AuthorizingRealm {
                 if(user!=null&&userId.equals(user.getId())) {
                     sessionManager.getSessionDAO().delete(session);
 
-                    //session.setTimeout(0);
                 }
             }
 
         }
 
-        sessionManager.getSessionDAO().create(session1);
+      //  sessionManager.getSessionDAO().create(session1);
     }
 }
