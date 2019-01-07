@@ -287,15 +287,11 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest  request) {
         HttpSession session = request.getSession();
         Subject subject = SecurityUtils.getSubject();
-        OrganizationUser currUser=null;
 
-        if(session!=null){
-            OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-            setCurrUserToSession(session,orgUser);
-            currUser = getCurrUser(session);
-        }else{
-            throw new NotLoginException();
-        }
+
+        OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
+        setCurrUserToSession(session,orgUser);
+        OrganizationUser  currUser = getCurrUser(session);
 
         if (currUser == null) {
             throw new NotLoginException();
