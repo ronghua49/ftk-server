@@ -115,5 +115,4 @@ public class PageResult<T> {
     public String toString() {
         return "PageResult [resultCode=" + resultCode + ", totalPages=" + totalPages + ", totalElements=" + totalElements + ", number=" + number + ", size=" + size + ", content=" + content + ", pages=" + pages + "]";
     }
-
 }

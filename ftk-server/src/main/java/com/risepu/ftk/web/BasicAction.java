@@ -3,9 +3,6 @@ package com.risepu.ftk.web;    /*
  * @date 2018/12/28
  */
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 
@@ -13,8 +10,7 @@ import java.util.Enumeration;
  * @author ronghaohua
  */
 public class BasicAction {
-
-    public static void forceLogoutUser(String userId){
+    public static void forceLogoutUser(String userId) {
         HttpSession hs = (HttpSession) SessionListener.sessionMap.get(userId);
         SessionListener.sessionMap.remove(userId);
         Enumeration e = hs.getAttributeNames();
@@ -24,7 +20,4 @@ public class BasicAction {
             hs.removeAttribute(sessionName);
         }
     }
-
-
-
 }

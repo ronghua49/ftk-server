@@ -4,60 +4,68 @@ package com.risepu.ftk.web.dto;
  * @author ronghaohua
  */
 public class ScanRequest {
-	/** 用户身份证*/
-	private String idCard;
-	/** 用户手机号*/
-	private String mobile;
-	/** 用户名*/
-	private String userName;
-	/** 企业id*/
-	private String orgId;
-	
-	/** 发送的授权状态 ：0 授权   1拒绝*/
-	private String state;
-	
-	
+    /**
+     * 用户身份证
+     */
+    private String idCard;
 
-	public String getState() {
-		return state;
-	}
+    /**
+     * 用户手机号
+     */
+    private String mobile;
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    /**
+     * 用户名
+     */
+    private String userName;
 
-	public String getUserName() {
-		return userName;
-	}
+    /**
+     * 企业id
+     */
+    private String orgId;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    /**
+     * 发送的授权状态 ：0 授权   1拒绝
+     */
+    private String state;
 
-	public String getIdCard() {
-		return idCard;
-	}
+    public String getState() {
+        return state;
+    }
 
-	public void setIdCard(String idCard) {
-		this.idCard = idCard;
-	}
+    public void setState(String state) {
+        this.state = state;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getOrgId() {
-		return orgId;
-	}
+    public String getIdCard() {
+        return idCard;
+    }
 
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
-	}
-	
-	
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
+    }
 }

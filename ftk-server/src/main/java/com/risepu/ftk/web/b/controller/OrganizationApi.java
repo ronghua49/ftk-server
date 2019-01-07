@@ -82,8 +82,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/authen/info")
     @ResponseBody
-    ResponseEntity<Response<String>> orgAuthen(@RequestBody OrganizationStream organizationStream,
-                                               HttpSession session);
+    ResponseEntity<Response<String>> orgAuthen(@RequestBody OrganizationStream organizationStream, HttpSession session);
 
     @ApiOperation(value = "校验企业认证状态", nickname = "checkState")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = OrganizationStream.class)})
@@ -98,13 +97,11 @@ public interface OrganizationApi {
     @ResponseBody
     ResponseEntity<Response<Long>> scanQR(@RequestParam String hash, HttpSession session);
 
-
     @ApiOperation(value = "企业验证历史", nickname = "QRHistory")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/history/verify")
     @ResponseBody
     ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session);
-
 
     @ApiOperation(value = "企业开单历史", nickname = "documentHistory")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
@@ -112,21 +109,17 @@ public interface OrganizationApi {
     @ResponseBody
     ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest, HttpSession session);
 
-
     @ApiOperation(value = "开单历史详情", nickname = "documentInfo")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/history/documentInfo")
     @ResponseBody
     ResponseEntity<Response<ProofDocument>> documentInfo(@RequestParam String chainHash);
 
-
     @ApiOperation(value = "企业反馈意见", nickname = "advice")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/advice")
     @ResponseBody
-    ResponseEntity<Response<String>> adviceInfo(@RequestBody OrganizationAdvice advice,
-                                                HttpSession session);
-
+    ResponseEntity<Response<String>> adviceInfo(@RequestBody OrganizationAdvice advice, HttpSession session);
 
     @ApiOperation(value = "退出登录", nickname = "loginout")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})

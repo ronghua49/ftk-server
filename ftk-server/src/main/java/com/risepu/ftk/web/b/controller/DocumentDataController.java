@@ -46,9 +46,6 @@ public class DocumentDataController implements DocumentDataApi {
     private SendMailService sendMailService;
 
     @Autowired
-    private DomainService domainService;
-
-    @Autowired
     private QrCodeUtilSerevice qrCodeUtilSerevice;
 
     @Autowired
@@ -118,7 +115,6 @@ public class DocumentDataController implements DocumentDataApi {
 
             //pdf流输出路径
             String pdfFilePath = filePath + date1 + "/职场通行证-" + template.getName() + "-" + date + ".pdf";
-
             Long proofDocumentId = Long.parseLong(map.get("proofDocumentId"));
             ProofDocument proofDocument = proofDocumentService.getDocumentById(proofDocumentId);
             proofDocument.setPersonalUser(map.get("idCard"));

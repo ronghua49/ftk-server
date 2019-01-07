@@ -26,5 +26,4 @@ public interface DocumentDateService {
      * @return
      */
     List<DocumentData> getByDocumentId(Long documentId);
-
 }

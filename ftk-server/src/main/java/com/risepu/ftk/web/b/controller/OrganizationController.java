@@ -43,7 +43,6 @@ import java.util.List;
  */
 @Controller
 public class OrganizationController implements OrganizationApi {
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${salt}")
@@ -67,17 +66,12 @@ public class OrganizationController implements OrganizationApi {
      * @return
      */
     @Override
-    public ResponseEntity<Response<String>> orgRegist(RegistRequest registVo,
-                                                      HttpSession session) {
+    public ResponseEntity<Response<String>> orgRegist(RegistRequest registVo, HttpSession session) {
         // 判断smsCode
-
         String code = (String) session.getAttribute(Constant.getSessionVerificationCodeSms());
-
         if (registVo.getSmsCode().equals(code)) {
-
             /** 判断企业是否已经注册 */
             String orgId = organizationService.checkOrgName(registVo.getMobile());
-
             if (orgId == null) {
                 organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
                 RegisterUserReport report = new RegisterUserReport();
@@ -85,9 +79,7 @@ public class OrganizationController implements OrganizationApi {
                 report.setUserType(OrganizationUser.ORG_USER_TYPE);
                 organizationService.saveRegisterReport(report);
                 logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
-
                 return ResponseEntity.ok(Response.succeed("注册成功！"));
-
             } else {
                 return ResponseEntity.ok(Response.failed(3, "该企业已经注册，请直接登录"));
             }
@@ -111,24 +103,15 @@ public class OrganizationController implements OrganizationApi {
 
     @Override
     public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         Subject subject = SecurityUtils.getSubject();
-
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
-
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(), password, true);
-
         usernamePasswordToken.setRememberMe(true);
         LoginResult loginResult = new LoginResult();
         try {
             subject.login(usernamePasswordToken);
-
             OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-
-
-
             String userId = orgUser.getId();
-            HashMap sessionMap = SessionListener.sessionMap;
 
             /** 实现单一登录，剔除效果*/
             if (SessionListener.sessionMap.get(userId) != null) {
@@ -138,7 +121,7 @@ public class OrganizationController implements OrganizationApi {
                 SessionListener.sessionMap.put(userId, request.getSession());
             }
 
-           setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(userId),orgUser);
+            setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(userId), orgUser);
 
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
@@ -151,20 +134,9 @@ public class OrganizationController implements OrganizationApi {
                 org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
             }
 
-
-
-
-
-
-
-
-
             loginResult.setOrganization(org);
-
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
-
             return ResponseEntity.ok(Response.succeed(loginResult));
-
         } catch (UnknownAccountException e) {
             loginResult.setCode(4);
             loginResult.setMessage(e.getMessage());
@@ -198,8 +170,6 @@ public class OrganizationController implements OrganizationApi {
             SessionListener.sessionMap.put(user.getId(), session);
         }
 
-       // setCurrUserToSession(session, user);
-
         return ResponseEntity.ok(Response.succeed(loginResult));
     }
 
@@ -215,12 +185,10 @@ public class OrganizationController implements OrganizationApi {
      * @return
      */
     @Override
-    public ResponseEntity<Response<String>> orgForgetPwd(ForgetRequest forgetRequest,
-                                                         HttpSession session) {
+    public ResponseEntity<Response<String>> orgForgetPwd(ForgetRequest forgetRequest, HttpSession session) {
         String salt = ConfigUtil.getValue("salt");
         /** 判断输入的企业信息是否存在  返回各自的id */
         String orgId = organizationService.checkOrgName(forgetRequest.getMobileOrName());
-
         if (orgId != null) {
             String smsCode = (String) session.getAttribute(Constant.getSessionVerificationCodeSms());
 
@@ -232,7 +200,6 @@ public class OrganizationController implements OrganizationApi {
 
                 return ResponseEntity.ok(Response.succeed("密码修改成功"));
             } else {
-
                 return ResponseEntity.ok(Response.failed(2, "验证码输入错误"));
             }
 
@@ -245,8 +212,7 @@ public class OrganizationController implements OrganizationApi {
      * 修改密码
      */
     @Override
-    public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd,
-                                                         HttpSession session) {
+    public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
             throw new NotLoginException();
@@ -273,7 +239,6 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<String>> upload(MultipartFile file) {
-
         try {
             String fileName = organizationService.upload(file);
             return ResponseEntity.ok(Response.succeed(fileName));
@@ -315,17 +280,12 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Subject subject = SecurityUtils.getSubject();
-
         OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-
-        setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(orgUser.getId()),orgUser);
-
-        OrganizationUser  currUser = getCurrUser(session);
-
+        setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(orgUser.getId()), orgUser);
+        OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
             throw new NotLoginException();
         }
-
         /**  根据申请人手机号 查询审核状态*/
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
@@ -339,8 +299,7 @@ public class OrganizationController implements OrganizationApi {
      * @return 上传结果
      */
     @Override
-    public ResponseEntity<Response<String>> orgAuthen(OrganizationStream organizationStream,
-                                                      HttpSession session) {
+    public ResponseEntity<Response<String>> orgAuthen(OrganizationStream organizationStream, HttpSession session) {
         OrganizationUser user = getCurrUser(session);
         if (user == null) {
             throw new NotLoginException();
@@ -379,7 +338,6 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<Long>> scanQR(String hash, HttpSession session) {
-
         /** 未审核通过的企业不允许扫描单据 */
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
@@ -407,25 +365,19 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
-
         OrganizationUser orgUser = getCurrUser(session);
         if (orgUser == null) {
             throw new NotLoginException();
         }
-
         OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
-
         PageResult<VerifyHistory> page = new PageResult();
         List content = new ArrayList();
         if (user.getOrganizationId() == null) {
             page.setContent(content);
             return ResponseEntity.ok(Response.succeed(page));
         }
-
         page = proofDocumentService.getVerfifyHistoryData(user.getOrganizationId(), pageRequest.getPageNo(), pageRequest.getPageSize(), pageRequest.getKey());
-
         return ResponseEntity.ok(Response.succeed(page));
-
     }
 
     /**
@@ -445,7 +397,6 @@ public class OrganizationController implements OrganizationApi {
 
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         PageResult document = new PageResult();
-
 
         if (user.getOrganizationId() == null) {
             document.setContent(new ArrayList());
@@ -469,7 +420,6 @@ public class OrganizationController implements OrganizationApi {
         return ResponseEntity.ok(Response.succeed(proofDocument));
     }
 
-
     /**
      * 企业反馈信息录入
      *
@@ -477,8 +427,7 @@ public class OrganizationController implements OrganizationApi {
      * @return 保存结果
      */
     @Override
-    public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice,
-                                                       HttpSession session) {
+    public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
             throw new NotLoginException();
@@ -487,7 +436,6 @@ public class OrganizationController implements OrganizationApi {
         organizationService.saveAdviceInfo(advice);
         return ResponseEntity.ok(Response.succeed("意见反馈成功！"));
     }
-
 
     private OrganizationUser getCurrUser(HttpSession session) {
         return (OrganizationUser) session.getAttribute(Constant.getSessionCurrUser());
@@ -498,15 +446,12 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<String>> loginOut(HttpSession session) {
-
         session.setAttribute(Constant.getSessionCurrUser(), null);
-
         return ResponseEntity.ok(Response.succeed("退出登录成功"));
     }
 
     @Override
     public ResponseEntity<Response<String>> setDefaultTemplate(String templateId, boolean state, HttpSession session) {
-
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
             throw new NotLoginException();
@@ -546,6 +491,5 @@ public class OrganizationController implements OrganizationApi {
         } else {
             return ResponseEntity.ok(Response.failed(400, "授权码错误"));
         }
-
     }
 }

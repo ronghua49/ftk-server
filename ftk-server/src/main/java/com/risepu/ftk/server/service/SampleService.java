@@ -9,6 +9,5 @@ import net.lc4ever.framework.remote.annotation.Remote;
  */
 @Remote(path = "/sample")
 public interface SampleService {
-
     List<String> sample1();
 }

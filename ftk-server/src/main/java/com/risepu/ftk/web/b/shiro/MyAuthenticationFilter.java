@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 public class MyAuthenticationFilter extends FormAuthenticationFilter {
 
-
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         if (this.isLoginRequest(request, response)) {
@@ -28,25 +27,20 @@ public class MyAuthenticationFilter extends FormAuthenticationFilter {
                 return true;
             }
         } else {
-                throw  new NotLoginException();
+            throw new NotLoginException();
         }
     }
 
     @Override
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
-
-        HttpSession session = ((HttpServletRequest)request).getSession();
-
-        OrganizationUser orgUser  = (OrganizationUser) token.getPrincipal();
-
-        session.setAttribute(Constant.getSessionCurrUser(),orgUser);
-
-
+        HttpSession session = ((HttpServletRequest) request).getSession();
+        OrganizationUser orgUser = (OrganizationUser) token.getPrincipal();
+        session.setAttribute(Constant.getSessionCurrUser(), orgUser);
         return true;
     }
+
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-       throw  new NotLoginException();
+        throw new NotLoginException();
     }
-
 }

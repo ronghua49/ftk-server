@@ -1,12 +1,13 @@
 package com.risepu.ftk.web.b.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.OrganizationService;
+import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.Constant;
+import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.m.dto.IdRequest;
 import net.lc4ever.framework.service.GenericCrudService;
@@ -15,13 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.risepu.ftk.server.domain.Domain;
-import com.risepu.ftk.server.domain.Template;
-import com.risepu.ftk.server.service.DomainService;
-import com.risepu.ftk.server.service.TemplateService;
-import com.risepu.ftk.web.api.Response;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author L-heng

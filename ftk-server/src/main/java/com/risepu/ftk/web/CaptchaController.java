@@ -30,7 +30,6 @@ import com.risepu.ftk.web.api.Response;
 @Controller
 @RequestMapping("/api/captcha/v1")
 public class CaptchaController implements InitializingBean, CaptchaApi {
-
     private final int OFFSET = 538309;
 
     @Value("${captcha.image.candicate:0123456789}")
@@ -50,22 +49,15 @@ public class CaptchaController implements InitializingBean, CaptchaApi {
 
     @Override
     public ResponseEntity<Response<String>> captcha(HttpServletResponse response, HttpServletRequest request) {
-
         String code = generateImageCaptcha();
-
-        System.out.println("请求图片的sessionId:" + request.getSession().getId());
-
         request.getSession().setAttribute(Constant.getSessionVerificationCodeImg(), code);
-
         try {
             captchaEnabled = true;
             return ResponseEntity.ok(Response.succeed(imgBase64(request, code)));
-
         } catch (Exception e) {
             return ResponseEntity.ok(Response.failed(500, "网络异常，请重试"));
         }
     }
-
 
     private String generateImageCaptcha() {
         if (captchaEnabled) {
@@ -90,10 +82,7 @@ public class CaptchaController implements InitializingBean, CaptchaApi {
         }
     }
 
-
     public String imgBase64(HttpServletRequest request, String code) {
-
-
         int width = 85, height = 50;
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g = image.createGraphics();
@@ -128,7 +117,6 @@ public class CaptchaController implements InitializingBean, CaptchaApi {
             e.printStackTrace();
             return "io 异常";
         }
-
     }
 
     private Color getRandColor(int fc, int bc) {
@@ -165,6 +153,4 @@ public class CaptchaController implements InitializingBean, CaptchaApi {
             g.copyArea(i, 0, 1, h1, 0, (int) d);
         }
     }
-
-
 }
