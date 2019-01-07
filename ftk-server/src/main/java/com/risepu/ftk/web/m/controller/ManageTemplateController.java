@@ -331,6 +331,14 @@ public class ManageTemplateController implements ManageTemplateApi {
                     crudService.save(simpleTemplateDomain);
                     return ResponseEntity.ok(Response.succeed("添加成功"));
                 }
+            } else {
+                SimpleTemplateDomain simpleTemplateDomain = new SimpleTemplateDomain();
+                SimpleTemplateDomain.ID id1 = new SimpleTemplateDomain.ID();
+                id1.setDomainId(domain.getId());
+                id1.setTemplateId(simpleTemplateId);
+                simpleTemplateDomain.setId(id1);
+                crudService.save(simpleTemplateDomain);
+                return ResponseEntity.ok(Response.succeed("添加成功"));
             }
         }
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
