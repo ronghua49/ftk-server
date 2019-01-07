@@ -140,6 +140,19 @@ public class DictionaryController implements DictionaryApi {
     }
 
     @Override
+    public ResponseEntity<Response<List<CodeAndName>>> secondclass(String dictCode) {
+        List<DictionaryData> dataList = dictionaryService.findIndustrysByDictCode(dictCode);
+        List<CodeAndName> codeAndNames = new ArrayList<>();
+        for (DictionaryData data : dataList) {
+            CodeAndName codeAndName = new CodeAndName();
+            codeAndName.setCode(data.getCode());
+            codeAndName.setName(data.getDictdataName());
+            codeAndNames.add(codeAndName);
+        }
+        return ResponseEntity.ok(Response.succeed(codeAndNames));
+    }
+
+    @Override
     public ResponseEntity<Response<String>> addIndustry(DictionaryData dictionaryData) {
         dictionaryService.addIndustry(dictionaryData);
         return ResponseEntity.ok(Response.succeed("添加成功"));
