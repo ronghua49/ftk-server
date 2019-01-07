@@ -54,7 +54,7 @@ public class MyRealm extends AuthorizingRealm {
             if (orgUser == null) {
                 throw new UnknownAccountException("此手机号还未注册，请注册！");
             } else {
-                //kickOutSession(orgUser.getId(),session);
+               // kickOutSession(orgUser.getId(),session);
                 logger.info("{}--登录系统", orgUser.getId());
                 //返回简单的 认证信息对象， 当前对象，认证证书，当前类的详情对象名(和传过来的token进行对比)
                 return new SimpleAuthenticationInfo(orgUser, orgUser.getPassword(), getName());
@@ -94,7 +94,6 @@ public class MyRealm extends AuthorizingRealm {
 
                 }
             }
-
         }
 
       //  sessionManager.getSessionDAO().create(session1);

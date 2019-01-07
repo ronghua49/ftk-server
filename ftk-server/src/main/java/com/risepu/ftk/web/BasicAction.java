@@ -15,7 +15,6 @@ import java.util.Enumeration;
 public class BasicAction {
 
     public static void forceLogoutUser(String userId){
-
         HttpSession hs = (HttpSession) SessionListener.sessionMap.get(userId);
         SessionListener.sessionMap.remove(userId);
         Enumeration e = hs.getAttributeNames();
@@ -24,10 +23,6 @@ public class BasicAction {
             // 清空session
             hs.removeAttribute(sessionName);
         }
-
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();
-        //hs.setAttribute(Constant.getSessionCurrUser(),null);
     }
 
 
