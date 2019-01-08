@@ -80,7 +80,7 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     private String address;
 
-    @Column(name = "ADDRESS", length = 31)
+    @Column(name = "ADDRESS")
     public String getAddress() {
         return address;
     }
