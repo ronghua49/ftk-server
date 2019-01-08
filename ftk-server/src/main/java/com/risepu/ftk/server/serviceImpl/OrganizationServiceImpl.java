@@ -50,65 +50,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public LoginResult orgLogin(String phoneOrName, String password) {
-        String secutityPwd = DigestUtils.md5Hex(password + SALT);
-        LoginResult loginResult = new LoginResult();
-
-        if (StringUtils.isNumeric(phoneOrName)) {
-            /** 使用手机号登录 */
-
-            OrganizationUser org = crudService.uniqueResultByProperty(OrganizationUser.class, "id", phoneOrName);
-
-            if (org == null) {
-                loginResult.setCode(4);
-                loginResult.setMessage("此手机号还未注册，请注册！");
-            }
-
-            if (org != null && org.getPassword().equals(secutityPwd)) {
-                loginResult.setCode(0);
-                loginResult.setMessage("登录成功！");
-                loginResult.setOrganizationUser(org);
-
-
-                /** 判断是否为审核通过的企业用户 */
-                Organization organization = null;
-                if (org.getOrganizationId() != null) {
-                    organization = crudService.uniqueResultByProperty(Organization.class, "id", org.getOrganizationId());
-                }
-
-                loginResult.setOrganization(organization);
-
-            } else {
-                loginResult.setCode(5);
-                loginResult.setMessage("密码错误！");
-            }
-
-
-        } else {
-            /** 使用企业名登录 */
-            Organization org = crudService.uniqueResultByProperty(Organization.class, "name", phoneOrName);
-
-            if (org != null) {
-                OrganizationUser orgUser = crudService.uniqueResultByProperty(OrganizationUser.class, "organizationId",
-                        org.getId());
-                if (orgUser.getPassword().equals(secutityPwd)) {
-                    loginResult.setCode(0);
-                    loginResult.setMessage("登录成功！");
-                    loginResult.setOrganization(org);
-                    loginResult.setOrganizationUser(orgUser);
-                } else {
-                    loginResult.setCode(5);
-                    loginResult.setMessage("密码错误！");
-                }
-            } else {
-                loginResult.setCode(6);
-                loginResult.setMessage("企业不存在，或未认证！");
-            }
-        }
-        return loginResult;
-    }
-
-    @Override
     public void changePwd(String id, String newPwd) {
         OrganizationUser orgUser = crudService.get(OrganizationUser.class, id);
         orgUser.setPassword(newPwd);

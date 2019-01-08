@@ -28,13 +28,6 @@ public interface OrganizationService {
     String orgReg(String phone, String password);
 
     /**
-     * @param phoneOrName
-     * @param password
-     * @return LoginResult 登录返回结果
-     */
-    LoginResult orgLogin(String phoneOrName, String password);
-
-    /**
      * @param id     手机号 获得 组织机构代码号
      * @param newPwd 新密码
      */
