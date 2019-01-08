@@ -136,7 +136,7 @@ public class ManageTemplateController implements ManageTemplateApi {
         }
         if (StringUtils.isNotEmpty(label)) {
             label = new String(label.getBytes("ISO8859-1"), "utf-8");
-            hql += " and d.label = '%" + label + "%'";
+            hql += " and d.label like '%" + label + "%'";
         }
         List<Domain> domains = domainService.getDomains(hql);
         List list = domainService.getAnyDomain(firstIndex, pageSize, hql);

@@ -56,7 +56,7 @@ public interface ManageTemplateApi {
     ResponseEntity<Response<PageResult>> getAllTemplate(@PathVariable Integer pageNo, Integer pageSize, String startDate, String endDate, String name) throws Exception;
 
     /**
-     * 显示所有模板
+     * 显示所有简易模板
      *
      * @return 模板JavaBean集合
      */
