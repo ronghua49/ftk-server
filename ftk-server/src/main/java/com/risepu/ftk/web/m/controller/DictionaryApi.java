@@ -33,7 +33,7 @@ public interface DictionaryApi {
     ResponseEntity<Response<PageResult<Dictionary>>> findAllPage(@RequestParam(required = false) String dictCode,
                                                                  @RequestParam(required = false) String name,
                                                                  @PathVariable Integer pageNo,
-                                                                 @RequestParam Integer pageSize);
+                                                                 @RequestParam Integer pageSize) throws UnsupportedEncodingException;
 
 
     @ApiOperation(value = "查询所有行业分类", nickname = "allclass")

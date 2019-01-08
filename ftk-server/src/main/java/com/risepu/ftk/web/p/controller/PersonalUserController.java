@@ -30,7 +30,6 @@ import java.util.Map;
 
 
 @RestController
-
 public class PersonalUserController implements PersonzalUserApi {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
