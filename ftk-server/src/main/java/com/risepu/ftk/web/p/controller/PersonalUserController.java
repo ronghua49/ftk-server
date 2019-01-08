@@ -78,7 +78,7 @@ public class PersonalUserController implements PersonzalUserApi {
                 } else {
                     SessionListener.sessionMap.put(no, request.getSession());
                 }
-                PersonalUser personalUser = personalService.findUserByNo(no);
+                PersonalUser personalUser = personalService.findUserByNo(no,loginRequest.getPhone());
                 if (personalUser != null) {
                     loginResult.setMessage("登录成功");
                     loginResult.setPersonalUser(personalUser);

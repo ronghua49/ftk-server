@@ -29,12 +29,13 @@ public interface PersonalUserService {
     String savePersonUser(PersonalUser user);
 
     /**
-     * 根据身份证号查询用户
+     * 根据身份证号和手机号查询用户
      *
      * @param cardNo 身份证号
+     * @param phone 注册手机号
      * @return
      */
-    PersonalUser findUserByNo(String cardNo);
+    PersonalUser findUserByNo(String cardNo,String phone);
 
     /**
      * 保存授权操作流水记录

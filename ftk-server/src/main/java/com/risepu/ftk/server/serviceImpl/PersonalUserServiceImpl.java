@@ -96,7 +96,7 @@ public class PersonalUserServiceImpl implements PersonalUserService {
     }
 
     @Override
-    public PersonalUser findUserByNo(String cardNo) {
-        return crudService.uniqueResultByProperty(PersonalUser.class, "id", cardNo);
+    public PersonalUser findUserByNo(String cardNo,String phone) {
+        return crudService.uniqueResultHql(PersonalUser.class, "from PersonalUser where id =?1 and mobile =?2", cardNo,phone);
     }
 }
