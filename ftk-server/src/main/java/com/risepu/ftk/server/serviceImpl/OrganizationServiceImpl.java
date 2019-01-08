@@ -194,7 +194,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
+    public PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException {
         Integer firstIndex = (pageNo) * pageSize;
 
         String hql = "";
@@ -233,7 +233,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
         if (StringUtils.isNotEmpty(key) && state == null && startDate == null) {
-
+            key = new String(key.getBytes("ISO8859-1"), "utf-8");
             hql = "from OrganizationStream where name like ?1 order by createTimestamp desc";
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%").intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%");
