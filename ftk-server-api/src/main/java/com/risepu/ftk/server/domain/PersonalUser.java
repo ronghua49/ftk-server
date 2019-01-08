@@ -48,6 +48,7 @@ public class PersonalUser extends TimestampObject<String> {
     }
 
     @Column(name = "MOBILE", length = 32)
+    @Id
     public String getMobile() {
         return mobile;
     }
