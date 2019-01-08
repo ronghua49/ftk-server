@@ -49,7 +49,7 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
         List<Template> templates = new ArrayList<>();
         if (defaultState.equals("0")) {
-            Long flag = org.getDefaultTemId();
+//            Long flag = org.getDefaultTemId();
             if (org.getDefaultTemId() == null) {
                 return ResponseEntity.ok(Response.failed(400, "无默认模板"));
             }
