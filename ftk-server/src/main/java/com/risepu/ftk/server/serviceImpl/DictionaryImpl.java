@@ -39,23 +39,27 @@ public class DictionaryImpl implements DictionaryService {
      * @return
      */
     @Override
-    public PageResult<Dictionary> queryIndustryClassByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException {
+    public PageResult<Dictionary> queryIndustryClassByParam(Map<String,Object> map, Integer pageNo, Integer pageSize) {
 
         String dictCode = (String) map.get("dictCode");
         String name = (String) map.get("name");
 
-        int firstIndex = pageNo * pageSize;
-        String hql = "from Dictionary where 1=1 ";
+        int firstIndex = pageNo*pageSize;
+        String hql="from Dictionary where 1=1 ";
         String prefix = "select count(*) ";
-        if (StringUtils.isNotEmpty(dictCode)) {
-            hql += "and dictCode = '" + dictCode + "'";
+        if(StringUtils.isNotEmpty(dictCode)){
+            hql+="and dictCode = '"+dictCode+"'";
         }
-        if (StringUtils.isNotEmpty(name)) {
-            name = new String(name.getBytes("ISO8859-1"), "utf-8");
-            hql += " and name like '%" + name + "%'";
+        if(StringUtils.isNotEmpty(name)){
+            try {
+                name = new String(name.getBytes("utf-8"), "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            hql+=" and name like '%"+name+"%'";
         }
 
-        int total = crudService.uniqueResultHql(Long.class, prefix + hql).intValue();
+        int total = crudService.uniqueResultHql(Long.class, prefix+hql).intValue();
         List<Dictionary> dictionaryList = crudService.hql(Dictionary.class, firstIndex, pageSize, hql);
         PageResult<Dictionary> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
@@ -95,7 +99,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public Dictionary findIndustryClassByCode(String dictCode) {
-        return crudService.uniqueResultHql(Dictionary.class, "from Dictionary where dictCode =?1", dictCode);
+        return crudService.uniqueResultHql(Dictionary.class,"from Dictionary where dictCode =?1",dictCode);
     }
 
     /**
@@ -106,7 +110,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public Dictionary findIndustryClassById(Long id) {
-        return crudService.get(Dictionary.class, id);
+        return crudService.get(Dictionary.class,id);
     }
 
     /**
@@ -118,7 +122,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public List<DictionaryData> queryIndustryDetailByParam(String key, Integer dictId) {
-        return crudService.hql(DictionaryData.class, "from DictionaryData where dictId =?1 and dictdataName like ?2", dictId.longValue(), "%" + key + "%");
+        return crudService.hql(DictionaryData.class,"from DictionaryData where dictId =?1 and dictdataName like ?2",dictId.longValue(),"%"+key+"%");
     }
 
     /**
@@ -129,7 +133,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public List<DictionaryData> queryAllData(Integer dictId) {
-        return crudService.hql(DictionaryData.class, "from DictionaryData where dictId =?1", dictId);
+        return crudService.hql(DictionaryData.class,"from DictionaryData where dictId =?1",dictId);
     }
 
     /**
@@ -150,7 +154,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public DictionaryData findIndustryByCode(String code) {
-        return crudService.uniqueResultHql(DictionaryData.class, "from DictionaryData where code =?1", code);
+        return crudService.uniqueResultHql(DictionaryData.class,"from DictionaryData where code =?1",code);
     }
 
     /**
@@ -182,7 +186,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public List<Dictionary> findAllIndustry() {
-        return crudService.hql(Dictionary.class, "from Dictionary");
+        return crudService.hql(Dictionary.class,"from Dictionary");
     }
 
     /**
@@ -192,7 +196,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public List<DictionaryData> queryAllDataList() {
-        return crudService.hql(DictionaryData.class, "from DictionaryData");
+        return crudService.hql(DictionaryData.class,"from DictionaryData");
     }
 
     /**
@@ -203,7 +207,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public List<DictionaryData> findIndustrysByDictCode(String dictCode) {
-        return crudService.hql(DictionaryData.class, "from DictionaryData where dictId in (select id from Dictionary where dictCode = ?1) ", dictCode);
+        return crudService.hql(DictionaryData.class,"from DictionaryData where dictId in (select id from Dictionary where dictCode = ?1) ",dictCode);
     }
 
     /**
@@ -225,7 +229,7 @@ public class DictionaryImpl implements DictionaryService {
      */
     @Override
     public DictionaryData findIndustryById(Integer id) {
-        return crudService.get(DictionaryData.class, id.longValue());
+        return crudService.get(DictionaryData.class,id.longValue());
     }
 
     /**
@@ -238,14 +242,18 @@ public class DictionaryImpl implements DictionaryService {
      * @return
      */
     @Override
-    public PageResult<DictionaryData> findIndustryDataPageByParam(Integer pageNo, Integer pageSize, String code, String name, Long dictId) throws UnsupportedEncodingException {
+    public PageResult<DictionaryData> findIndustryDataPageByParam(Integer pageNo, Integer pageSize, String code, String name,Long dictId) {
         Integer firstIndex = pageNo * pageSize;
         String sql = "from DictionaryData where dictId = " + dictId;
         if (StringUtils.isNotEmpty(code)) {
             sql += " and code = " + code;
         }
         if (StringUtils.isNotEmpty(name)) {
-            name = new String(name.getBytes("ISO8859-1"), "utf-8");
+            try {
+                name = new String(name.getBytes("utf-8"), "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             sql += " and dictdataName like '%" + name + "%'";
         }
 

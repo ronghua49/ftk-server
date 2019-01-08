@@ -64,7 +64,7 @@ public class PersonalUserController implements PersonzalUserApi {
         boolean identify = smsService.identify(loginRequest.getInCode(), smsCode);
         LoginResult loginResult = new LoginResult();
         if (identify) {
-            String no = loginRequest.getCardNo();
+          String no = loginRequest.getCardNo();
             /** 解析单据信息 */
             String chainHash = (String) request.getSession().getAttribute(Constant.getSessionChainHash());
             /** 校验用户输入的身份证号是否和单据信息一致 */
@@ -77,6 +77,7 @@ public class PersonalUserController implements PersonzalUserApi {
                 } else {
                     SessionListener.sessionMap.put(no, request.getSession());
                 }
+
                 PersonalUser personalUser = personalService.findUserByNo(no,loginRequest.getPhone());
                 if (personalUser != null) {
                     loginResult.setMessage("登录成功");
