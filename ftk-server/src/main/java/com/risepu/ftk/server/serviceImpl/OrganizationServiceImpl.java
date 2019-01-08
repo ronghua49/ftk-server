@@ -230,13 +230,13 @@ public class OrganizationServiceImpl implements OrganizationService {
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%");
 
         } else if (StringUtils.isNotEmpty(key) && state != null && startDate == null) {
+            key = new String(key.getBytes("ISO8859-1"), "utf-8");
             hql = "from OrganizationStream where name like ?1 and state=?2 order by createTimestamp desc";
-
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%", state).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%", state);
 
         } else if (StringUtils.isNotEmpty(key) && state != null && startDate != null) {
-
+            key = new String(key.getBytes("ISO8859-1"), "utf-8");
             hql = "from OrganizationStream where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%", state, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%", state, startDate, nextDate);
