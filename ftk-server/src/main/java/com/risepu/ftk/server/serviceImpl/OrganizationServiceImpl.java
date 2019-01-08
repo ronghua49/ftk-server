@@ -1,11 +1,9 @@
 package com.risepu.ftk.server.serviceImpl;
 
 import com.risepu.ftk.server.domain.*;
-import com.risepu.ftk.server.domain.Dictionary;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.utils.StringUtil;
 import com.risepu.ftk.web.b.dto.LoginResult;
 import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
@@ -129,7 +127,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         File dir = new File(uploadPath);
         File target = new File(dir, name);
         target.getParentFile().mkdirs();
-        
+
         file.transferTo(target);
         return name;
     }
