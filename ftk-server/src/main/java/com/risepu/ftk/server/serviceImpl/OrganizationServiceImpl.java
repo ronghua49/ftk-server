@@ -203,14 +203,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         List<OrganizationStream> orgs = new ArrayList<OrganizationStream>();
 
         String key = (String) map.get("key");
-        if (StringUtils.isNotEmpty(key)) {
-            try {
-                key = new String(key.getBytes("ISO8859-1"), "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-
 
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
