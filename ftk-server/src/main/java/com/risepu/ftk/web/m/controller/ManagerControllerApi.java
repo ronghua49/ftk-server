@@ -20,6 +20,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import java.io.UnsupportedEncodingException;
+
 
 /**
  * @author ronghaohua
@@ -55,7 +57,7 @@ public interface ManagerControllerApi {
 																				  @RequestParam Integer pageSize,
 																				  @RequestParam(required = false) String startTime,
 																				  @RequestParam(required = false) String endTime,
-																				  @RequestParam(required = false) Integer state);
+																				  @RequestParam(required = false) Integer state) throws UnsupportedEncodingException;
 	@ApiOperation(value = "查询单个企业流水的详情信息", nickname = "queryOne")
 	@ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Organization.class) })
 	@RequestMapping(path = "/queryOne/{streamId:\\d+}")

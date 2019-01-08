@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,7 +112,7 @@ public class ManagerController implements ManagerControllerApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String key, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) {
+	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String key, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) throws UnsupportedEncodingException {
 		Map<String, Object> map = new HashMap<>();
 
 		map.put("key", key);

@@ -38,7 +38,7 @@ public class DictionaryController implements DictionaryApi {
     private DictionaryService dictionaryService;
 
     @Override
-    public ResponseEntity<Response<PageResult<Dictionary>>> findAllPage(String dictCode, String name, Integer pageNo, Integer pageSize) {
+    public ResponseEntity<Response<PageResult<Dictionary>>> findAllPage(String dictCode, String name, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException {
         Map<String, Object> map = new HashMap<>();
         map.put("dictCode", dictCode);
         map.put("name", name);

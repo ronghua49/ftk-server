@@ -5,6 +5,7 @@ import com.risepu.ftk.server.domain.DictionaryData;
 import com.risepu.ftk.utils.PageResult;
 import net.lc4ever.framework.remote.annotation.Remote;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public interface DictionaryService {
      * @param pageSize
      * @return
      */
-    PageResult<Dictionary> queryIndustryClassByParam(Map<String, Object> map, Integer pageNo, Integer pageSize);
+    PageResult<Dictionary> queryIndustryClassByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException;
 
     /**
      * 添加行业分类
@@ -146,5 +147,5 @@ public interface DictionaryService {
      * @param name
      * @return
      */
-    PageResult<DictionaryData> findIndustryDataPageByParam(Integer pageNo, Integer pageSize, String code, String name,Long dictId);
+    PageResult<DictionaryData> findIndustryDataPageByParam(Integer pageNo, Integer pageSize, String code, String name,Long dictId) throws UnsupportedEncodingException;
 }
