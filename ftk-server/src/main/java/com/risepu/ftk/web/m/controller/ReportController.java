@@ -78,7 +78,7 @@ public class ReportController implements ReportApi {
     }
 
     @Override
-    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String type) throws UnsupportedEncodingException, ParseException {
+    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String templateType) throws UnsupportedEncodingException, ParseException {
         Integer firstIndex = pageNo * pageSize;
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash) from Organization a,ProofDocument b,Template c where a.id=b.organization and c.id=b.template";
         if (StringUtils.isNotEmpty(organization)) {
@@ -95,8 +95,8 @@ public class ReportController implements ReportApi {
         if (StringUtils.isNotEmpty(number)) {
             hql += " and b.number like '%" + number + "%'";
         }
-        if (StringUtils.isNotEmpty(type)) {
-            hql += " and c.code = '" + type + "'";
+        if (StringUtils.isNotEmpty(templateType)) {
+            hql += " and c.code = '" + templateType + "'";
         }
         List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql);
         List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
