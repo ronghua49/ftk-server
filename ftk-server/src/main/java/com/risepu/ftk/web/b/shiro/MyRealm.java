@@ -2,7 +2,6 @@ package com.risepu.ftk.web.b.shiro;    /*
  * @author  Administrator
  * @date 2019/1/2
  */
-
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.OrganizationUser;
 import com.risepu.ftk.server.service.OrganizationService;

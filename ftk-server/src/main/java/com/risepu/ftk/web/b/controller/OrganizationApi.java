@@ -1,26 +1,23 @@
 package com.risepu.ftk.web.b.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.risepu.ftk.server.domain.OrganizationAdvice;
 import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.*;
 import com.risepu.ftk.web.exception.NotLoginException;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.risepu.ftk.web.api.Response;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 

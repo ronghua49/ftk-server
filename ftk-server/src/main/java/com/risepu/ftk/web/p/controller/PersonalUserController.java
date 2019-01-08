@@ -175,17 +175,13 @@ public class PersonalUserController implements PersonzalUserApi {
      * @return
      */
     @Override
-    public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(PageRequest pageRequest,
-                                                                                 HttpServletRequest request) {
+    public ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(PageRequest pageRequest, HttpServletRequest request) {
         PersonalUser user = getCurrUser(request);
         if (user == null) {
             return ResponseEntity.ok(Response.failed(400, "请重新扫码登录"));
         }
-
         PageResult<AuthHistoryInfo> pageResult = personalService.queryHistoryByParam(pageRequest.getKey(), pageRequest.getPageNo(), pageRequest.getPageSize(), user.getId());
-
         return ResponseEntity.ok(Response.succeed(pageResult));
-
     }
 
     private PersonalUser getCurrUser(HttpServletRequest request) {

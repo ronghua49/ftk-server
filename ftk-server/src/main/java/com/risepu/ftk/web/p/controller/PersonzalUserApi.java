@@ -51,6 +51,4 @@ public interface PersonzalUserApi {
     ResponseEntity<Response<PageResult<AuthHistoryInfo>>> getAuthInfoList(@RequestBody PageRequest pageRequest,
                                                                                  HttpServletRequest request);
 
-
-
 }

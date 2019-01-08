@@ -27,7 +27,7 @@ public class MyAuthenticationFilter extends FormAuthenticationFilter {
                 return true;
             }
         } else {
-            throw new NotLoginException();
+            throw new NotLoginException("您还未登录，请登录后操作");
         }
     }
 

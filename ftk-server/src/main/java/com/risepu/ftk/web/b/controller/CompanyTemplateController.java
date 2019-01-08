@@ -66,7 +66,7 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     public ResponseEntity<Response<String>> getTemplateState(HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
         if (organizationUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
         if (user.getOrganizationId() == null) {

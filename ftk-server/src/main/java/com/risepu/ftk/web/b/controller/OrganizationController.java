@@ -217,7 +217,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
-            throw new NotLoginException("您还未登录，请先登录");
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         String salt = ConfigUtil.getValue("salt");
@@ -281,11 +281,6 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
        HttpSession session = request.getSession();
-//        Subject subject = SecurityUtils.getSubject();
-//        OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-        /** 把对象放入当前回话session*/
-        //setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(orgUser.getId()), orgUser);
-        //setCurrUserToSession(session,orgUser);
         OrganizationUser currUser = getCurrUser(session);
         /** 若果当前回话的 user 为空，表示被挤掉*/
         if (currUser == null) {
@@ -307,7 +302,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<String>> orgAuthen(OrganizationStream organizationStream, HttpSession session) {
         OrganizationUser user = getCurrUser(session);
         if (user == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
 
         /** 查找当前用户提交的组织机构代码证 是否已经通过审核*/
@@ -346,7 +341,7 @@ public class OrganizationController implements OrganizationApi {
         /** 未审核通过的企业不允许扫描单据 */
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
@@ -372,7 +367,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
         OrganizationUser orgUser = getCurrUser(session);
         if (orgUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
         PageResult<VerifyHistory> page = new PageResult();
@@ -397,7 +392,7 @@ public class OrganizationController implements OrganizationApi {
         /** 查询企业开单历史 */
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
 
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
@@ -435,7 +430,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         advice.setOrgId(currUser.getId());
         organizationService.saveAdviceInfo(advice);
@@ -459,7 +454,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<String>> setDefaultTemplate(String templateId, boolean state, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
