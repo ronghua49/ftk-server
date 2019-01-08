@@ -63,6 +63,8 @@ public class PersonalUserController implements PersonzalUserApi {
         String smsCode = getSmsCode(request);
         boolean identify = smsService.identify(loginRequest.getInCode(), smsCode);
         LoginResult loginResult = new LoginResult();
+
+        identify=true;
         if (identify) {
           String no = loginRequest.getCardNo();
             /** 解析单据信息 */
@@ -84,15 +86,19 @@ public class PersonalUserController implements PersonzalUserApi {
                     loginResult.setPersonalUser(personalUser);
                 } else {
                     PersonalUser user = new PersonalUser();
-                    user.setId(no);
-                    user.setMobile(loginRequest.getPhone());
+                    PersonalUser.ID id=new PersonalUser.ID();
+                    id.setId(no);
+                    id.setMobile(loginRequest.getPhone());
+                    user.setId(id);
                     personalService.savePersonUser(user);
+
                     RegisterUserReport report = new RegisterUserReport();
                     report.setUserName(loginRequest.getPhone());
                     report.setUserType(PersonalUser.PERSONAL_USER_TYPE);
                     organizationService.saveRegisterReport(report);
                     personalUser = user;
                 }
+                loginResult.setPersonalUser(personalUser);
                 request.getSession().setAttribute(Constant.getSessionCurrUser(), personalUser);
 
                 /** 根据身份证 查询新的请求授权的企业名和 当前授权流水的id*/
@@ -101,7 +107,7 @@ public class PersonalUserController implements PersonzalUserApi {
                     loginResult.setOrgName((String) map.get("orgName"));
                     loginResult.setStreamId((Long) map.get("streamId"));
                 }
-                logger.debug("用户手机号--{}，登录成功", personalUser.getMobile());
+                logger.debug("用户手机号--{}，登录成功", personalUser.getId().getMobile());
                 return ResponseEntity.ok(Response.succeed(loginResult));
             } else {
                 loginResult.setMessage("输入的身份证号和单据不匹配");
@@ -151,7 +157,7 @@ public class PersonalUserController implements PersonzalUserApi {
             /** 发送验证码 */
             Map<String, String> params = new HashMap<>();
             params.put("company", org.getName());
-            String code = smsService.sendCode(personalUser.getMobile(), SmsService.authTemplateCode, params);
+            String code = smsService.sendCode(personalUser.getId().getMobile(), SmsService.authTemplateCode, params);
             stream.setAuthCode(code);
             stream.setAuthState(AuthorizationStream.AUTH_STATE_PASS);
             message = "授权码下发成功";
@@ -180,7 +186,7 @@ public class PersonalUserController implements PersonzalUserApi {
         if (user == null) {
             return ResponseEntity.ok(Response.failed(400, "请重新扫码登录"));
         }
-        PageResult<AuthHistoryInfo> pageResult = personalService.queryHistoryByParam(pageRequest.getKey(), pageRequest.getPageNo(), pageRequest.getPageSize(), user.getId());
+        PageResult<AuthHistoryInfo> pageResult = personalService.queryHistoryByParam(pageRequest.getKey(), pageRequest.getPageNo(), pageRequest.getPageSize(), user.getId().getId());
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
 

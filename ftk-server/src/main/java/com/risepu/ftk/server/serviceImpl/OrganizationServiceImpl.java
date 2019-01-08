@@ -426,8 +426,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         String  hql = "from OrganizationStream where 1=1 ";
         String hql1 = " order by createTimestamp desc";
         String hql2 = "select count(*) ";
-
-
         String orgName = (String) map.get("orgName");
         String legalPerson = (String) map.get("legalPerson");
         String industry = (String) map.get("industry");

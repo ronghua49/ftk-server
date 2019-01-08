@@ -25,19 +25,11 @@ public class PersonalUserServiceImpl implements PersonalUserService {
     @Autowired
     private GenericCrudService crudService;
 
-    @Override
-    public String personReg(String mobile, String cardNo, String userName) {
-        PersonalUser personalUser = new PersonalUser();
-        personalUser.setId(cardNo);
-        personalUser.setMobile(mobile);
-        personalUser.setUserName(userName);
-        crudService.save(personalUser);
-        return "success";
-    }
+
 
     @Override
-    public String savePersonUser(PersonalUser user) {
-        return crudService.save(user);
+    public void savePersonUser(PersonalUser user) {
+         crudService.save(user);
     }
 
     @Override
@@ -97,6 +89,6 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 
     @Override
     public PersonalUser findUserByNo(String cardNo,String phone) {
-        return crudService.uniqueResultHql(PersonalUser.class, "from PersonalUser where id =?1 and mobile =?2", cardNo,phone);
+        return crudService.uniqueResultHql(PersonalUser.class, "from PersonalUser where id.id =?1 and id.mobile =?2", cardNo,phone);
     }
 }
