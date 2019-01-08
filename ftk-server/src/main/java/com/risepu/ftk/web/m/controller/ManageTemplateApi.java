@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -74,7 +75,7 @@ public interface ManageTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @GetMapping(path = "/getAnyDomain/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> getAnyDomain(@PathVariable Integer pageNo, Integer pageSize, String code, String label, Long templateId);
+    ResponseEntity<Response<PageResult>> getAnyDomain(@PathVariable Integer pageNo, Integer pageSize, String code, String label, Long templateId) throws UnsupportedEncodingException;
 
     /**
      * 根据模板id查找所有模板数据(无分页）
