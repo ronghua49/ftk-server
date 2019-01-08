@@ -63,8 +63,6 @@ public class PersonalUserController implements PersonzalUserApi {
         String smsCode = getSmsCode(request);
         boolean identify = smsService.identify(loginRequest.getInCode(), smsCode);
         LoginResult loginResult = new LoginResult();
-
-        identify=true;
         if (identify) {
           String no = loginRequest.getCardNo();
             /** 解析单据信息 */
