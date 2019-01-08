@@ -269,8 +269,6 @@ public class OrganizationServiceImpl implements OrganizationService {
             total = crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql);
         }
-
-
         PageResult<OrganizationStream> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);
