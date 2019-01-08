@@ -120,7 +120,7 @@ public class OrganizationController implements OrganizationApi {
             } else {
                 SessionListener.sessionMap.put(userId, request.getSession());
             }
-
+            /**  对象放入当前回话*/
             setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(userId), orgUser);
 
             loginResult.setOrganizationUser(orgUser);
@@ -156,13 +156,15 @@ public class OrganizationController implements OrganizationApi {
         LoginResult loginResult = new LoginResult();
         Subject subject = SecurityUtils.getSubject();
         OrganizationUser user = (OrganizationUser) subject.getPrincipal();
+
+
         Organization org = null;
         if (user.getOrganizationId() != null) {
             org = organizationService.findAuthenOrgById(user.getOrganizationId());
         }
         loginResult.setOrganization(org);
         loginResult.setOrganizationUser(user);
-
+        /** 如果有userId相同的回话 则剔除，保留当前回话*/
         if (SessionListener.sessionMap.get(user.getId()) != null) {
             BasicAction.forceLogoutUser(user.getId());
             SessionListener.sessionMap.put(user.getId(), session);
@@ -215,7 +217,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
         if (currUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您还未登录，请先登录");
         }
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         String salt = ConfigUtil.getValue("salt");
@@ -278,13 +280,16 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Subject subject = SecurityUtils.getSubject();
-        OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-        setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(orgUser.getId()), orgUser);
+       HttpSession session = request.getSession();
+//        Subject subject = SecurityUtils.getSubject();
+//        OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
+        /** 把对象放入当前回话session*/
+        //setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(orgUser.getId()), orgUser);
+        //setCurrUserToSession(session,orgUser);
         OrganizationUser currUser = getCurrUser(session);
+        /** 若果当前回话的 user 为空，表示被挤掉*/
         if (currUser == null) {
-            throw new NotLoginException();
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         /**  根据申请人手机号 查询审核状态*/
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());

@@ -13,11 +13,13 @@ public class BasicAction {
     public static void forceLogoutUser(String userId) {
         HttpSession hs = (HttpSession) SessionListener.sessionMap.get(userId);
         SessionListener.sessionMap.remove(userId);
-        Enumeration e = hs.getAttributeNames();
-        while (e.hasMoreElements()) {
-            String sessionName = (String) e.nextElement();
-            // 清空session
-            hs.removeAttribute(sessionName);
+        if(hs!=null){
+            Enumeration e = hs.getAttributeNames();
+            while (e.hasMoreElements()) {
+                String sessionName = (String) e.nextElement();
+                // 清空session
+                hs.removeAttribute(sessionName);
+            }
         }
     }
 }
