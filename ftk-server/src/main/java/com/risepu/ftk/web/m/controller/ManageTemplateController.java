@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -86,6 +87,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             hql += " and createTimestamp >= '" + startTime + "' and createTimestamp < '" + endTime + "'";
         }
         if (StringUtils.isNotEmpty(name)) {
+            name = new String(name.getBytes("ISO8859-1"), "utf-8");
             hql += " and name like '%" + name + "%'";
         }
         List<Template> templates = templateService.getAllTemplate(hql);
@@ -109,6 +111,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             hql += " and code like '%" + code + "%'";
         }
         if (StringUtils.isNotEmpty(name)) {
+            name = new String(name.getBytes("ISO8859-1"), "utf-8");
             hql += " and name like '%" + name + "%'";
         }
         List<SimpleTemplate> templates = crudService.hql(SimpleTemplate.class, hql);
@@ -125,14 +128,15 @@ public class ManageTemplateController implements ManageTemplateApi {
     }
 
     @Override
-    public ResponseEntity<Response<PageResult>> getAnyDomain(Integer pageNo, Integer pageSize, String code, String label, Long templateId) {
+    public ResponseEntity<Response<PageResult>> getAnyDomain(Integer pageNo, Integer pageSize, String code, String label, Long templateId) throws UnsupportedEncodingException {
         Integer firstIndex = pageNo * pageSize;
         String hql = "from Domain d where d.id in (select t.id.domainId from SimpleTemplateDomain t where t.id.templateId = " + templateId + ")";
         if (StringUtils.isNotEmpty(code)) {
-            hql += " and d.code = '" + code + "'";
+            hql += " and d.code like '%" + code + "%'";
         }
         if (StringUtils.isNotEmpty(label)) {
-            hql += " and d.label = '" + label + "'";
+            label = new String(label.getBytes("ISO8859-1"), "utf-8");
+            hql += " and d.label = '%" + label + "%'";
         }
         List<Domain> domains = domainService.getDomains(hql);
         List list = domainService.getAnyDomain(firstIndex, pageSize, hql);
