@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +107,7 @@ public interface OrganizationService {
      * @param pageSize 每条显示数量
      * @return PageResult 对象
      */
-    PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize);
+    PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException;
 
     /**
      * 修改企业用户信息
@@ -206,7 +207,7 @@ public interface OrganizationService {
      * @param pageSize
      * @return
      */
-    PageResult<OrganizationStream> findOrgRegStreamByMap(Map<String,Object> map, Integer pageNo, Integer pageSize);
+    PageResult<OrganizationStream> findOrgRegStreamByMap(Map<String,Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException;
 
     /**
      * 根据参数查询企业和个人注册用户
