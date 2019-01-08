@@ -227,7 +227,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (StringUtils.isNotEmpty(key) && state == null && startDate == null) {
 
             hql = "from OrganizationStream where name like ?1 order by createTimestamp desc";
-
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%").intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%");
 
@@ -240,32 +239,27 @@ public class OrganizationServiceImpl implements OrganizationService {
         } else if (StringUtils.isNotEmpty(key) && state != null && startDate != null) {
 
             hql = "from OrganizationStream where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
-
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%", state, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%", state, startDate, nextDate);
 
         } else if (StringUtils.isEmpty(key) && state == null && startDate != null) {
 
             hql = "from OrganizationStream where createTimestamp between ?1 and ?2 order by createTimestamp desc";
-
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, startDate, nextDate);
 
         } else if (StringUtils.isEmpty(key)&& state != null && startDate != null) {
 
             hql = "from OrganizationStream where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
-
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, state, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, state, startDate, nextDate);
 
         } else if (StringUtils.isEmpty(key) && state != null && startDate == null) {
             hql = "from OrganizationStream where state=?1 order by createTimestamp desc";
-
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, state).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, state);
         } else {
             hql = "from OrganizationStream order by createTimestamp desc";
-
             total = crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql);
         }
