@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,11 @@ public class DictionaryImpl implements DictionaryService {
             hql+="and dictCode = '"+dictCode+"'";
         }
         if(StringUtils.isNotEmpty(name)){
+            try {
+                name = new String(name.getBytes("utf-8"), "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             hql+=" and name like '%"+name+"%'";
         }
 
@@ -243,6 +249,11 @@ public class DictionaryImpl implements DictionaryService {
             sql += " and code = " + code;
         }
         if (StringUtils.isNotEmpty(name)) {
+            try {
+                name = new String(name.getBytes("utf-8"), "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             sql += " and dictdataName like '%" + name + "%'";
         }
 

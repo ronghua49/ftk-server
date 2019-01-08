@@ -22,7 +22,6 @@ public interface PersonalUserService {
 
     /**
      * 保存用户
-     *
      * @param user 用户对象
      * @return 保存的用户id
      */
@@ -30,7 +29,6 @@ public interface PersonalUserService {
 
     /**
      * 根据身份证号和手机号查询用户
-     *
      * @param cardNo 身份证号
      * @param phone 注册手机号
      * @return

@@ -55,7 +55,6 @@ public interface ReportApi {
                                                                                   @RequestParam(required = false) String endTime,
                                                                                   @RequestParam(required = false) Integer state);
 
-
     @ApiOperation(value = "用户注册统计", nickname = "UserRegisterReport")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @RequestMapping(path = "/userReg/{pageNo:\\d+}")

@@ -5,6 +5,7 @@ import com.risepu.ftk.server.domain.Dictionary;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.utils.StringUtil;
 import com.risepu.ftk.web.b.dto.LoginResult;
 import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
@@ -204,6 +205,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         List<OrganizationStream> orgs = new ArrayList<OrganizationStream>();
 
         String key = (String) map.get("key");
+        if(StringUtils.isNotEmpty(key)){
+            try {
+                key = new String(key.getBytes("utf-8"), "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         Integer state = (Integer) map.get("state");
@@ -440,10 +450,20 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
         if(StringUtils.isNotEmpty(orgName)){
+            try {
+                orgName = new String(orgName.getBytes("utf-8"), "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             hql+="and name like '%"+orgName+"%'";
         }
 
         if(StringUtils.isNotEmpty(legalPerson)){
+            try {
+                legalPerson = new String(legalPerson.getBytes("utf-8"), "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             hql+=" and legalPerson like '%"+legalPerson+"%'";
         }
         if(StringUtils.isNotEmpty(industry)){
