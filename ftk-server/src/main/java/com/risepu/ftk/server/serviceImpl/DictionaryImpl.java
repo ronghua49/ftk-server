@@ -39,7 +39,7 @@ public class DictionaryImpl implements DictionaryService {
      * @return
      */
     @Override
-    public PageResult<Dictionary> queryIndustryClassByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) {
+    public PageResult<Dictionary> queryIndustryClassByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException {
 
         String dictCode = (String) map.get("dictCode");
         String name = (String) map.get("name");
@@ -51,11 +51,7 @@ public class DictionaryImpl implements DictionaryService {
             hql += "and dictCode = '" + dictCode + "'";
         }
         if (StringUtils.isNotEmpty(name)) {
-            try {
-                name = new String(name.getBytes("utf-8"), "ISO-8859-1");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            name = new String(name.getBytes("ISO-8859-1"), "utf-8");
             hql += " and name like '%" + name + "%'";
         }
 
