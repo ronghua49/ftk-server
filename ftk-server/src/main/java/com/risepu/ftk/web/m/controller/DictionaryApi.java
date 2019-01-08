@@ -67,7 +67,7 @@ public interface DictionaryApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @RequestMapping(path = "/detail/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> detail(@PathVariable Integer pageNo, Integer pageSize, @RequestParam String code, @RequestParam String name, Long dictId) throws UnsupportedEncodingException;
+    ResponseEntity<Response<PageResult>> detail(@PathVariable Integer pageNo, Integer pageSize, @RequestParam(required = false) String code, @RequestParam(required = false) String name, Long dictId) throws UnsupportedEncodingException;
 
 
     @ApiOperation(value = "删除行业分类", nickname = "del")
