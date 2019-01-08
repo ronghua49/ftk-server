@@ -114,13 +114,6 @@ public class ReportController implements ReportApi {
     @Override
     public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String orgName, String legalPerson, String industry, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) {
         Map<String, Object> map = new HashMap<>();
-
-        try {
-            orgName = new String(orgName.getBytes("ISO-8859-1"), "utf-8");
-            legalPerson = new String(legalPerson.getBytes("ISO-8859-1"), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         map.put("orgName", orgName);
         map.put("legalPerson", legalPerson);
         map.put("industry", industry);

@@ -1,11 +1,15 @@
 package com.risepu.ftk.web.m.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.risepu.ftk.server.domain.AdminUser;
+import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationStream;
+import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.server.service.AdminService;
+import com.risepu.ftk.server.service.OrganizationService;
+import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.Constant;
+import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,20 +18,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.risepu.ftk.server.domain.AdminUser;
-import com.risepu.ftk.server.domain.Organization;
-import com.risepu.ftk.server.domain.OrganizationStream;
-import com.risepu.ftk.server.domain.OrganizationUser;
-import com.risepu.ftk.server.service.AdminService;
-import com.risepu.ftk.server.service.OrganizationService;
-import com.risepu.ftk.utils.ConfigUtil;
-import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.web.Constant;
-import com.risepu.ftk.web.api.Response;
-import com.risepu.ftk.web.exception.NotLoginException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author ronghaohua

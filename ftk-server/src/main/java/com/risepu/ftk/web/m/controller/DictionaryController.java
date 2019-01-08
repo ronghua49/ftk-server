@@ -89,25 +89,9 @@ public class DictionaryController implements DictionaryApi {
 
     @Override
     public ResponseEntity<Response<PageResult>> detail(Integer pageNo, Integer pageSize, String code, String name, Long dictId) throws UnsupportedEncodingException {
-        Integer firstIndex = pageNo * pageSize;
-        String sql = "from DictionaryData where dictId = " + dictId;
-        if (StringUtils.isNotEmpty(code)) {
-            sql += " and code = " + code;
-        }
-        if (StringUtils.isNotEmpty(name)) {
-            //name = new String(name.getBytes("ISO8859-1"), "utf-8");
-            sql += " and dictdataName like '%" + name + "%'";
-        }
-        List<DictionaryData> list = crudService.hql(DictionaryData.class, firstIndex, pageSize, sql);
-        List<DictionaryData> dataList = crudService.hql(DictionaryData.class, sql);
-        PageResult<DictionaryData> pageResult = new PageResult<>();
-        pageResult.setResultCode("SUCCESS");
-        pageResult.setNumber(pageNo);
-        pageResult.setSize(pageSize);
-        pageResult.setTotalPages(dataList.size(), pageSize);
-        pageResult.setTotalElements(dataList.size());
-        pageResult.setContent(list);
-        return ResponseEntity.ok(Response.succeed(pageResult));
+        PageResult<DictionaryData> pageResult = dictionaryService.findIndustryDataPageByParam(pageNo,pageSize,code,name,dictId);
+        return  ResponseEntity.ok(Response.succeed(pageResult));
+
     }
 
     @Override

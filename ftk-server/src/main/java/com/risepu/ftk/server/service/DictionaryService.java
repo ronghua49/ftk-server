@@ -137,4 +137,14 @@ public interface DictionaryService {
      * @return
      */
     DictionaryData findIndustryById(Integer id);
+
+    /**
+     * 根据参数参数查询二级行业
+     * @param pageNo
+     * @param pageSize
+     * @param code
+     * @param name
+     * @return
+     */
+    PageResult<DictionaryData> findIndustryDataPageByParam(Integer pageNo, Integer pageSize, String code, String name,Long dictId);
 }

@@ -225,4 +225,36 @@ public class DictionaryImpl implements DictionaryService {
     public DictionaryData findIndustryById(Integer id) {
         return crudService.get(DictionaryData.class,id.longValue());
     }
+
+    /**
+     * 根据参数参数查询二级行业
+     *
+     * @param pageNo
+     * @param pageSize
+     * @param code
+     * @param name
+     * @return
+     */
+    @Override
+    public PageResult<DictionaryData> findIndustryDataPageByParam(Integer pageNo, Integer pageSize, String code, String name,Long dictId) {
+        Integer firstIndex = pageNo * pageSize;
+        String sql = "from DictionaryData where dictId = " + dictId;
+        if (StringUtils.isNotEmpty(code)) {
+            sql += " and code = " + code;
+        }
+        if (StringUtils.isNotEmpty(name)) {
+            sql += " and dictdataName like '%" + name + "%'";
+        }
+
+        List<DictionaryData> list = crudService.hql(DictionaryData.class, firstIndex, pageSize, sql);
+        List<DictionaryData> dataList = crudService.hql(DictionaryData.class, sql);
+        PageResult<DictionaryData> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(dataList.size(), pageSize);
+        pageResult.setTotalElements(dataList.size());
+        pageResult.setContent(list);
+        return pageResult;
+    }
 }
