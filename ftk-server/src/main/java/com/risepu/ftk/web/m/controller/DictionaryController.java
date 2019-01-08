@@ -95,7 +95,7 @@ public class DictionaryController implements DictionaryApi {
             sql += " and code = " + code;
         }
         if (StringUtils.isNotEmpty(name)) {
-            name = new String(name.getBytes("ISO8859-1"), "utf-8");
+            //name = new String(name.getBytes("ISO8859-1"), "utf-8");
             sql += " and dictdataName like '%" + name + "%'";
         }
         List<DictionaryData> list = crudService.hql(DictionaryData.class, firstIndex, pageSize, sql);

@@ -47,7 +47,7 @@ public class DictionaryImpl implements DictionaryService {
         String hql="from Dictionary where 1=1 ";
         String prefix = "select count(*) ";
         if(StringUtils.isNotEmpty(dictCode)){
-            hql+="and dictCode like '%"+dictCode+"%'";
+            hql+="and dictCode = '"+dictCode+"'";
         }
         if(StringUtils.isNotEmpty(name)){
             hql+=" and name like '%"+name+"%'";
