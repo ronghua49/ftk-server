@@ -30,7 +30,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
     @Value("${salt}")
-    private  String SALT;
+    private String SALT;
 
     @Autowired
     private GenericCrudService crudService;
@@ -122,7 +122,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public String upload(MultipartFile file) throws IllegalStateException, IOException {
         String name = UUID.randomUUID().toString().replaceAll("-", "");
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-        name =  new SimpleDateFormat("yyyy-MM/dd/").format(new Date())+name + "." + ext;
+        name = new SimpleDateFormat("yyyy-MM/dd/").format(new Date()) + name + "." + ext;
         /** 上传图片到指定地址路径 */
         File dir = new File(uploadPath);
         File target = new File(dir, name);
@@ -135,7 +135,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public void download(String imgName, HttpServletResponse response) throws IOException {
         File dir = new File(ConfigUtil.getValue("file.upload.path"));
-        File target = new File(dir,imgName);
+        File target = new File(dir, imgName);
 
         InputStream in = new FileInputStream(target);
         OutputStream out = response.getOutputStream();
@@ -203,9 +203,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         List<OrganizationStream> orgs = new ArrayList<OrganizationStream>();
 
         String key = (String) map.get("key");
-        if(StringUtils.isNotEmpty(key)){
+        if (StringUtils.isNotEmpty(key)) {
             try {
-                key = new String(key.getBytes("utf-8"), "ISO-8859-1");
+                key = new String(key.getBytes("ISO8859-1"), "utf-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -229,7 +229,6 @@ public class OrganizationServiceImpl implements OrganizationService {
                 e.printStackTrace();
             }
         }
-
 
 
         if (StringUtils.isNotEmpty(key) && state == null && startDate == null) {
@@ -256,7 +255,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, startDate, nextDate).intValue();
             orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, startDate, nextDate);
 
-        } else if (StringUtils.isEmpty(key)&& state != null && startDate != null) {
+        } else if (StringUtils.isEmpty(key) && state != null && startDate != null) {
 
             hql = "from OrganizationStream where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
             total = crudService.uniqueResultHql(Long.class, hql2 + hql, state, startDate, nextDate).intValue();
@@ -421,9 +420,9 @@ public class OrganizationServiceImpl implements OrganizationService {
      * @return
      */
     @Override
-    public PageResult<OrganizationStream> findOrgRegStreamByMap(Map<String, Object> map, Integer pageNo, Integer pageSize) {
+    public PageResult<OrganizationStream> findOrgRegStreamByMap(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException {
         Integer firstIndex = (pageNo) * pageSize;
-        String  hql = "from OrganizationStream where 1=1 ";
+        String hql = "from OrganizationStream where 1=1 ";
         String hql1 = " order by createTimestamp desc";
         String hql2 = "select count(*) ";
 
@@ -436,46 +435,39 @@ public class OrganizationServiceImpl implements OrganizationService {
         Integer state = (Integer) map.get("state");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String nextDate=null;
+        String nextDate = null;
         if (StringUtils.isNotEmpty(startTime)) {
             try {
                 Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
-                nextDate =  format.format(next);
+                nextDate = format.format(next);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
 
 
-        if(StringUtils.isNotEmpty(orgName)){
-            try {
-                orgName = new String(orgName.getBytes("utf-8"), "ISO-8859-1");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            hql+="and name like '%"+orgName+"%'";
+        if (StringUtils.isNotEmpty(orgName)) {
+            orgName = new String(orgName.getBytes("ISO8859-1"), "utf-8");
+
+            hql += "and name like '%" + orgName + "%'";
         }
 
-        if(StringUtils.isNotEmpty(legalPerson)){
-            try {
-                legalPerson = new String(legalPerson.getBytes("utf-8"), "ISO-8859-1");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            hql+=" and legalPerson like '%"+legalPerson+"%'";
+        if (StringUtils.isNotEmpty(legalPerson)) {
+            legalPerson = new String(legalPerson.getBytes("ISO8859-1"), "utf-8");
+            hql += " and legalPerson like '%" + legalPerson + "%'";
         }
-        if(StringUtils.isNotEmpty(industry)){
-            hql+=" and code in (select code from DictionaryData where dictId =(select id from Dictionary where dictCode = '"+industry+"'))";
+        if (StringUtils.isNotEmpty(industry)) {
+            hql += " and code in (select code from DictionaryData where dictId =(select id from Dictionary where dictCode = '" + industry + "'))";
         }
-        if(StringUtils.isNotEmpty(startTime)){
-            hql+=" and createTimestamp  between '"+startTime+"' and '"+nextDate+"'";
+        if (StringUtils.isNotEmpty(startTime)) {
+            hql += " and createTimestamp  between '" + startTime + "' and '" + nextDate + "'";
         }
 
-        if(state!=null){
-            hql+=" and state= "+state;
+        if (state != null) {
+            hql += " and state= " + state;
         }
-        List<OrganizationStream> organizationStreams = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql+hql1);
-        int total= crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
+        List<OrganizationStream> organizationStreams = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql + hql1);
+        int total = crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
         PageResult<OrganizationStream> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);
@@ -504,11 +496,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         String endTime = (String) map.get("endTime");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String nextDate=null;
+        String nextDate = null;
         if (StringUtils.isNotEmpty(startTime)) {
             try {
                 Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
-                nextDate =  format.format(next);
+                nextDate = format.format(next);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -517,17 +509,17 @@ public class OrganizationServiceImpl implements OrganizationService {
         String hql = "from RegisterUserReport where 1=1 ";
         String prefixSql = "select count(*) ";
 
-        if(StringUtils.isNotEmpty(userType)){
-            hql+="and userType = "+Integer.parseInt(userType);
+        if (StringUtils.isNotEmpty(userType)) {
+            hql += "and userType = " + Integer.parseInt(userType);
         }
-        if(StringUtils.isNotEmpty(startTime)){
-            hql+="and createTimestamp between '"+startTime+"' and '"+nextDate+"'";
+        if (StringUtils.isNotEmpty(startTime)) {
+            hql += "and createTimestamp between '" + startTime + "' and '" + nextDate + "'";
         }
 
-        hql+=" order by createTimestamp desc";
+        hql += " order by createTimestamp desc";
 
         List<RegisterUserReport> reportList = crudService.hql(RegisterUserReport.class, firstIndex, pageSize, hql);
-        int total= crudService.uniqueResultHql(Long.class, prefixSql + hql).intValue();
+        int total = crudService.uniqueResultHql(Long.class, prefixSql + hql).intValue();
 
         PageResult<RegisterUserReport> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
@@ -560,7 +552,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationStream findAuthStreamByNameAndState(String name, Integer checkingState, Integer checkFailState) {
 
-        return crudService.uniqueResultHql(OrganizationStream.class,"from OrganizationStream where name =?1 and state in (2,3)",name);
+        return crudService.uniqueResultHql(OrganizationStream.class, "from OrganizationStream where name =?1 and state in (2,3)", name);
     }
 
 }
