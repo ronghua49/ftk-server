@@ -197,12 +197,12 @@ public class DocumentDataController implements DocumentDataApi {
                 file.mkdirs();
             }
             Long templateId = Long.parseLong(map.get("templateId"));
-            List<Domain> list = crudService.hql(Domain.class, "from Domain d where d.id in (select t.id.domainId from SimpleTemplateDomain t where t.id.templateId = ?1 )", templateId);
+            List<Domain> list = crudService.hql(Domain.class, "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )", templateId);
             for (Domain domain : list) {
                 for (Map.Entry<String, String> entry : map.entrySet()) {
                     if (domain.getCode().equals(entry.getKey())) {
-                        if (map.get(domain.getCode()).length() < domain.getMin() || map.get(domain.getCode()).length() > domain.getMax()) {
-                            return ResponseEntity.ok(Response.failed(400, "字符长度必须在" + domain.getMin() + "~" + domain.getMax() + "之间"));
+                        if (domain.getMin() != null && domain.getMax() != null && (map.get(domain.getCode()).length() < domain.getMin() || map.get(domain.getCode()).length() > domain.getMax())) {
+                            return ResponseEntity.ok(Response.failed(400, domain.getLabel() + "长度必须在" + domain.getMin() + "~" + domain.getMax() + "之间"));
                         }
                     }
                 }
