@@ -201,7 +201,7 @@ public class DocumentDataController implements DocumentDataApi {
             for (Domain domain : list) {
                 for (Map.Entry<String, String> entry : map.entrySet()) {
                     if (domain.getCode().equals(entry.getKey())) {
-                        if (map.get(domain.getCode()).length() < domain.getMin() || map.get(domain.getCode()).length() > domain.getMax()) {
+                        if (domain.getMin() != null && domain.getMax() != null && (map.get(domain.getCode()).length() < domain.getMin() || map.get(domain.getCode()).length() > domain.getMax())) {
                             return ResponseEntity.ok(Response.failed(400, "字符长度必须在" + domain.getMin() + "~" + domain.getMax() + "之间"));
                         }
                     }
