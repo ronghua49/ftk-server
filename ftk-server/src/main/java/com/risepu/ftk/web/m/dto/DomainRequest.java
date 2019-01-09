@@ -18,6 +18,16 @@ public class DomainRequest {
     private String type;
 
     /**
+     * 数据最小长度
+     */
+    private Integer min;
+
+    /**
+     * 数据最大长度
+     */
+    private Integer max;
+
+    /**
      * 校验规则
      */
     private String kegex;
@@ -54,6 +64,22 @@ public class DomainRequest {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Integer getMin() {
+        return min;
+    }
+
+    public void setMin(Integer min) {
+        this.min = min;
+    }
+
+    public Integer getMax() {
+        return max;
+    }
+
+    public void setMax(Integer max) {
+        this.max = max;
     }
 
     public String getKegex() {
