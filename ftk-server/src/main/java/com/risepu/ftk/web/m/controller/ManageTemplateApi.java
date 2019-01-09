@@ -169,7 +169,7 @@ public interface ManageTemplateApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
     @PostMapping(path = "/updateTemplateData", consumes = {"application/json"})
     @ResponseBody
-    ResponseEntity<Response<String>> updateTemplateData(Domain domain);
+    ResponseEntity<Response<String>> updateTemplateData(@RequestBody Domain domain);
 
     /**
      * 模板名称下拉框
