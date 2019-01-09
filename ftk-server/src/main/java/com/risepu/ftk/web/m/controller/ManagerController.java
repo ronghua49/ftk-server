@@ -1,9 +1,6 @@
 package com.risepu.ftk.web.m.controller;
 
-import com.risepu.ftk.server.domain.AdminUser;
-import com.risepu.ftk.server.domain.Organization;
-import com.risepu.ftk.server.domain.OrganizationStream;
-import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.AdminService;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.PageResult;
@@ -202,6 +199,40 @@ public class ManagerController implements ManagerControllerApi {
 		request.getSession().setAttribute(Constant.getSessionCurrUser(), null);
 		return ResponseEntity.ok(Response.succeed("退出登录成功"));
 	}
+
+
+	/**
+	 * 企业反馈意见详情
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public ResponseEntity<Response<OrganizationAdvice>> queryAdvice(Long id) {
+		OrganizationAdvice advice = organizationService.findOrgAdviceById(id);
+		return ResponseEntity.ok(Response.succeed(advice));
+	}
+
+	/**
+	 * 企业反馈信息查询
+	 * @param orgName 企业名称
+	 * @param tel 电话
+	 * @param pageNo 页码
+	 * @param pageSize 每页显示数量
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @return
+	 */
+	@Override
+	public ResponseEntity<Response<PageResult<OrganizationAdvice>>> queryAllAdvice(String orgName, String tel, Integer pageNo, Integer pageSize, String startTime, String endTime) throws UnsupportedEncodingException {
+		Map<String,Object> map = new HashMap<>();
+		map.put("orgName",orgName);
+		map.put("tel",tel);
+		map.put("startTime",startTime);
+		map.put("endTime",endTime);
+		PageResult<OrganizationAdvice> pageResult = organizationService.findOrgAdviceByParam(map,pageNo,pageSize);
+		return ResponseEntity.ok(Response.succeed(pageResult));
+	}
+
 
 	@Override
 	public ResponseEntity<Response<String>> loginUser(HttpSession session) {
