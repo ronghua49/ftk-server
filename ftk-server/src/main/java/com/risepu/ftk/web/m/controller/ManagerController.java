@@ -207,8 +207,8 @@ public class ManagerController implements ManagerControllerApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<OrganizationAdvice>> queryAdvice(String id) {
-		OrganizationAdvice advice = organizationService.findOrgAdviceById(Long.parseLong(id));
+	public ResponseEntity<Response<OrganizationAdvice>> queryAdvice(Long id) {
+		OrganizationAdvice advice = organizationService.findOrgAdviceById(id);
 		return ResponseEntity.ok(Response.succeed(advice));
 	}
 
