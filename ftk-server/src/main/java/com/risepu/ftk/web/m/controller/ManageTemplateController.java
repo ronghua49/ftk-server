@@ -356,10 +356,21 @@ public class ManageTemplateController implements ManageTemplateApi {
         // TODO Auto-generated method stub
         if (StringUtils.isEmpty(domainRequest.getCode())) {
             return ResponseEntity.ok(Response.failed(400, "模板要素code不能为空"));
-        } else if (StringUtils.isEmpty(domainRequest.getLabel())) {
+        }
+        if (StringUtils.isEmpty(domainRequest.getLabel())) {
             return ResponseEntity.ok(Response.failed(400, "模板要素名称不能为空"));
-        } else if (StringUtils.isEmpty(domainRequest.getKegex())) {
+        }
+        if (StringUtils.isEmpty(domainRequest.getKegex())) {
             return ResponseEntity.ok(Response.failed(400, "校验规则不能为空"));
+        }
+        if (domainRequest.getMin() == null) {
+            return ResponseEntity.ok(Response.failed(400, "最小长度不能为空"));
+        }
+        if (domainRequest.getMax() == null) {
+            return ResponseEntity.ok(Response.failed(400, "最大长度不能为空"));
+        }
+        if (domainRequest.getMin() > domainRequest.getMax()) {
+            return ResponseEntity.ok(Response.failed(400, "最小长度不能大于最大长度"));
         }
         String code = domainRequest.getCode().trim();
         List<Domain> domains = domainService.selectAll();
@@ -376,6 +387,8 @@ public class ManageTemplateController implements ManageTemplateApi {
             domain.setKegex(domainRequest.getKegex());
             domain.setType(domainRequest.getType());
             domain.setLabel(domainRequest.getLabel());
+            domain.setMax(domainRequest.getMax());
+            domain.setMin(domainRequest.getMin());
             domainId = domainService.add(domain);
         } else {
             Domain domain = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", domainRequest.getCode());
