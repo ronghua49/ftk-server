@@ -96,7 +96,7 @@ public interface ManagerControllerApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = OrganizationAdvice.class)})
     @RequestMapping(path = "/advice")
     @ResponseBody
-    ResponseEntity<Response<OrganizationAdvice>> queryAdvice(@RequestParam Long id);
+    ResponseEntity<Response<OrganizationAdvice>> queryAdvice(@RequestParam String id);
 
 
 }

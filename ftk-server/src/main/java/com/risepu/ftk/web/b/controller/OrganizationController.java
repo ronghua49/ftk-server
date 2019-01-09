@@ -271,7 +271,6 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(9, "图片下载失败"));
         }
     }
-
     /**
      * 校验当前企业的审核状态
      *
