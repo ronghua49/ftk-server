@@ -414,6 +414,9 @@ public class ManageTemplateController implements ManageTemplateApi {
 
     @Override
     public ResponseEntity<Response<String>> updateTemplateData(Domain domain) {
+        if (domain.getMin() > domain.getMax()) {
+            return ResponseEntity.ok(Response.failed(400, "最小长度不能大于最大长度"));
+        }
         String code = domain.getCode().trim();
         domain.setCode(code);
         domainService.update(domain);
