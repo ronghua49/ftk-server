@@ -167,7 +167,7 @@ public interface ManageTemplateApi {
      */
     @ApiOperation(value = "修改模板数据", nickname = "updateTemplateData")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
-    @PostMapping(path = "/updateTemplateData")
+    @PostMapping(path = "/updateTemplateData", consumes = {"application/json"})
     @ResponseBody
     ResponseEntity<Response<String>> updateTemplateData(Domain domain);
 
