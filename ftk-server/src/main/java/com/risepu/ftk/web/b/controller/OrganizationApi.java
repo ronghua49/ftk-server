@@ -42,7 +42,7 @@ public interface OrganizationApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = LoginResult.class)})
     @RequestMapping(path = "/login")
     @ResponseBody
-    ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) throws IOException;
+    ResponseEntity<Response<LoginResult>> orgLogin(@RequestBody OrgLoginRequest loginRequest, HttpServletRequest request);
 
 
     @ApiOperation(value = "登录成功的跳转", nickname = "loginSuccess")

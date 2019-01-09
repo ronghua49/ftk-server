@@ -102,7 +102,7 @@ public class OrganizationController implements OrganizationApi {
      */
 
     @Override
-    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Response<LoginResult>> orgLogin(OrgLoginRequest loginRequest, HttpServletRequest request)  {
         Subject subject = SecurityUtils.getSubject();
         String password = DigestUtils.md5Hex(loginRequest.getPassword() + SALT);
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(loginRequest.getName(), password, true);
