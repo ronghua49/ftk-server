@@ -271,7 +271,6 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(9, "图片下载失败"));
         }
     }
-
     /**
      * 校验当前企业的审核状态
      *
@@ -433,6 +432,9 @@ public class OrganizationController implements OrganizationApi {
             throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
         advice.setOrgId(currUser.getId());
+        if(advice.getContactTel().length()>50){
+            return ResponseEntity.ok(Response.failed(400,"联系方式字段超长"));
+        }
         organizationService.saveAdviceInfo(advice);
         return ResponseEntity.ok(Response.succeed("意见反馈成功！"));
     }

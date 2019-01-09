@@ -226,4 +226,20 @@ public interface OrganizationService {
      * @return
      */
     OrganizationStream findAuthStreamByNameAndState(String name, Integer checkingState, Integer checkFailState);
+
+    /**
+     * 根据参数查询企业反馈意见
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    PageResult<OrganizationAdvice> findOrgAdviceByParam(Map<String,Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException;
+
+    /**
+     * 查询企业反馈意见
+     * @param id
+     * @return
+     */
+    OrganizationAdvice findOrgAdviceById(Long id);
 }

@@ -441,6 +441,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         String prefixSql = "select count(*) ";
 
         if (StringUtils.isNotEmpty(userType)) {
+
             hql += "and userType = " + Integer.parseInt(userType);
         }
         if (StringUtils.isNotEmpty(startTime)) {
@@ -484,6 +485,76 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationStream findAuthStreamByNameAndState(String name, Integer checkingState, Integer checkFailState) {
 
         return crudService.uniqueResultHql(OrganizationStream.class, "from OrganizationStream where name =?1 and state in (2,3)", name);
+    }
+
+    /**
+     * 根据参数查询企业反馈意见
+     *
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageResult<OrganizationAdvice> findOrgAdviceByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException {
+        Integer firstIndex = (pageNo) * pageSize;
+
+        String orgName = (String) map.get("orgName");
+        String tel = (String) map.get("tel");
+        String startTime = (String) map.get("startTime");
+        String endTime = (String) map.get("endTime");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String nextDate = null;
+        if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
+            try {
+                Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
+                nextDate = format.format(next);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String hql = "from OrganizationAdvice where 1=1 ";
+        String prefixSql = "select count(*) ";
+
+        if (StringUtils.isNotEmpty(orgName)) {
+            orgName = new String(orgName.getBytes("ISO-8859-1"),"utf-8");
+            hql += "and organizationName  like '%" + orgName + "%'";
+        }
+
+        if(StringUtils.isNotEmpty(tel)){
+            hql+=" and contactTel like '" + tel + "%'";
+
+        }
+        if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
+            hql += "and createTimestamp between '" + startTime + "' and '" + nextDate + "'";
+        }
+
+        hql += " order by createTimestamp desc";
+
+        List<OrganizationAdvice>  adviceList= crudService.hql(OrganizationAdvice.class, firstIndex, pageSize, hql);
+        int total = crudService.uniqueResultHql(Long.class, prefixSql + hql).intValue();
+
+        PageResult<OrganizationAdvice> pageResult = new PageResult<>();
+        pageResult.setResultCode("SUCCESS");
+        pageResult.setNumber(pageNo);
+        pageResult.setSize(pageSize);
+        pageResult.setTotalPages(total, pageSize);
+        pageResult.setTotalElements(total);
+        pageResult.setContent(adviceList);
+        return pageResult;
+    }
+
+    /**
+     * 查询企业反馈意见
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public OrganizationAdvice findOrgAdviceById(Long id) {
+        return crudService.get(OrganizationAdvice.class,id);
     }
 
 }
