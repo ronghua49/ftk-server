@@ -197,7 +197,7 @@ public class DocumentDataController implements DocumentDataApi {
                 file.mkdirs();
             }
             Long templateId = Long.parseLong(map.get("templateId"));
-            List<Domain> list = crudService.hql(Domain.class, "from Domain d where d.id in (select t.id.domainId from SimpleTemplateDomain t where t.id.templateId = ?1 )", templateId);
+            List<Domain> list = crudService.hql(Domain.class, "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )", templateId);
             for (Domain domain : list) {
                 for (Map.Entry<String, String> entry : map.entrySet()) {
                     if (domain.getCode().equals(entry.getKey())) {
