@@ -21,10 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author L-heng
@@ -200,6 +197,16 @@ public class DocumentDataController implements DocumentDataApi {
                 file.mkdirs();
             }
             Long templateId = Long.parseLong(map.get("templateId"));
+            List<Domain> list = crudService.hql(Domain.class, "from Domain d where d.id in (select t.id.domainId from SimpleTemplateDomain t where t.id.templateId = ?1 )", templateId);
+            for (Domain domain : list) {
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    if (domain.getCode().equals(entry.getKey())) {
+                        if (map.get(domain.getCode()).length() < domain.getMin() || map.get(domain.getCode()).length() > domain.getMax()) {
+                            return ResponseEntity.ok(Response.failed(400, "字符长度必须在" + domain.getMin() + "~" + domain.getMax() + "之间"));
+                        }
+                    }
+                }
+            }
             // 根据模板id得到模板
             Template template = templateService.getTemplate(templateId);
 
