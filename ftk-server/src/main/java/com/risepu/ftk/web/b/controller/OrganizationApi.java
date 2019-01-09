@@ -57,7 +57,7 @@ public interface OrganizationApi {
 
     @ApiOperation(value = "修改密码", nickname = "changePwd")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
-    @RequestMapping(path = "/changePwd")
+    @PostMapping(path = "/changePwd")
     @ResponseBody
     ResponseEntity<Response<String>> orgChangePwd(@RequestParam String password, @RequestParam String newpwd, HttpSession session);
 

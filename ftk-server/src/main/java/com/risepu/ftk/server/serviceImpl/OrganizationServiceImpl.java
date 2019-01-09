@@ -519,7 +519,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         String prefixSql = "select count(*) ";
 
         if (StringUtils.isNotEmpty(orgName)) {
-           // orgName = new String(orgName.getBytes("ISO-8859-1"),"utf-8");
+            orgName = new String(orgName.getBytes("ISO-8859-1"),"utf-8");
             hql += "and organizationName  like '%" + orgName + "%'";
         }
 
