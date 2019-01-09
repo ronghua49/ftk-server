@@ -70,13 +70,13 @@ public class PersonalUserController implements PersonzalUserApi {
             /** 校验用户输入的身份证号是否和单据信息一致 */
             ProofDocument document = chainService.verify(chainHash, no);
             if (document != null) {
-                /** 实现单一登录，剔除效果*/
-                if (SessionListener.sessionMap.get(no) != null) {
-                    BasicAction.forceLogoutUser(no);
-                    SessionListener.sessionMap.put(no, request.getSession());
-                } else {
-                    SessionListener.sessionMap.put(no, request.getSession());
-                }
+//                /** 实现单一登录，剔除效果*/
+//                if (SessionListener.sessionMap.get(no) != null) {
+//                    BasicAction.forceLogoutUser(no);
+//                    SessionListener.sessionMap.put(no, request.getSession());
+//                } else {
+//                    SessionListener.sessionMap.put(no, request.getSession());
+//                }
 
                 PersonalUser personalUser = personalService.findUserByNo(no,loginRequest.getPhone());
                 if (personalUser != null) {
