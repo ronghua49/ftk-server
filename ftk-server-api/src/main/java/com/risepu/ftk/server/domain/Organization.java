@@ -37,7 +37,7 @@ public class Organization extends AuditableObject<String> {
 	/** 企业名 */
 	private String name;
 
-	@Column(name = "NAME", length = 255, nullable = false)
+	@Column(name = "NAME", nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -51,7 +51,7 @@ public class Organization extends AuditableObject<String> {
 
 	private String address;
 
-	@Column(name = "ADDRESS", length = 31)
+	@Column(name = "ADDRESS")
 	public String getAddress() {
 		return address;
 	}
@@ -62,7 +62,7 @@ public class Organization extends AuditableObject<String> {
 
 	private String legalPerson;
 
-	@Column(name = "LEGAL_PERSON", length = 10)
+	@Column(name = "LEGAL_PERSON", length = 50)
 	public String getLegalPerson() {
 		return legalPerson;
 	}
@@ -106,7 +106,7 @@ public class Organization extends AuditableObject<String> {
 
 	private String tel;
 
-	@Column(name = "TEL", length = 15)
+	@Column(name = "TEL", length = 50)
 	public String getTel() {
 		return tel;
 	}
@@ -137,7 +137,7 @@ public class Organization extends AuditableObject<String> {
 		this.orgType = orgType;
 	}
 
-	@Column(name = "SIGN_STS", length = 10)
+	@Column(name = "SIGN_STS", length = 20)
 	public String getSignSts() {
 		return signSts;
 	}
@@ -166,7 +166,7 @@ public class Organization extends AuditableObject<String> {
 		this.scope = scope;
 	}
 
-	@Column(name = "REG_DATE", length = 10)
+	@Column(name = "REG_DATE", length = 50)
 	public String getRegistedDate() {
 		return registedDate;
 	}

@@ -54,7 +54,7 @@ public class OrganizationStream extends AuditableObject<Long> {
     /** 企业名 */
     private String name;
 
-    @Column(name = "NAME", length = 255, nullable = false)
+    @Column(name = "NAME", nullable = false)
     public String getName() {
         return name;
     }
@@ -91,7 +91,7 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     private String legalPerson;
 
-    @Column(name = "LEGAL_PERSON", length = 10)
+    @Column(name = "LEGAL_PERSON", length = 50)
     public String getLegalPerson() {
         return legalPerson;
     }
@@ -126,7 +126,7 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     private String tel;
 
-    @Column(name = "TEL", length = 15)
+    @Column(name = "TEL", length = 50)
     public String getTel() {
         return tel;
     }
@@ -177,7 +177,7 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.orgType = orgType;
     }
 
-    @Column(name = "SIGN_STS", length = 10)
+    @Column(name = "SIGN_STS", length = 20)
     public String getSignSts() {
         return signSts;
     }
@@ -206,7 +206,7 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.scope = scope;
     }
 
-    @Column(name = "REG_DATE", length = 10)
+    @Column(name = "REG_DATE", length = 50)
     public String getRegistedDate() {
         return registedDate;
     }
