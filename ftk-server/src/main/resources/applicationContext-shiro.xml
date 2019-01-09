@@ -31,7 +31,6 @@
 
     <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO">
     </bean>
-
     <bean id="sessionManager"
           class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
         <property name="globalSessionTimeout" value="1800000" />
