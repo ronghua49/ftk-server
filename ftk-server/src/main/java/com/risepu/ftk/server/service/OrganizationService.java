@@ -212,11 +212,7 @@ public interface OrganizationService {
     PageResult<RegisterUserReport> findRegUserByMap(Map<String,Object> map, Integer pageNo, Integer pageSize);
 
 
-//    /**
-//     * 保存企业注册信息到报表
-//     * @param report
-//     */
-//    void saveRegisterReport(RegisterUserReport report);
+
 
     /**
      * 根据状态和企业名查询 企业流水
