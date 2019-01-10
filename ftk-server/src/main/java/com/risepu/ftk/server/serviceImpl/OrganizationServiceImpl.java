@@ -439,18 +439,13 @@ public class OrganizationServiceImpl implements OrganizationService {
                 e.printStackTrace();
             }
         }
-        String sql = "select o.ID as userName ,o.USER_TYPE ,CREATE_TIMESTAMP from FTK_ORGANIZATION_USER o   UNION ALL SELECT p.MOBILE as userName,p.USER_TYPE,CREATE_TIMESTAMP FROM FTK_PERSONAL_USER p  WHERE 1=1";
+        String sql = "select *from FTK_REGISTER_USER where 1 =1";
         if (StringUtils.isNotEmpty(userType)) {
-            if("0".equals(userType)){
-                sql ="select o.ID as userName ,o.USER_TYPE ,CREATE_TIMESTAMP from FTK_ORGANIZATION_USER o where 1=1 ";
-            }else{
-                sql ="SELECT p.MOBILE as userName,p.USER_TYPE,CREATE_TIMESTAMP FROM FTK_PERSONAL_USER p  where 1=1";
-            }
+            sql+=" and USER_TYPE ="+userType;
         }
         if (StringUtils.isNotEmpty(startTime)) {
             sql +=" AND  CREATE_TIMESTAMP  between '" + startTime + "' and '" + nextDate + "'";
         }
-
         sql += " order by CREATE_TIMESTAMP desc";
         List<?> reglist = crudService.sql(firstIndex, pageSize, sql);
         List<?> allRegList = crudService.sql(sql);
