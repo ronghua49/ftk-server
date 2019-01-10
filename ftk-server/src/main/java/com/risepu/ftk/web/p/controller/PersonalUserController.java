@@ -90,10 +90,10 @@ public class PersonalUserController implements PersonzalUserApi {
                     user.setId(id);
                     personalService.savePersonUser(user);
 
-                    RegisterUserReport report = new RegisterUserReport();
-                    report.setUserName(loginRequest.getPhone());
-                    report.setUserType(PersonalUser.PERSONAL_USER_TYPE);
-                    organizationService.saveRegisterReport(report);
+//                    RegisterUserReport report = new RegisterUserReport();
+//                    report.setUserName(loginRequest.getPhone());
+//                    report.setUserType(PersonalUser.PERSONAL_USER_TYPE);
+//                    organizationService.saveRegisterReport(report);
                     personalUser = user;
                 }
                 loginResult.setPersonalUser(personalUser);

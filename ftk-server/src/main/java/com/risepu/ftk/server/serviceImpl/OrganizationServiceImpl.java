@@ -5,6 +5,7 @@ import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.b.dto.LoginResult;
+import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -21,6 +22,8 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static java.awt.SystemColor.info;
 
 /**
  * @author ronghaohua
@@ -436,42 +439,49 @@ public class OrganizationServiceImpl implements OrganizationService {
                 e.printStackTrace();
             }
         }
-
-        String hql = "from RegisterUserReport where 1=1 ";
-        String prefixSql = "select count(*) ";
-
+        String sql = "select o.ID as userName ,o.USER_TYPE ,CREATE_TIMESTAMP from FTK_ORGANIZATION_USER o   UNION ALL SELECT p.MOBILE as userName,p.USER_TYPE,CREATE_TIMESTAMP FROM FTK_PERSONAL_USER p  WHERE 1=1";
         if (StringUtils.isNotEmpty(userType)) {
-
-            hql += "and userType = " + Integer.parseInt(userType);
+            if("0".equals(userType)){
+                sql ="select o.ID as userName ,o.USER_TYPE ,CREATE_TIMESTAMP from FTK_ORGANIZATION_USER o where 1=1 ";
+            }else{
+                sql ="SELECT p.MOBILE as userName,p.USER_TYPE,CREATE_TIMESTAMP FROM FTK_PERSONAL_USER p  where 1=1";
+            }
         }
         if (StringUtils.isNotEmpty(startTime)) {
-            hql += "and createTimestamp between '" + startTime + "' and '" + nextDate + "'";
+            sql +=" AND  CREATE_TIMESTAMP  between '" + startTime + "' and '" + nextDate + "'";
         }
 
-        hql += " order by createTimestamp desc";
-
-        List<RegisterUserReport> reportList = crudService.hql(RegisterUserReport.class, firstIndex, pageSize, hql);
-        int total = crudService.uniqueResultHql(Long.class, prefixSql + hql).intValue();
-
+        sql += " order by CREATE_TIMESTAMP desc";
+        List<?> reglist = crudService.sql(firstIndex, pageSize, sql);
+        List<?> allRegList = crudService.sql(sql);
+        List<RegisterUserReport> reportList = new ArrayList<>();
+        for (int i = 0; i < reglist.size(); i++) {
+            RegisterUserReport report = new RegisterUserReport();
+            Object[] object = (Object[]) reglist.get(i);
+            report.setUserName((String) object[0]);
+            report.setUserType((Integer) object[1]);
+            report.setCreateTimestamp((Date) object[2]);
+            reportList.add(report);
+        }
         PageResult<RegisterUserReport> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);
         pageResult.setSize(pageSize);
-        pageResult.setTotalPages(total, pageSize);
-        pageResult.setTotalElements(total);
+        pageResult.setTotalPages(allRegList.size(), pageSize);
+        pageResult.setTotalElements(allRegList.size());
         pageResult.setContent(reportList);
         return pageResult;
     }
 
-    /**
-     * 保存企业注册信息到报表
-     *
-     * @param report
-     */
-    @Override
-    public void saveRegisterReport(RegisterUserReport report) {
-        crudService.save(report);
-    }
+//    /**
+//     * 保存企业注册信息到报表
+//     *
+//     * @param report
+//     */
+//    @Override
+//    public void saveRegisterReport(RegisterUserReport report) {
+//        crudService.save(report);
+//    }
 
     /**
      * 根据状态和企业名查询 企业流水

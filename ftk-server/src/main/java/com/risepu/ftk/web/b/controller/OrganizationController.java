@@ -74,6 +74,7 @@ public class OrganizationController implements OrganizationApi {
             String orgId = organizationService.checkOrgName(registVo.getMobile());
             if (orgId == null) {
                 organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
+
 //                RegisterUserReport report = new RegisterUserReport();
 //                report.setUserName(registVo.getMobile());
 //                report.setUserType(OrganizationUser.ORG_USER_TYPE);
