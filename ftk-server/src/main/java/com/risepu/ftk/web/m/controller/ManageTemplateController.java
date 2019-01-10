@@ -322,6 +322,10 @@ public class ManageTemplateController implements ManageTemplateApi {
         if (StringUtils.isEmpty(simpleTemplate.getName())) {
             return ResponseEntity.ok(Response.failed(400, "模板名称不能为空"));
         }
+        Template template = crudService.uniqueResultHql(Template.class, "from SimpleTemplate where code = ?1", simpleTemplate.getCode());
+        if (template != null) {
+            return ResponseEntity.ok(Response.failed(400, "模板code不能重复"));
+        }
         Long simpleTemplateId = crudService.save(simpleTemplate);
         if (simpleTemplateId != null) {
             Domain domain = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "idCard");
