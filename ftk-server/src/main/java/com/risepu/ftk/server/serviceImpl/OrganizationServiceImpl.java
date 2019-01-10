@@ -468,15 +468,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         return pageResult;
     }
 
-//    /**
-//     * 保存企业注册信息到报表
-//     *
-//     * @param report
-//     */
-//    @Override
-//    public void saveRegisterReport(RegisterUserReport report) {
-//        crudService.save(report);
-//    }
 
     /**
      * 根据状态和企业名查询 企业流水

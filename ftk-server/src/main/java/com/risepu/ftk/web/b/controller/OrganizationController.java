@@ -75,10 +75,6 @@ public class OrganizationController implements OrganizationApi {
             if (orgId == null) {
                 organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
 
-//                RegisterUserReport report = new RegisterUserReport();
-//                report.setUserName(registVo.getMobile());
-//                report.setUserType(OrganizationUser.ORG_USER_TYPE);
-//                organizationService.saveRegisterReport(report);
                 logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
                 return ResponseEntity.ok(Response.succeed("注册成功！"));
             } else {
