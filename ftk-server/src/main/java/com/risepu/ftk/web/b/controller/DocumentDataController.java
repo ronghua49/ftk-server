@@ -248,8 +248,9 @@ public class DocumentDataController implements DocumentDataApi {
         // TODO Auto-generated method stub
         logger.debug("Request Uri: /documentData/sendEmail");
         try {
-            Template template = templateService.getTemplate(emailRequest.getTemplateId());
-            sendMailService.sendMail(emailRequest.getEmail(), emailRequest.getFilePath(), template.getName());
+            ProofDocument documentById = proofDocumentService.getDocumentById(emailRequest.getDocumentId());
+            Template template = templateService.getTemplate(documentById.getTemplate());
+            sendMailService.sendMail(emailRequest.getEmail(), documentById.getFilePath(), template.getName());
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
