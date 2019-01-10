@@ -1,24 +1,23 @@
 package com.risepu.ftk.server.service;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.risepu.ftk.server.domain.*;
+import com.risepu.ftk.utils.PageResult;
+import com.risepu.ftk.web.b.dto.LoginResult;
 import net.lc4ever.framework.remote.annotation.Remote;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.web.b.dto.LoginResult;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
 
 
 /**
  * @author ronghaohua
  */
-@Remote(path="/org")
+@Remote(path = "/org")
 public interface OrganizationService {
 
     /**
@@ -29,18 +28,10 @@ public interface OrganizationService {
     String orgReg(String phone, String password);
 
     /**
-     * @param phoneOrName
-     * @param password
-     * @return LoginResult 登录返回结果
-     */
-    LoginResult orgLogin(String phoneOrName, String password);
-
-    /**
      * @param id     手机号 获得 组织机构代码号
      * @param newPwd 新密码
      */
     void changePwd(String id, String newPwd);
-
 
     /**
      * 上传图片
@@ -101,7 +92,6 @@ public interface OrganizationService {
      */
     Long InsertAuthorStream(String orgId, String cardNo);
 
-
     /**
      * 根据条件查询 企业信息
      *
@@ -110,7 +100,7 @@ public interface OrganizationService {
      * @param pageSize 每条显示数量
      * @return PageResult 对象
      */
-    PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize);
+    PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException;
 
     /**
      * 修改企业用户信息
@@ -196,12 +186,56 @@ public interface OrganizationService {
      */
     Organization findAuthenOrgByName(String name);
 
+    /**
+     *新增或者修改企业发起认证的流水
+     * @param organizationStream
+     */
+    void saveOrUpdateOrgStream(OrganizationStream organizationStream);
+
 
     /**
-     * 当企业扫码 点击查询时候，读取的单据历史，分为读取成功和读取失败
-     *
-     *
+     * 根据参数查询企业注册信息
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
      */
+    PageResult<OrganizationStream> findOrgRegStreamByMap(Map<String,Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException;
+
+    /**
+     * 根据参数查询企业和个人注册用户
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    PageResult<RegisterUserReport> findRegUserByMap(Map<String,Object> map, Integer pageNo, Integer pageSize);
 
 
+
+
+    /**
+     * 根据状态和企业名查询 企业流水
+     * @param name
+     * @param checkingState
+     * @param checkFailState
+     * @return
+     */
+    OrganizationStream findAuthStreamByNameAndState(String name, Integer checkingState, Integer checkFailState);
+
+    /**
+     * 根据参数查询企业反馈意见
+     * @param map
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    PageResult<OrganizationAdvice> findOrgAdviceByParam(Map<String,Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException;
+
+    /**
+     * 查询企业反馈意见
+     * @param id
+     * @return
+     */
+    OrganizationAdvice findOrgAdviceById(Long id);
 }

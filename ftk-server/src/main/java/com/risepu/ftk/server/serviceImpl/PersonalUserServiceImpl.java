@@ -25,19 +25,11 @@ public class PersonalUserServiceImpl implements PersonalUserService {
     @Autowired
     private GenericCrudService crudService;
 
-    @Override
-    public String personReg(String mobile, String cardNo, String userName) {
-        PersonalUser personalUser = new PersonalUser();
-        personalUser.setId(cardNo);
-        personalUser.setMobile(mobile);
-        personalUser.setUserName(userName);
-        crudService.save(personalUser);
-        return "success";
-    }
+
 
     @Override
-    public String savePersonUser(PersonalUser user) {
-        return crudService.save(user);
+    public void savePersonUser(PersonalUser user) {
+         crudService.save(user);
     }
 
     @Override
@@ -74,24 +66,17 @@ public class PersonalUserServiceImpl implements PersonalUserService {
 
     @Override
     public Map<String, Object> findNewRequestByCardNo(String cardNo) {
-
         /** 只查询 10 分钟之内的 最近扫描单据的一个企业id */
         DateTime dateTime = new DateTime();
         DateTime minusTime = dateTime.minusMinutes(10);
-
         Date time = minusTime.toDate();
         List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and authState=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo, time);
-
         if (streams != null && !streams.isEmpty()) {
-
             String orgId = streams.get(0).getOrgId();
-
             Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", orgId);
-
             Map<String, Object> map = new HashMap<>();
             map.put("orgName", organization.getName());
             map.put("streamId", streams.get(0).getId());
-
             return map;
         }
         return null;
@@ -103,8 +88,7 @@ public class PersonalUserServiceImpl implements PersonalUserService {
     }
 
     @Override
-    public PersonalUser findUserByNo(String cardNo) {
-        return crudService.uniqueResultByProperty(PersonalUser.class, "id", cardNo);
+    public PersonalUser findUserByNo(String cardNo,String phone) {
+        return crudService.uniqueResultHql(PersonalUser.class, "from PersonalUser where id.id =?1 and id.mobile =?2", cardNo,phone);
     }
-
 }

@@ -37,7 +37,7 @@ public class Organization extends AuditableObject<String> {
 	/** 企业名 */
 	private String name;
 
-	@Column(name = "NAME", length = 255, nullable = false)
+	@Column(name = "NAME", nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -51,7 +51,7 @@ public class Organization extends AuditableObject<String> {
 
 	private String address;
 
-	@Column(name = "ADDRESS", length = 31)
+	@Column(name = "ADDRESS")
 	public String getAddress() {
 		return address;
 	}
@@ -62,7 +62,7 @@ public class Organization extends AuditableObject<String> {
 
 	private String legalPerson;
 
-	@Column(name = "LEGAL_PERSON", length = 10)
+	@Column(name = "LEGAL_PERSON", length = 50)
 	public String getLegalPerson() {
 		return legalPerson;
 	}
@@ -95,7 +95,7 @@ public class Organization extends AuditableObject<String> {
 
 	private String remark;
 
-	@Column(name = "REMARK", length = 225)
+	@Column(name = "REMARK")
 	public String getRemark() {
 		return remark;
 	}
@@ -104,11 +104,9 @@ public class Organization extends AuditableObject<String> {
 		this.remark = remark;
 	}
 
-	
-	
 	private String tel;
 
-	@Column(name = "TEL", length = 15)
+	@Column(name = "TEL", length = 50)
 	public String getTel() {
 		return tel;
 	}
@@ -119,7 +117,6 @@ public class Organization extends AuditableObject<String> {
 
 	
 	private String orgType;
-	
 	private String signSts;
 	private String registedCapital;
 	private String scope;
@@ -127,8 +124,10 @@ public class Organization extends AuditableObject<String> {
 	private String insuranceNum;
 	private String staffSize;
 	private String website ;
-	
-	
+	private String code;
+
+	/** 行业一级编号 */
+	private String dictCode;
 	@Column(name = "ORG_TYPE", length = 20)
 	public String getOrgType() {
 		return orgType;
@@ -138,7 +137,7 @@ public class Organization extends AuditableObject<String> {
 		this.orgType = orgType;
 	}
 
-	@Column(name = "SIGN_STS", length = 10)
+	@Column(name = "SIGN_STS", length = 20)
 	public String getSignSts() {
 		return signSts;
 	}
@@ -158,7 +157,7 @@ public class Organization extends AuditableObject<String> {
 		this.registedCapital = registedCapital;
 	}
 
-	@Column(name = "SCOPE", length = 20)
+	@Column(name = "SCOPE")
 	public String getScope() {
 		return scope;
 	}
@@ -167,7 +166,7 @@ public class Organization extends AuditableObject<String> {
 		this.scope = scope;
 	}
 
-	@Column(name = "REG_DATE", length = 10)
+	@Column(name = "REG_DATE", length = 50)
 	public String getRegistedDate() {
 		return registedDate;
 	}
@@ -194,7 +193,7 @@ public class Organization extends AuditableObject<String> {
 		this.staffSize = staffSize;
 	}
 
-	@Column(name = "WEBSITE", length = 20)
+	@Column(name = "WEBSITE")
 	public String getWebsite() {
 		return website;
 	}
@@ -202,6 +201,22 @@ public class Organization extends AuditableObject<String> {
 	public void setWebsite(String website) {
 		this.website = website;
 	}
-	
 
+	@Column(name = "CODE")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	@Column(name = "DICT_CODE")
+	public String getDictCode() {
+		return dictCode;
+	}
+
+	public void setDictCode(String dictCode) {
+		this.dictCode = dictCode;
+	}
 }

@@ -24,7 +24,4 @@ public interface AdminService {
      * @param adminUser
      */
     void updateAdminUser(AdminUser adminUser);
-
-
-
 }

@@ -17,25 +17,25 @@ import java.util.HashMap;
 public class SessionListener implements HttpSessionListener {
 
     public static HashMap sessionMap = new HashMap();
+
     @Override
     public void sessionCreated(HttpSessionEvent hse) {
         HttpSession session = hse.getSession();
     }
+
     @Override
     public void sessionDestroyed(HttpSessionEvent hse) {
         HttpSession session = hse.getSession();
         DelSession(session);
     }
+
     public static synchronized void DelSession(HttpSession session) {
         if (session != null) {
             // 删除单一登录中记录的变量
-            if(session.getAttribute(Constant.getSessionCurrUser())!=null){
-                OrganizationUser  user = (OrganizationUser) session.getAttribute(Constant.getSessionCurrUser());
+            if (session.getAttribute(Constant.getSessionCurrUser()) != null) {
+                OrganizationUser user = (OrganizationUser) session.getAttribute(Constant.getSessionCurrUser());
                 SessionListener.sessionMap.remove(user.getId());
             }
         }
     }
-
-
-
 }

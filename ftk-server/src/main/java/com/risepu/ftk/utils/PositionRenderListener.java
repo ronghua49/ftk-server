@@ -14,7 +14,9 @@ import com.itextpdf.text.pdf.parser.TextRenderInfo;
  */
 public class PositionRenderListener implements RenderListener {
     private List<String> findText;
+
     private float defaultH;        ///出现无法取到值的情况，默认为12
+
     private float fixHeight;    //可能出现无法完全覆盖的情况，提供修正的参数，默认为2
 
     public PositionRenderListener(List<String> findText, float defaultH, float fixHeight) {

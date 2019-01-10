@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -54,14 +53,14 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
         Integer firstIndex = pageNo * pageSize;
         List<ProofDocument> proofDocuments1 = new ArrayList<>();
         List proofDocuments = new ArrayList();
-        Domain domain1 = crudService.uniqueResultHql(Domain.class, "from Domain where code = ?1", "name");
         if (StringUtils.isEmpty(name)) {
             proofDocuments1 = proofDocumentService.getByOrganization(organization);
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null order by createTimestamp desc", organization);
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 order by createTimestamp desc", organization);
         } else {
-            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
-            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and id in (select id.documentId from DocumentData where  id.domainId = ?2 and value like ?3) order by createTimestamp desc", organization, domain1.getId(), "%"+name+"%");
+            proofDocuments1 = crudService.hql(ProofDocument.class, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (number like ?2 or personalUser like ?3) order by createTimestamp desc", organization, "%" + name + "%", "%" + name + "%");
+            proofDocuments = crudService.hql(firstIndex, pageSize, "from ProofDocument where organization = ?1 and filePath is not null and state = 0 and (number like ?2 or personalUser like ?3) order by createTimestamp desc", organization, "%" + name + "%", "%" + name + "%");
         }
+
         List list = new ArrayList();
         List<DocumentData> documentDataList = new ArrayList<>();
         PageResult<Template> pageResult = new PageResult<>();
@@ -75,7 +74,9 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
             for (int j = 0; j < documentDataList.size(); j++) {
                 DocumentData documentData = documentDataList.get(j);
                 Domain domain = domainService.selectById(documentData.getId().getDomainId());
-                map.put(domain.getCode(), documentData.getValue());
+                if (domain != null) {
+                    map.put(domain.getCode(), documentData.getValue());
+                }
             }
             list.add(map);
         }
@@ -85,42 +86,25 @@ public class ProofDocumentServiceImpl implements ProofDocumentService {
     }
 
     @Override
-    public String getDocument(String chainHash) {
+    public ProofDocument getDocument(String chainHash) {
         ProofDocument proofDocument = crudService.uniqueResultHql(ProofDocument.class, "from ProofDocument where chainHash = ?1", chainHash);
-        return proofDocument.getFilePath();
+        return proofDocument;
     }
 
     @Override
     public PageResult<VerifyHistory> getVerfifyHistoryData(String orgId, Integer pageNo, Integer pageSize, String name) {
-
         Integer firstIndex = pageNo * pageSize;
-        int total=0;
-        List<?> objects = new ArrayList<>();
+        List<VerifyHistory> objects = new ArrayList<>();
         List<VerifyHistory> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(name)) {
-            String sql="select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
-            String sql2 = "select count(*) from  FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?";
-            objects = crudService.sql(firstIndex, pageSize, sql, orgId);
-            BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2, orgId);
-            total= bigInteger.intValue();
+            objects = crudService.hql(VerifyHistory.class, "select new com.risepu.ftk.web.b.dto.VerifyHistory (a.chainHash as chainHash,b.number as number,a.createTimestamp as createTimestamp,b.personalUser as idCard) from AuthorizationStream a,ProofDocument b where  a.chainHash=b.chainHash and a.verifyState in (3,4) and a.orgId = ?1 and (b.personalUser like ?2 or b.number like ?3) ORDER BY a.createTimestamp DESC", orgId, "%" + name + "%", "%" + name + "%");
+            list = crudService.hql(VerifyHistory.class, firstIndex, pageSize, "select new com.risepu.ftk.web.b.dto.VerifyHistory (a.chainHash as chainHash,b.number as number,a.createTimestamp as createTimestamp,b.personalUser as idCard) from AuthorizationStream a,ProofDocument b where a.chainHash=b.chainHash and a.verifyState in (3,4) and a.orgId = ?1 and (b.personalUser like ?2  or b.number like ?3) ORDER BY a.createTimestamp DESC", orgId, "%" + name + "%", "%" + name + "%");
         } else {
-            String sql="select a.CHAIN_HASH,p.NUMBER,a.CREATE_TIMESTAMP,p.PERSONAL_USER from FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?  ORDER BY a.CREATE_TIMESTAMP DESC";
-            String sql2 = "select count(*) from  FTK_AUTHORIZATION_STREAM a ,FTK_PROOF_DOCUMENT p  where a.VERIFY_STATE in (3,4) and p.CHAIN_HASH=a.CHAIN_HASH  and a.ORG_ID = ?";
-            objects = crudService.sql(firstIndex, pageSize, sql,orgId);
-            BigInteger bigInteger = (BigInteger) crudService.uniqueResultSql(sql2,orgId);
-            total= bigInteger.intValue();
-        }
-        for (int i = 0; i < objects.size(); i++) {
-            VerifyHistory history = new VerifyHistory();
-            Object[] object = (Object[]) objects.get(i);
-            history.setChainHash((String) object[0]);
-            history.setNumber((String) object[1]);
-            history.setCreateTimestamp((Date) object[2]);
-            history.setIdCard((String) object[3]);
-            list.add(history);
+            objects = crudService.hql(VerifyHistory.class, "select new com.risepu.ftk.web.b.dto.VerifyHistory (a.chainHash as chainHash,b.number as number,a.createTimestamp as createTimestamp,b.personalUser as idCard) from AuthorizationStream a,ProofDocument b where a.chainHash=b.chainHash and a.verifyState in (3,4) and a.orgId = ?1 ORDER BY a.createTimestamp DESC", orgId);
+            list = crudService.hql(VerifyHistory.class, firstIndex, pageSize, "select new com.risepu.ftk.web.b.dto.VerifyHistory (a.chainHash as chainHash,b.number as number,a.createTimestamp as createTimestamp,b.personalUser as idCard) from AuthorizationStream a,ProofDocument b where a.chainHash=b.chainHash and a.verifyState in (3,4) and a.orgId = ?1 ORDER BY a.createTimestamp DESC", orgId);
         }
         PageResult<VerifyHistory> pageResult = new PageResult<>();
-        pageResult.setTotalElements(total);
+        pageResult.setTotalElements(objects.size());
         pageResult.setContent(list);
         return pageResult;
     }

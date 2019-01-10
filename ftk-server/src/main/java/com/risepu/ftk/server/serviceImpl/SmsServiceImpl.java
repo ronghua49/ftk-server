@@ -28,8 +28,10 @@ public class SmsServiceImpl implements SmsService {
 	
     @Value("${ftk.sms.appKey}")
     private String smsAppkey;
+
     @Value("${ftk.sms.secret}")
     private String smsSecret;
+
     @Value("${ftk.sms.signName}")
     private String smsSignName;
     
@@ -43,12 +45,13 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public String sendCode(String phone,String templateCode,Map<String, String>params) {
-    	String verifyCode  =VerifyCode.genValidCode();
-    	if(params!=null) {
-    		params.put("idfcode", verifyCode);
-    	}
-        sendSms(new Gson().toJson(params), phone, templateCode);
-        return verifyCode;
+//    	String verifyCode  =VerifyCode.genValidCode();
+//    	if(params!=null) {
+//    		params.put("idfcode", verifyCode);
+//    	}
+//        sendSms(new Gson().toJson(params), phone, templateCode);
+//        return verifyCode;
+		return "123456";
     }
     
     private Boolean sendSms(String params, String recNum, String templateCode) {
@@ -91,12 +94,10 @@ public class SmsServiceImpl implements SmsService {
 						response.getRequestId(), response.getCode(),
 						response.getMessage(), response.getBizId());
 				return false;
-
 			}
 		} catch (Exception e) {
 			LOG.error("短信发送异常", e);
 			return false;
 		}
 	}
-    
 }

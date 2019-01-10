@@ -15,6 +15,5 @@ public interface PdfService {
      */
     String pdf(String _template, String hash, String title, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception;
 
-
     String pdf(Map<String, String> map, String hash, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception;
 }

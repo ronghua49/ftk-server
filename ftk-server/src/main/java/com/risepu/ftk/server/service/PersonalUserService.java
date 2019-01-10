@@ -10,32 +10,22 @@ import java.util.Map;
 
 @Remote(path = "/person")
 public interface PersonalUserService {
-    /**
-     * 个人用户注册
-     *
-     * @param mobile   电话
-     * @param cardNo   身份证号
-     * @param userName 用户名
-     * @return
-     */
-    String personReg(String mobile, String cardNo, String userName);
+
 
     /**
      * 保存用户
-     *
      * @param user 用户对象
      * @return 保存的用户id
      */
-    String savePersonUser(PersonalUser user);
-
+    void savePersonUser(PersonalUser user);
 
     /**
-     * 根据身份证号查询用户
-     *
+     * 根据身份证号和手机号查询用户
      * @param cardNo 身份证号
+     * @param phone 注册手机号
      * @return
      */
-    PersonalUser findUserByNo(String cardNo);
+    PersonalUser findUserByNo(String cardNo,String phone);
 
     /**
      * 保存授权操作流水记录
@@ -70,5 +60,4 @@ public interface PersonalUserService {
      * @return
      */
     AuthorizationStream findAuthorizationStreamById(long streamId);
-
 }

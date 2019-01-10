@@ -13,20 +13,26 @@ public class PageResult<T> {
      * 总页数
      */
     private Integer totalPages;
+
     /**
      * 总条数
      */
     private Integer totalElements;
+
     /**
      * 当前页数
      */
     private Integer number;
+
     /**
      * 每页显示条数
      */
     private Integer size;
 
+    private Long total;
+
     private List<T> content;
+
     /**
      * 总页码数组
      */
@@ -85,6 +91,14 @@ public class PageResult<T> {
         this.size = size;
     }
 
+    public Long getTotal() {
+        return total;
+    }
+
+    public void setTotal(Long total) {
+        this.total = total;
+    }
+
     public List<T> getContent() {
         return content;
     }
@@ -101,5 +115,4 @@ public class PageResult<T> {
     public String toString() {
         return "PageResult [resultCode=" + resultCode + ", totalPages=" + totalPages + ", totalElements=" + totalElements + ", number=" + number + ", size=" + size + ", content=" + content + ", pages=" + pages + "]";
     }
-
 }

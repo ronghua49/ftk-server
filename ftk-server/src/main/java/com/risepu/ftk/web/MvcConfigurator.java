@@ -33,39 +33,38 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class MvcConfigurator implements WebMvcConfigurer {
 
-	@Override
-	public void configureViewResolvers(ViewResolverRegistry registry) {
-		registry.enableContentNegotiation(new MappingJackson2JsonView());
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.enableContentNegotiation(new MappingJackson2JsonView());
+    }
 
-	}
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.defaultContentType(MediaType.APPLICATION_JSON);
+    }
 
-	@Override
-	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		configurer.defaultContentType(MediaType.APPLICATION_JSON);
-	}
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        builder.indentOutput(true).simpleDateFormat("yyyy-MM-dd");
+        builder.featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+    }
 
-	@Override
-	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-		builder.indentOutput(true).simpleDateFormat("yyyy-MM-dd");
-		builder.featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-		converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
-	}
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-	}
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.regex("/api/.*")).build().apiInfo(apiInfo());
+    }
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.regex("/api/.*")).build().apiInfo(apiInfo());
-	}
-
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("FTK-API").description("").version("0.5").build();
-	}
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("FTK-API").description("").version("0.5").build();
+    }
 
 }

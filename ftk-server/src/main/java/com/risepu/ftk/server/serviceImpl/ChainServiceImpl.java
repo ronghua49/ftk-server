@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.risepu.ftk.server.serviceImpl;
 
 import java.util.List;

@@ -9,13 +9,10 @@ import net.lc4ever.framework.remote.annotation.Remote;
  */
 @Remote(path = "/sms")
 public interface SmsService {
+    static final String regTemplateCode = "SMS_153991308";
+    static final String authTemplateCode = "SMS_153996284";
 
-	static final String regTemplateCode = "SMS_153991308";
-	static final String authTemplateCode = "SMS_153996284";
+    String sendCode(String phone, String templateCode, Map<String, String> params);
 
-
-	String sendCode(String phone,String templateCode,Map<String, String>params);
-	
     boolean identify(String inCode, String createCode);
-
 }

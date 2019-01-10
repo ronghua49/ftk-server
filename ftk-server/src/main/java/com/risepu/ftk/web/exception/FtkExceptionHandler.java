@@ -9,18 +9,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
-
 /**
  * @author ronghaohua
  */
 @ControllerAdvice
 public class FtkExceptionHandler {
-
     @ExceptionHandler(NotLoginException.class)
     @ResponseBody
-    public ResponseEntity<Response<String>> notFoundException(){
-        return ResponseEntity.ok(Response.failed(-101,"您还未登录，请登录后操作"));
-    }
+    public ResponseEntity<Response<String>> notFoundException(Exception e) {
 
+        return ResponseEntity.ok(Response.failed(-101, e.getMessage()));
+    }
 }

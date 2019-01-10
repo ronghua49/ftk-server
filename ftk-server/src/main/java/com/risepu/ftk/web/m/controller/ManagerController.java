@@ -1,32 +1,27 @@
 package com.risepu.ftk.web.m.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.risepu.ftk.server.domain.AdminUser;
-import com.risepu.ftk.server.domain.Organization;
-import com.risepu.ftk.server.domain.OrganizationStream;
-import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.AdminService;
 import com.risepu.ftk.server.service.OrganizationService;
-import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.exception.NotLoginException;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author ronghaohua
@@ -37,7 +32,8 @@ public class ManagerController implements ManagerControllerApi {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	private static final String SALT = ConfigUtil.getValue("salt");
+	@Value("${salt}")
+	private   String SALT;
 
 	@Autowired
 	private OrganizationService organizationService;
@@ -54,7 +50,7 @@ public class ManagerController implements ManagerControllerApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<String>> orgLogin(String adminName, @RequestParam String password, HttpServletRequest request) {
+	public ResponseEntity<Response<String>> orgLogin(String adminName,String password, HttpServletRequest request) {
 
 		password = DigestUtils.md5Hex(password + SALT);
 
@@ -99,20 +95,21 @@ public class ManagerController implements ManagerControllerApi {
 
 	}
 
+
+
 	/**
 	 * 根据参数查询认证的企业信息
 	 *
-	 * @param key       关键字
+	 * @param key    企业名
 	 * @param pageNo
 	 * @param pageSize
 	 * @param startTime 开始时间
 	 * @param endTime   结束时间
 	 * @param state     审核状态
-	 * @param request
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryOrganization(@RequestParam(required = false) String key, @PathVariable Integer pageNo, @RequestParam Integer pageSize, @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer state, HttpServletRequest request) {
+	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String key, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) throws UnsupportedEncodingException {
 		Map<String, Object> map = new HashMap<>();
 
 		map.put("key", key);
@@ -151,6 +148,8 @@ public class ManagerController implements ManagerControllerApi {
 			organization.setLicenseImgName(stream.getLicenseImgName());
 			organization.setId(stream.getOrganization());
 
+            organization.setDictCode(organizationStream.getDictCode());
+			organization.setCode(organizationStream.getCode());
 			organization.setInsuranceNum(organizationStream.getInsuranceNum());
 			organization.setOrgType(organizationStream.getOrgType());
 			organization.setRegistedCapital(organizationStream.getRegistedCapital());
@@ -163,6 +162,8 @@ public class ManagerController implements ManagerControllerApi {
 			organizationService.save(organization);
 		}
 
+		stream.setDictCode(organizationStream.getDictCode());
+		stream.setCode(organizationStream.getCode());
 		stream.setState(organizationStream.getState());
 		stream.setInsuranceNum(organizationStream.getInsuranceNum());
 		stream.setOrgType(organizationStream.getOrgType());
@@ -198,6 +199,40 @@ public class ManagerController implements ManagerControllerApi {
 		request.getSession().setAttribute(Constant.getSessionCurrUser(), null);
 		return ResponseEntity.ok(Response.succeed("退出登录成功"));
 	}
+
+
+	/**
+	 * 企业反馈意见详情
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public ResponseEntity<Response<OrganizationAdvice>> queryAdvice(Long id) {
+		OrganizationAdvice advice = organizationService.findOrgAdviceById(id);
+		return ResponseEntity.ok(Response.succeed(advice));
+	}
+
+	/**
+	 * 企业反馈信息查询
+	 * @param orgName 企业名称
+	 * @param tel 电话
+	 * @param pageNo 页码
+	 * @param pageSize 每页显示数量
+	 * @param startTime 开始时间
+	 * @param endTime 结束时间
+	 * @return
+	 */
+	@Override
+	public ResponseEntity<Response<PageResult<OrganizationAdvice>>> queryAllAdvice(String orgName, String tel, Integer pageNo, Integer pageSize, String startTime, String endTime) throws UnsupportedEncodingException {
+		Map<String,Object> map = new HashMap<>();
+		map.put("orgName",orgName);
+		map.put("tel",tel);
+		map.put("startTime",startTime);
+		map.put("endTime",endTime);
+		PageResult<OrganizationAdvice> pageResult = organizationService.findOrgAdviceByParam(map,pageNo,pageSize);
+		return ResponseEntity.ok(Response.succeed(pageResult));
+	}
+
 
 	@Override
 	public ResponseEntity<Response<String>> loginUser(HttpSession session) {

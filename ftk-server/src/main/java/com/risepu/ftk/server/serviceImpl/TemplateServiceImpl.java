@@ -25,7 +25,7 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     public Long add(Template template) {
         // TODO Auto-generated method stub
-        template.setState(0);
+        template.setState(1);
         return crudService.save(template);
     }
 
@@ -57,5 +57,4 @@ public class TemplateServiceImpl implements TemplateService {
         List list = crudService.hql(firstIndex, pageSize, hql);
         return list;
     }
-
 }

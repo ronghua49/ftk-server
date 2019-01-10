@@ -71,8 +71,9 @@ public class ChartGraphics {
         return createImage(imgurl);
     }
 
-    /*public static void main(String[] args) {
+/*
+    public static void main(String[] args) {
         ChartGraphics g = new ChartGraphics();
-        g.graphicsGeneration("电风扇", "/file-path/112.jpg");
+        g.graphicsGeneration("中科白城科技（北京）股份有限公司", "/file-path/112.jpg");
     }*/
 }

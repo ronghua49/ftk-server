@@ -10,6 +10,7 @@ import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.PdfService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.m.dto.Pdf;
+import net.lc4ever.framework.service.GenericCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +27,13 @@ import java.util.List;
 @Service
 public class PdfServiceImpl implements PdfService {
     @Autowired
-    private DomainService domainService;
+    private GenericCrudService crudService;
     @Autowired
     private TemplateService templateService;
 
     @Override
     public String pdf(String _template, String hash, String title, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
         // TODO Auto-generated method stub
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy年MM月dd日");
-        String date = "" + ft.format(new Date());
 //        _template = _template.replaceAll("/t", " ");
         //设置纸张
         Rectangle rect = new Rectangle(PageSize.A4);
@@ -103,19 +102,19 @@ public class PdfServiceImpl implements PdfService {
 
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(80, 140);//坐标
+        image.setAbsolutePosition(210, 80);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 120, 110, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 240, 60, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(300, 170);//坐标
+        image1.setAbsolutePosition(300, 300);//坐标
         image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
@@ -127,7 +126,7 @@ public class PdfServiceImpl implements PdfService {
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 150, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "xxxx年xx月xx日", 370, 280, 0);
         cd.endText();
 
         doc.close();
@@ -138,12 +137,14 @@ public class PdfServiceImpl implements PdfService {
     public String pdf(Map<String, String> map, String hash, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
         Long templateId = Long.parseLong(map.get("templateId"));
         // 根据模板id得到模板数据
-        java.util.List<Domain> list = domainService.selectByTemplate(templateId);
+        List<Domain> list = crudService.hql(Domain.class,
+                "from Domain d where d.id in (select t.id.domainId from TemplateDomain t where t.id.templateId = ?1 )",
+                templateId);
         // 根据模板id得到模板
         Template template = templateService.getTemplate(templateId);
         // 获取一次模板
         String _template = template.get_template();
-        _template = _template.replaceAll("/t", " ");
+//        _template = _template.replaceAll("/t", " ");
         //获取pdf标题
         String title = template.getName();
         int number = 0;
@@ -179,7 +180,6 @@ public class PdfServiceImpl implements PdfService {
 
         p1 = new Paragraph();
         p1.setLeading(30);
-//        p1.setAlignment(Element.ALIGN_CENTER);
         //短语
         Phrase ph1 = new Phrase();
         //块
@@ -233,9 +233,6 @@ public class PdfServiceImpl implements PdfService {
         while ((index = _template.indexOf("${", number)) != -1) {
             int index2 = _template.indexOf("}", index);
             String key = _template.substring(index + 2, index2);
-            if (!list1.contains(key)) {
-                continue;
-            }
             Pdf pdf1 = map1.get(key);
             String value = map.get(pdf1.getCode());
             if (number > index) {
@@ -258,38 +255,37 @@ public class PdfServiceImpl implements PdfService {
         doc.add(p1);
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(80, 140);//坐标
+        image.setAbsolutePosition(210, 80);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 120, 110, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 240, 60, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(300, 170);//坐标
+        image1.setAbsolutePosition(300, 300);//坐标
         image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 150, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 280, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
     }
 
-
-//    public static void main(String[] args) {
-//        PdfServiceImpl a = new PdfServiceImpl();
-//        try {
-//            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/11.jpg", "/file-path/112.jpg", "/file-path/test.pdf");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+   /* public static void main(String[] args) {
+        PdfServiceImpl a = new PdfServiceImpl();
+        try {
+            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/11.jpg", "/file-path/112.jpg", "/file-path/test.pdf");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 }

@@ -8,8 +8,9 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:/applicationContext.xml</param-value>
+		<param-value>classpath:/applicationContext*.xml</param-value>
 	</context-param>
+
 
 	<!-- <listener> -->
 	<!-- <display-name>Spring Startup Listener</display-name> -->
@@ -47,6 +48,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>classpath:mvc-users-servlet.xml</param-value>
 		</init-param>
+
 		<load-on-startup>5</load-on-startup>
 	</servlet>
 
@@ -76,5 +78,28 @@
 		<servlet-name>mvc</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!--配置spring的过滤器委托代理的过滤器-->
+	<filter>
+		<filter-name>shiroFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<!--开启目标生命周期-->
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>shiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
 
 </web-app>

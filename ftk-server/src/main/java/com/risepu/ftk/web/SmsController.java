@@ -20,27 +20,22 @@ import com.risepu.ftk.web.dto.MesRequest;
 @RequestMapping("/api/sms")
 public class SmsController implements SmsControllerApi {
 
-	@Autowired
-	private SmsService smsService;
+    @Autowired
+    private SmsService smsService;
 
-	@Override
-	public ResponseEntity<Response<String>> sendSms(MesRequest mesRequest, HttpServletRequest request) {
+    @Override
+    public ResponseEntity<Response<String>> sendSms(MesRequest mesRequest, HttpServletRequest request) {
 
-		System.out.println("发送短信的请求sessionid:" + request.getSession().getId());
+        String sessionCode = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeImg());
 
-		String sessionCode = (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeImg());
+        boolean identify = smsService.identify(mesRequest.getImgCode(), sessionCode);
 
-		boolean identify = smsService.identify(mesRequest.getImgCode(), sessionCode);
-
-		if (identify) {
-			String sendCode = smsService.sendCode(mesRequest.getPhone(), SmsService.regTemplateCode, new HashMap<>());
-
-			request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(), sendCode);
-			return ResponseEntity.ok(Response.succeed("验证码已下发"));
-		} else {
-			return ResponseEntity.ok(Response.failed(1, "图片验证码错误"));
-		}
-
-	}
-
+        if (identify) {
+            String sendCode = smsService.sendCode(mesRequest.getPhone(), SmsService.regTemplateCode, new HashMap<>());
+            request.getSession().setAttribute(Constant.getSessionVerificationCodeSms(), sendCode);
+            return ResponseEntity.ok(Response.succeed("验证码已下发"));
+        } else {
+            return ResponseEntity.ok(Response.failed(1, "图片验证码错误"));
+        }
+    }
 }

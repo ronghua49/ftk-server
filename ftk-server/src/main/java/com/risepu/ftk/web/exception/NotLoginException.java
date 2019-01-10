@@ -3,7 +3,7 @@ package com.risepu.ftk.web.exception;    /*
  * @date 2018/12/25
  */
 
-public class NotLoginException  extends RuntimeException{
+public class NotLoginException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
