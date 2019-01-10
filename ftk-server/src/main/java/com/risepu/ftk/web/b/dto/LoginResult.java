@@ -1,6 +1,7 @@
 package com.risepu.ftk.web.b.dto;
 
 import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.server.domain.OrganizationUser;
 
 /**
@@ -14,7 +15,7 @@ public class LoginResult {
 	/** 未认证企业 */
 	private OrganizationUser organizationUser;
 	/** 认证企业 */
-	private Organization organization;
+	private OrganizationStream organizationStream;
 	
 	
 
@@ -42,15 +43,11 @@ public class LoginResult {
 		this.organizationUser = organizationUser;
 	}
 
-	public Organization getOrganization() {
-		return organization;
+	public OrganizationStream getOrganizationStream() {
+		return organizationStream;
 	}
 
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
+	public void setOrganizationStream(OrganizationStream organizationStream) {
+		this.organizationStream = organizationStream;
 	}
-	
-	
-	
-
 }

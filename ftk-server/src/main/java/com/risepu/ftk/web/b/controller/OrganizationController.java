@@ -74,10 +74,10 @@ public class OrganizationController implements OrganizationApi {
             String orgId = organizationService.checkOrgName(registVo.getMobile());
             if (orgId == null) {
                 organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
-                RegisterUserReport report = new RegisterUserReport();
-                report.setUserName(registVo.getMobile());
-                report.setUserType(OrganizationUser.ORG_USER_TYPE);
-                organizationService.saveRegisterReport(report);
+//                RegisterUserReport report = new RegisterUserReport();
+//                report.setUserName(registVo.getMobile());
+//                report.setUserType(OrganizationUser.ORG_USER_TYPE);
+//                organizationService.saveRegisterReport(report);
                 logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
                 return ResponseEntity.ok(Response.succeed("注册成功！"));
             } else {
@@ -125,16 +125,9 @@ public class OrganizationController implements OrganizationApi {
 
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
-            Organization org = null;
-            if (!StringUtils.isNumeric(loginRequest.getName())) {
-                org = organizationService.findAuthenOrgByName(loginRequest.getName());
-            }
 
-            if (orgUser.getOrganizationId() != null) {
-                org = organizationService.findAuthenOrgById(orgUser.getOrganizationId());
-            }
-
-            loginResult.setOrganization(org);
+            OrganizationStream authStream = organizationService.findAuthStreamByPhone(orgUser.getId());
+            loginResult.setOrganizationStream(authStream);
             logger.debug("企业用户--{},登录成功！", loginRequest.getName());
             return ResponseEntity.ok(Response.succeed(loginResult));
         } catch (UnknownAccountException e) {
@@ -156,13 +149,8 @@ public class OrganizationController implements OrganizationApi {
         LoginResult loginResult = new LoginResult();
         Subject subject = SecurityUtils.getSubject();
         OrganizationUser user = (OrganizationUser) subject.getPrincipal();
-
-
-        Organization org = null;
-        if (user.getOrganizationId() != null) {
-            org = organizationService.findAuthenOrgById(user.getOrganizationId());
-        }
-        loginResult.setOrganization(org);
+        OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
+        loginResult.setOrganizationStream(stream);
         loginResult.setOrganizationUser(user);
         /** 如果有userId相同的回话 则剔除，保留当前回话*/
         if (SessionListener.sessionMap.get(user.getId()) != null) {
@@ -350,7 +338,6 @@ public class OrganizationController implements OrganizationApi {
         } catch (Exception e) {
             return ResponseEntity.ok(Response.failed(400, "失效的单据二维码"));
         }
-
         Long streamId = organizationService.InsertAuthorStream(org.getId(), cardNo);
         return ResponseEntity.ok(Response.succeed(streamId));
     }
