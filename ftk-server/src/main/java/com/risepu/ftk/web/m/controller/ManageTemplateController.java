@@ -378,6 +378,9 @@ public class ManageTemplateController implements ManageTemplateApi {
         if (domainRequest.getMin() > domainRequest.getMax()) {
             return ResponseEntity.ok(Response.failed(400, "最小长度不能大于最大长度"));
         }
+        if (domainRequest.getMin() <= 0 || domainRequest.getMax() <= 0) {
+            return ResponseEntity.ok(Response.failed(400, "最小长度/最大长度必须大于0"));
+        }
         String code = domainRequest.getCode().trim();
         List<Domain> domains = domainService.selectAll();
         boolean flag = false;
