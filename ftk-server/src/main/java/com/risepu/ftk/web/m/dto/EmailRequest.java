@@ -3,17 +3,7 @@ package com.risepu.ftk.web.m.dto;
 public class EmailRequest {
     private String email;
 
-    private Long templateId;
-
-    private String filePath;
-
-    public Long getTemplateId() {
-        return templateId;
-    }
-
-    public void setTemplateId(Long templateId) {
-        this.templateId = templateId;
-    }
+    private Long documentId;
 
     public String getEmail() {
         return email;
@@ -23,11 +13,11 @@ public class EmailRequest {
         this.email = email;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public Long getDocumentId() {
+        return documentId;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setDocumentId(Long documentId) {
+        this.documentId = documentId;
     }
 }
