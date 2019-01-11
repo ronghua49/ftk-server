@@ -1,10 +1,7 @@
 package com.risepu.ftk.web.b.controller;
 
 import com.risepu.ftk.server.domain.*;
-import com.risepu.ftk.server.service.ChainService;
-import com.risepu.ftk.server.service.OrganizationService;
-import com.risepu.ftk.server.service.PersonalUserService;
-import com.risepu.ftk.server.service.ProofDocumentService;
+import com.risepu.ftk.server.service.*;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.BasicAction;
@@ -59,6 +56,9 @@ public class OrganizationController implements OrganizationApi {
 
     @Autowired
     private PersonalUserService personalUserService;
+
+    @Autowired
+    private ChannelService channelService;
 
     /**
      * 企业端注册
@@ -304,6 +304,12 @@ public class OrganizationController implements OrganizationApi {
 
         if (stream != null && !stream.getId().equals(organizationStream.getId())) {
             return ResponseEntity.ok(Response.failed(400, "该公司名已经被注册，不得重复！"));
+        }
+        if(StringUtils.isNotEmpty(user.getInviteCode())){
+            Channel channel = channelService.queryChannelByInviteCode(user.getInviteCode());
+            if(channel!=null){
+                organizationStream.setChannalName(channel.getChannelName());
+            }
         }
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());

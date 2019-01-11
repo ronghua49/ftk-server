@@ -47,4 +47,11 @@ public interface ChannelService {
      * @return
      */
     Channel queryChannelById(Long id);
+
+    /**
+     * 根据邀请码查询
+     * @param inviteCode
+     * @return
+     */
+    Channel queryChannelByInviteCode(String inviteCode);
 }
