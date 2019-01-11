@@ -43,11 +43,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public String orgReg(String phone, String password) {
+    public String orgReg(String phone, String password,String inviteCode) {
         OrganizationUser org = new OrganizationUser();
         org.setId(phone);
         password = DigestUtils.md5Hex(password + SALT);
         org.setPassword(password);
+        if(StringUtils.isNotEmpty(inviteCode)){
+        org.setInviteCode(inviteCode);
+        }
         crudService.save(org);
         return "success";
     }
