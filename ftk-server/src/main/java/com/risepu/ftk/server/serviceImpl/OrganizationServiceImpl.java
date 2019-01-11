@@ -1,6 +1,7 @@
 package com.risepu.ftk.server.serviceImpl;
 
 import com.risepu.ftk.server.domain.*;
+import com.risepu.ftk.server.service.ChannelService;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
@@ -38,6 +39,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private GenericCrudService crudService;
 
+    @Autowired
+    private ChannelService channelService;
+
     public void setCrudService(GenericCrudService crudService) {
         this.crudService = crudService;
     }
@@ -49,7 +53,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         password = DigestUtils.md5Hex(password + SALT);
         org.setPassword(password);
         if(StringUtils.isNotEmpty(inviteCode)){
-        org.setInviteCode(inviteCode);
+            List<Channel> all = channelService.getAll();
+            Set<String> codeSet = new HashSet<>();
+            for(Channel channel:all){
+                codeSet.add(channel.getInviteCode());
+            }
+            if(codeSet.contains(inviteCode)){
+                org.setInviteCode(inviteCode);
+            }
+            org.setInvalidInviteCode(inviteCode);
         }
         crudService.save(org);
         return "success";

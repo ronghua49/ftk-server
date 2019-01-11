@@ -56,7 +56,13 @@ public class ChannelController implements  ChannelApi{
 
     @Override
     public ResponseEntity<Response<String>> editChannel(Channel channel) {
-        channelService.edit(channel);
+        Channel currChannel = channelService.queryChannelById(channel.getId());
+        currChannel.setChannelCode(channel.getChannelCode());
+        currChannel.setChannelName(channel.getChannelName());
+        currChannel.setContactPerson(channel.getContactPerson());
+        currChannel.setRemark(channel.getRemark());
+        currChannel.setTel(channel.getTel());
+        channelService.edit(currChannel);
         return ResponseEntity.ok(Response.succeed("修改渠道成功"));
     }
 
