@@ -14,6 +14,8 @@ public class RegistRequest {
 	
 	private String imgCode;
 
+	private String InviteCode;
+
 	public String getMobile() {
 		return mobile;
 	}
@@ -46,6 +48,14 @@ public class RegistRequest {
 
 	public void setImgCode(String imgCode) {
 		this.imgCode = imgCode;
+	}
+
+	public String getInviteCode() {
+		return InviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		InviteCode = inviteCode;
 	}
 
 	@Override

@@ -35,6 +35,12 @@ public class OrganizationUser extends TimestampObject<String> {
      */
     private Integer userType=ORG_USER_TYPE;
 
+
+    /**
+     * 邀请码
+     */
+    private String inviteCode;
+
     @Override
     @Id
     @Column(name = "ID", length = 11)
@@ -71,5 +77,13 @@ public class OrganizationUser extends TimestampObject<String> {
 
     public void setUserType(Integer userType) {
         this.userType = userType;
+    }
+    @Column(name = "INVITE_CODE",length = 10)
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 }
