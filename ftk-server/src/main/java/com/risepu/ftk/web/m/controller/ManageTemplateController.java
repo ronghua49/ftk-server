@@ -322,7 +322,7 @@ public class ManageTemplateController implements ManageTemplateApi {
         if (StringUtils.isEmpty(simpleTemplate.getName())) {
             return ResponseEntity.ok(Response.failed(400, "模板名称不能为空"));
         }
-        Template template = crudService.uniqueResultHql(Template.class, "from SimpleTemplate where code = ?1", simpleTemplate.getCode());
+        SimpleTemplate template = crudService.uniqueResultHql(SimpleTemplate.class, "from SimpleTemplate where code = ?1", simpleTemplate.getCode());
         if (template != null) {
             return ResponseEntity.ok(Response.failed(400, "模板code不能重复"));
         }
