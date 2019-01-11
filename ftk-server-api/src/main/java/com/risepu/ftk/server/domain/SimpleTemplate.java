@@ -40,7 +40,7 @@ public class SimpleTemplate extends AuditableObject<Long> {
         this.code = code;
     }
 
-    @Column(name = "NAME", length = 32)
+    @Column(name = "NAME", length = 50)
     public String getName() {
         return name;
     }
