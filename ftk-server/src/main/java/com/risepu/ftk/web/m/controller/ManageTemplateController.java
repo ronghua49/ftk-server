@@ -207,7 +207,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
             String pdfFilePath = filePath + date + "/" + templateId + date1 + ".pdf";
             String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
-            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", simpleTemplate.getName(), qrFilePath, GrFilePath, pdfFilePath);
+            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", simpleTemplate.getName(), qrFilePath, GrFilePath, pdfFilePath, template.getHashSize(), template.getTitleSize(), template.getContentSize());
             Template template2 = templateService.getTemplate(templateId);
             template2.setHashSize(template.getHashSize());
             template2.set_template(template.get_template());
@@ -279,7 +279,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             String GrFilePath = cg.graphicsGeneration("******有限公司", filePath + date + "/示例盖章.jpg");
             String pdfFilePath = filePath + date + "/" + template.getId() + date1 + ".pdf";
             String qrFilePath = qrCodeUtilSerevice.createQrCode(filePath + date + "/示例二维码.jpg", "china is good");
-            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", simpleTemplate.getName(), qrFilePath, GrFilePath, pdfFilePath);
+            String filePath1 = pdfService.pdf(_template, "97481fb743487be151082fde934762eb9e3366a3", simpleTemplate.getName(), qrFilePath, GrFilePath, pdfFilePath, template.getHashSize(), template.getTitleSize(), template.getContentSize());
             template1.set_template(template.get_template());
             template1.setDescription(template.getDescription());
             template1.setName(simpleTemplate.getName());

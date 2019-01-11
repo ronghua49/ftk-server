@@ -20,6 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Rectangle;
 
 /**
  * @author L-heng
@@ -32,7 +35,7 @@ public class PdfServiceImpl implements PdfService {
     private TemplateService templateService;
 
     @Override
-    public String pdf(String _template, String hash, String title, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
+    public String pdf(String _template, String hash, String title, String qrFilePath, String GrFilePath, String pdfFilePath, Integer hashSize, Integer titleSize, Integer contentSize) throws Exception {
         // TODO Auto-generated method stub
 //        _template = _template.replaceAll("/t", " ");
         //设置纸张
@@ -42,11 +45,11 @@ public class PdfServiceImpl implements PdfService {
         //添加中文字体
         BaseFont bfChinese = BaseFont.createFont("/simsun.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         //设置字体样式
-        Font textFont = new Font(bfChinese, 15, Font.BOLD); //加粗
-        Font boldFont = new Font(bfChinese, 15, Font.UNDEFINED); //正常
-        Font boldFont1 = new Font(bfChinese, 15, Font.UNDEFINED); //正常
-        boldFont1.setColor(BaseColor.RED);
-        Font secondTitleFont = new Font(bfChinese, 20, Font.BOLD); //标题
+        Font textFont1 = new Font(bfChinese, 14, Font.BOLD); //加粗
+        Font hashFont = new Font(bfChinese, hashSize, Font.UNDEFINED); //哈希
+        hashFont.setColor(BaseColor.RED);
+        Font contentFont = new Font(bfChinese, contentSize, Font.UNDEFINED); //正文
+        Font titleFont = new Font(bfChinese, titleSize, Font.BOLD); //标题
 
 
         //创建输出流
@@ -56,18 +59,18 @@ public class PdfServiceImpl implements PdfService {
         PdfContentByte cd = pdfWriter.getDirectContent();
         doc.newPage();
 
-        //段落
-        Paragraph p1 = new Paragraph("【职场通行证】", textFont);
-        p1.setAlignment(Element.ALIGN_CENTER);
-        doc.add(p1);
+//        //段落
+//        Paragraph p1 = new Paragraph("【职场通行证】", textFont1);
+//        p1.setAlignment(Element.ALIGN_CENTER);
+//        doc.add(p1);
 
-        p1 = new Paragraph();
-        p1.setLeading(30);
+        Paragraph p1 = new Paragraph();
+//        p1.setLeading(30);
         //短语
         Phrase ph1 = new Phrase();
         //块
-        Chunk c2 = new Chunk("区块链存证编码：", boldFont1);
-        Chunk c22 = new Chunk(hash, boldFont1);
+        Chunk c2 = new Chunk("区块链防伪编码：", hashFont);
+        Chunk c22 = new Chunk(hash, hashFont);
         //将块添加到短语
         ph1.add(c2);
         ph1.add(c22);
@@ -78,22 +81,22 @@ public class PdfServiceImpl implements PdfService {
 
         doc.add(p1);
 
-        p1 = new Paragraph(title, secondTitleFont);
+        p1 = new Paragraph(title, titleFont);
         //设置行间距
-        p1.setLeading(80);
+        p1.setLeading(60);
         p1.setAlignment(Element.ALIGN_CENTER);
         doc.add(p1);
 
         p1 = new Paragraph(" ");
         //设置行间距
-        p1.setLeading(30);
+        p1.setLeading(20);
         doc.add(p1);
 
         String[] a = _template.split("/n");
         for (int i = 0; i < a.length; i++) {
             p1 = new Paragraph();
             ph1 = new Phrase();
-            Chunk c1 = new Chunk(a[i], boldFont);
+            Chunk c1 = new Chunk(a[i], contentFont);
             p1.setLeading(30);
             ph1.add(c1);
             p1.add(ph1);
@@ -102,19 +105,21 @@ public class PdfServiceImpl implements PdfService {
 
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(210, 80);//坐标
+        image.setAbsolutePosition(80, 170);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
+//        cd.setFontAndSize(bfChinese, 14);
+//        cd.showTextAligned(Element.ALIGN_UNDEFINED, "【职场通行证】", 120, 145, 0);
 
-        cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 240, 60, 0);
+        cd.setFontAndSize(bfChinese, 14);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 115, 150, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(300, 300);//坐标
+        image1.setAbsolutePosition(300, 185);//坐标
         image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
@@ -124,14 +129,24 @@ public class PdfServiceImpl implements PdfService {
         //cd.setLineWidth(0.5);
         //设置文本为描边模式
         //cd.setTextRenderingMode(PdfContentByte.TEXT_RENDER_MODE_FILL_STROKE);
-
-        cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "xxxx年xx月xx日", 370, 280, 0);
+        cd.setFontAndSize(bfChinese, 14);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "xxxx年xx月xx日", 360, 150, 0);
         cd.endText();
 
         doc.close();
         return pdfFilePath;
     }
+
+//    public static void main(String[] args) {
+////        PdfServiceImpl a = new PdfServiceImpl();
+////        try {
+////            a.pdf("     张三（身份证号152502199106267252）电话：18518431201。自2015年01月01日入职我公司担任 品质总监职位至2018年12月01 日因个人原因 离职，经公司研究决定，同意其离职，已办理离职手续且与我公司解除劳动关系，双方无劳动纠纷。\n" +
+////                    "     对在我公司任职期间获知的技术秘密和商业秘密 ， 负有保密义务，自离职之日起两年内有义务保守我公司的技术秘密和商务秘密。 \n" +
+////                    "     特此证明！", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "离职证明", "/file-path/2019-01/04/示例二维码.jpg", "/file-path/2019-01/04/示例盖章.jpg", "/file-path/test.pdf", 12, 26, 14);
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        }
+////    }
 
     @Override
     public String pdf(Map<String, String> map, String hash, String qrFilePath, String GrFilePath, String pdfFilePath) throws Exception {
@@ -173,17 +188,11 @@ public class PdfServiceImpl implements PdfService {
         PdfContentByte cd = pdfWriter.getDirectContent();
         doc.newPage();
 
-        //段落
-        Paragraph p1 = new Paragraph("【职场通行证】", textFont1);
-        p1.setAlignment(Element.ALIGN_CENTER);
-        doc.add(p1);
-
-        p1 = new Paragraph();
-        p1.setLeading(30);
+        Paragraph p1 = new Paragraph();
         //短语
         Phrase ph1 = new Phrase();
         //块
-        Chunk c1 = new Chunk("区块链存证编码：", hashFont);
+        Chunk c1 = new Chunk("区块链防伪编码：", hashFont);
         Chunk c11 = new Chunk(hash, hashFont);
         //将块添加到短语
         ph1.add(c1);
@@ -195,13 +204,13 @@ public class PdfServiceImpl implements PdfService {
 
         p1 = new Paragraph(title, titleFont);
         //设置行间距
-        p1.setLeading(80);
+        p1.setLeading(60);
         p1.setAlignment(Element.ALIGN_CENTER);
         doc.add(p1);
 
         p1 = new Paragraph(" ");
         //设置行间距
-        p1.setLeading(30);
+        p1.setLeading(20);
         doc.add(p1);
 
         p1 = new Paragraph();
@@ -255,37 +264,29 @@ public class PdfServiceImpl implements PdfService {
         doc.add(p1);
         //插入一个二维码图片
         Image image = Image.getInstance(qrFilePath);
-        image.setAbsolutePosition(210, 80);//坐标
+        image.setAbsolutePosition(80, 170);//坐标
         image.scaleAbsolute(172, 172);//自定义大小
         doc.add(image);
 
         cd.beginText();
 
-        cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 240, 60, 0);
+        cd.setFontAndSize(bfChinese, 14);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 150, 150, 0);
         cd.endText();
 
         //插入公司盖章图片
         Image image1 = Image.getInstance(GrFilePath);
-        image1.setAbsolutePosition(300, 300);//坐标
+        image1.setAbsolutePosition(300, 185);//坐标
         image1.scaleAbsolute(210, 60);//自定义大小
         doc.add(image1);
 
         cd.beginText();
 
-        cd.setFontAndSize(bfChinese, 12);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 370, 280, 0);
+        cd.setFontAndSize(bfChinese, 14);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, date, 360, 150, 0);
         cd.endText();
         doc.close();
         return pdfFilePath;
     }
 
-   /* public static void main(String[] args) {
-        PdfServiceImpl a = new PdfServiceImpl();
-        try {
-            a.pdf("撒烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦烦的反对大师傅嘀咕嘀咕的事发生发射点发生发射点发生/n沙发沙发沙发沙发丰富的石帆胜丰沙发上的方式犯得上发射点发射点犯得上发射点发生随风倒十分", "SFDSFSFSFSDFSDGSFDGDFGDFGDFGDGD", "但是发射点发生", "/file-path/11.jpg", "/file-path/112.jpg", "/file-path/test.pdf");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 }
