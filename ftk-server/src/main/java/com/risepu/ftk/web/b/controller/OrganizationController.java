@@ -14,6 +14,7 @@ import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.*;
 import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -72,6 +74,7 @@ public class OrganizationController implements OrganizationApi {
             String orgId = organizationService.checkOrgName(registVo.getMobile());
             if (orgId == null) {
                 organizationService.orgReg(registVo.getMobile(), registVo.getPassword(),registVo.getInviteCode());
+
                 logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
                 return ResponseEntity.ok(Response.succeed("注册成功！"));
             } else {
