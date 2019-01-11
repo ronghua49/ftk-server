@@ -89,7 +89,7 @@ public class ChannelServiceImpl implements ChannelService {
      */
     @Override
     public List<Channel> getAll() {
-        return crudService.list(Channel.class);
+        return crudService.hql(Channel.class,"from Channel");
     }
 
     /**

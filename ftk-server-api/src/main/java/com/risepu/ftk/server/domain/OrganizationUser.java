@@ -41,6 +41,9 @@ public class OrganizationUser extends TimestampObject<String> {
      */
     private String inviteCode;
 
+
+    private String invalidInviteCode;
+
     @Override
     @Id
     @Column(name = "ID", length = 11)
@@ -85,5 +88,13 @@ public class OrganizationUser extends TimestampObject<String> {
 
     public void setInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
+    }
+    @Column(name = "INVALID_INVITE_CODE",length = 10)
+    public String getInvalidInviteCode() {
+        return invalidInviteCode;
+    }
+
+    public void setInvalidInviteCode(String invalidInviteCode) {
+        this.invalidInviteCode = invalidInviteCode;
     }
 }
