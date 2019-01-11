@@ -60,8 +60,9 @@ public class OrganizationServiceImpl implements OrganizationService {
             }
             if(codeSet.contains(inviteCode)){
                 org.setInviteCode(inviteCode);
+            }else{
+                org.setInvalidInviteCode(inviteCode);
             }
-            org.setInvalidInviteCode(inviteCode);
         }
         crudService.save(org);
         return "success";
