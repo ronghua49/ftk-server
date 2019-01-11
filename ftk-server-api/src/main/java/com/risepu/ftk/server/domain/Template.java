@@ -80,7 +80,7 @@ public class Template extends AuditableObject<Long> {
         this.code = code;
     }
 
-    @Column(name = "NAME", length = 50)
+    @Column(name = "NAME", length = 150)
     public String getName() {
         return name;
     }
