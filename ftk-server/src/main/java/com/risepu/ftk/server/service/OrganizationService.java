@@ -25,7 +25,7 @@ public interface OrganizationService {
      * @param password 密码
      * @return
      */
-    String orgReg(String phone, String password);
+    String orgReg(String phone, String password,String inviteCode);
 
     /**
      * @param id     手机号 获得 组织机构代码号
