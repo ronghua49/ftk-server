@@ -131,6 +131,6 @@ public class ChannelServiceImpl implements ChannelService {
      */
     @Override
     public Channel queryChannelByInviteCode(String inviteCode) {
-        return crudService.uniqueResultSql(Channel.class,"from Channel where inviteCode =?1 ",inviteCode);
+        return crudService.uniqueResultHql(Channel.class,"from Channel where inviteCode = ?1 ",inviteCode);
     }
 }
