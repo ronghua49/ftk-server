@@ -69,7 +69,7 @@ public class ChannelController implements  ChannelApi{
     @Override
     public ResponseEntity<Response<Channel>> queryOne(Long id) {
         Channel channel = channelService.queryChannelById(id);
-        return null;
+        return ResponseEntity.ok(Response.succeed(channel));
     }
 
     private String getInviteCode(Set<String> codeSet) {
