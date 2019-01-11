@@ -6,7 +6,6 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.risepu.ftk.server.domain.Domain;
 import com.risepu.ftk.server.domain.Template;
-import com.risepu.ftk.server.service.DomainService;
 import com.risepu.ftk.server.service.PdfService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.m.dto.Pdf;
@@ -271,7 +270,7 @@ public class PdfServiceImpl implements PdfService {
         cd.beginText();
 
         cd.setFontAndSize(bfChinese, 14);
-        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 150, 150, 0);
+        cd.showTextAligned(Element.ALIGN_UNDEFINED, "扫一扫   验真伪", 115, 150, 0);
         cd.endText();
 
         //插入公司盖章图片
