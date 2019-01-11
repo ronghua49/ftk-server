@@ -73,7 +73,7 @@ public class OrganizationController implements OrganizationApi {
             /** 判断企业是否已经注册 */
             String orgId = organizationService.checkOrgName(registVo.getMobile());
             if (orgId == null) {
-                organizationService.orgReg(registVo.getMobile(), registVo.getPassword());
+                organizationService.orgReg(registVo.getMobile(), registVo.getPassword(),registVo.getInviteCode());
 
                 logger.debug("企业用户手机号--{},注册成功！", registVo.getMobile());
                 return ResponseEntity.ok(Response.succeed("注册成功！"));
