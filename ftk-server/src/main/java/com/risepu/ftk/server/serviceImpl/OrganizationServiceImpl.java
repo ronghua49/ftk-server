@@ -496,7 +496,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationStream findAuthStreamByNameAndState(String name, Integer checkingState, Integer checkFailState) {
 
-        return crudService.uniqueResultHql(OrganizationStream.class, "from OrganizationStream where name =?1 and state in (2,3)", name);
+        return crudService.uniqueResultHql(OrganizationStream.class, "from OrganizationStream where name =?1 and state in (1,2)", name);
     }
 
     /**

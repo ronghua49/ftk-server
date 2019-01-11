@@ -313,6 +313,7 @@ public class OrganizationController implements OrganizationApi {
         }
         organizationStream.setState(OrganizationStream.CHECKING_STATE);
         organizationStream.setApplicationPhone(user.getId());
+
         organizationService.saveOrUpdateOrgStream(organizationStream);
 
         logger.debug("企业用户手机号--{},发送认证信息成功！", user.getId());
