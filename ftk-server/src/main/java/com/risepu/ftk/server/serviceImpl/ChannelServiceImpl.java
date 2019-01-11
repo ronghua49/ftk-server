@@ -122,4 +122,15 @@ public class ChannelServiceImpl implements ChannelService {
     public Channel queryChannelById(Long id) {
         return crudService.get(Channel.class,id);
     }
+
+    /**
+     * 根据邀请码查询
+     *
+     * @param inviteCode
+     * @return
+     */
+    @Override
+    public Channel queryChannelByInviteCode(String inviteCode) {
+        return crudService.uniqueResultSql(Channel.class,"from Channel where inviteCode =?1 ",inviteCode);
+    }
 }

@@ -122,8 +122,6 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.remark = remark;
     }
 
-
-
     private String tel;
 
     @Column(name = "TEL", length = 50)
@@ -135,11 +133,6 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.tel = tel;
     }
 
-
-
-
-
-
     private String applicationPhone;
 
     @Column(name = "APPLICATION_PHONE", length = 11)
@@ -150,8 +143,6 @@ public class OrganizationStream extends AuditableObject<Long> {
     public void setApplicationPhone(String applicationPhone) {
         this.applicationPhone = applicationPhone;
     }
-
-
 
     private String orgType;
     private String signSts;
@@ -167,7 +158,8 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     /** 行业一级编号 */
     private String dictCode;
-
+    /** 渠道名称 */
+    private String channalName;
     @Column(name = "ORG_TYPE", length = 20)
     public String getOrgType() {
         return orgType;
@@ -258,5 +250,13 @@ public class OrganizationStream extends AuditableObject<Long> {
 
     public void setDictCode(String dictCode) {
         this.dictCode = dictCode;
+    }
+    @Column(name = "CHANNAL_NAME",length = 50)
+    public String getChannalName() {
+        return channalName;
+    }
+
+    public void setChannalName(String channalName) {
+        this.channalName = channalName;
     }
 }
