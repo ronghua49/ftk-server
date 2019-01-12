@@ -133,4 +133,26 @@ public class ChannelServiceImpl implements ChannelService {
     public Channel queryChannelByInviteCode(String inviteCode) {
         return crudService.uniqueResultHql(Channel.class,"from Channel where inviteCode =?1 ",inviteCode);
     }
+
+    /**
+     * 根据渠道编号查询channel
+     *
+     * @param channelCode
+     * @return
+     */
+    @Override
+    public Channel queryChannelByChannelCode(String channelCode) {
+        return crudService.uniqueResultHql(Channel.class,"from Channel where channelCode =?1 ",channelCode);
+    }
+
+    /**
+     * 根据渠道名查询 渠道
+     *
+     * @param channelName
+     * @return
+     */
+    @Override
+    public Channel queryChannelByName(String channelName) {
+        return crudService.uniqueResultHql(Channel.class,"from Channel where channelName =?1 ",channelName);
+    }
 }

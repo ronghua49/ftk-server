@@ -54,4 +54,19 @@ public interface ChannelService {
      * @return
      */
     Channel queryChannelByInviteCode(String inviteCode);
+
+    /**
+     * 根据渠道编号查询channel
+     * @param channelCode
+     * @return
+     */
+    Channel queryChannelByChannelCode(String channelCode);
+
+
+    /**
+     * 根据渠道名查询 渠道
+     * @param channelName
+     * @return
+     */
+    Channel queryChannelByName(String channelName);
 }

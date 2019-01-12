@@ -238,4 +238,11 @@ public interface OrganizationService {
      * @return
      */
     OrganizationAdvice findOrgAdviceById(Long id);
+
+    /**
+     * 根据企业名称查询企业流水
+     * @param channelName
+     * @return
+     */
+    List<OrganizationStream> findAuthStreamByChannelName(String channelName);
 }

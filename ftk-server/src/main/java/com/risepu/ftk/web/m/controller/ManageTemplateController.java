@@ -51,6 +51,11 @@ public class ManageTemplateController implements ManageTemplateApi {
     @Value("${ftk.root.filePath}")
     private String filePath;
 
+    /**
+     * 根据id查找模板
+     *
+     * @return 模板JavaBean
+     */
     @Override
     public ResponseEntity<Response<Template>> getTemplate(Long templateId) {
         if (templateId == null) {
@@ -60,6 +65,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(template));
     }
 
+    /**
+     * 根据id查找简易模板
+     *
+     * @return 模板JavaBean
+     */
     @Override
     public ResponseEntity<Response<SimpleTemplate>> getSimpleTemplate(Long id) {
         if (id == null) {
@@ -69,6 +79,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(simpleTemplate));
     }
 
+    /**
+     * 显示所有模板
+     *
+     * @return 模板JavaBean集合
+     */
     @Override
     public ResponseEntity<Response<PageResult>> getAllTemplate(Integer pageNo, Integer pageSize, String startTime, String endTime, String name) throws Exception {
         Integer firstIndex = pageNo * pageSize;
@@ -104,6 +119,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
 
+    /**
+     * 显示所有简易模板
+     *
+     * @return 模板JavaBean集合
+     */
     @Override
     public ResponseEntity<Response<PageResult>> getAllSimpleTemplate(Integer pageNo, Integer pageSize, String code, String name) throws Exception {
         Integer firstIndex = pageNo * pageSize;
@@ -130,6 +150,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
 
+    /**
+     * 根据模板id查找所有模板数据(有分页）
+     *
+     * @return
+     */
     @Override
     public ResponseEntity<Response<PageResult>> getAnyDomain(Integer pageNo, Integer pageSize, String code, String label, Long templateId) throws UnsupportedEncodingException {
         Integer firstIndex = pageNo * pageSize;
@@ -155,6 +180,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
 
+    /**
+     * 根据模板id查找所有模板数据(无分页）
+     *
+     * @return
+     */
     @Override
     public ResponseEntity<Response<List<Domain>>> getAllDomain(String templateId) {
         SimpleTemplate simpleTemplate = crudService.uniqueResultHql(SimpleTemplate.class, "from SimpleTemplate where code = ?1", templateId);
@@ -164,7 +194,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(list));
     }
 
-
+    /**
+     * 添加模板
+     *
+     * @param template
+     * @return
+     */
     @Override
     public ResponseEntity<Response<String>> addTemplate(Template template) {
         try {
@@ -229,6 +264,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         }
     }
 
+    /**
+     * 修改模板
+     *
+     * @param template
+     * @return
+     */
     @Override
     public ResponseEntity<Response<String>> updateTemplate(Template template) {
         try {
@@ -301,6 +342,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         }
     }
 
+    /**
+     * 修改简易模板
+     *
+     * @param simpleTemplate
+     * @return
+     */
     @Override
     public ResponseEntity<Response<String>> updateSimpleTemplate(SimpleTemplate simpleTemplate) {
         if (simpleTemplate.getId() == null) {
@@ -323,6 +370,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed("更新成功"));
     }
 
+    /**
+     * 添加简易模板
+     *
+     * @param simpleTemplate 模板JavaBean
+     * @return 添加是否成功
+     */
     @Override
     public ResponseEntity<Response<String>> addSimpleTemplate(SimpleTemplate simpleTemplate) {
         // TODO Auto-generated method stub
@@ -364,6 +417,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
 
+    /**
+     * 添加简易模板数据
+     *
+     * @return 添加是否成功
+     */
     @Override
     public ResponseEntity<Response<String>> addSimpleTemplateData(DomainRequest domainRequest) {
         // TODO Auto-generated method stub
@@ -423,13 +481,25 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.failed(400, "添加失败"));
     }
 
+    /**
+     * 回显模板数据
+     *
+     * @param domainId 模板数据id
+     * @return
+     */
     @Override
     public ResponseEntity<Response<Domain>> getTemplateData(Long domainId) {
         return ResponseEntity.ok(Response.succeed(domainService.selectById(domainId)));
     }
 
+    /**
+     * 修改模板要素
+     *
+     * @param domain
+     * @return
+     */
     @Override
-    public ResponseEntity<Response<String>> updateTemplateData(Domain domain) {
+    public ResponseEntity<Response<String>> updateDomain(Domain domain) {
         if (domain.getMax() != null && domain.getMin() != null && domain.getMin() > domain.getMax()) {
             return ResponseEntity.ok(Response.failed(400, "最小长度不能大于最大长度"));
         }
@@ -439,6 +509,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed("修改成功"));
     }
 
+    /**
+     * 模板名称下拉框
+     *
+     * @return
+     */
     @Override
     public ResponseEntity<Response<List>> TemplateList() {
         List<SimpleTemplate> simpleTemplates = crudService.hql(SimpleTemplate.class, "from SimpleTemplate");
@@ -452,6 +527,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed(list));
     }
 
+    /**
+     * 删除模板数据
+     *
+     * @param domainId
+     * @return
+     */
     @Override
     public ResponseEntity<Response<String>> deleteSimpleTemplateData(Long domainId, Long templateId) {
         if (domainId == null) {
@@ -471,6 +552,12 @@ public class ManageTemplateController implements ManageTemplateApi {
         return ResponseEntity.ok(Response.succeed("删除成功"));
     }
 
+    /**
+     * 更新模板状态
+     *
+     * @param templateId 模板id
+     * @return 是否更新成功
+     */
     @Override
     public ResponseEntity<Response<String>> updateTemplateState(Long templateId) {
         if (templateId == null) {
