@@ -7,6 +7,7 @@ import com.risepu.ftk.server.domain.Template;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.TemplateService;
 import com.risepu.ftk.web.Constant;
+import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.m.dto.IdRequest;
@@ -40,9 +41,7 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     public ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
         OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
-        if (user == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeKickOut(user.getId(),request.getSession());
         if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }
@@ -68,9 +67,7 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Override
     public ResponseEntity<Response<String>> getTemplateState(HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
-        if (organizationUser == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeLogin(organizationUser);
         OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
         if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));

@@ -8,6 +8,7 @@ import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.*;
+import com.risepu.ftk.web.exception.KickoutException;
 import com.risepu.ftk.web.exception.NotLoginException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -150,14 +151,8 @@ public class OrganizationController implements OrganizationApi {
         OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
         loginResult.setOrganizationStream(stream);
         loginResult.setOrganizationUser(user);
-        /** 如果有userId相同的回话 则剔除，保留当前回话*/
-
-        String[] sessionIds = SessionListener.sessionMap.get(user.getId());
         //如果用户当前session被移到第二位，则表示被踢出
-        if(sessionIds!=null&&session.getId().equals(SessionListener.sessionMap.get(user.getId())[1])){
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
-
+        SessionListener.judgeKickOut(user.getId(),session);
         return ResponseEntity.ok(Response.succeed(loginResult));
     }
 
@@ -201,10 +196,9 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<String>> orgChangePwd(String password, String newpwd, HttpSession session) {
+
         OrganizationUser currUser = getCurrUser(session);
-        if (currUser == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeLogin(currUser);
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         String salt = ConfigUtil.getValue("salt");
         password = DigestUtils.md5Hex(password + salt);
@@ -218,6 +212,8 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(7, "原始密码输入错误，请重新输入"));
         }
     }
+
+
 
     /**
      * 图片上传
@@ -265,18 +261,10 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
-       HttpSession session = request.getSession();
-        OrganizationUser currUser = getCurrUser(session);
-        /** 若果当前回话的 user 为空，表示被挤掉*/
-        if (currUser == null) {
-            throw new NotLoginException();
-        }
+        OrganizationUser currUser = getCurrUser( request.getSession());
+        SessionListener.judgeLogin(currUser);
         //如果用户当前session被移到第二位，则表示被踢出
-        String[] sessionIds = SessionListener.sessionMap.get(currUser.getId());
-        if(sessionIds!=null&&request.getSession().getId().equals(sessionIds[1])){
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
-
+        SessionListener.judgeKickOut(currUser.getId(),request.getSession());
 
         /**  根据申请人手机号 查询审核状态*/
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
@@ -293,9 +281,7 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<String>> orgAuthen(OrganizationStream organizationStream, HttpSession session) {
         OrganizationUser user = getCurrUser(session);
-        if (user == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeLogin(user);
 
         /** 查找当前用户提交的组织机构代码证 是否已经通过审核*/
         Organization org = organizationService.findAuthenOrgById(organizationStream.getOrganization());
@@ -339,9 +325,8 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<Long>> scanQR(String hash, HttpSession session) {
         /** 未审核通过的企业不允许扫描单据 */
         OrganizationUser currUser = getCurrUser(session);
-        if (currUser == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeLogin(currUser);
+        SessionListener.judgeKickOut(currUser.getId(),session);
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
         String cardNo;
@@ -364,9 +349,7 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<PageResult<VerifyHistory>>> verifyHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
         OrganizationUser orgUser = getCurrUser(session);
-        if (orgUser == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeLogin(orgUser);
         OrganizationUser user = organizationService.findOrgUserById(orgUser.getId());
         PageResult<VerifyHistory> page = new PageResult();
         List content = new ArrayList();
@@ -389,10 +372,7 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<PageResult>> documentHistory(@RequestBody PageRequest pageRequest, HttpSession session) {
         /** 查询企业开单历史 */
         OrganizationUser currUser = getCurrUser(session);
-        if (currUser == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
-
+        SessionListener.judgeLogin(currUser);
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         PageResult document = new PageResult();
 
@@ -427,9 +407,7 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<String>> adviceInfo(OrganizationAdvice advice, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
-        if (currUser == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeLogin(currUser);
         advice.setOrgId(currUser.getId());
         if(advice.getContactTel().length()>50){
             return ResponseEntity.ok(Response.failed(400,"联系方式字段超长"));
@@ -455,9 +433,7 @@ public class OrganizationController implements OrganizationApi {
     @Override
     public ResponseEntity<Response<String>> setDefaultTemplate(String templateId, boolean state, HttpSession session) {
         OrganizationUser currUser = getCurrUser(session);
-        if (currUser == null) {
-            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
-        }
+        SessionListener.judgeLogin(currUser);
         OrganizationUser user = organizationService.findOrgUserById(currUser.getId());
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
         if (state == false) {
@@ -494,4 +470,7 @@ public class OrganizationController implements OrganizationApi {
             return ResponseEntity.ok(Response.failed(400, "授权码错误"));
         }
     }
+
+
+
 }

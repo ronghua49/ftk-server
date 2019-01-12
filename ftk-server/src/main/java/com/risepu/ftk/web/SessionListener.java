@@ -4,6 +4,8 @@ package com.risepu.ftk.web;    /*
  */
 
 import com.risepu.ftk.server.domain.OrganizationUser;
+import com.risepu.ftk.web.exception.KickoutException;
+import com.risepu.ftk.web.exception.NotLoginException;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionAttributeListener;
@@ -53,4 +55,21 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
         }
 
     }
+
+    public static void judgeLogin(OrganizationUser organizationUser){
+        if (organizationUser == null) {
+            throw new NotLoginException();
+        }
+
+    }
+
+    public static void judgeKickOut(String userId,HttpSession session){
+
+        String[] sessionIds = SessionListener.sessionMap.get(userId);
+        if(sessionIds!=null&&session.getId().equals(sessionIds[1])){
+            throw new KickoutException();
+        }
+
+    }
+
 }

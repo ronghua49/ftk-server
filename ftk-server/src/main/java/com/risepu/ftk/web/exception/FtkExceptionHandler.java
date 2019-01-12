@@ -18,6 +18,12 @@ public class FtkExceptionHandler {
     @ResponseBody
     public ResponseEntity<Response<String>> notFoundException(Exception e) {
 
-        return ResponseEntity.ok(Response.failed(-101, e.getMessage()));
+        return ResponseEntity.ok(Response.failed(-101, "您还未登录，请先登录"));
+    }
+
+    @ExceptionHandler(KickoutException.class)
+    @ResponseBody
+    public ResponseEntity<Response<String>> KickoutException(Exception e) {
+        return ResponseEntity.ok(Response.failed(-101, "您的账号在另一设备登录，被迫下线"));
     }
 }
