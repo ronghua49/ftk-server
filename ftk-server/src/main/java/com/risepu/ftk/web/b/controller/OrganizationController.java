@@ -17,7 +17,9 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +62,7 @@ public class OrganizationController implements OrganizationApi {
 
     @Autowired
     private ChannelService channelService;
+
 
     /**
      * 企业端注册
@@ -106,19 +110,26 @@ public class OrganizationController implements OrganizationApi {
         usernamePasswordToken.setRememberMe(true);
         LoginResult loginResult = new LoginResult();
         try {
+
             subject.login(usernamePasswordToken);
             OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
             String userId = orgUser.getId();
 
             /** 实现单一登录，剔除效果*/
-            if (SessionListener.sessionMap.get(userId) != null) {
-                BasicAction.forceLogoutUser(userId);
-                SessionListener.sessionMap.put(userId, request.getSession());
-            } else {
-                SessionListener.sessionMap.put(userId, request.getSession());
+//            String currSessionId = SessionListener.sessionMap.get(userId)[0];
+//            String kickedOutSessionId = SessionListener.sessionMap.get(userId)[1];
+
+            String[] sessionIds = SessionListener.sessionMap.get(orgUser.getId());
+            if(sessionIds==null){
+                sessionIds = new String[2];
+                sessionIds[0]= request.getSession().getId();
+            }else if(sessionIds[0]!=null){
+                sessionIds[1] = sessionIds[0];
+                sessionIds[0] = request.getSession().getId();
             }
+
             /**  对象放入当前回话*/
-            setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(userId), orgUser);
+            setCurrUserToSession(request.getSession(), orgUser);
 
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
@@ -150,11 +161,11 @@ public class OrganizationController implements OrganizationApi {
         loginResult.setOrganizationStream(stream);
         loginResult.setOrganizationUser(user);
         /** 如果有userId相同的回话 则剔除，保留当前回话*/
-        if (SessionListener.sessionMap.get(user.getId()) != null) {
-            BasicAction.forceLogoutUser(user.getId());
-            SessionListener.sessionMap.put(user.getId(), session);
-        } else {
-            SessionListener.sessionMap.put(user.getId(), session);
+
+        String[] sessionIds = SessionListener.sessionMap.get(user.getId());
+        //如果用户当前session被移到第二位，则表示被踢出
+        if(sessionIds!=null&&session.getId().equals(SessionListener.sessionMap.get(user.getId())[1])){
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
 
         return ResponseEntity.ok(Response.succeed(loginResult));
@@ -268,8 +279,15 @@ public class OrganizationController implements OrganizationApi {
         OrganizationUser currUser = getCurrUser(session);
         /** 若果当前回话的 user 为空，表示被挤掉*/
         if (currUser == null) {
+            throw new NotLoginException();
+        }
+        //如果用户当前session被移到第二位，则表示被踢出
+        String[] sessionIds = SessionListener.sessionMap.get(currUser.getId());
+        if(sessionIds!=null&&session.getId().equals(SessionListener.sessionMap.get(currUser.getId())[1])){
             throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
+
+
         /**  根据申请人手机号 查询审核状态*/
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
@@ -439,7 +457,8 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<String>> loginOut(HttpSession session) {
-        session.setAttribute(Constant.getSessionCurrUser(), null);
+        session.invalidate();
+        //session.setAttribute(Constant.getSessionCurrUser(), null);
         return ResponseEntity.ok(Response.succeed("退出登录成功"));
     }
 
