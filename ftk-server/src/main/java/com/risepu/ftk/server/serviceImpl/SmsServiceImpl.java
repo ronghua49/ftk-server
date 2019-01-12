@@ -34,6 +34,9 @@ public class SmsServiceImpl implements SmsService {
 
     @Value("${ftk.sms.signName}")
     private String smsSignName;
+
+    @Value("${sms.send}")
+    private String isSend;
     
     @Override
     public boolean identify(String inCode, String createCode) {
@@ -45,13 +48,16 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public String sendCode(String phone,String templateCode,Map<String, String>params) {
-//    	String verifyCode  =VerifyCode.genValidCode();
-//    	if(params!=null) {
-//    		params.put("idfcode", verifyCode);
-//    	}
-//        sendSms(new Gson().toJson(params), phone, templateCode);
-//        return verifyCode;
-		return "123456";
+		if(Boolean.valueOf(isSend)){
+			String verifyCode  =VerifyCode.genValidCode();
+			if(params!=null) {
+				params.put("idfcode", verifyCode);
+			}
+			sendSms(new Gson().toJson(params), phone, templateCode);
+			return verifyCode;
+		}else{
+			return "123456";
+		}
     }
     
     private Boolean sendSms(String params, String recNum, String templateCode) {
