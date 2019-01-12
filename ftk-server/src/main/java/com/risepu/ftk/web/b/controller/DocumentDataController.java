@@ -250,18 +250,18 @@ public class DocumentDataController implements DocumentDataApi {
         try {
             ProofDocument documentById = proofDocumentService.getDocumentById(emailRequest.getDocumentId());
 
-            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+//            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 
             Template template = templateService.getTemplate(documentById.getTemplate());
             sendMailService.sendMail(emailRequest.getEmail(), documentById.getFilePath(), template.getName());
-            //邮件流水表
-            EmailTransaction emailTransation = new EmailTransaction();
-            emailTransation.setEmail(emailRequest.getEmail());
-            emailTransation.setNumber(documentById.getNumber());
-            emailTransation.setOrganization(documentById.getOrganization());
-            emailTransation.setOrganizationUser(organizationUser.getId());
-            emailTransation.setPersonalUser(documentById.getPersonalUser());
-            crudService.save(emailTransation);
+//            //邮件流水表
+//            EmailTransaction emailTransation = new EmailTransaction();
+//            emailTransation.setEmail(emailRequest.getEmail());
+//            emailTransation.setNumber(documentById.getNumber());
+//            emailTransation.setOrganization(documentById.getOrganization());
+//            emailTransation.setOrganizationUser(organizationUser.getId());
+//            emailTransation.setPersonalUser(documentById.getPersonalUser());
+//            crudService.save(emailTransation);
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
