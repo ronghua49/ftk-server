@@ -153,9 +153,9 @@ public class DocumentDataController implements DocumentDataApi {
             if (dateList.contains(date3) && organizationList.contains(user.getOrganizationId()) && list2.contains(title)) {
                 SimpleDateFormat ft2 = new SimpleDateFormat("yyyy-MM-dd");
                 Date date2 = DateFormatter.startOfDay(DateFormatter.nextDay(new Date()));
-                String time = ft2.format(date2);
                 String time1 = ft2.format(new Date());
-                Integer index = (Integer) crudService.uniqueResultHql("select max(index) from ProofDocument where organization = ?1 and template = ?2 and createTimestamp >= '" + time1 + "' and createTimestamp < '" + time + "'", user.getOrganizationId(), templateId);
+
+                Integer index = (Integer) crudService.uniqueResultHql("select max(index) from ProofDocument where organization = ?1 and template = ?2 and createTimestamp >= ?3 and createTimestamp < ?4", user.getOrganizationId(), templateId, ft2.parse(time1), date2);
                 proofDocument1.setIndex(index + 1);
                 n = String.format("%03d", index + 1);
             } else {
