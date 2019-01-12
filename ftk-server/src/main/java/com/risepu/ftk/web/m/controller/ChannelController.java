@@ -4,6 +4,7 @@ package com.risepu.ftk.web.m.controller;    /*
  */
 
 import com.risepu.ftk.server.domain.Channel;
+import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.server.service.ChannelService;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.utils.PageResult;
@@ -49,6 +50,14 @@ public class ChannelController implements  ChannelApi{
         }
         String code = getInviteCode(inviteCode);
         channel.setInviteCode(code);
+
+        if(channelService.queryChannelByChannelCode(channel.getChannelCode()) !=null){
+            return ResponseEntity.ok(Response.failed(400,"渠道编号不得重复"));
+        }
+
+        if(channelService.queryChannelByName(channel.getChannelName())!=null){
+            return ResponseEntity.ok(Response.failed(400,"渠道名称不得重复"));
+        }
         channelService.save(channel);
 
         return ResponseEntity.ok(Response.succeed("添加渠道成功"));
@@ -56,12 +65,31 @@ public class ChannelController implements  ChannelApi{
 
     @Override
     public ResponseEntity<Response<String>> editChannel(Channel channel) {
+
+
+        Channel channel1 = channelService.queryChannelByChannelCode(channel.getChannelCode());
+        if( channel1!=null&&!channel.getId().equals(channel1.getId())){
+            return ResponseEntity.ok(Response.failed(400,"渠道编号不得重复"));
+        }
+
+        Channel channel2 = channelService.queryChannelByName(channel.getChannelName());
+        if(channel2!=null&&!channel2.getId().equals(channel.getId())){
+            return ResponseEntity.ok(Response.failed(400,"渠道名称不得重复"));
+        }
+
         Channel currChannel = channelService.queryChannelById(channel.getId());
+        String channelName = currChannel.getChannelName();
+        List<OrganizationStream> streams = organizationService.findAuthStreamByChannelName(channelName);
+        for(OrganizationStream stream:streams){
+            stream.setChannalName(channel.getChannelName());
+            organizationService.updateOrgStream(stream);
+        }
         currChannel.setChannelCode(channel.getChannelCode());
         currChannel.setChannelName(channel.getChannelName());
         currChannel.setContactPerson(channel.getContactPerson());
         currChannel.setRemark(channel.getRemark());
         currChannel.setTel(channel.getTel());
+
         channelService.edit(currChannel);
         return ResponseEntity.ok(Response.succeed("修改渠道成功"));
     }

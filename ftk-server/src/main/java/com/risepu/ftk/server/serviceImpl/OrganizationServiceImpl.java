@@ -569,4 +569,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         return crudService.get(OrganizationAdvice.class,id);
     }
 
+    /**
+     * 根据企业名称查询企业流水
+     *
+     * @param channelName
+     * @return
+     */
+    @Override
+    public List<OrganizationStream> findAuthStreamByChannelName(String channelName) {
+        return crudService.hql(OrganizationStream.class,"from OrganizationStream where channelName =?1 ",channelName);
+    }
+
 }
