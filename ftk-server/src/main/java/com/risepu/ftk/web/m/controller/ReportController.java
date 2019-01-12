@@ -35,6 +35,11 @@ public class ReportController implements ReportApi {
     @Autowired
     private OrganizationService organizationService;
 
+    /**
+     * 证明统计汇总表
+     *
+     * @return 模板JavaBean
+     */
     @Override
     public ResponseEntity<Response<PageResult>> getCount(Integer pageNo, Integer pageSize, Integer startYear, Integer endYear) {
         Integer firstIndex = pageNo * pageSize;
@@ -77,6 +82,11 @@ public class ReportController implements ReportApi {
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
 
+    /**
+     * 企业单据统计明细表
+     *
+     * @return 模板JavaBean
+     */
     @Override
     public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String templateType) throws UnsupportedEncodingException, ParseException {
         Integer firstIndex = pageNo * pageSize;

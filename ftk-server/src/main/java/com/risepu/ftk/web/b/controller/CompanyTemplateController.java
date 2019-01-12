@@ -37,11 +37,16 @@ public class CompanyTemplateController implements CompanyTemplateApi {
     @Autowired
     private GenericCrudService crudService;
 
+    /**
+     * 显示已启用模板
+     *
+     * @return 模板JavaBean集合
+     */
     @Override
     public ResponseEntity<Response<List<Template>>> getTemplates(String defaultState, HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
         OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
-        SessionListener.judgeKickOut(user.getId(),request.getSession());
+        SessionListener.judgeKickOut(user.getId(), request.getSession());
         if (user.getOrganizationId() == null) {
             return ResponseEntity.ok(Response.failed(400, "企业未认证"));
         }
@@ -64,6 +69,12 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         return ResponseEntity.ok(Response.succeed(templates));
     }
 
+    /**
+     * 判断是否有默认模板
+     *
+     * @param request
+     * @return
+     */
     @Override
     public ResponseEntity<Response<String>> getTemplateState(HttpServletRequest request) {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
@@ -80,6 +91,12 @@ public class CompanyTemplateController implements CompanyTemplateApi {
         return ResponseEntity.ok(Response.succeed("1"));
     }
 
+    /**
+     * 查找模板对应的所有数据
+     *
+     * @param templateId
+     * @return 模板数据
+     */
     @Override
     public ResponseEntity<Response<List<Domain>>> getAllTemplateData(IdRequest templateId) {
         if (templateId.getTemplateId() == null) {

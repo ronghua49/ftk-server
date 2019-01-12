@@ -19,22 +19,14 @@ import java.text.ParseException;
  */
 @Api(value = "report")
 public interface ReportApi {
-    /**
-     * 证明统计汇总表
-     *
-     * @return 模板JavaBean
-     */
+
     @ApiOperation(value = "证明统计汇总表", nickname = "getCount")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @GetMapping(path = "/getCount/{pageNo:\\d+}")
     @ResponseBody
     ResponseEntity<Response<PageResult>> getCount(@PathVariable Integer pageNo, Integer pageSize, Integer startYear, Integer endYear);
 
-    /**
-     * 企业单据统计明细表
-     *
-     * @return 模板JavaBean
-     */
+
     @ApiOperation(value = "企业单据统计明细表", nickname = "getDocument")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @GetMapping(path = "/getDocument/{pageNo:\\d+}")

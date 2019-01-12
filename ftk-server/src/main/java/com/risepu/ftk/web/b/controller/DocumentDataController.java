@@ -66,9 +66,13 @@ public class DocumentDataController implements DocumentDataApi {
     @Value("${ftk.root.filePaths}")
     private String filePaths;
 
-    //FIXME:线程安全 企业单号每天从1开始递增
-    private Integer t = 1;
-
+    /**
+     * 生成文档(真)
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
     @Override
     public ResponseEntity<Response<ProofDocument>> addProofDocument(Map<String, String> map, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Request Uri: /documentData/add");
@@ -184,6 +188,13 @@ public class DocumentDataController implements DocumentDataApi {
         }
     }
 
+    /**
+     * 生成文档（假）
+     *
+     * @param map
+     * @return
+     * @throws Exception
+     */
     @Override
     public ResponseEntity<Response<ProofDocument>> add(Map<String, String> map, HttpServletRequest request) {
         try {
@@ -243,6 +254,12 @@ public class DocumentDataController implements DocumentDataApi {
         }
     }
 
+    /**
+     * 发送邮件
+     *
+     * @return 邮件发送状态
+     * @throws Exception
+     */
     @Override
     public ResponseEntity<Response<String>> sendEmail(EmailRequest emailRequest, HttpServletRequest request) {
         // TODO Auto-generated method stub
