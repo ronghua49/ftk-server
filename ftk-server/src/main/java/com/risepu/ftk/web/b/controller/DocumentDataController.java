@@ -250,22 +250,37 @@ public class DocumentDataController implements DocumentDataApi {
         try {
             ProofDocument documentById = proofDocumentService.getDocumentById(emailRequest.getDocumentId());
 
-//            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+            OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
 
             Template template = templateService.getTemplate(documentById.getTemplate());
             sendMailService.sendMail(emailRequest.getEmail(), documentById.getFilePath(), template.getName());
-//            //邮件流水表
-//            EmailTransaction emailTransation = new EmailTransaction();
-//            emailTransation.setEmail(emailRequest.getEmail());
-//            emailTransation.setNumber(documentById.getNumber());
-//            emailTransation.setOrganization(documentById.getOrganization());
-//            emailTransation.setOrganizationUser(organizationUser.getId());
-//            emailTransation.setPersonalUser(documentById.getPersonalUser());
-//            crudService.save(emailTransation);
+            //邮件流水表
+            EmailTransaction emailTransation = new EmailTransaction();
+            emailTransation.setEmail(emailRequest.getEmail());
+            emailTransation.setNumber(documentById.getNumber());
+            emailTransation.setOrganization(documentById.getOrganization());
+            emailTransation.setOrganizationUser(organizationUser.getId());
+            emailTransation.setPersonalUser(documentById.getPersonalUser());
+            crudService.save(emailTransation);
             return ResponseEntity.ok(Response.succeed("邮件发送成功"));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.ok(Response.failed(400, "邮件发送失败"));
         }
+    }
+
+    @Override
+    public ResponseEntity<Response<List>> getEmails(HttpServletRequest request) {
+        OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+        OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
+        List<String> hql = crudService.hql(String.class, 0, 3, "select distinct email from EmailTransaction where organization = ?1 ORDER BY createTimestamp DESC", org.getId());
+        List list = new ArrayList();
+        for (String email : hql) {
+            Map map = new HashMap();
+            map.put("email", email);
+            list.add(map);
+        }
+        return ResponseEntity.ok(Response.succeed(list));
     }
 }
