@@ -274,7 +274,13 @@ public class DocumentDataController implements DocumentDataApi {
         OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
         OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
         Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
-        List<String> hql = crudService.hql(String.class, "select distinct email from EmailTransaction where organization = ?1 ORDER BY createTimestamp DESC LIMIT 0,3", org.getId());
-        return ResponseEntity.ok(Response.succeed(hql));
+        List<String> hql = crudService.hql(String.class, 0, 3, "select distinct email from EmailTransaction where organization = ?1 ORDER BY createTimestamp DESC", org.getId());
+        List list = new ArrayList();
+        for (String email : hql) {
+            Map map = new HashMap();
+            map.put("email", email);
+            list.add(map);
+        }
+        return ResponseEntity.ok(Response.succeed(list));
     }
 }
