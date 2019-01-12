@@ -18,7 +18,7 @@ public class FtkExceptionHandler {
     @ResponseBody
     public ResponseEntity<Response<String>> notFoundException(Exception e) {
 
-        return ResponseEntity.ok(Response.failed(-101, "您还未登录，请先登录"));
+        return ResponseEntity.ok(Response.failed(-101, "登录过期"));
     }
 
     @ExceptionHandler(KickoutException.class)
