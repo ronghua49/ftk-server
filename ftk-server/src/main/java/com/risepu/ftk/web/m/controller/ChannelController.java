@@ -76,7 +76,12 @@ public class ChannelController implements  ChannelApi{
 
         int s = (int) (Math.random() * 9000) + 1000;
         String code = String.valueOf(s);
-        while(codeSet.contains(code)){
+        String s1 = String.valueOf(code.charAt(0));
+        String s2 = String.valueOf(code.charAt(1));
+        String s3 = String.valueOf(code.charAt(2));
+        String s4 = String.valueOf(code.charAt(3));
+
+        while(codeSet.contains(code)||s1.equals(s2)||s2.equals(s3)||s3.equals(s4)||(s1.equals("0")&&s2.equals("0"))){
             s=(int) (Math.random() * 9000) + 1000;
         }
       return  String.valueOf(s);
