@@ -4,18 +4,13 @@ package com.risepu.ftk.web;    /*
  */
 
 import com.risepu.ftk.server.domain.OrganizationUser;
-import com.risepu.ftk.server.service.UserSessionService;
-import net.lc4ever.framework.service.GenericCrudService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
