@@ -99,4 +99,8 @@ public interface ManagerControllerApi {
     ResponseEntity<Response<OrganizationAdvice>> queryAdvice(@PathVariable Long id);
 
 
+
+
+
+
 }
