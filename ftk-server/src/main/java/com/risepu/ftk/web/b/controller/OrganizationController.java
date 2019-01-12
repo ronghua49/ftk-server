@@ -111,6 +111,7 @@ public class OrganizationController implements OrganizationApi {
             String[] sessionIds = SessionListener.sessionMap.get(orgUser.getId());
             if(sessionIds==null){
                 sessionIds = new String[2];
+                SessionListener.sessionMap.put(orgUser.getId(),sessionIds);
                 sessionIds[0]= request.getSession().getId();
             }else if(sessionIds[0]!=null){
                 sessionIds[1] = sessionIds[0];
