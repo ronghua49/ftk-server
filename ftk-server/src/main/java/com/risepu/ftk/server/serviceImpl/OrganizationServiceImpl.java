@@ -577,7 +577,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public List<OrganizationStream> findAuthStreamByChannelName(String channelName) {
-        return crudService.hql(OrganizationStream.class,"from OrganizationStream where channelName =?1 ",channelName);
+        return crudService.hql(OrganizationStream.class,"from OrganizationStream where channalName =?1 ",channelName);
     }
 
 }
