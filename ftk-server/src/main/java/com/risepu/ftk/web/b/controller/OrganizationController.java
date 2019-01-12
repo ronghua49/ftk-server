@@ -105,14 +105,8 @@ public class OrganizationController implements OrganizationApi {
         usernamePasswordToken.setRememberMe(true);
         LoginResult loginResult = new LoginResult();
         try {
-
             subject.login(usernamePasswordToken);
             OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-            String userId = orgUser.getId();
-
-            /** 实现单一登录，剔除效果*/
-//            String currSessionId = SessionListener.sessionMap.get(userId)[0];
-//            String kickedOutSessionId = SessionListener.sessionMap.get(userId)[1];
 
             String[] sessionIds = SessionListener.sessionMap.get(orgUser.getId());
             if(sessionIds==null){
@@ -278,7 +272,7 @@ public class OrganizationController implements OrganizationApi {
         }
         //如果用户当前session被移到第二位，则表示被踢出
         String[] sessionIds = SessionListener.sessionMap.get(currUser.getId());
-        if(sessionIds!=null&&session.getId().equals(SessionListener.sessionMap.get(currUser.getId())[1])){
+        if(sessionIds!=null&&request.getSession().getId().equals(sessionIds[1])){
             throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
 
