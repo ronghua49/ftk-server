@@ -189,7 +189,7 @@ public class OrganizationStream extends AuditableObject<Long> {
         this.registedCapital = registedCapital;
     }
 
-    @Column(name = "SCOPE")
+    @Column(name = "SCOPE",length = 1000)
     public String getScope() {
         return scope;
     }
