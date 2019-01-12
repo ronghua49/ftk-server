@@ -1,10 +1,10 @@
 package com.risepu.ftk.web.b.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.web.m.dto.EmailRequest;
-import com.risepu.ftk.web.m.dto.IdRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,4 +64,12 @@ public interface DocumentDataApi {
     @ResponseBody
     @CrossOrigin
     ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest, HttpServletRequest request);
+
+
+    @ApiOperation(value = "邮件流水", nickname = "getEmails")
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = List.class)})
+    @GetMapping(path = "/getEmails")
+    @ResponseBody
+    @CrossOrigin
+    ResponseEntity<Response<List>> getEmails(HttpServletRequest request);
 }

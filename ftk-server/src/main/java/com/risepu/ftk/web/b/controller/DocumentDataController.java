@@ -268,4 +268,13 @@ public class DocumentDataController implements DocumentDataApi {
             return ResponseEntity.ok(Response.failed(400, "邮件发送失败"));
         }
     }
+
+    @Override
+    public ResponseEntity<Response<List>> getEmails(HttpServletRequest request) {
+        OrganizationUser organizationUser = (OrganizationUser) request.getSession().getAttribute(Constant.getSessionCurrUser());
+        OrganizationUser user = organizationService.findOrgUserById(organizationUser.getId());
+        Organization org = organizationService.findAuthenOrgById(user.getOrganizationId());
+        List<String> hql = crudService.hql(String.class, "select distinct email from EmailTransaction where organization = ?1 ORDER BY createTimestamp DESC LIMIT 0,3", org.getId());
+        return ResponseEntity.ok(Response.succeed(hql));
+    }
 }
