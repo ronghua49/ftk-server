@@ -4,7 +4,6 @@ import com.risepu.ftk.server.domain.*;
 import com.risepu.ftk.server.service.*;
 import com.risepu.ftk.utils.ConfigUtil;
 import com.risepu.ftk.utils.PageResult;
-import com.risepu.ftk.web.BasicAction;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.SessionListener;
 import com.risepu.ftk.web.api.Response;
@@ -32,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,6 +57,7 @@ public class OrganizationController implements OrganizationApi {
 
     @Autowired
     private ChannelService channelService;
+
 
     /**
      * 企业端注册
@@ -108,17 +107,19 @@ public class OrganizationController implements OrganizationApi {
         try {
             subject.login(usernamePasswordToken);
             OrganizationUser orgUser = (OrganizationUser) subject.getPrincipal();
-            String userId = orgUser.getId();
 
-            /** 实现单一登录，剔除效果*/
-            if (SessionListener.sessionMap.get(userId) != null) {
-                BasicAction.forceLogoutUser(userId);
-                SessionListener.sessionMap.put(userId, request.getSession());
-            } else {
-                SessionListener.sessionMap.put(userId, request.getSession());
+            String[] sessionIds = SessionListener.sessionMap.get(orgUser.getId());
+            if(sessionIds==null){
+                sessionIds = new String[2];
+                SessionListener.sessionMap.put(orgUser.getId(),sessionIds);
+                sessionIds[0]= request.getSession().getId();
+            }else if(sessionIds[0]!=null){
+                sessionIds[1] = sessionIds[0];
+                sessionIds[0] = request.getSession().getId();
             }
+
             /**  对象放入当前回话*/
-            setCurrUserToSession((HttpSession) SessionListener.sessionMap.get(userId), orgUser);
+            setCurrUserToSession(request.getSession(), orgUser);
 
             loginResult.setOrganizationUser(orgUser);
             loginResult.setMessage("登录成功！");
@@ -150,11 +151,11 @@ public class OrganizationController implements OrganizationApi {
         loginResult.setOrganizationStream(stream);
         loginResult.setOrganizationUser(user);
         /** 如果有userId相同的回话 则剔除，保留当前回话*/
-        if (SessionListener.sessionMap.get(user.getId()) != null) {
-            BasicAction.forceLogoutUser(user.getId());
-            SessionListener.sessionMap.put(user.getId(), session);
-        } else {
-            SessionListener.sessionMap.put(user.getId(), session);
+
+        String[] sessionIds = SessionListener.sessionMap.get(user.getId());
+        //如果用户当前session被移到第二位，则表示被踢出
+        if(sessionIds!=null&&session.getId().equals(SessionListener.sessionMap.get(user.getId())[1])){
+            throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
 
         return ResponseEntity.ok(Response.succeed(loginResult));
@@ -268,8 +269,15 @@ public class OrganizationController implements OrganizationApi {
         OrganizationUser currUser = getCurrUser(session);
         /** 若果当前回话的 user 为空，表示被挤掉*/
         if (currUser == null) {
+            throw new NotLoginException();
+        }
+        //如果用户当前session被移到第二位，则表示被踢出
+        String[] sessionIds = SessionListener.sessionMap.get(currUser.getId());
+        if(sessionIds!=null&&request.getSession().getId().equals(sessionIds[1])){
             throw new NotLoginException("您的账号在另一设备登录，被迫下线");
         }
+
+
         /**  根据申请人手机号 查询审核状态*/
         OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
         return ResponseEntity.ok(Response.succeed(stream));
@@ -439,7 +447,8 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<String>> loginOut(HttpSession session) {
-        session.setAttribute(Constant.getSessionCurrUser(), null);
+        session.invalidate();
+        //session.setAttribute(Constant.getSessionCurrUser(), null);
         return ResponseEntity.ok(Response.succeed("退出登录成功"));
     }
 
