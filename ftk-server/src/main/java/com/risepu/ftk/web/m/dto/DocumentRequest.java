@@ -37,10 +37,16 @@ public class DocumentRequest {
      */
     private String chainHash;
 
+
+    /**
+     *渠道名称
+     */
+    private String channelName;
+
     public DocumentRequest() {
     }
 
-    public DocumentRequest(String organizationName, String organizationCode, String type, String documentType, Date time, String number, String idCard, String chainHash) {
+    public DocumentRequest(String organizationName, String organizationCode, String type, String documentType, Date time, String number, String idCard, String chainHash,String channelName) {
         this.organizationName = organizationName;
         this.organizationCode = organizationCode;
         this.type = type;
@@ -49,6 +55,7 @@ public class DocumentRequest {
         this.number = number;
         this.idCard = idCard;
         this.chainHash = chainHash;
+        this.channelName = channelName;
     }
 
     public String getOrganizationName() {
@@ -113,5 +120,13 @@ public class DocumentRequest {
 
     public void setChainHash(String chainHash) {
         this.chainHash = chainHash;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 }

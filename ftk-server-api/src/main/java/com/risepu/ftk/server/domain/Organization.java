@@ -157,7 +157,7 @@ public class Organization extends AuditableObject<String> {
 		this.registedCapital = registedCapital;
 	}
 
-	@Column(name = "SCOPE")
+	@Column(name = "SCOPE",length = 1000)
 	public String getScope() {
 		return scope;
 	}
