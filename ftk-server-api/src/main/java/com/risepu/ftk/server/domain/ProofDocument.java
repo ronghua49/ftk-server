@@ -98,7 +98,7 @@ public class ProofDocument extends AuditableObject<Long> {
     public void setChainHash(String chainHash) {
         this.chainHash = chainHash;
     }
-
+    @Column(name = "STATE")
     public Integer getState() {
         return state;
     }
