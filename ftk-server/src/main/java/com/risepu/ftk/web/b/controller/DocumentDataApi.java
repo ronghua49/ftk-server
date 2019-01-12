@@ -50,7 +50,7 @@ public interface DocumentDataApi {
     @PostMapping(path = "/add")
     @ResponseBody
     @CrossOrigin
-    ResponseEntity<Response<ProofDocument>> add(@RequestBody Map<String, String> map, HttpServletRequest request, HttpServletResponse response) throws Exception;
+    ResponseEntity<Response<ProofDocument>> add(@RequestBody Map<String, String> map, HttpServletRequest request) throws Exception;
 
     /**
      * 发送邮件
@@ -63,5 +63,5 @@ public interface DocumentDataApi {
     @PostMapping(path = "/sendEmail")
     @ResponseBody
     @CrossOrigin
-    ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest);
+    ResponseEntity<Response<String>> sendEmail(@RequestBody EmailRequest emailRequest, HttpServletRequest request);
 }

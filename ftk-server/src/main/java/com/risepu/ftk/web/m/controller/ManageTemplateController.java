@@ -87,6 +87,7 @@ public class ManageTemplateController implements ManageTemplateApi {
             hql += " and createTimestamp >= '" + startTime + "' and createTimestamp < '" + endTime + "'";
         }
         if (StringUtils.isNotEmpty(name)) {
+            name = name.trim();
             name = new String(name.getBytes("ISO8859-1"), "utf-8");
             hql += " and name like '%" + name + "%'";
         }
@@ -108,9 +109,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         Integer firstIndex = pageNo * pageSize;
         String hql = "from SimpleTemplate where 1 = 1";
         if (StringUtils.isNotEmpty(code)) {
+            code = code.trim();
             hql += " and code like '%" + code + "%'";
         }
         if (StringUtils.isNotEmpty(name)) {
+            name = name.trim();
             name = new String(name.getBytes("ISO8859-1"), "utf-8");
             hql += " and name like '%" + name + "%'";
         }
@@ -132,9 +135,11 @@ public class ManageTemplateController implements ManageTemplateApi {
         Integer firstIndex = pageNo * pageSize;
         String hql = "from Domain d where d.id in (select t.id.domainId from SimpleTemplateDomain t where t.id.templateId = " + templateId + ")";
         if (StringUtils.isNotEmpty(code)) {
+            code = code.trim();
             hql += " and d.code like '%" + code + "%'";
         }
         if (StringUtils.isNotEmpty(label)) {
+            label = label.trim();
             label = new String(label.getBytes("ISO8859-1"), "utf-8");
             hql += " and d.label like '%" + label + "%'";
         }

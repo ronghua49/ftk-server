@@ -82,6 +82,7 @@ public class ReportController implements ReportApi {
         Integer firstIndex = pageNo * pageSize;
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode";
         if (StringUtils.isNotEmpty(organization)) {
+            organization = organization.trim();
             organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
             hql += " and a.name like '%" + organization + "%'";
         }
@@ -93,9 +94,11 @@ public class ReportController implements ReportApi {
             hql += " and b.createTimestamp >= '" + createTime + "' and b.createTimestamp < '" + endDate + "'";
         }
         if (StringUtils.isNotEmpty(number)) {
+            number = number.trim();
             hql += " and b.number like '%" + number + "%'";
         }
         if (StringUtils.isNotEmpty(templateType)) {
+            templateType = templateType.trim();
             hql += " and c.code = '" + templateType + "'";
         }
         List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql);
