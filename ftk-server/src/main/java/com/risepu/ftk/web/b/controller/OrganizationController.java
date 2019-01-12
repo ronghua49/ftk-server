@@ -296,6 +296,10 @@ public class OrganizationController implements OrganizationApi {
         /** 公司名称在审核中和审核成功的不可重复*/
         OrganizationStream stream = organizationService.findAuthStreamByNameAndState(organizationStream.getName(), OrganizationStream.CHECKING_STATE, OrganizationStream.CHECK_FAIL_STATE);
 
+        if(stream!=null&&organizationStream.getId()==null){
+            return ResponseEntity.ok(Response.failed(400, "该公司名已经被注册，不得重复！"));
+        }
+
         if (stream != null && !stream.getId().equals(organizationStream.getId())) {
             return ResponseEntity.ok(Response.failed(400, "该公司名已经被注册，不得重复！"));
         }
