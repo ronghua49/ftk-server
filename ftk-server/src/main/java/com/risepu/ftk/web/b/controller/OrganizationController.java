@@ -151,6 +151,7 @@ public class OrganizationController implements OrganizationApi {
         OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
         loginResult.setOrganizationStream(stream);
         loginResult.setOrganizationUser(user);
+        setCurrUserToSession(session,user);
         //如果用户当前session被移到第二位，则表示被踢出
         SessionListener.judgeKickOut(user.getId(),session);
         return ResponseEntity.ok(Response.succeed(loginResult));
@@ -282,7 +283,6 @@ public class OrganizationController implements OrganizationApi {
     public ResponseEntity<Response<String>> orgAuthen(OrganizationStream organizationStream, HttpSession session) {
         OrganizationUser user = getCurrUser(session);
         SessionListener.judgeLogin(user);
-
         /** 查找当前用户提交的组织机构代码证 是否已经通过审核*/
         Organization org = organizationService.findAuthenOrgById(organizationStream.getOrganization());
         if (org != null) {
