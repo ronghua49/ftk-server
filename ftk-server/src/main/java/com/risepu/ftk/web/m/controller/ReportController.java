@@ -166,8 +166,11 @@ public class ReportController implements ReportApi {
     }
     @Override
     public void exportDocument(HttpServletResponse response,  String organization, String channelName,  String createTime, String number, String type,String hashs)throws UnsupportedEncodingException, ParseException {
-        String[] hashArray = hashs.split(",");
-        List<String> stringList = Arrays.asList(hashArray);
+        List<String> stringList = new ArrayList<>();
+        if(StringUtils.isNotEmpty(hashs)){
+           String[] hashArray = hashs.split(",");
+            stringList = Arrays.asList(hashArray);
+       }
         String templateType = type;
         List<List<String>> data = new ArrayList<List<String>>();
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode and b.number is not null";
