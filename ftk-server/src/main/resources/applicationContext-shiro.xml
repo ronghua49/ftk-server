@@ -47,11 +47,11 @@
 		<property name="sessionValidationSchedulerEnabled"
 			value="true" />
 		<property name="sessionValidationInterval" value="1800000" />
-		<!--<property name="sessionIdCookie">-->
-			<!--<bean class="org.apache.shiro.web.servlet.SimpleCookie">-->
-				<!--<property name="name" value="shiro.session" />-->
-			<!--</bean>-->
-		<!--</property>-->
+		<property name="sessionIdCookie">
+			<bean class="org.apache.shiro.web.servlet.SimpleCookie">
+				<property name="name" value="shiro.session" />
+			</bean>
+		</property>
 		<property name="sessionDAO" ref="sessionDAO" />
 	</bean>
 
