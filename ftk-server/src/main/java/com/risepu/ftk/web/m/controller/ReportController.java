@@ -162,7 +162,7 @@ public class ReportController implements ReportApi {
     }
 
     @Override
-    public ResponseEntity<Response<String>> exportDocument(HttpServletResponse response) {
+    public void exportDocument(HttpServletResponse response) {
 
         List<List<String>> data = new ArrayList<List<String>>();
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode order by b.createTimestamp desc";
@@ -183,6 +183,5 @@ public class ReportController implements ReportApi {
         }
         String[] tableName = {"企业名称", "社会信用代码", "行业类别", "单据类型", "生成日期", "单据编码", "身份证号码", "渠道名称", "区块链存证编码"};
         ExcelExportUtil.download(response, "企业单据统计明细表", "企业单据统计明细表", tableName, data);
-        return ResponseEntity.ok(Response.succeed("导出成功"));
     }
 }
