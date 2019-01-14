@@ -60,10 +60,10 @@ public interface ReportApi {
 
 
     @ApiOperation(value = "企业单据表导出excel", nickname = "exportExcel")
-    @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = String.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "succeed")})
     @GetMapping(path = "/doc/export")
     @ResponseBody
-    ResponseEntity<Response<String>> exportDocument(HttpServletResponse response);
+   void exportDocument(HttpServletResponse response);
 
 
 
