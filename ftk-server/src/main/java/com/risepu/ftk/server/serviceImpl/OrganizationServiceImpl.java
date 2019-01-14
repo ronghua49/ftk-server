@@ -374,12 +374,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         if (StringUtils.isNotEmpty(orgName)) {
             orgName = new String(orgName.getBytes("ISO8859-1"), "utf-8");
-
+            orgName = orgName.trim();
             hql += "and name like '%" + orgName + "%'";
         }
 
         if (StringUtils.isNotEmpty(legalPerson)) {
             legalPerson = new String(legalPerson.getBytes("ISO8859-1"), "utf-8");
+            legalPerson = legalPerson.trim();
             hql += " and legalPerson like '%" + legalPerson + "%'";
         }
         if (StringUtils.isNotEmpty(industry)) {
