@@ -92,7 +92,7 @@ public class ReportController implements ReportApi {
     @Override
     public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String templateType,String channelName) throws UnsupportedEncodingException, ParseException {
         Integer firstIndex = pageNo * pageSize;
-        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode";
+        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode and b.number is not null";
         if (StringUtils.isNotEmpty(organization)) {
             organization = organization.trim();
             organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
@@ -118,7 +118,7 @@ public class ReportController implements ReportApi {
             templateType = templateType.trim();
             hql += " and c.code = '" + templateType + "'";
         }
-        List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql);
+        List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql + " order by time desc");
         List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
         PageResult<DocumentRequest> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
