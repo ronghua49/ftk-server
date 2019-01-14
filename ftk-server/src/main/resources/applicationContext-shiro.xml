@@ -1,77 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.risepu.ftk.web.b.shiro"/>
-    <!--cookie配置-->
-    <bean id="rememberCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <!--十年有效期-->
-        <property name="maxAge" value="311040000"/>
-        <property name="httpOnly" value="true"/>
-        <property name="name" value="rememberMe"/>
-    </bean>
-    <!--记住我管理器-->
-    <bean id="rememberManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-        <property name="cookie" ref="rememberCookie"/>
-        <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
-    </bean>
-    <!--1.配置安全管理器-->
-    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="cacheManager" ref="cacheManager"/>
-        <property name="realm" ref="myRealm"/>
-        <property name="rememberMeManager" ref="rememberManager"/>
-        <property name="sessionManager" ref="sessionManager"/>
-    </bean>
-    <!--2.配置缓存管理器-->
-    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
-    </bean>
+	<context:component-scan
+		base-package="com.risepu.ftk.web.b.shiro" />
+	<!--cookie配置 -->
+	<bean id="rememberCookie"
+		class="org.apache.shiro.web.servlet.SimpleCookie">
+		<!--十年有效期 -->
+		<property name="maxAge" value="311040000" />
+		<property name="httpOnly" value="true" />
+		<property name="name" value="rememberMe" />
+		<property name="path" value="/" />
+	</bean>
+	<!--记住我管理器 -->
+	<bean id="rememberManager"
+		class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cookie" ref="rememberCookie" />
+		<property name="cipherKey"
+			value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
+	</bean>
+	<!--1.配置安全管理器 -->
+	<bean id="securityManager"
+		class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="cacheManager" ref="cacheManager" />
+		<property name="realm" ref="myRealm" />
+		<property name="rememberMeManager" ref="rememberManager" />
+		<property name="sessionManager" ref="sessionManager" />
+	</bean>
+	<!--2.配置缓存管理器 -->
+	<bean id="cacheManager"
+		class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile"
+			value="classpath:ehcache.xml" />
+	</bean>
 
-    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO">
-    </bean>
-    <bean id="sessionManager"
-          class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="globalSessionTimeout" value="1800000" />
-        <property name="deleteInvalidSessions" value="true" />
-        <property name="sessionValidationSchedulerEnabled" value="true" />
-        <property name="sessionValidationInterval" value="1800000" />
-        <property name="sessionIdCookie">
-            <bean class="org.apache.shiro.web.servlet.SimpleCookie">
-                <property name="name" value="shiro.session" />
-            </bean>
-        </property>
-        <property name="sessionDAO" ref="sessionDAO"/>
-    </bean>
+	<bean id="sessionDAO"
+		class="org.apache.shiro.session.mgt.eis.MemorySessionDAO">
+	</bean>
+	<bean id="sessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="globalSessionTimeout" value="1800000" />
+		<property name="deleteInvalidSessions" value="true" />
+		<property name="sessionValidationSchedulerEnabled"
+			value="true" />
+		<property name="sessionValidationInterval" value="1800000" />
+		<property name="sessionIdCookie">
+			<bean class="org.apache.shiro.web.servlet.SimpleCookie">
+				<property name="name" value="shiro.session" />
+			</bean>
+		</property>
+		<property name="sessionDAO" ref="sessionDAO" />
+	</bean>
 
-    <!--3.配置自定义的realm-->
-    <bean id="myRealm" class="com.risepu.ftk.web.b.shiro.MyRealm"/>
+	<!--3.配置自定义的realm -->
+	<bean id="myRealm" class="com.risepu.ftk.web.b.shiro.MyRealm" />
 
-    <!--配置生命周期管理器-->
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	<!--配置生命周期管理器 -->
+	<bean id="lifecycleBeanPostProcessor"
+		class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
-    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-        <!--配置安全管理器-->
-        <property name="securityManager" ref="securityManager"/>
-        <!--配置登录的url-->
-        <property name="loginUrl" value="/api/org"/>
-        <!--登录成功的url-->
-        <property name="successUrl" value="/api/org/loginSuccess"/>
-        <property name="filters">
-            <map>
-                <entry key="authc" value-ref="myAuthenticationFilter"/>
-            </map>
-        </property>
+	<bean id="shiroFilter"
+		class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!--配置安全管理器 -->
+		<property name="securityManager" ref="securityManager" />
+		<!--配置登录的url -->
+		<property name="loginUrl" value="/api/org" />
+		<!--登录成功的url -->
+		<property name="successUrl" value="/api/org/loginSuccess" />
+		<property name="filters">
+			<map>
+				<entry key="authc" value-ref="myAuthenticationFilter" />
+			</map>
+		</property>
 
-        <property name="filterChainDefinitions">
-            <value>
-                /favicon.ico = anon
-                /api/org/auth/check = anon
-                /api/org = user
-                /** = anon
-            </value>
-        </property>
-    </bean>
-    <bean id="myAuthenticationFilter" class="com.risepu.ftk.web.b.shiro.MyAuthenticationFilter"/>
+		<property name="filterChainDefinitions">
+			<value>
+				/favicon.ico = anon
+				/api/org/auth/check = anon
+				/api/org = user
+				/** = anon
+			</value>
+		</property>
+	</bean>
+	<bean id="myAuthenticationFilter"
+		class="com.risepu.ftk.web.b.shiro.MyAuthenticationFilter" />
 </beans>
