@@ -8,6 +8,7 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.m.dto.DocumentNumber;
 import com.risepu.ftk.web.m.dto.DocumentRequest;
+import com.risepu.ftk.web.m.util.ExcelExportUtil;
 import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -88,13 +90,18 @@ public class ReportController implements ReportApi {
      * @return 模板JavaBean
      */
     @Override
-    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String templateType) throws UnsupportedEncodingException, ParseException {
+    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String templateType,String channelName) throws UnsupportedEncodingException, ParseException {
         Integer firstIndex = pageNo * pageSize;
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode";
         if (StringUtils.isNotEmpty(organization)) {
             organization = organization.trim();
             organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
             hql += " and a.name like '%" + organization + "%'";
+        }
+        if(StringUtils.isNotEmpty(channelName)){
+            channelName = channelName.trim();
+            channelName = new String(channelName.getBytes("ISO8859-1"), "utf-8");
+            hql += " and e.channelName like '%" + channelName + "%'";
         }
         if (StringUtils.isNotEmpty(createTime)) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -147,5 +154,30 @@ public class ReportController implements ReportApi {
         PageResult<RegisterUserReport> pageResult = organizationService.findRegUserByMap(map, pageNo, pageSize);
 
         return ResponseEntity.ok(Response.succeed(pageResult));
+    }
+
+    @Override
+    public ResponseEntity<Response<String>> exportDocument(HttpServletResponse response) {
+
+        List<List<String>> data = new ArrayList<List<String>>();
+        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode order by b.createTimestamp desc";
+        List<DocumentRequest> docList = crudService.hql(DocumentRequest.class, hql);
+        for (int i = 0; i < docList.size(); i++) {
+            List<String> br = new ArrayList<>();
+            DocumentRequest doc = docList.get(i);
+            br.add(doc.getOrganizationName());
+            br.add(doc.getOrganizationCode());
+            br.add(doc.getType());
+            br.add(doc.getDocumentType());
+            br.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(doc.getTime()));
+            br.add(doc.getNumber());
+            br.add(doc.getIdCard());
+            br.add(doc.getChannelName());
+            br.add(doc.getChainHash());
+            data.add(br);
+        }
+        String[] tableName = { "企业名称", "社会信用代码", "行业类别", "单据类型", "生成日期", "单据编码", "身份证号码", "渠道名称","区块链存证编码" };
+        ExcelExportUtil.download(response, "企业单据统计明细表", "企业单据统计明细表", tableName, data);
+        return ResponseEntity.ok(Response.succeed("导出成功"));
     }
 }

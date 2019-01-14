@@ -40,6 +40,11 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.7'
 	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-guava', version: '2.9.7'
 	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7'
+	compile group: 'org.apache.poi', name: 'poi', version: '3.12'
+	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.12'
+	compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '3.12'
+
+
 
 
 	compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: "$bouncyCastleVersion"
