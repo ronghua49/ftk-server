@@ -71,11 +71,9 @@ public class ExcelExportUtil {
 
             // 填充表头标题
             HSSFRow firstRow = sheet.createRow(0);// 第几行（从0开始）
-            HSSFFont headfont = book.createFont();
-            headfont.setFontHeightInPoints((short) 22);// 字体大小
-            headfont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);// 加粗
+
             HSSFCellStyle sheetStyle = book.createCellStyle();
-            sheetStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+            sheetStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);//居中显示
             HSSFFont font = book.createFont();
             font.setFontHeightInPoints((short) 16);
             font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
