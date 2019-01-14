@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 
@@ -29,9 +30,11 @@ public class ExcelExportUtil {
     public static void download(HttpServletResponse response, String fileName, String sheetName, String[] tableName, List<List<String>> data) {
         OutputStream ouputStream = null;
         try {
+
             HSSFWorkbook workbook = ExcelExportUtil.generateExcel(data, sheetName, tableName);
             response.setContentType("application/vnd.ms-excel");
-            response.addHeader("Content-disposition", "attachment;filename=" + new String(fileName.getBytes("GBK"), "ISO8859-1") + ".xls");
+           //response.addHeader("Content-disposition", "attachment;filename=" + new String(fileName.getBytes("GBK"), "ISO8859-1") + ".xls");
+            response.setHeader("Content-disposition", "attachment; filename=" + URLEncoder.encode(fileName+".xls", "utf-8"));
             ouputStream = response.getOutputStream();
             workbook.write(ouputStream);
         } catch (Exception e) {

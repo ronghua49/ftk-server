@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * @author L-heng
@@ -32,7 +33,13 @@ public interface ReportApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed", response = PageResult.class)})
     @GetMapping(path = "/getDocument/{pageNo:\\d+}")
     @ResponseBody
-    ResponseEntity<Response<PageResult>> getDocument(@PathVariable Integer pageNo, Integer pageSize, String organization, @RequestParam(required = false) String channelName, String createTime, String number, String type) throws UnsupportedEncodingException, ParseException;
+    ResponseEntity<Response<PageResult>> getDocument(@PathVariable Integer pageNo,
+                                                     Integer pageSize,
+                                                     @RequestParam(required = false) String organization,
+                                                     @RequestParam(required = false) String channelName,
+                                                     @RequestParam(required = false) String createTime,
+                                                     @RequestParam(required = false) String number,
+                                                     @RequestParam(required = false) String type) throws UnsupportedEncodingException, ParseException;
 
 
     @ApiOperation(value = "企业认证统计", nickname = "orgRegisterReport")
@@ -63,7 +70,7 @@ public interface ReportApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed")})
     @GetMapping(path = "/doc/export")
     @ResponseBody
-   void exportDocument(HttpServletResponse response);
+   void exportDocument(HttpServletResponse response, @RequestParam(required = false) String organization, @RequestParam(required = false) String channelName, @RequestParam(required = false) String createTime, @RequestParam(required = false) String number, @RequestParam(required = false) String type, @RequestParam(required = false) List<String> ids)throws UnsupportedEncodingException, ParseException;
 
 
 

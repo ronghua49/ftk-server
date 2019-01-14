@@ -1,6 +1,7 @@
 
 package com.risepu.ftk.web.m.controller;
 
+import com.google.gson.Gson;
 import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.server.domain.RegisterUserReport;
 import com.risepu.ftk.server.service.OrganizationService;
@@ -15,7 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -162,10 +165,46 @@ public class ReportController implements ReportApi {
     }
 
     @Override
-    public void exportDocument(HttpServletResponse response) {
+    public void exportDocument(HttpServletResponse response, String organization, String channelName,  String createTime, String number, String templateType,List<String> ids)throws UnsupportedEncodingException, ParseException {
 
         List<List<String>> data = new ArrayList<List<String>>();
-        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode order by b.createTimestamp desc";
+        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode and b.number is not null";
+        if (StringUtils.isNotEmpty(organization)) {
+            organization = organization.trim();
+            organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
+            hql += " and a.name like '%" + organization + "%'";
+        }
+        if(StringUtils.isNotEmpty(channelName)){
+            channelName = channelName.trim();
+            channelName = new String(channelName.getBytes("ISO8859-1"), "utf-8");
+            hql += " and e.channelName like '%" + channelName + "%'";
+        }
+        if (StringUtils.isNotEmpty(createTime)) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = formatter.parse(createTime);
+            date = DateFormatter.startOfDay(DateFormatter.nextDay(date));
+            String endDate = formatter.format(date);
+            hql += " and b.createTimestamp >= '" + createTime + "' and b.createTimestamp < '" + endDate + "'";
+        }
+        if (StringUtils.isNotEmpty(number)) {
+            number = number.trim();
+            hql += " and b.number like '%" + number + "%'";
+        }
+        if (StringUtils.isNotEmpty(templateType)) {
+            templateType = templateType.trim();
+            hql += " and c.code = '" + templateType + "'";
+        }
+        if (!ids.isEmpty()) {
+            List<String> ids2 = new ArrayList<>();
+            for(int i=0;i<ids.size();i++){
+                String id="\'"+ids.get(i)+"\'";
+                ids2.add(id);
+            }
+            String s = ids2.toString();
+            s = s.substring(1, s.length() - 1);
+            hql += " and b.chainHash in (" +s+")";
+        }
+            hql+=" order by b.createTimestamp desc";
         List<DocumentRequest> docList = crudService.hql(DocumentRequest.class, hql);
         for (int i = 0; i < docList.size(); i++) {
             List<String> br = new ArrayList<>();
