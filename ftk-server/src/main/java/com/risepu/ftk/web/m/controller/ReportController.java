@@ -111,7 +111,7 @@ public class ReportController implements ReportApi {
             templateType = templateType.trim();
             hql += " and c.code = '" + templateType + "'";
         }
-        List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql);
+        List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql + " order by time desc");
         List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
         PageResult<DocumentRequest> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
