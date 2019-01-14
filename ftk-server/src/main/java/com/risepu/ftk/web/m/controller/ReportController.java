@@ -90,26 +90,22 @@ public class ReportController implements ReportApi {
      * @return 模板JavaBean
      */
     @Override
-    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String templateType,String channelName) throws UnsupportedEncodingException, ParseException {
+    public ResponseEntity<Response<PageResult>> getDocument(Integer pageNo, Integer pageSize, String organization, String createTime, String number, String templateType, String channelName) throws UnsupportedEncodingException, ParseException {
         Integer firstIndex = pageNo * pageSize;
+        List<DocumentRequest> list = new ArrayList<>();
+        List<DocumentRequest> list1 = new ArrayList<>();
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode and b.number is not null";
         if (StringUtils.isNotEmpty(organization)) {
             organization = organization.trim();
             organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
             hql += " and a.name like '%" + organization + "%'";
         }
-        if(StringUtils.isNotEmpty(channelName)){
+        if (StringUtils.isNotEmpty(channelName)) {
             channelName = channelName.trim();
             channelName = new String(channelName.getBytes("ISO8859-1"), "utf-8");
             hql += " and e.channelName like '%" + channelName + "%'";
         }
-        if (StringUtils.isNotEmpty(createTime)) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = formatter.parse(createTime);
-            date = DateFormatter.startOfDay(DateFormatter.nextDay(date));
-            String endDate = formatter.format(date);
-            hql += " and b.createTimestamp >= '" + createTime + "' and b.createTimestamp < '" + endDate + "'";
-        }
+
         if (StringUtils.isNotEmpty(number)) {
             number = number.trim();
             hql += " and b.number like '%" + number + "%'";
@@ -118,8 +114,17 @@ public class ReportController implements ReportApi {
             templateType = templateType.trim();
             hql += " and c.code = '" + templateType + "'";
         }
-        List<DocumentRequest> list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql + " order by time desc");
-        List<DocumentRequest> list1 = crudService.hql(DocumentRequest.class, hql);
+        if (StringUtils.isNotEmpty(createTime)) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = formatter.parse(createTime);
+            Date date1 = DateFormatter.startOfDay(DateFormatter.nextDay(date));
+            hql += " and b.createTimestamp >= ?1 and b.createTimestamp < ?2";
+            list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql + " order by time desc", date, date1);
+            list1 = crudService.hql(DocumentRequest.class, hql, date, date1);
+        } else {
+            list = crudService.hql(DocumentRequest.class, firstIndex, pageSize, hql + " order by time desc");
+            list1 = crudService.hql(DocumentRequest.class, hql);
+        }
         PageResult<DocumentRequest> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);
@@ -176,7 +181,7 @@ public class ReportController implements ReportApi {
             br.add(doc.getChainHash());
             data.add(br);
         }
-        String[] tableName = { "企业名称", "社会信用代码", "行业类别", "单据类型", "生成日期", "单据编码", "身份证号码", "渠道名称","区块链存证编码" };
+        String[] tableName = {"企业名称", "社会信用代码", "行业类别", "单据类型", "生成日期", "单据编码", "身份证号码", "渠道名称", "区块链存证编码"};
         ExcelExportUtil.download(response, "企业单据统计明细表", "企业单据统计明细表", tableName, data);
         return ResponseEntity.ok(Response.succeed("导出成功"));
     }
