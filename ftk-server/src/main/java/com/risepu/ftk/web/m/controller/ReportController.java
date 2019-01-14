@@ -9,6 +9,7 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.m.dto.DocumentNumber;
 import com.risepu.ftk.web.m.dto.DocumentRequest;
+import com.risepu.ftk.web.m.dto.ExportRequest;
 import com.risepu.ftk.web.m.util.ExcelExportUtil;
 import net.lc4ever.framework.format.DateFormatter;
 import net.lc4ever.framework.service.GenericCrudService;
@@ -165,7 +166,14 @@ public class ReportController implements ReportApi {
     }
 
     @Override
-    public void exportDocument(HttpServletResponse response, String organization, String channelName,  String createTime, String number, String templateType,List<String> ids)throws UnsupportedEncodingException, ParseException {
+    public void exportDocument(HttpServletResponse response, ExportRequest exportRequest)throws UnsupportedEncodingException, ParseException {
+        String organization = exportRequest.getOrgName();
+        String channelName = exportRequest.getChannelName();
+        String createTime = exportRequest.getCreateTimestamp();
+        String number = exportRequest.getNumber();
+        String templateType = exportRequest.getType();
+        List<String> ids = exportRequest.getHashs();
+
 
         List<List<String>> data = new ArrayList<List<String>>();
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode and b.number is not null";
@@ -222,5 +230,5 @@ public class ReportController implements ReportApi {
         }
         String[] tableName = {"企业名称", "社会信用代码", "行业类别", "单据类型", "生成日期", "单据编码", "身份证号码", "渠道名称", "区块链存证编码"};
         ExcelExportUtil.download(response, "企业单据统计明细表", "企业单据统计明细表", tableName, data);
-    }
+   }
 }

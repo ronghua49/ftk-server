@@ -4,6 +4,8 @@ import com.risepu.ftk.server.domain.OrganizationStream;
 import com.risepu.ftk.server.domain.RegisterUserReport;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.api.Response;
+import com.risepu.ftk.web.m.dto.DocumentRequest;
+import com.risepu.ftk.web.m.dto.ExportRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -68,10 +70,9 @@ public interface ReportApi {
 
     @ApiOperation(value = "企业单据表导出excel", nickname = "exportExcel")
     @ApiResponses({@ApiResponse(code = 200, message = "succeed")})
-    @GetMapping(path = "/doc/export")
+    @RequestMapping(path = "/doc/export")
     @ResponseBody
-   void exportDocument(HttpServletResponse response, @RequestParam(required = false) String organization, @RequestParam(required = false) String channelName, @RequestParam(required = false) String createTime, @RequestParam(required = false) String number, @RequestParam(required = false) String type, @RequestParam(required = false) List<String> ids)throws UnsupportedEncodingException, ParseException;
-
+   void exportDocument(HttpServletResponse response,@RequestBody ExportRequest exportRequest )throws UnsupportedEncodingException, ParseException;
 
 
 }
