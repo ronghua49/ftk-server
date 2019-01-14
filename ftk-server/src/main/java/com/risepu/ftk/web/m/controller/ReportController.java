@@ -164,17 +164,11 @@ public class ReportController implements ReportApi {
 
         return ResponseEntity.ok(Response.succeed(pageResult));
     }
-
     @Override
-    public void exportDocument(HttpServletResponse response, ExportRequest exportRequest)throws UnsupportedEncodingException, ParseException {
-        String organization = exportRequest.getOrgName();
-        String channelName = exportRequest.getChannelName();
-        String createTime = exportRequest.getCreateTimestamp();
-        String number = exportRequest.getNumber();
-        String templateType = exportRequest.getType();
-        List<String> ids = exportRequest.getHashs();
-
-
+    public void exportDocument(HttpServletResponse response,  String organization, String channelName,  String createTime, String number, String type,String hashs)throws UnsupportedEncodingException, ParseException {
+        String[] hashArray = hashs.split(",");
+        List<String> stringList = Arrays.asList(hashArray);
+        String templateType = type;
         List<List<String>> data = new ArrayList<List<String>>();
         String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode and b.number is not null";
         if (StringUtils.isNotEmpty(organization)) {
@@ -202,10 +196,10 @@ public class ReportController implements ReportApi {
             templateType = templateType.trim();
             hql += " and c.code = '" + templateType + "'";
         }
-        if (!ids.isEmpty()) {
+        if (!stringList.isEmpty()) {
             List<String> ids2 = new ArrayList<>();
-            for(int i=0;i<ids.size();i++){
-                String id="\'"+ids.get(i)+"\'";
+            for(int i=0;i<stringList.size();i++){
+                String id="\'"+stringList.get(i)+"\'";
                 ids2.add(id);
             }
             String s = ids2.toString();

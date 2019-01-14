@@ -43,6 +43,9 @@ public class DocumentRequest {
      */
     private String channelName;
 
+
+
+
     public DocumentRequest() {
     }
 
@@ -129,4 +132,6 @@ public class DocumentRequest {
     public void setChannelName(String channelName) {
         this.channelName = channelName;
     }
+
+
 }

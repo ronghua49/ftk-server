@@ -72,7 +72,7 @@ public interface ReportApi {
     @ApiResponses({@ApiResponse(code = 200, message = "succeed")})
     @RequestMapping(path = "/doc/export")
     @ResponseBody
-   void exportDocument(HttpServletResponse response,@RequestBody ExportRequest exportRequest )throws UnsupportedEncodingException, ParseException;
+   void exportDocument(HttpServletResponse response, @RequestParam(required = false) String organization, @RequestParam(required = false) String channelName, @RequestParam(required = false) String createTime, @RequestParam(required = false) String number, @RequestParam(required = false) String type, @RequestParam(required = false) String  hashs)throws UnsupportedEncodingException, ParseException;
 
 
 }
