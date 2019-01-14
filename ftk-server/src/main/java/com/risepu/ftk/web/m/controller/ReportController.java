@@ -168,7 +168,7 @@ public class ReportController implements ReportApi {
     public void exportDocument(HttpServletResponse response, String organization, String channelName,  String createTime, String number, String templateType,List<String> ids)throws UnsupportedEncodingException, ParseException {
 
         List<List<String>> data = new ArrayList<List<String>>();
-        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode ";
+        String hql = "select new com.risepu.ftk.web.m.dto.DocumentRequest (a.name as organizationName,a.id as organizationCode,a.code as type,c.name as documentType,b.createTimestamp as time,b.number as number,b.personalUser as idCard,b.chainHash as chainHash,e.channelName as channelName) from Organization a,ProofDocument b,Template c,OrganizationUser d,Channel e where a.id=b.organization and c.id=b.template and d.organizationId =a.id and d.inviteCode = e.inviteCode and b.number is not null";
         if (StringUtils.isNotEmpty(organization)) {
             organization = organization.trim();
             organization = new String(organization.getBytes("ISO8859-1"), "utf-8");
@@ -202,7 +202,7 @@ public class ReportController implements ReportApi {
             }
             String s = ids2.toString();
             s = s.substring(1, s.length() - 1);
-            hql += " and b.number in (" +s+")";
+            hql += " and b.chainHash in (" +s+")";
         }
             hql+=" order by b.createTimestamp desc";
         List<DocumentRequest> docList = crudService.hql(DocumentRequest.class, hql);
