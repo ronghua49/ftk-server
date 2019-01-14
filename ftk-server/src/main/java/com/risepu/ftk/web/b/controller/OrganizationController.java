@@ -118,7 +118,6 @@ public class OrganizationController implements OrganizationApi {
                 sessionIds[1] = sessionIds[0];
                 sessionIds[0] = request.getSession().getId();
             }
-
             /**  对象放入当前回话*/
             setCurrUserToSession(request.getSession(), orgUser);
 
