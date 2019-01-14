@@ -109,10 +109,10 @@ public class ManagerController implements ManagerControllerApi {
 	 * @return
 	 */
 	@Override
-	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String key, Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) throws UnsupportedEncodingException {
+	public ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(String key, String applicationPhone,Integer pageNo, Integer pageSize, String startTime, String endTime, Integer state) throws UnsupportedEncodingException {
 		Map<String, Object> map = new HashMap<>();
-
 		map.put("key", key);
+		map.put("applicationPhone",applicationPhone);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("state", state);

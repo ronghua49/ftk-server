@@ -54,6 +54,7 @@ public interface ManagerControllerApi {
     @RequestMapping(path = "/queryList/{pageNo:\\d+}")
     @ResponseBody
     ResponseEntity<Response<PageResult<OrganizationStream>>> queryRegOrganization(@RequestParam(required = false) String key,
+                                                                                  @RequestParam(required = false) String  applicationPhone,
                                                                                   @PathVariable Integer pageNo,
                                                                                   @RequestParam Integer pageSize,
                                                                                   @RequestParam(required = false) String startTime,

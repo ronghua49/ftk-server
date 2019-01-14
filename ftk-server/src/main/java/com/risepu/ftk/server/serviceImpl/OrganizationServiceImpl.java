@@ -47,20 +47,20 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public String orgReg(String phone, String password,String inviteCode) {
+    public String orgReg(String phone, String password, String inviteCode) {
         OrganizationUser org = new OrganizationUser();
         org.setId(phone);
         password = DigestUtils.md5Hex(password + SALT);
         org.setPassword(password);
-        if(StringUtils.isNotEmpty(inviteCode)){
+        if (StringUtils.isNotEmpty(inviteCode)) {
             List<Channel> all = channelService.getAll();
             Set<String> codeSet = new HashSet<>();
-            for(Channel channel:all){
+            for (Channel channel : all) {
                 codeSet.add(channel.getInviteCode());
             }
-            if(codeSet.contains(inviteCode)){
+            if (codeSet.contains(inviteCode)) {
                 org.setInviteCode(inviteCode);
-            }else{
+            } else {
                 org.setInvalidInviteCode(inviteCode);
             }
         }
@@ -156,17 +156,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public PageResult<OrganizationStream> findByParam(Map<String, Object> map, Integer pageNo, Integer pageSize) throws UnsupportedEncodingException {
         Integer firstIndex = (pageNo) * pageSize;
-
-        String hql = "";
         String hql2 = "select count(*) ";
-        int total = 0;
         List<OrganizationStream> orgs = new ArrayList<OrganizationStream>();
-
         String key = (String) map.get("key");
-
+        String applicationPhone = (String) map.get("applicationPhone");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         Integer state = (Integer) map.get("state");
+
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
@@ -181,47 +178,26 @@ public class OrganizationServiceImpl implements OrganizationService {
                 e.printStackTrace();
             }
         }
-
-
-        if (StringUtils.isNotEmpty(key) && state == null && startDate == null) {
+        String hql = "from OrganizationStream where 1=1 ";
+        if (StringUtils.isNotEmpty(key)) {
             key = new String(key.getBytes("ISO8859-1"), "utf-8");
-            hql = "from OrganizationStream where name like ?1 order by createTimestamp desc";
-            total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%").intValue();
-            orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%");
-
-        } else if (StringUtils.isNotEmpty(key) && state != null && startDate == null) {
-            key = new String(key.getBytes("ISO8859-1"), "utf-8");
-            hql = "from OrganizationStream where name like ?1 and state = ?2 order by createTimestamp desc";
-            total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%", state).intValue();
-            orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%", state);
-
-        } else if (StringUtils.isNotEmpty(key) && state != null && startDate != null) {
-            key = new String(key.getBytes("ISO8859-1"), "utf-8");
-            hql = "from OrganizationStream where name like ?1 and state=?2 and createTimestamp between ?3 and ?4 order by createTimestamp desc";
-            total = crudService.uniqueResultHql(Long.class, hql2 + hql, "%" + key + "%", state, startDate, nextDate).intValue();
-            orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, "%" + key + "%", state, startDate, nextDate);
-
-        } else if (StringUtils.isEmpty(key) && state == null && startDate != null) {
-
-            hql = "from OrganizationStream where createTimestamp between ?1 and ?2 order by createTimestamp desc";
-            total = crudService.uniqueResultHql(Long.class, hql2 + hql, startDate, nextDate).intValue();
-            orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, startDate, nextDate);
-
-        } else if (StringUtils.isEmpty(key) && state != null && startDate != null) {
-
-            hql = "from OrganizationStream where state=?1 and createTimestamp between ?2 and ?3 order by createTimestamp desc";
-            total = crudService.uniqueResultHql(Long.class, hql2 + hql, state, startDate, nextDate).intValue();
-            orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, state, startDate, nextDate);
-
-        } else if (StringUtils.isEmpty(key) && state != null && startDate == null) {
-            hql = "from OrganizationStream where state=?1 order by createTimestamp desc";
-            total = crudService.uniqueResultHql(Long.class, hql2 + hql, state).intValue();
-            orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql, state);
-        } else {
-            hql = "from OrganizationStream order by createTimestamp desc";
-            total = crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
-            orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql);
+            hql += " and name like '%" + key + "%'";
         }
+
+        if (StringUtils.isNotEmpty(applicationPhone)) {
+            hql += " and applicationPhone like '" + applicationPhone + "%'";
+        }
+
+        if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
+            hql += " and createTimestamp  between '" + startDate + "' and '" + nextDate + "'";
+        }
+
+        if (state != null) {
+            hql += " and  state=" + state;
+        }
+        hql += " order by createTimestamp desc";
+        int total = crudService.uniqueResultHql(Long.class, hql2 + hql).intValue();
+        orgs = crudService.hql(OrganizationStream.class, firstIndex, pageSize, hql);
         PageResult<OrganizationStream> pageResult = new PageResult<>();
         pageResult.setResultCode("SUCCESS");
         pageResult.setNumber(pageNo);
@@ -457,10 +433,10 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
         String sql = "select *from FTK_REGISTER_USER where 1 =1";
         if (StringUtils.isNotEmpty(userType)) {
-            sql+=" and USER_TYPE ="+userType;
+            sql += " and USER_TYPE =" + userType;
         }
         if (StringUtils.isNotEmpty(startTime)) {
-            sql +=" AND  CREATE_TIMESTAMP  between '" + startTime + "' and '" + nextDate + "'";
+            sql += " AND  CREATE_TIMESTAMP  between '" + startTime + "' and '" + nextDate + "'";
         }
         sql += " order by CREATE_TIMESTAMP desc";
         List<?> reglist = crudService.sql(firstIndex, pageSize, sql);
@@ -518,7 +494,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String nextDate = null;
-        if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
+        if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
             try {
                 Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
                 nextDate = format.format(next);
@@ -531,21 +507,21 @@ public class OrganizationServiceImpl implements OrganizationService {
         String prefixSql = "select count(*) ";
 
         if (StringUtils.isNotEmpty(orgName)) {
-            orgName = new String(orgName.getBytes("ISO-8859-1"),"utf-8");
+            orgName = new String(orgName.getBytes("ISO-8859-1"), "utf-8");
             hql += "and organizationName  like '%" + orgName + "%'";
         }
 
-        if(StringUtils.isNotEmpty(tel)){
-            hql+=" and contactTel like '" + tel + "%'";
+        if (StringUtils.isNotEmpty(tel)) {
+            hql += " and contactTel like '" + tel + "%'";
 
         }
-        if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
+        if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
             hql += "and createTimestamp between '" + startTime + "' and '" + nextDate + "'";
         }
 
         hql += " order by createTimestamp desc";
 
-        List<OrganizationAdvice>  adviceList= crudService.hql(OrganizationAdvice.class, firstIndex, pageSize, hql);
+        List<OrganizationAdvice> adviceList = crudService.hql(OrganizationAdvice.class, firstIndex, pageSize, hql);
         int total = crudService.uniqueResultHql(Long.class, prefixSql + hql).intValue();
 
         PageResult<OrganizationAdvice> pageResult = new PageResult<>();
@@ -566,7 +542,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public OrganizationAdvice findOrgAdviceById(Long id) {
-        return crudService.get(OrganizationAdvice.class,id);
+        return crudService.get(OrganizationAdvice.class, id);
     }
 
     /**
@@ -577,7 +553,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     @Override
     public List<OrganizationStream> findAuthStreamByChannelName(String channelName) {
-        return crudService.hql(OrganizationStream.class,"from OrganizationStream where channalName =?1 ",channelName);
+        return crudService.hql(OrganizationStream.class, "from OrganizationStream where channalName =?1 ", channelName);
     }
 
 }
