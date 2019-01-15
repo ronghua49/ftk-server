@@ -180,11 +180,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
         String hql = "from OrganizationStream where 1=1 ";
         if (StringUtils.isNotEmpty(key)) {
+            key = key.trim();
             key = new String(key.getBytes("ISO8859-1"), "utf-8");
             hql += " and name like '%" + key + "%'";
         }
 
         if (StringUtils.isNotEmpty(applicationPhone)) {
+            applicationPhone = applicationPhone.trim();
             hql += " and applicationPhone like '" + applicationPhone + "%'";
         }
 
@@ -373,17 +375,20 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 
         if (StringUtils.isNotEmpty(orgName)) {
+            orgName = orgName.trim();
             orgName = new String(orgName.getBytes("ISO8859-1"), "utf-8");
             orgName = orgName.trim();
             hql += "and name like '%" + orgName + "%'";
         }
 
         if (StringUtils.isNotEmpty(legalPerson)) {
+            legalPerson = legalPerson.trim();
             legalPerson = new String(legalPerson.getBytes("ISO8859-1"), "utf-8");
             legalPerson = legalPerson.trim();
             hql += " and legalPerson like '%" + legalPerson + "%'";
         }
         if (StringUtils.isNotEmpty(industry)) {
+            industry = industry.trim();
             hql += " and code in (select code from DictionaryData where dictId =(select id from Dictionary where dictCode = '" + industry + "'))";
         }
         if (StringUtils.isNotEmpty(startTime)) {
@@ -508,11 +513,13 @@ public class OrganizationServiceImpl implements OrganizationService {
         String prefixSql = "select count(*) ";
 
         if (StringUtils.isNotEmpty(orgName)) {
+            orgName = orgName.trim();
             orgName = new String(orgName.getBytes("ISO-8859-1"), "utf-8");
             hql += "and organizationName  like '%" + orgName + "%'";
         }
 
         if (StringUtils.isNotEmpty(tel)) {
+            tel = tel.trim();
             hql += " and contactTel like '" + tel + "%'";
 
         }

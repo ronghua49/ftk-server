@@ -58,11 +58,13 @@ public class ChannelServiceImpl implements ChannelService {
         }
 
         if (StringUtils.isNotEmpty(channelName)) {
+            channelName=channelName.trim();
             channelName = new String(channelName.getBytes("ISO8859-1"), "utf-8");
             hql += "and channelName like '%" + channelName + "%'";
         }
 
         if (StringUtils.isNotEmpty(contactPerson)) {
+            contactPerson=contactPerson.trim();
             contactPerson = new String(contactPerson.getBytes("ISO8859-1"), "utf-8");
             hql += " and contactPerson like '%" + contactPerson + "%'";
         }

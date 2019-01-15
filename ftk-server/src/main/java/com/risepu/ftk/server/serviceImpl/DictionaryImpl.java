@@ -51,6 +51,7 @@ public class DictionaryImpl implements DictionaryService {
             hql += "and dictCode = '" + dictCode + "'";
         }
         if (StringUtils.isNotEmpty(name)) {
+            name = name.trim();
             name = new String(name.getBytes("ISO-8859-1"), "utf-8");
             hql += " and name like '%" + name + "%'";
         }
@@ -245,6 +246,7 @@ public class DictionaryImpl implements DictionaryService {
             sql += " and code = " + code;
         }
         if (StringUtils.isNotEmpty(name)) {
+            name = name.trim();
             name = new String(name.getBytes("ISO8859-1"), "utf-8");
             sql += " and dictdataName like '%" + name + "%'";
         }
