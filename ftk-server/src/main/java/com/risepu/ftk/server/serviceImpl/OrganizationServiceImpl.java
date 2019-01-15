@@ -163,17 +163,12 @@ public class OrganizationServiceImpl implements OrganizationService {
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         Integer state = (Integer) map.get("state");
-
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = null;
-        Date endDate;
-        Date nextDate = null;
         if (StringUtils.isNotEmpty(startTime)) {
             try {
-                startDate = format.parse(startTime);
-                endDate = format.parse(endTime);
-                nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
+                Date endDate = format.parse(endTime);
+                endDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
+                endTime = format.format(endDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -191,7 +186,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
 
         if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
-            hql += " and createTimestamp  between '" + startDate + "' and '" + nextDate + "'";
+            hql += " and createTimestamp  between '" + startTime + "' and '" + endTime + "'";
         }
 
         if (state != null) {
@@ -363,15 +358,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         Integer state = (Integer) map.get("state");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date startDate = null;
-        Date endDate;
-        Date nextDate = null;
         if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
             try {
-                startDate = format.parse(startTime);
-                endDate = format.parse(endTime);
-                nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
+                Date endDate = format.parse(endTime);
+                endDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
+                endTime = format.format(endDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -394,7 +385,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             hql += " and code in (select code from DictionaryData where dictId =(select id from Dictionary where dictCode = '" + industry + "'))";
         }
         if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
-            hql += " and createTimestamp  between '" + startDate + "' and '" + nextDate + "'";
+            hql += " and createTimestamp  between '" + startTime + "' and '" + endTime + "'";
         }
 
         if (state != null) {
@@ -429,14 +420,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = null;
-        Date endDate;
-        Date nextDate = null;
         if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
             try {
-                startDate = format.parse(startTime);
-                endDate = format.parse(endTime);
-                nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
+                Date nextDate = format.parse(endTime);
+                nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(nextDate));
+                endTime = format.format(nextDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -446,7 +434,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             sql += " and USER_TYPE =" + userType;
         }
         if (StringUtils.isNotEmpty(startTime)) {
-            sql += " AND  CREATE_TIMESTAMP  between '" + startDate + "' and '" + nextDate + "'";
+            sql += " AND  CREATE_TIMESTAMP  >= '" + startTime + "' and CREATE_TIMESTAMP <'" + endTime +"'";
         }
         sql += " order by CREATE_TIMESTAMP desc";
         List<?> reglist = crudService.sql(firstIndex, pageSize, sql);
@@ -503,11 +491,10 @@ public class OrganizationServiceImpl implements OrganizationService {
         String endTime = (String) map.get("endTime");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String nextDate = null;
         if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
             try {
                 Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
-                nextDate = format.format(next);
+                endTime = format.format(next);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -528,7 +515,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         }
         if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
-            hql += "and createTimestamp between '" + startTime + "' and '" + nextDate + "'";
+            hql += "and createTimestamp between '" + startTime + "' and '" + endTime + "'";
         }
 
         hql += " order by createTimestamp desc";
