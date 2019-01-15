@@ -214,6 +214,7 @@ public class ReportController implements ReportApi {
         for (int i = 0; i < docList.size(); i++) {
             List<String> br = new ArrayList<>();
             DocumentRequest doc = docList.get(i);
+            br.add(String.valueOf(i+1));
             br.add(doc.getOrganizationName());
             br.add(doc.getOrganizationCode());
             br.add(doc.getType());
@@ -225,7 +226,7 @@ public class ReportController implements ReportApi {
             br.add(doc.getChainHash());
             data.add(br);
         }
-        String[] tableName = {"企业名称", "社会信用代码", "行业类别", "单据类型", "生成日期", "单据编码", "身份证号码", "渠道名称", "区块链存证编码"};
+        String[] tableName = {"序号","企业名称", "社会信用代码", "行业类别", "单据类型", "生成日期", "单据编码", "身份证号码", "渠道名称", "区块链存证编码"};
         ExcelExportUtil.download(response, "企业单据统计明细表", "企业单据统计明细表", tableName, data);
    }
 }
