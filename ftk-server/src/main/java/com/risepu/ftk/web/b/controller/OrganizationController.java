@@ -261,6 +261,13 @@ public class OrganizationController implements OrganizationApi {
      */
     @Override
     public ResponseEntity<Response<OrganizationStream>> checkAuthState(HttpServletRequest request) {
+
+        Subject subject = SecurityUtils.getSubject();
+        OrganizationUser user = (OrganizationUser) subject.getPrincipal();
+        setCurrUserToSession(request.getSession(),user);
+       // OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
+//        loginResult.setOrganizationStream(stream);
+//        loginResult.setOrganizationUser(user);
         OrganizationUser currUser = getCurrUser( request.getSession());
         SessionListener.judgeLogin(currUser);
         //如果用户当前session被移到第二位，则表示被踢出
