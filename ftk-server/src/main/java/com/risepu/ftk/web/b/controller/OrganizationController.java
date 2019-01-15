@@ -264,17 +264,17 @@ public class OrganizationController implements OrganizationApi {
 
         Subject subject = SecurityUtils.getSubject();
         OrganizationUser user = (OrganizationUser) subject.getPrincipal();
+        SessionListener.judgeKickOut(user.getId(),request.getSession());
         setCurrUserToSession(request.getSession(),user);
-       // OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
+        // OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
 //        loginResult.setOrganizationStream(stream);
 //        loginResult.setOrganizationUser(user);
-        OrganizationUser currUser = getCurrUser( request.getSession());
-        SessionListener.judgeLogin(currUser);
+        //OrganizationUser currUser = getCurrUser( request.getSession());
+        SessionListener.judgeLogin(user);
         //如果用户当前session被移到第二位，则表示被踢出
-        SessionListener.judgeKickOut(currUser.getId(),request.getSession());
 
         /**  根据申请人手机号 查询审核状态*/
-        OrganizationStream stream = organizationService.findAuthStreamByPhone(currUser.getId());
+        OrganizationStream stream = organizationService.findAuthStreamByPhone(user.getId());
         return ResponseEntity.ok(Response.succeed(stream));
     }
 
