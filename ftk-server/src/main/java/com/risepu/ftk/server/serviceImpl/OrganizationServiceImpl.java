@@ -363,17 +363,19 @@ public class OrganizationServiceImpl implements OrganizationService {
         Integer state = (Integer) map.get("state");
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String nextDate = null;
-        if (StringUtils.isNotEmpty(startTime)) {
+
+        Date startDate = null;
+        Date endDate;
+        Date nextDate = null;
+        if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
             try {
-                Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
-                nextDate = format.format(next);
+                startDate = format.parse(startTime);
+                endDate = format.parse(endTime);
+                nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
-
         if (StringUtils.isNotEmpty(orgName)) {
             orgName = orgName.trim();
             orgName = new String(orgName.getBytes("ISO8859-1"), "utf-8");
@@ -391,8 +393,8 @@ public class OrganizationServiceImpl implements OrganizationService {
             industry = industry.trim();
             hql += " and code in (select code from DictionaryData where dictId =(select id from Dictionary where dictCode = '" + industry + "'))";
         }
-        if (StringUtils.isNotEmpty(startTime)) {
-            hql += " and createTimestamp  between '" + startTime + "' and '" + nextDate + "'";
+        if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
+            hql += " and createTimestamp  between '" + startDate + "' and '" + nextDate + "'";
         }
 
         if (state != null) {
