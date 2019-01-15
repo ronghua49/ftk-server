@@ -1,20 +1,18 @@
 package com.risepu.ftk.server.serviceImpl;
 
-import java.math.BigInteger;
-import java.util.*;
-
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.risepu.ftk.server.domain.AuthorizationStream;
 import com.risepu.ftk.server.domain.Organization;
 import com.risepu.ftk.server.domain.PersonalUser;
 import com.risepu.ftk.server.service.PersonalUserService;
 import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
-
 import net.lc4ever.framework.service.GenericCrudService;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * @author ronghaohua
@@ -65,18 +63,17 @@ public class PersonalUserServiceImpl implements PersonalUserService {
     }
 
     @Override
-    public Map<String, Object> findNewRequestByCardNo(String cardNo) {
+    public Map<Long, String> findNewRequestByCardNo(String cardNo) {
         /** 只查询 10 分钟之内的 最近扫描单据的一个企业id */
         DateTime dateTime = new DateTime();
         DateTime minusTime = dateTime.minusMinutes(10);
         Date time = minusTime.toDate();
         List<AuthorizationStream> streams = crudService.hql(AuthorizationStream.class, "from AuthorizationStream where personId =?1 and authState=0 and  createTimestamp > ?2 order by createTimestamp desc", cardNo, time);
         if (streams != null && !streams.isEmpty()) {
-            String orgId = streams.get(0).getOrgId();
-            Organization organization = crudService.uniqueResultByProperty(Organization.class, "id", orgId);
-            Map<String, Object> map = new HashMap<>();
-            map.put("orgName", organization.getName());
-            map.put("streamId", streams.get(0).getId());
+            Map<Long, String> map = new HashMap<>();
+            for(AuthorizationStream stream:streams){
+                map.put(stream.getId(),crudService.uniqueResultByProperty(Organization.class, "id", stream.getOrgId()).getName());
+            }
             return map;
         }
         return null;

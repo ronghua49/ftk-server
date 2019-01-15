@@ -6,6 +6,7 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import net.lc4ever.framework.remote.annotation.Remote;
 
+import java.util.List;
 import java.util.Map;
 
 @Remote(path = "/person")
@@ -51,7 +52,7 @@ public interface PersonalUserService {
      * @param cardNo 身份证号
      * @return 需求授权的企业名称    流水的
      */
-    Map<String, Object> findNewRequestByCardNo(String cardNo);
+    Map<Long, String> findNewRequestByCardNo(String cardNo);
 
     /**
      * 根据流水id查询 流水

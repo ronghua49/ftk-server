@@ -2,6 +2,8 @@ package com.risepu.ftk.web.p.dto;
 
 import com.risepu.ftk.server.domain.PersonalUser;
 
+import java.util.Map;
+
 public class LoginResult {
 	
 	private int code;
@@ -10,9 +12,7 @@ public class LoginResult {
 	
 	private PersonalUser personalUser;
 	
-	private String orgName;
-	
-	private Long streamId;
+	private Map<Long,String> map;
 
 	public String getMessage() {
 		return message;
@@ -30,22 +30,13 @@ public class LoginResult {
 		this.personalUser = personalUser;
 	}
 
-	public String getOrgName() {
-		return orgName;
+	public Map<Long, String> getMap() {
+		return map;
 	}
 
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
+	public void setMap(Map<Long, String> map) {
+		this.map = map;
 	}
-
-	public Long getStreamId() {
-		return streamId;
-	}
-
-	public void setStreamId(Long streamId) {
-		this.streamId = streamId;
-	}
-
 	public int getCode() {
 		return code;
 	}

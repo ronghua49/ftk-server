@@ -1,7 +1,10 @@
 
 package com.risepu.ftk.web.p.controller;
 
-import com.risepu.ftk.server.domain.*;
+import com.risepu.ftk.server.domain.AuthorizationStream;
+import com.risepu.ftk.server.domain.Organization;
+import com.risepu.ftk.server.domain.PersonalUser;
+import com.risepu.ftk.server.domain.ProofDocument;
 import com.risepu.ftk.server.service.ChainService;
 import com.risepu.ftk.server.service.OrganizationService;
 import com.risepu.ftk.server.service.PersonalUserService;
@@ -16,6 +19,7 @@ import com.risepu.ftk.web.p.dto.LoginResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -85,10 +89,10 @@ public class PersonalUserController implements PersonzalUserApi {
                 request.getSession().setAttribute(Constant.getSessionCurrUser(), personalUser);
 
                 /** 根据身份证 查询新的请求授权的企业名和 当前授权流水的id*/
-                Map<String, Object> map = personalService.findNewRequestByCardNo(no);
-                if (map != null) {
-                    loginResult.setOrgName((String) map.get("orgName"));
-                    loginResult.setStreamId((Long) map.get("streamId"));
+
+               Map<Long, String> requestAuthMap = personalService.findNewRequestByCardNo(no);
+                if (requestAuthMap != null) {
+                    loginResult.setMap(requestAuthMap);
                 }
                 logger.debug("用户手机号--{}，登录成功", personalUser.getId().getMobile());
                 return ResponseEntity.ok(Response.succeed(loginResult));
@@ -102,6 +106,12 @@ public class PersonalUserController implements PersonzalUserApi {
         }
     }
 
+    @Override
+    public ResponseEntity<Response< Map<Long, String>>> getNewAuthingStream(HttpRequest request) {
+        PersonalUser currUser = getCurrUser((HttpServletRequest) request);
+        Map<Long, String> map = personalService.findNewRequestByCardNo(currUser.getId().getId());
+        return  ResponseEntity.ok(Response.succeed(map));
+    }
     private String getSmsCode(HttpServletRequest request) {
         return (String) request.getSession().getAttribute(Constant.getSessionVerificationCodeSms());
     }
