@@ -428,13 +428,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         String userType = (String) map.get("userType");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
-
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String nextDate = null;
-        if (StringUtils.isNotEmpty(startTime)) {
+        Date startDate = null;
+        Date endDate;
+        Date nextDate = null;
+        if (StringUtils.isNotEmpty(startTime)&&StringUtils.isNotEmpty(endTime)) {
             try {
-                Date next = DateFormatter.startOfDay(DateFormatter.nextDay(format.parse(endTime)));
-                nextDate = format.format(next);
+                startDate = format.parse(startTime);
+                endDate = format.parse(endTime);
+                nextDate = DateFormatter.startOfDay(DateFormatter.nextDay(endDate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -444,7 +446,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             sql += " and USER_TYPE =" + userType;
         }
         if (StringUtils.isNotEmpty(startTime)) {
-            sql += " AND  CREATE_TIMESTAMP  between '" + startTime + "' and '" + nextDate + "'";
+            sql += " AND  CREATE_TIMESTAMP  between '" + startDate + "' and '" + nextDate + "'";
         }
         sql += " order by CREATE_TIMESTAMP desc";
         List<?> reglist = crudService.sql(firstIndex, pageSize, sql);
