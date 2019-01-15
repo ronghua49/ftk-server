@@ -13,13 +13,13 @@ import com.risepu.ftk.utils.PageResult;
 import com.risepu.ftk.web.Constant;
 import com.risepu.ftk.web.api.Response;
 import com.risepu.ftk.web.b.dto.PageRequest;
+import com.risepu.ftk.web.exception.NotLoginException;
 import com.risepu.ftk.web.p.dto.AuthHistoryInfo;
 import com.risepu.ftk.web.p.dto.LoginRequest;
 import com.risepu.ftk.web.p.dto.LoginResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -107,8 +107,11 @@ public class PersonalUserController implements PersonzalUserApi {
     }
 
     @Override
-    public ResponseEntity<Response< Map<Long, String>>> getNewAuthingStream(HttpRequest request) {
-        PersonalUser currUser = getCurrUser((HttpServletRequest) request);
+    public ResponseEntity<Response< Map<Long, String>>> getNewAuthingStream(HttpServletRequest request) {
+        PersonalUser currUser = getCurrUser(request);
+        if(currUser==null){
+            throw  new NotLoginException();
+        }
         Map<Long, String> map = personalService.findNewRequestByCardNo(currUser.getId().getId());
         return  ResponseEntity.ok(Response.succeed(map));
     }

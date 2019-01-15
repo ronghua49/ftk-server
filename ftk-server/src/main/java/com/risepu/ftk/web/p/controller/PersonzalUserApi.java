@@ -13,7 +13,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +44,7 @@ public interface PersonzalUserApi {
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = Map.class) })
     @RequestMapping(path = "/auth/stream")
     @ResponseBody
-    ResponseEntity<Response<Map<Long, String>>> getNewAuthingStream(HttpRequest request);
+    ResponseEntity<Response<Map<Long, String>>> getNewAuthingStream(HttpServletRequest request);
 
     @ApiOperation(value = "个人点击授权或拒绝", nickname = "authentic orgScanRequest")
     @ApiResponses({ @ApiResponse(code = 200, message = "succeed", response = String.class) })
